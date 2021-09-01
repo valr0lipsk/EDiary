@@ -1,0 +1,79 @@
+﻿<form asp-controller="Home" asp-action="Admin">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-12 accountF h-100 p-3">
+                <div class="row h-100">
+                    <div class="col-3">
+                        <dl class="list-group list-group-flush">
+                            <dt class="mb-1">Пользователи:</dt>
+                            <dd class="list-group-item list-group-item-action cursor">Добавить пользователя</dd>
+                            <dd class="list-group-item list-group-item-action cursor">Все пользователи</dd>
+                            @*<dt class="mt-2 mb-1">Группы:</dt>
+                                <dd class="list-group-item list-group-item-action cursor">Добавить группу</dd>
+                                <dd class="list-group-item list-group-item-action cursor">Все группы</dd>*@
+                            <dt class="mt-2 mb-1">Предметы:</dt>
+                            <dd class="list-group-item list-group-item-action cursor">Добавить предмет</dd>
+                            <dd class="list-group-item list-group-item-action cursor">Все предметы</dd>
+                        </dl>
+                    </div>
+                    <div class="col-9">
+                        @*<table class="table table-hover table-bordered">  Таблица преподов 
+                        <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Логин</th>
+                                    <th scope="col">Фамилия</th>
+                                    <th scope="col">Имя</th>
+                                    <th scope="col">Отчество</th>
+                                    <th scope="col">Предметы</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var teacher in Model)
+                             {
+                                <tr>
+                                <td>@teacher.Id</td>
+                                <td>@teacher.Login</td>
+                                <td>@teacher.Surname</td>
+                                <td>@teacher.Name</td>
+                                <td>@teacher.secName</td>
+                                <td>
+                                    <ul>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                             }
+                            </tbody>
+                        </table>*@
+                        @*<table class="table table-hover table-bordered">  Таблица студентов 
+                        <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Логин</th>
+                                    <th scope="col">Фамилия</th>
+                                    <th scope="col">Имя</th>
+                                    <th scope="col">Отчество</th>
+                                    <th scope="col">Группа</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                               @foreach (var student in Model)
+                                {
+                                   <tr>
+                                       <td>@student.Id</td>
+                                       <td>@student.Login</td>
+                                       <td>@student.Surname</td>
+                                       <td>@student.Name</td>
+                                       <td>@student.secName</td>
+                                       <td>@student.Group</td>
+                                   </tr>
+                                }
+                            </tbody>
+                        </table>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

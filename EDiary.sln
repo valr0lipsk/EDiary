@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EDiary", "EDiary\EDiary.csproj", "{B0C7A253-220A-4105-AAF9-FF027F8A8549}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B0C7A253-220A-4105-AAF9-FF027F8A8549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C7A253-220A-4105-AAF9-FF027F8A8549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C7A253-220A-4105-AAF9-FF027F8A8549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C7A253-220A-4105-AAF9-FF027F8A8549}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0DFC8A5E-E3FF-4536-A54A-4E0E0AEAAA4F}
+	EndGlobalSection
+EndGlobal
