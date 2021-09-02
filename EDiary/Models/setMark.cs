@@ -29,5 +29,8 @@ namespace EDiary.Models
 
         [ForeignKey("markId")]
         public Mark mark { get; set; }
+
+        [ForeignKey("lessonId")]
+        public Lesson lesson { get; set; }
     }
 }
