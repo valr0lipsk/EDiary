@@ -1,0 +1,29 @@
+﻿<table class="table table-hover table-bordered">  Таблица преподов
+    <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Логин</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Отчество</th>
+                <th scope="col">Предметы</th>
+            </tr>
+    </thead>
+    <tbody>
+        @foreach (var teacher in Model)
+         {
+            <tr>
+               <td>@teacher.Id</td>
+               <td>@teacher.Login</td>
+               <td>@teacher.Surname</td>
+               <td>@teacher.Name</td>
+               <td>@teacher.secName</td>
+               <td>
+                   <ul>
+
+                   </ul>
+               </td>
+            </tr>
+         }
+    </tbody>
+</table>
