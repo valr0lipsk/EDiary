@@ -58,8 +58,8 @@ namespace EDiary
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Name = "ElectronicDiaryMRK";
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/LogIn/Login";
+                options.AccessDeniedPath = "/LogIn/AccessDenied";
             });
             //передача сервисов для контроллеров и представлений
             services.AddControllersWithViews(x =>
@@ -103,7 +103,7 @@ namespace EDiary
                     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");*/
                 endpoints.MapControllerRoute("area", "{area:exists}/{controller=Home}/{action=Teacher}/{id?}");
                 //endpoints.MapControllerRoute("teacher", "{area:exists}/{controller=Teacher}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default", "{controller=Account}/{action=Login}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
 
             });
 

@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace EDiary.Controllers
 {
-    public class HomeController : Controller
+    public class AccountsController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<AccountsController> _logger;
         EDContext context;
-        public HomeController(EDContext context)
+        public AccountsController(EDContext context)
         {
             this.context = context;
         }

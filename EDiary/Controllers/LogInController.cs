@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 namespace EDiary.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class LogInController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -44,7 +44,7 @@ namespace EDiary.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.Remember, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Teacher", "Home");
+                        return RedirectToAction("Teacher", "Accounts");
                         //if (userManager.IsInRoleAsync(user,"admin1"))
                         //{
 
@@ -68,7 +68,7 @@ namespace EDiary.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "LogIn");
         }
     }
 }
