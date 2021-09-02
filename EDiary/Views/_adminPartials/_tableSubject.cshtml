@@ -1,0 +1,21 @@
+﻿<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Предмет</th>
+            <th scope="col">Преподаватель</th>
+            <th scope="col">Группа</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var subject in Model)
+        {
+            <tr>
+                <td>@subject.Id</td>
+                <td>@subject.Name</td>
+                <td>@subject.Teacher</td>
+                <td>@subject.Group</td>
+            </tr>
+        }
+    </tbody>
+</table>
