@@ -39,8 +39,14 @@ namespace EDiary.Controllers
         //    return View(await context.subjectTaughts.ToListAsync());
         //}
         public IActionResult Teacher()
-        { 
-            return View();
+        {
+            //Users users = (Users)context.users.Where(u => u. == 1);
+            //Teacher teacher = (Teacher)context.teachers.Where(c => c.teacherId == users.idUser);
+            //subjectTaught subjectTaught = (subjectTaught)context.subjectTaughts.Where(c => c.teacherId == teacher.teacherId);
+            //var subjects = (from subject in context.subjects
+            //                            where subject.subjectId == subjectTaught.subjectId 
+            //                            select subject).ToList();
+            return View(/*subjects*/);
         }
     }
 }
