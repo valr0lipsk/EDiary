@@ -18,7 +18,7 @@ namespace EDiary.Models
         public string groupName { get; set; }
 
         [Display(Name ="Куратор")]
-        public int curatorId { get; set; }
+        public int? curatorId { get; set; }
 
         [ForeignKey("curatorId")]
         public Teacher teacher { get; set; }
