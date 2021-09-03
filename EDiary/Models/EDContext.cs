@@ -44,6 +44,7 @@ namespace EDiary.Models
                 Name = "student",
                 NormalizedName = "STUDENT"
             });
+
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = "1",
@@ -64,6 +65,28 @@ namespace EDiary.Models
                 teacherId = 1,
                 teacherRole = "teacher",
                 teacherUser = 1
+            });
+
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "2",
+                UserName = "tr000002",
+                NormalizedUserName = "TR000002",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "6Z21AsZ1")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 2,
+                userSurname = "Лазицкас",
+                userName = "Екатерина",
+                userLastname = "Александровна",
+                userId = "2",
+            });
+            modelBuilder.Entity<Teacher>().HasData(new Teacher
+            {
+                teacherId = 2,
+                teacherRole = "teacher",
+                teacherUser = 2
             });
         }
     }

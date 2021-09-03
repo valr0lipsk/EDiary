@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.Controllers
 {
-    [Authorize]
+    [Authorize] 
     public class LogInController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;

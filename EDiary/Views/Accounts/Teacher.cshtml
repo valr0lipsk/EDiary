@@ -19,7 +19,7 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
                                 @if (SignInManager.IsSignedIn(User))
                                  {
-                                    <label class="mt-0" style="font-size: 115%">@userManager.GetUserAsync(User).Result.UserName</label>
+                                    <label class="mt-0" style="font-size: 115%">@ViewBag.name</label>
                                  }
                             </div>
                         </div>
@@ -33,10 +33,10 @@
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol class="list-group list-group-flush list-group-numbered">
-                                @foreach (var subject in Model)
+                               @*@foreach (var subject in Model)
                                  {
                                     <li class="list-group-item" data-id="@subject.subjectId"><a href="">@subject.subjectId</a></li>
-                                 }
+                                 }*@
                             </ol>
                     </div>
                 </div>

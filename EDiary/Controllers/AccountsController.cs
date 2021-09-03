@@ -2,7 +2,9 @@
 using EDiary.Models;
 using EDiary.Repositories;
 using EDiary.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,9 +19,13 @@ namespace EDiary.Controllers
     {
         private readonly ILogger<AccountsController> _logger;
         EDContext context;
-        public AccountsController(EDContext context)
+        private UserManager<IdentityUser> userManager;
+        private SignInManager<IdentityUser> signInManager;
+        public AccountsController(EDContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             this.context = context;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         //public HomeController(ILogger<HomeController> logger)
         //{
@@ -46,6 +52,13 @@ namespace EDiary.Controllers
             //var subjects = (from subject in context.subjects
             //                            where subject.subjectId == subjectTaught.subjectId 
             //                            select subject).ToList();
+            SqlConnection con = new SqlConnection(Config.ConnectionString);
+            con.Open();
+            var surname = new SqlCommand($@"select B.userSurname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}",con).ExecuteScalar().ToString();
+            var name = new SqlCommand($@"select B.userName from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
+            var lastname = new SqlCommand($@"select B.userLastname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
+            string fullname = string.Join(" ", surname, name, lastname);
+            ViewBag.name = fullname;
             return View(/*subjects*/);
         }
     }
