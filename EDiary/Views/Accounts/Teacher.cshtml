@@ -18,9 +18,9 @@
                             <div class="row ml-2">
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
                                 @if (SignInManager.IsSignedIn(User))
-                                {
+                                 {
                                     <label class="mt-0" style="font-size: 115%">@userManager.GetUserAsync(User).Result.UserName</label>
-                                }
+                                 }
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
         <div class="col-12 accountF h-100 p-3">
             <div class="row h-100 align-content-center w-100 flex-column-reverse justify-content-center">
                 <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
-                    <div class="row h100 flex-column">
+                    <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol class="list-group list-group-flush list-group-numbered">
                                 @foreach (var subject in Model)
