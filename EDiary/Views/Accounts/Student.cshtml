@@ -1,5 +1,46 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using Microsoft.AspNetCore.Identity
+@using EDiary.Models
+@model IEnumerable<EDiary.Models.Subject>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> userManager
+<div class="container h-100">
+    <div class="row h-100">
+        <div class="col-12 accountF h-100 p-3">
+            <div class="row h-100 align-content-center w-100 flex-row-reverse justify-content-center">
+                <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
+                    <div class="row">
+                        <div class="col-lg-3 col-5 flex-column justify-content-around">
+                            <div class="accountIcon">
+                                <img src="~/css/source/user-image.png" class="accountIcon" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-4 ml-lg-0 ml-3 justify-content-between">
+                            <div class="row ml-2">
+                                <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <label class="mt-0" style="font-size: 115%">@userManager.GetUserAsync(User).Result.UserName</label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 accountF h-100 p-3">
+            <div class="row h-100 align-content-center w-100 flex-column-reverse justify-content-center">
+                <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
+                    <div class="row h100 flex-column">
+                        <h4>Мои предметы:</h4>
+                        @*<ol class="list-group list-group-flush list-group-numbered">
+                                @foreach (var subject in Model)
+                                 {
+                                    <li class="list-group-item" data-id="@subject.subjectId"><a href="">@subject.subjectName</a></li>
+                                 }
+                            </ol>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
