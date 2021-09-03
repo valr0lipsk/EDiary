@@ -15,7 +15,43 @@
                         </dl>
                     </div>
                     <div class="col-9">
-
+                        <form class="row g-3 needs-validation" novalidate>
+                            <div class="col-md-5">
+                                <label for="validationCustom02" class="form-label mb-0">Название предмета</label>
+                                <input type="text" class="form-control" id="validationCustom02" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="validationCustom02" class="form-label mb-0">Преподаватель</label>
+                                <input type="text" class="form-control" id="validationCustom02" list="teachers" required>
+                                <datalist id="teachers">
+                                    <option>1</option>
+                                    <option>56</option>
+                                </datalist>
+                                @*<datalist id="teacher">
+                                    @foreach (var teacher in Model)
+                                     {
+                                        <option>@teacher</option>
+                                     }
+                                </datalist>*@
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationCustom02" class="form-label mb-0">Группа</label>
+                                <input type="text" class="form-control" id="validationCustom02" list="groups" required>
+                                <datalist id="groups">
+                                    <option>1</option>
+                                    <option>56</option>
+                                </datalist>
+                                @*<datalist id="groups">
+                                    @foreach (var group in Model)
+                                     {
+                                        <option>@group</option>
+                                     }
+                                </datalist>*@
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Сохранить предмет</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
