@@ -23,10 +23,7 @@ namespace EDiary
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) =>Configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -101,7 +98,7 @@ namespace EDiary
                     name: "AdminArea",
                     areaName: "Admin",
                     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");*/
-                endpoints.MapControllerRoute("area", "{area:exists}/{controller=Home}/{action=Teacher}/{id?}");
+                //endpoints.MapControllerRoute("area", "{area:exists}/{controller=Home}/{action=Teacher}/{id?}");
                 //endpoints.MapControllerRoute("teacher", "{area:exists}/{controller=Teacher}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
 

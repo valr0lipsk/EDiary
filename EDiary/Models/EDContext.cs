@@ -20,6 +20,7 @@ namespace EDiary.Models
         public DbSet<Users> users { get; set; }
         public DbSet<Teacher> teachers { get; set; }
         public DbSet<Student> students { get; set; }
+        public DbSet<IdentityUser> aspnetusers { get; set; }
         public EDContext(DbContextOptions<EDContext> options):base(options)
         {
         }
@@ -87,6 +88,28 @@ namespace EDiary.Models
                 teacherId = 2,
                 teacherRole = "teacher",
                 teacherUser = 2
+            });
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "3",
+                UserName = "st000001",
+                NormalizedUserName = "ST000001",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4u6tv3Sm")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 3,
+                userSurname = "Купреенко",
+                userName = "Александр",
+                userLastname = "Андреевич",
+                userId = "3",
+            });
+            modelBuilder.Entity<Student>().HasData(new Student
+            {
+               studentId=1,
+               studentGroup=2,
+               studentRole="student",
+               studentUser=3
             });
         }
     }

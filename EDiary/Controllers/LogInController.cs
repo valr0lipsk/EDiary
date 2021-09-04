@@ -1,7 +1,9 @@
 ﻿using EDiary.Models;
+using EDiary.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +16,9 @@ namespace EDiary.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
-        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
-        {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-        }
+        EDContext context;
+        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) => (this.userManager, this.signInManager) = (userManager, signInManager);
+
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
@@ -44,7 +44,14 @@ namespace EDiary.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.Remember, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Teacher", "Accounts");
+                        if (user.UserName.Contains("tr"))
+                        {
+                            return RedirectToAction("Teacher", "Accounts");
+                        }
+                        if (user.UserName.Contains("st"))
+                        {
+                            return RedirectToAction("Student", "Accounts");
+                        }
                         //if (userManager.IsInRoleAsync(user,"admin1"))
                         //{
 
@@ -56,8 +63,7 @@ namespace EDiary.Controllers
                         //return Redirect(returnUrl ?? "/");
                         //return Redirect(loginModel.returnUrl);
                         //return RedirectToAction("Admin", "Home");
-
-                    }
+                    }  
                 }
                 ModelState.AddModelError(nameof(loginViewModel.userName), "Неправильно введен логин или пароль");
             }

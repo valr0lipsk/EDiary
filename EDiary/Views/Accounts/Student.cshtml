@@ -19,7 +19,7 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
                                 @if (SignInManager.IsSignedIn(User))
                                 {
-                                    <label class="mt-0" style="font-size: 115%">@userManager.GetUserAsync(User).Result.UserName</label>
+                                    <label class="mt-0" style="font-size: 115%">@ViewBag.name</label>
                                 }
                             </div>
                         </div>
