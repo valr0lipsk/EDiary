@@ -12,16 +12,15 @@ function scrollFunction() {
     }
 }
 
-// When the user clicks on the button, scroll to the top of the document
 function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 $(document).ready(function () {
     $('#addSt').click(function () {
         //var url = '@Url.Action("AddStudent", "Admin")';
         //$("#partialDiv").load(url);
-        $('#partialDiv').load('@Url.Content("~ /Admin/AddStudent")')
+        $('#partialdiv').load('@url.content("~/admin/addstudent")')
     }
     )
 }
