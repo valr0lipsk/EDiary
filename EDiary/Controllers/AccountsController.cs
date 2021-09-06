@@ -66,19 +66,19 @@ namespace EDiary.Controllers
                                                             LEFT JOIN users us ON us.idUser=tr.teacherUser
                                                             LEFT JOIN AspNetUsers aspuse ON aspuse.Id=us.userId
                                                             WHERE aspuse.Id={userManager.GetUserId(User)}",con).ExecuteScalar();
-            var query = from sub in context.subjects
-                        join st in context.subjectTaughts on sub.subjectId equals st.subjectId
-                        join tr in context.teachers on st.teacherId equals tr.teacherId
-                        join us in context.users on tr.teacherUser equals us.idUser
-                        join aspusers in context.aspnetusers on us.idUser equals aspusers.Id
-                        where aspusers.Id == userManager.GetUserId(User)
-                        select new
-                        {
-                            sub.subjectName,
-                            st.tsubjectId
-                        };
+            //var query = from sub in context.subjects
+            //            join st in context.subjectTaughts on sub.subjectId equals st.subjectId
+            //            join tr in context.teachers on st.teacherId equals tr.teacherId
+            //            join us in context.users on tr.teacherUser equals us.idUser
+            //            join aspusers in context.aspnetusers on us.idUser equals aspusers.Id
+            //            where aspusers.Id == userManager.GetUserId(User)
+            //            select new
+            //            {
+            //                sub.subjectName,
+            //                st.tsubjectId
+            //            };
             ViewBag.sub = subjects;
-            return View(/*subjects*/);
+            return View();
         }
     }
 }
