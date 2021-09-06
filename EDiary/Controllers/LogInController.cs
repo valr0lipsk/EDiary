@@ -44,6 +44,10 @@ namespace EDiary.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.Remember, false);
                     if (result.Succeeded)
                     {
+                        if (user.UserName=="admin")
+                        {
+                            return RedirectToAction("Admin", "Accounts");
+                        }
                         if (user.UserName.Contains("tr"))
                         {
                             return RedirectToAction("Teacher", "Accounts");

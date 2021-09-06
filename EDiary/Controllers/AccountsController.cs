@@ -50,12 +50,6 @@ namespace EDiary.Controllers
         }
         public IActionResult Teacher()
         {
-            //Users users = (Users)context.users.Where(u => u. == 1);
-            //Teacher teacher = (Teacher)context.teachers.Where(c => c.teacherId == users.idUser);
-            //subjectTaught subjectTaught = (subjectTaught)context.subjectTaughts.Where(c => c.teacherId == teacher.teacherId);
-            //var subjects = (from subject in context.subjects
-            //                            where subject.subjectId == subjectTaught.subjectId 
-            //                            select subject).ToList();
             SqlConnection con = new SqlConnection(Config.ConnectionString);
             con.Open();
             var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
