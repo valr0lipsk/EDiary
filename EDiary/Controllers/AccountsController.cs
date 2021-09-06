@@ -56,6 +56,7 @@ namespace EDiary.Controllers
             ViewBag.name = fullname;
             var subjectsLINQ = (from tsub in context.subjectTaughts
                                 join st in context.subjects on tsub.subjectId equals st.subjectId
+                                /*join gr in context.groups on tsub.groupId equals gr.groupId*/
                                 join tr in context.teachers on tsub.teacherId equals tr.teacherId
                                 join us in context.users on tr.teacherUser equals us.idUser
                                 join aspusers in context.Users on us.userId equals aspusers.Id
@@ -63,7 +64,7 @@ namespace EDiary.Controllers
                                 select new Subject
                                 {
                                     subjectName = st.subjectName,
-                                    subjectId=tsub.tsubjectId
+                                    subjectId = tsub.tsubjectId
                                 });
             return View(await subjectsLINQ.ToListAsync());
         }
