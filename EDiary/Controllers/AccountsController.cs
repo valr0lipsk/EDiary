@@ -54,24 +54,18 @@ namespace EDiary.Controllers
             con.Open();
             var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
             ViewBag.name = fullname;
-            //var subjectsSQL = new SqlCommand($@"SELECT sub.subjectName FROM subjects sub
-            //                                                LEFT JOIN subjectTaughts st ON sub.subjectId= st.subjectId
-            //                                                LEFT JOIN teachers tr ON tr.teacherId=st.teacherId
-            //                                                LEFT JOIN users us ON us.idUser=tr.teacherUser
-            //                                                LEFT JOIN AspNetUsers aspuse ON aspuse.Id=us.userId
-            //                                                WHERE aspuse.Id={userManager.GetUserId(User)}",con).ExecuteScalar();
-            //var subjectsLINQ = (from sub in context.subjects
-            //                 join st in context.subjectTaughts on sub.subjectId equals st.subjectId
-            //                 join tr in context.teachers on st.teacherId equals tr.teacherId
-            //                 join us in context.users on tr.teacherUser equals us.idUser
-            //                 join aspusers in context.Users on us.userId equals aspusers.Id
-            //                 where aspusers.Id == userManager.GetUserId(User)
-            //                 select new
-            //                 {
-            //                     sub.subjectName,
-            //                     st.tsubjectId
-            //                 }); 
-            return View(await context.subjectTaughts.ToListAsync());
+            var subjectsLINQ = (from tsub in context.subjectTaughts
+                                join st in context.subjects on tsub.subjectId equals st.subjectId
+                                join tr in context.teachers on tsub.teacherId equals tr.teacherId
+                                join us in context.users on tr.teacherUser equals us.idUser
+                                join aspusers in context.Users on us.userId equals aspusers.Id
+                                where aspusers.Id == userManager.GetUserId(User)
+                                select new Subject
+                                {
+                                    subjectName = st.subjectName,
+                                    subjectId=tsub.tsubjectId
+                                });
+            return View(await subjectsLINQ.ToListAsync());
         }
     }
 }
