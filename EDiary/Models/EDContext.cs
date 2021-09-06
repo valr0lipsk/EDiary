@@ -21,7 +21,6 @@ namespace EDiary.Models
         public DbSet<Users> users { get; set; }
         public DbSet<Teacher> teachers { get; set; }
         public DbSet<Student> students { get; set; }
-        public DbSet<IdentityUser> aspnetusers { get; set; }
         public EDContext(DbContextOptions<EDContext> options):base(options)
         {
         }

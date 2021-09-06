@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using EDiary.Models
-@model IEnumerable<EDiary.Models.subjectTaught>
+@model IEnumerable<subjectTaught>
 @inject SignInManager<IdentityUser> signInManager
 @inject UserManager<IdentityUser> userManager
 <div class="container h-100">
@@ -33,11 +33,10 @@
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol class="list-group list-group-flush list-group-numbered">
-                            @*@foreach (var subject in Model)
-        {
-           <li class="list-group-item" data-id="@subject.subjectId"><a href="">@subject.subjectId</a></li>
-        }*@
-                            <li class="list-group-item"><a href="">@ViewBag.sub</a></li>
+                            @foreach (var subject in Model)
+                            {
+                                    <li class="list-group-item" data-id="@subject.tsubjectId"><a href="">@subject.subjectId</a></li>
+                            }
                         </ol>
                     </div>
                 </div>
