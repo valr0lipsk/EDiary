@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using EDiary.Models
 @model IEnumerable<EDiary.Models.subjectTaught>
-@inject SignInManager<IdentityUser> SignInManager
+@inject SignInManager<IdentityUser> signInManager
 @inject UserManager<IdentityUser> userManager
 <div class="container h-100">
     <div class="row h-100">
@@ -17,7 +17,7 @@
                         <div class="col-lg-6 col-4 ml-lg-0 ml-3 justify-content-between">
                             <div class="row ml-2">
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
-                                @if (SignInManager.IsSignedIn(User))
+                                @if (signInManager.IsSignedIn(User))
                                  {
                                     <label class="mt-0" style="font-size: 115%">@ViewBag.name</label>
                                  }
@@ -33,11 +33,12 @@
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol class="list-group list-group-flush list-group-numbered">
-                               @*@foreach (var subject in Model)
-                                 {
-                                    <li class="list-group-item" data-id="@subject.subjectId"><a href="">@subject.subjectId</a></li>
-                                 }*@
-                            </ol>
+                            @*@foreach (var subject in Model)
+        {
+           <li class="list-group-item" data-id="@subject.subjectId"><a href="">@subject.subjectId</a></li>
+        }*@
+                            <li class="list-group-item"><a href="">@ViewBag.sub</a></li>
+                        </ol>
                     </div>
                 </div>
             </div>

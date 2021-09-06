@@ -21,12 +21,8 @@ namespace EDiary.Controllers
         EDContext context;
         private UserManager<IdentityUser> userManager;
         private SignInManager<IdentityUser> signInManager;
-        public AccountsController(EDContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
-        {
-            this.context = context;
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-        }
+        public string fullname { get; set; }
+        public AccountsController(EDContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) => (this.userManager, this.signInManager, this.context) = (userManager, signInManager,context);
         //public HomeController(ILogger<HomeController> logger)
         //{
         //    _logger = logger;
@@ -44,6 +40,14 @@ namespace EDiary.Controllers
         //{
         //    return View(await context.subjectTaughts.ToListAsync());
         //}
+        public IActionResult Student()
+        {
+            SqlConnection con = new SqlConnection(Config.ConnectionString);
+            con.Open();
+            var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
+            ViewBag.name = fullname;
+            return View();
+        }
         public IActionResult Teacher()
         {
             //Users users = (Users)context.users.Where(u => u. == 1);
@@ -54,11 +58,26 @@ namespace EDiary.Controllers
             //                            select subject).ToList();
             SqlConnection con = new SqlConnection(Config.ConnectionString);
             con.Open();
-            var surname = new SqlCommand($@"select B.userSurname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}",con).ExecuteScalar().ToString();
-            var name = new SqlCommand($@"select B.userName from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
-            var lastname = new SqlCommand($@"select B.userLastname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
-            string fullname = string.Join(" ", surname, name, lastname);
+            var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
             ViewBag.name = fullname;
+            var subjects = new SqlCommand($@"SELECT sub.subjectName FROM subjects sub
+                                                            LEFT JOIN subjectTaughts st ON sub.subjectId= st.subjectId
+                                                            LEFT JOIN teachers tr ON tr.teacherId=st.teacherId
+                                                            LEFT JOIN users us ON us.idUser=tr.teacherUser
+                                                            LEFT JOIN AspNetUsers aspuse ON aspuse.Id=us.userId
+                                                            WHERE aspuse.Id={userManager.GetUserId(User)}",con).ExecuteScalar();
+            var query = from sub in context.subjects
+                        join st in context.subjectTaughts on sub.subjectId equals st.subjectId
+                        join tr in context.teachers on st.teacherId equals tr.teacherId
+                        join us in context.users on tr.teacherUser equals us.idUser
+                        join aspusers in context.aspnetusers on us.idUser equals aspusers.Id
+                        where aspusers.Id == userManager.GetUserId(User)
+                        select new
+                        {
+                            sub.subjectName,
+                            st.tsubjectId
+                        };
+            ViewBag.sub = subjects;
             return View(/*subjects*/);
         }
     }
