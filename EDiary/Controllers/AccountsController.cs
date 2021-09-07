@@ -34,7 +34,7 @@ namespace EDiary.Controllers
         }
         public IActionResult Admin()
         {
-            return RedirectToAction("Admin", "Admin");
+            return RedirectToAction("Home", "Admin");
         }
         //public async Task<IActionResult> Teacher()
         //{
