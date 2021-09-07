@@ -14,10 +14,11 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 $(document).ready(function () {
+    var url = '@Url.Action("AddStudent", "Admin")';
     $('#addSt').click(function () {
-        var url = '@Url.Action("AddStudent", "Admin")';
+        //var url = '@Url.Action("AddStudent", "Admin")';
         $("#partialDiv").load(url);
-        //$('#partialdiv').load('@Url.Content("~/Admin/AddStudent")')
+        //$('#partialdiv').load('@Url.Content("~/Admin/AddStudent")')\
     }
     )
 }

@@ -5,7 +5,7 @@ namespace EDiary.Controllers
     public class AdminController : Controller
 
     {
-        public IActionResult Home()
+        public IActionResult Admin()
         {
             return View();
         }
