@@ -20,8 +20,10 @@ $(document).ready(function () {
     $('#addSt').click(function () {
         //var url = '@Url.Action("AddStudent", "Admin")';
         //$("#partialDiv").load(url);
-        $('#partialdiv').load('@url.content("~/admin/addstudent")')
+        $('#partialdiv').load('@Url.Content("~/admin/addstudent")')
     }
     )
 }
 )
+window.history.forward();
+function noBack() { window.history.forward(); }
