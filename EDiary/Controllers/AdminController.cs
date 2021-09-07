@@ -2,6 +2,7 @@
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EDiary.Controllers
@@ -25,7 +26,7 @@ namespace EDiary.Controllers
             {
                 IdentityUser identityStudentUser = new IdentityUser { UserName = createStudent.studentLogin, PasswordHash=createStudent.studentPassword };
                 Users studentUser = new Users {userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname };
-                Student student = new Student { studentRole = "student"/*, studentGroup = createStudent.studentGroup*/ };
+                Student student = new Student { studentRole = "student", studentGroup = createStudent.studentGroup};
                 var result = await userManager.CreateAsync(identityStudentUser, createStudent.studentPassword);
                 if (result.Succeeded)
                 {

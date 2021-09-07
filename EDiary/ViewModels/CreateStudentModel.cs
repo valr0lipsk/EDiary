@@ -29,7 +29,7 @@ namespace EDiary.ViewModels
 
         [Required]
         [Display(Name = "Группа студента")]
-        public string studentGroup { get; set; }
+        public int studentGroup { get; set; }
 
     }
 }
