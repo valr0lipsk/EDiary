@@ -14,14 +14,29 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 $(document).ready(function () {
-    var url = '@Url.Action("AddStudent", "Admin")';
+    //добавить студента
     $('#addSt').click(function () {
-        //var url = '@Url.Action("AddStudent", "Admin")';
-        $("#partialDiv").load(url);
-        //$('#partialdiv').load('@Url.Content("~/Admin/AddStudent")')\
-    }
-    )
+        $("#partialDiv").load('/Admin/AddStudent');
+    })
+    //добавить преподавателя
+    $('#addT').click(function () {
+        $("#partialDiv").load('/Admin/AddTeacher');
+    })
+    //добавить предмет
+    $('#addSb').click(function () {
+        $("#partialDiv").load('/Admin/AddSubject');
+    })
+    //все студенты
+    $('#allSt').click(function () {
+        $("#partialDiv").load('/Admin/ShowStudents');
+    })
+    //все преподаватели
+    $('#allT').click(function () {
+        $("#partialDiv").load('/Admin/ShowTeachers');
+    })
+    //все предметы
+    $('#allSb').click(function () {
+        $("#partialDiv").load('/Admin/ShowSubjects');
+    })
 }
 )
-//    window.history.forward();
-//function noBack() { window.history.forward(); }
