@@ -1,7 +1,4 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿
 window.onscroll = function () { scrollFunction() };
 
 function scrollFunction() {
@@ -18,12 +15,12 @@ function topFunction() {
 }
 $(document).ready(function () {
     $('#addSt').click(function () {
-        //var url = '@Url.Action("AddStudent", "Admin")';
-        //$("#partialDiv").load(url);
-        $('#partialdiv').load('@Url.Content("~/admin/addstudent")')
+        var url = '@Url.Action("AddStudent", "Admin")';
+        $("#partialDiv").load(url);
+        //$('#partialdiv').load('@Url.Content("~/Admin/AddStudent")')
     }
     )
 }
 )
-window.history.forward();
-function noBack() { window.history.forward(); }
+//    window.history.forward();
+//function noBack() { window.history.forward(); }

@@ -3,6 +3,7 @@
 namespace EDiary.Controllers
 {
     public class AdminController : Controller
+
     {
         public IActionResult AddStudent()
         {
@@ -31,6 +32,10 @@ namespace EDiary.Controllers
         public IActionResult ShowSubjects()
         {
             return PartialView("~/Views/Admin/_tableSubject.cshtml");
+        }
+        public IActionResult Admin()
+        {
+            return View();
         }
     }
 }
