@@ -8,11 +8,10 @@ namespace EDiary.Models
 {
     public class loginViewModel
     {
-        [Required (ErrorMessage = "Введите логин")]
+        [Required]
         [Display(Name = "Логин")]
         public string userName { get; set; }
-
-        [Required (ErrorMessage = "Введите пароль")]
+        [Required]
         [UIHint("password")]
         [Display (Name = "Пароль")]
         public string Password { get; set; }

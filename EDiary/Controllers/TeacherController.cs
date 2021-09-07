@@ -22,6 +22,15 @@ namespace EDiary.Controllers
         {
             SqlConnection con = new SqlConnection(Config.ConnectionString);
             con.Open();
+            var name = (from user in context.users
+                       join aspusers in context.Users on user.userId equals aspusers.Id
+                       where user.userId == userManager.GetUserId(User)
+                       select new Users
+                       {
+                           userSurname = user.userSurname,
+                           userName = user.userName,
+                           userLastname = user.userLastname
+                       }).ToString();
             var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
             ViewBag.name = fullname;
             var subjectsLINQ = from tsub in context.subjectTaughts
