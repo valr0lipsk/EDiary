@@ -63,5 +63,9 @@ namespace EDiary.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Login", "LogIn");
         }
+        public IActionResult AlertMessage()
+        {
+            return PartialView("~/Views/Login/_alertMessage.cshtml");
+        }
     }
 }

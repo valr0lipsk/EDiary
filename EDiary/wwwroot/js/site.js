@@ -13,6 +13,8 @@ function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
+
+
 $(document).ready(function () {
     //добавить студента
     $('#addSt').click(function () {
@@ -38,5 +40,6 @@ $(document).ready(function () {
     $('#allSb').click(function () {
         $("#partialDiv").load('/Admin/ShowSubjects');
     })
+
 }
 )
