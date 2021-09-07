@@ -27,6 +27,7 @@ namespace EDiary.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            //добавление ролей
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Id = "admin",
@@ -45,7 +46,7 @@ namespace EDiary.Models
                 Name = "student",
                 NormalizedName = "STUDENT"
             });
-
+            //1-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = "1",
@@ -67,7 +68,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 1
             });
-
+            //2-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = "2",
@@ -89,6 +90,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 2
             });
+            //1-ый студент
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = "3",
@@ -111,6 +113,7 @@ namespace EDiary.Models
                studentRole="student",
                studentUser=3
             });
+            //добавление админа
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = "4",
@@ -123,6 +126,94 @@ namespace EDiary.Models
                 adminId = 1,
                 adminRole = "admin",
                 adminUser = "4"
+            });
+            //3-ий препод
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "5",
+                UserName = "tr000003",
+                NormalizedUserName = "TR000003",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "3ApHY46c")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 4,
+                userSurname = "Терешко",
+                userName = "Ольга",
+                userLastname = "Николаевна",
+                userId = "5",
+            });
+            modelBuilder.Entity<Teacher>().HasData(new Teacher
+            {
+                teacherId = 3,
+                teacherRole = "teacher",
+                teacherUser = 4
+            });
+            //4-ый препод
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "6",
+                UserName = "tr000004",
+                NormalizedUserName = "TR000004",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "56W3gpHz")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 5,
+                userSurname = "Апанасевич",
+                userName = "Сергей",
+                userLastname = "Александрович",
+                userId = "6",
+            });
+            modelBuilder.Entity<Teacher>().HasData(new Teacher
+            {
+                teacherId = 4,
+                teacherRole = "teacher",
+                teacherUser = 5
+            });
+            //5-ый препод
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "7",
+                UserName = "tr000005",
+                NormalizedUserName = "TR000005",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "ph2jCcD8")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 6,
+                userSurname = "Карпович",
+                userName = "Дарья",
+                userLastname = "Валерьевна",
+                userId = "7",
+            });
+            modelBuilder.Entity<Teacher>().HasData(new Teacher
+            {
+                teacherId = 5,
+                teacherRole = "teacher",
+                teacherUser = 6
+            });
+            //6-ый препод
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "8",
+                UserName = "tr000006",
+                NormalizedUserName = "TR000006",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "7jOD2Cof")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 7,
+                userSurname = "Гордеюк",
+                userName = "Анастасия",
+                userLastname = "Владимировна",
+                userId = "8",
+            });
+            modelBuilder.Entity<Teacher>().HasData(new Teacher
+            {
+                teacherId = 6,
+                teacherRole = "teacher",
+                teacherUser = 7
             });
 
         }
