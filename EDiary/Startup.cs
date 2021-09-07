@@ -94,14 +94,7 @@ namespace EDiary
             //настройка маршрутизации
             app.UseEndpoints(endpoints =>
             {
-                /*endpoints.MapAreaControllerRoute(
-                    name: "AdminArea",
-                    areaName: "Admin",
-                    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");*/
-                //endpoints.MapControllerRoute("area", "{area:exists}/{controller=Home}/{action=Teacher}/{id?}");
-                //endpoints.MapControllerRoute("teacher", "{area:exists}/{controller=Teacher}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
-
+                  endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
             });
 
         }

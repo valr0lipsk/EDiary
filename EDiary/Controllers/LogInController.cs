@@ -16,7 +16,6 @@ namespace EDiary.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
-        EDContext context;
         public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) => (this.userManager, this.signInManager) = (userManager, signInManager);
 
         [AllowAnonymous]
@@ -25,12 +24,7 @@ namespace EDiary.Controllers
             ViewBag.returnUrl = returnUrl;
             return View(new loginViewModel());
         }
-        //[HttpGet]
-        //public IActionResult Login(string returnUrl = null)
-        //{
-        //    return View(new loginViewModel { returnUrl = returnUrl });
-        //}
-
+ 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login(loginViewModel loginModel, string returnUrl)
@@ -56,17 +50,6 @@ namespace EDiary.Controllers
                         {
                             return RedirectToAction("Student", "Student");
                         }
-                        //if (userManager.IsInRoleAsync(user,"admin1"))
-                        //{
-
-                        //}
-                        //{
-                        //    return RedirectToAction("Admin", "Home");
-                        //}
-                        //return Redirect("~/Home/Index");
-                        //return Redirect(returnUrl ?? "/");
-                        //return Redirect(loginModel.returnUrl);
-                        //return RedirectToAction("Admin", "Home");
                     }  
                 }
                 ModelState.AddModelError(nameof(loginViewModel.userName), "Неправильно введен логин или пароль");
