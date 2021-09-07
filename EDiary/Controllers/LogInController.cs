@@ -46,15 +46,15 @@ namespace EDiary.Controllers
                     {
                         if (user.UserName=="admin")
                         {
-                            return RedirectToAction("Admin", "Accounts");
+                            return RedirectToAction("Admin", "Admin");
                         }
                         if (user.UserName.Contains("tr"))
                         {
-                            return RedirectToAction("Teacher", "Accounts");
+                            return RedirectToAction("Teacher", "Teacher");
                         }
                         if (user.UserName.Contains("st"))
                         {
-                            return RedirectToAction("Student", "Accounts");
+                            return RedirectToAction("Student", "Student");
                         }
                         //if (userManager.IsInRoleAsync(user,"admin1"))
                         //{
