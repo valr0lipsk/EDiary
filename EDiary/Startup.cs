@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using EDiary.IRepositories;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EDiary
 {
@@ -67,7 +68,7 @@ namespace EDiary
             //настройка политики авторизации для админов
             services.AddAuthorization(x =>
             {
-                x.AddPolicy("area", policy => { policy.RequireRole("Area"); });
+                //x.AddPolicy("area", policy => { policy.RequireRole("Area"); });
                 //x.AddPolicy("teacherArea", teacherPolicy => { teacherPolicy.RequireRole("teacher"); });
             });
         }
