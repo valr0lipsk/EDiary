@@ -127,6 +127,12 @@ body {
     background-image: url(source/background-3.jpg)
 }
 
+table {
+    display: block;
+    overflow: auto;
+    max-width: 100%;
+}
+
 #onTop {
     display: none;
     position: fixed;
@@ -191,3 +197,14 @@ body {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
+
+.vt-text{
+    writing-mode:vertical-lr;
+    font-size: 75%;
+    font-style: oblique;
+}
+tr, td{
+    text-align: center;
+    text-anchor:middle;
+}
+

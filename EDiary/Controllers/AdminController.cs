@@ -1,5 +1,6 @@
 ﻿using EDiary.Models;
 using EDiary.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         UserManager<IdentityUser> userManager;
