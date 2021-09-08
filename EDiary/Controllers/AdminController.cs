@@ -16,10 +16,7 @@ namespace EDiary.Controllers
         {
             return View();
         }
-        public IActionResult AddStudent()
-        {
-            return PartialView("~/Views/Admin/_addStudent.cshtml");
-        }
+
         public async Task<IActionResult> AddStudent(CreateStudentModel createStudent)
         {
             if (ModelState.IsValid)
@@ -30,7 +27,7 @@ namespace EDiary.Controllers
                 var result = await userManager.CreateAsync(identityStudentUser, createStudent.studentPassword);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Admin");
+                    return RedirectToAction("AddStudent");
                 }
                 else
                 {
@@ -40,7 +37,7 @@ namespace EDiary.Controllers
                     }
                 }
             }
-            return View(createStudent);
+            return PartialView("~/Views/Admin/_addStudent.cshtml",createStudent);
         }
         public IActionResult AddTeacher()
         {
