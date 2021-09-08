@@ -51,6 +51,12 @@ namespace EDiary
                 opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
                 opts.Password.RequireDigit = true; //требуются ли цифры
             }).AddEntityFrameworkStores<EDContext>().AddDefaultTokenProviders();
+            //добавление и настройка сессии
+            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(6);
+            });
             //подключение аутентификации и куки
             services.ConfigureApplicationCookie(options =>
             {
@@ -58,6 +64,7 @@ namespace EDiary
                 options.Cookie.Name = "ElectronicDiaryMRK";
                 options.LoginPath = "/LogIn/Login";
                 options.AccessDeniedPath = "/LogIn/AccessDenied";
+                options.LogoutPath = "/LogIn/Logout";
             });
             //передача сервисов для контроллеров и представлений
             services.AddControllersWithViews(x =>
