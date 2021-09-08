@@ -14,6 +14,9 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 
+//function noBack() {
+//    window.history.forward();
+//}
 
 $(document).ready(function () {
     //добавить студента
@@ -40,6 +43,5 @@ $(document).ready(function () {
     $('#allSb').click(function () {
         $("#partialDiv").load('/Admin/ShowSubjects');
     })
-
 }
 )
