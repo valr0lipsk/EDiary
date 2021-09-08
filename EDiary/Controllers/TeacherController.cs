@@ -1,6 +1,7 @@
 ﻿using EDiary.Models;
 using EDiary.Service;
 using EDiary.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.Controllers
 {
+    [Authorize]
     public class TeacherController : Controller
     {
         EDContext context;
