@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-
+using EDiary.Repositories;
 namespace EDiary.Controllers
 {
     public class AdminController : Controller
@@ -38,7 +38,6 @@ namespace EDiary.Controllers
                     }
                 }
             }
-            
             return PartialView("~/Views/Admin/_addStudent.cshtml");
         }
         public IActionResult AddTeacher()
