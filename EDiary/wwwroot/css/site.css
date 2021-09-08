@@ -33,6 +33,14 @@ html {
     }
 }
 
+@media (min-height: 300px)
+{
+    html
+    {
+        min-height: 80vh;
+    }
+}
+
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
@@ -51,11 +59,12 @@ button.accept-policy {
 }
 
 .footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
     background-color: aliceblue;
     width: 100%;
     white-space: nowrap;
+    margin-top:0;
     line-height: 60px;
 }
 
@@ -172,7 +181,9 @@ body {
 .h100 {
     /*min-height: 60vh*/
     box-sizing: border-box;
-    min-height: 60vh;
+    min-height: 76vh;
+    margin-bottom: 0px;
+    border: none;
 }
 
 .cursor {
