@@ -33,13 +33,6 @@ html {
     }
 }
 
-@media (min-height: 300px)
-{
-    html
-    {
-        min-height: 80vh;
-    }
-}
 
 .border-top {
     border-top: 1px solid #e5e5e5;
@@ -59,7 +52,7 @@ button.accept-policy {
 }
 
 .footer {
-    position: relative;
+    position:page;
     bottom: 0;
     background-color: aliceblue;
     width: 100%;
@@ -151,9 +144,6 @@ body {
     font-size: 230%;
 }
 
-#myBtn:hover {
-    background-color: #555; /* Add a dark-grey background on hover */
-}
 
 .accountF {
     background: #FFFFFF;
@@ -185,6 +175,13 @@ body {
     margin-bottom: 0px;
     border: none;
 }
+
+.h100-2 {
+    box-sizing: border-box;
+    min-height: 63vh;
+    margin-bottom: 0px;
+}
+
 
 .cursor {
     cursor: pointer;
