@@ -33,6 +33,7 @@ html {
     }
 }
 
+
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
@@ -51,11 +52,12 @@ button.accept-policy {
 }
 
 .footer {
-    position: absolute;
+    position:page;
     bottom: 0;
     background-color: aliceblue;
     width: 100%;
     white-space: nowrap;
+    margin-top:0;
     line-height: 60px;
 }
 
@@ -142,9 +144,6 @@ body {
     font-size: 230%;
 }
 
-#myBtn:hover {
-    background-color: #555; /* Add a dark-grey background on hover */
-}
 
 .accountF {
     background: #FFFFFF;
@@ -172,8 +171,17 @@ body {
 .h100 {
     /*min-height: 60vh*/
     box-sizing: border-box;
-    min-height: 60vh;
+    min-height: 76vh;
+    margin-bottom: 0px;
+    border: none;
 }
+
+.h100-2 {
+    box-sizing: border-box;
+    min-height: 63vh;
+    margin-bottom: 0px;
+}
+
 
 .cursor {
     cursor: pointer;
