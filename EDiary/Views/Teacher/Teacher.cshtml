@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using EDiary.Models
 @using EDiary.ViewModels
-@model GroupSubject
+@model TeacherGroupSubject
 @inject SignInManager<IdentityUser> signInManager
 @inject UserManager<IdentityUser> userManager
 <div class="container h-100">
@@ -20,7 +20,10 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
                                 @if (signInManager.IsSignedIn(User))
                                 {
-                                    <label class="mt-0" style="font-size: 115%">@ViewBag.name</label>
+                                    @foreach (var teacherName in Model.Users)
+                                    {
+                                    <label class="mt-0" style="font-size: 115%">@teacherName.userSurname @teacherName.userName @teacherName.userLastname</label>
+                                    }
                                 }
                             </div>
                         </div>
@@ -39,7 +42,6 @@
                                <li class="list-group-item" data-id="@subjectsGroups.Second.subjectId"><a href="">@subjectsGroups.Second.subjectName (@subjectsGroups.First.groupName)</a></li>
                             }
                         </ol>
-
                     </div>
                 </div>
             </div>

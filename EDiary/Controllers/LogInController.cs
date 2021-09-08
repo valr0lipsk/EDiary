@@ -19,9 +19,8 @@ namespace EDiary.Controllers
         public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) => (this.userManager, this.signInManager) = (userManager, signInManager);
 
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
-            ViewBag.returnUrl = returnUrl;
             return View(new loginViewModel());
         }
  

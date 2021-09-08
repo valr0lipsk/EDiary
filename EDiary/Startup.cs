@@ -24,7 +24,7 @@ namespace EDiary
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public Startup(IConfiguration configuration) =>Configuration = configuration;
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -45,7 +45,7 @@ namespace EDiary
             //подключение идентификации пользователей
             services.AddIdentity<IdentityUser, IdentityRole>(opts =>
             {
-                opts.Password.RequiredLength = 10;   // минимальная длина
+                opts.Password.RequiredLength = 8;   // минимальная длина
                 opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
                 opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
                 opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
@@ -67,17 +67,9 @@ namespace EDiary
                 options.LogoutPath = "/LogIn/Logout";
             });
             //передача сервисов для контроллеров и представлений
-            services.AddControllersWithViews(x =>
-            {
-                x.Conventions.Add(new Authorization("area", "Area"));
-                //x.Conventions.Add(new teacherAuthorization("teacher", "teacherArea"));
-            });
+            services.AddControllersWithViews();
             //настройка политики авторизации для админов
-            services.AddAuthorization(x =>
-            {
-                //x.AddPolicy("area", policy => { policy.RequireRole("Area"); });
-                //x.AddPolicy("teacherArea", teacherPolicy => { teacherPolicy.RequireRole("teacher"); });
-            });
+            services.AddAuthorization();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

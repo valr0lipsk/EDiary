@@ -21,11 +21,17 @@ namespace EDiary.Controllers
 
         public IActionResult Student()
         {
-            SqlConnection con = new SqlConnection(Config.ConnectionString);
-            con.Open();
-            var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
-            ViewBag.name = fullname;
-            return View();
+            var studentNameLINQ = (from user in context.users
+                        join aspusers in context.Users on user.userId equals aspusers.Id
+                        where user.userId == userManager.GetUserId(User)
+                        select new Users
+                        {
+                            userSurname = user.userSurname,
+                            userName = user.userName,
+                            userLastname = user.userLastname
+                        });
+            var studentFullname = studentNameLINQ.ToList();
+            return View(studentFullname);
         }
     }
 }

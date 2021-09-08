@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class GroupSubject
+    public class TeacherGroupSubject
     {
         public IEnumerable<collegeGroup> Groups { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
+        public IEnumerable<Users> Users { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace EDiary.Controllers
     {
         UserManager<IdentityUser> userManager;
         EDContext context;
-        public AdminController(UserManager<IdentityUser> userManager) => this.userManager = userManager;
+        public AdminController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager,context);
         public IActionResult Admin()
         {
             return View();
@@ -54,12 +54,102 @@ namespace EDiary.Controllers
 
         public IActionResult ShowStudents()
         {
-            return PartialView("~/Views/Admin/_tableStudent.cshtml");
+            var studentsLINQ = from us in context.users
+                               join st in context.students on us.idUser equals st.studentUser
+                               join gr in context.groups on st.studentGroup equals gr.groupId
+                               join aspuser in context.Users on us.userId equals aspuser.Id
+                               where st.studentRole == "student"
+                               select new Student
+                               {
+                                   studentId = st.studentId
+                               };
+            var usersLINQ = from us in context.users
+                            join st in context.students on us.idUser equals st.studentUser
+                            join gr in context.groups on st.studentGroup equals gr.groupId
+                            join aspuser in context.Users on us.userId equals aspuser.Id
+                            where st.studentRole=="student"
+                            select new Users
+                            {
+                                userLastname = us.userLastname,
+                                userName = us.userName,
+                                userSurname = us.userSurname
+                            };
+            var groupsLINQ = from us in context.users
+                             join st in context.students on us.idUser equals st.studentUser
+                             join gr in context.groups on st.studentGroup equals gr.groupId
+                             join aspuser in context.Users on us.userId equals aspuser.Id
+                             where st.studentRole == "student"
+                             select new collegeGroup
+                             {
+                                 groupName = gr.groupName
+                             };
+            var aspusersLINQ = from us in context.users
+                             join st in context.students on us.idUser equals st.studentUser
+                             join gr in context.groups on st.studentGroup equals gr.groupId
+                             join aspuser in context.Users on us.userId equals aspuser.Id
+                             where st.studentRole == "student"
+                             select new IdentityUser
+                             {
+                                 UserName=aspuser.UserName
+                             };
+            var students = studentsLINQ.ToList();
+            var groups = groupsLINQ.ToList();
+            var users = usersLINQ.ToList();
+            var aspusers = aspusersLINQ.ToList();
+            var aspUserStudentGroup = new AspUserStudentGroup { Students = students, Groups = groups, Users = users, AspUsers = aspusers };
+            return PartialView("~/Views/Admin/_tableStudent.cshtml", aspUserStudentGroup);
         }
 
         public IActionResult ShowTeachers()
         {
-            return PartialView("~/Views/Admin/_tableTeacher.cshtml");
+            var teachersLINQ = from us in context.users
+                               join tr in context.teachers on us.idUser equals tr.teacherUser
+                               join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                               join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                               join aspuser in context.Users on us.userId equals aspuser.Id
+                               where tr.teacherRole == "teacher"
+                               select new Teacher
+                               {
+                                   teacherId = tr.teacherId
+                               };
+            var usersLINQ = from us in context.users
+                            join tr in context.teachers on us.idUser equals tr.teacherUser
+                            join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                            join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                            join aspuser in context.Users on us.userId equals aspuser.Id
+                            where tr.teacherRole == "teacher"
+                            select new Users
+                            {
+                                userLastname = us.userLastname,
+                                userName = us.userName,
+                                userSurname = us.userSurname
+                            };
+            var subjectsLINQ = from us in context.users
+                             join tr in context.teachers on us.idUser equals tr.teacherUser
+                             join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                             join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                             join aspuser in context.Users on us.userId equals aspuser.Id
+                             where tr.teacherRole == "teacher"
+                             select new Subject
+                             {
+                                 subjectName=sub.subjectName
+                             };
+            var aspusersLINQ = from us in context.users
+                               join tr in context.teachers on us.idUser equals tr.teacherUser
+                               join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                               join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                               join aspuser in context.Users on us.userId equals aspuser.Id
+                               where tr.teacherRole == "teacher"
+                               select new IdentityUser
+                               {
+                                   UserName = aspuser.UserName
+                               };
+            var teachers = teachersLINQ.ToList();
+            var subjects = subjectsLINQ.ToList();
+            var users = usersLINQ.ToList();
+            var aspusers = aspusersLINQ.ToList();
+            var aspUserTeacherSubject = new AspUserTeacherSubject { Subjects = subjects, Teachers = teachers, Users = users, AspUsers = aspusers };
+            return PartialView("~/Views/Admin/_tableTeacher.cshtml",aspUserTeacherSubject);
         }
         public IActionResult ShowSubjects()
         {

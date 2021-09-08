@@ -1,25 +1,29 @@
-﻿<table class="table table-hover table-bordered">  @*Таблица студентов*@
+﻿@using EDiary.Models
+@using EDiary.ViewModels
+@model AspUserStudentGroup
+<table class="table table-hover table-bordered">
+    @*Таблица студентов*@
     <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Логин</th>
-                <th scope="col">Фамилия</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Отчество</th>
-                <th scope="col">Группа</th>
-            </tr>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">Группа</th>
+        </tr>
     </thead>
     <tbody>
-           @*@foreach (var student in Model)
+        @foreach (var userStudentGroup in Model.Users.Zip(Model.Students.Zip(Model.Groups.Zip(Model.AspUsers))))
             {
                <tr>
-                   <td>@student.Id</td>
-                   <td>@student.Login</td>
-                   <td>@student.Surname</td>
-                   <td>@student.Name</td>
-                   <td>@student.secName</td>
-                   <td>@student.Group</td>
+                   <td>@userStudentGroup.Second.First.studentId</td>
+                   <td>@userStudentGroup.Second.Second.Second.UserName</td>
+                   <td>@userStudentGroup.First.userSurname</td>
+                   <td>@userStudentGroup.First.userName</td>
+                   <td>@userStudentGroup.First.userLastname</td>
+                   <td>@userStudentGroup.Second.Second.First.groupName</td>
                </tr>
-            }*@
+            }
     </tbody>
 </table>

@@ -23,9 +23,7 @@ namespace EDiary.Controllers
 
         public IActionResult Teacher()
         {
-            SqlConnection con = new SqlConnection(Config.ConnectionString);
-            con.Open();
-            var name = (from user in context.users
+            var teacherNameLINQ = (from user in context.users
                         join aspusers in context.Users on user.userId equals aspusers.Id
                         where user.userId == userManager.GetUserId(User)
                         select new Users
@@ -34,8 +32,7 @@ namespace EDiary.Controllers
                             userName = user.userName,
                             userLastname = user.userLastname
                         });
-            var fullname = new SqlCommand($@"select concat(B.userSurname,' ',B.userName, ' ', B.userLastname) as fullname from users B inner join AspNetUsers E on B.userId=E.Id where B.userId={userManager.GetUserId(User)}", con).ExecuteScalar().ToString();
-            ViewBag.name = fullname;
+            var teacherFullname = teacherNameLINQ.ToList();
             var subjectsLINQ = from tsub in context.subjectTaughts
                                join st in context.subjects on tsub.subjectId equals st.subjectId
                                join tr in context.teachers on tsub.teacherId equals tr.teacherId
@@ -60,8 +57,8 @@ namespace EDiary.Controllers
                             };
             var subjects = subjectsLINQ.ToList();
             var groups = groupLINQ.ToList();
-            var subjectsGroups = new GroupSubject { Subjects = subjects, Groups = groups };
-            return View(subjectsGroups);
+            var teacherSubjectsGroups = new TeacherGroupSubject { Subjects = subjects, Groups = groups, Users = teacherFullname };
+            return View(teacherSubjectsGroups);
         }
     }
 }

@@ -113,6 +113,29 @@ namespace EDiary.Models
                studentRole="student",
                studentUser=3
             });
+            //2-ой студент
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "9",
+                UserName = "st000002",
+                NormalizedUserName = "ST000002",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4iNvZYI9")
+            });
+            modelBuilder.Entity<Users>().HasData(new Users
+            {
+                idUser = 8,
+                userSurname = "Липская",
+                userName = "Валерия",
+                userLastname = "Александровна",
+                userId = "9",
+            });
+            modelBuilder.Entity<Student>().HasData(new Student
+            {
+                studentId = 2,
+                studentGroup = 2,
+                studentRole = "student",
+                studentUser = 8
+            });
             //добавление админа
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
