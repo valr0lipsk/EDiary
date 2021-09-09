@@ -51,4 +51,4 @@ $(document).ready(function () {
         $("#partialDiv").load('/Admin/ShowSubjects');
     })
 }
-)
+);
