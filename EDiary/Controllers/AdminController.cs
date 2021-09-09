@@ -28,6 +28,7 @@ namespace EDiary.Controllers
                 if (char.IsLetterOrDigit(c))
                     pass += c;
             }
+            CreateStudentModel createStudentModel
             return pass;
         }
         public IActionResult Admin()
