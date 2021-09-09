@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using EDiary.Repositories;
-using System.Collections.Generic;
+using System;
 
 namespace EDiary.Controllers
 {
@@ -17,6 +17,19 @@ namespace EDiary.Controllers
         UserManager<IdentityUser> userManager;
         EDContext context;
         public AdminController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager,context);
+
+        public static string generatePassword()
+        {
+            string pass = "";
+            var r = new Random();
+            while (pass.Length < 8)
+            {
+                char c = (char)r.Next(33, 125);
+                if (char.IsLetterOrDigit(c))
+                    pass += c;
+            }
+            return pass;
+        }
         public IActionResult Admin()
         {
             return View();

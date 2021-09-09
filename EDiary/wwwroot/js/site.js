@@ -14,15 +14,22 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 
-//function noBack() {
-//    window.history.forward();
-//}
+function generatePassword() {
+    var length = 8,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+}
 
 $(document).ready(function () {
     //добавить студента
     $('#addSt').click(function () {
         $("#partialDiv").load('/Admin/AddStudent');
-    })
+    });
+
     //добавить преподавателя
     $('#addT').click(function () {
         $("#partialDiv").load('/Admin/AddTeacher');
