@@ -28,8 +28,9 @@ namespace EDiary.Controllers
                 if (char.IsLetterOrDigit(c))
                     pass += c;
             }
-            CreateStudentModel createStudentModel
-            return pass;
+            CreateStudentModel createStudentModel = new CreateStudentModel();
+            createStudentModel.studentPassword = pass;
+            return createStudentModel.studentPassword;
         }
         public IActionResult Admin()
         {
@@ -41,22 +42,22 @@ namespace EDiary.Controllers
             if (ModelState.IsValid)
             {
                 IdentityUser identityStudentUser = new IdentityUser { UserName = createStudent.studentLogin, PasswordHash=createStudent.studentPassword };
-                Users studentUser = new Users {userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname };
-                Student student = new Student { studentRole = "student", studentGroup = createStudent.studentGroup};
-                var result = await userManager.CreateAsync(identityStudentUser, createStudent.studentPassword);
-                if (result.Succeeded)
+                Users studentUser = new Users {userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname, userId=identityStudentUser.Id };
+                Student student = new Student {studentUser=studentUser.idUser, studentRole = "student", studentGroup = createStudent.studentGroup};
+                var user = await userManager.CreateAsync(identityStudentUser, createStudent.studentPassword);
+                if (user.Succeeded)
                 {
                     return RedirectToAction("AddStudent");
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in user.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
             }
-            return PartialView("~/Views/Admin/_addStudent.cshtml");
+            return PartialView("~/Views/Admin/_addStudent.cshtml", createStudent);
         }
         public IActionResult AddTeacher()
         {

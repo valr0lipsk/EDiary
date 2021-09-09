@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EDiary.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace EDiary.ViewModels
         [Required]
         [Display(Name = "Группа студента")]
         public int studentGroup { get; set; }
+        public IEnumerable<collegeGroup> groups;
 
     }
 }

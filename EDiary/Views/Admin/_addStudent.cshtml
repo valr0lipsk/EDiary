@@ -1,5 +1,7 @@
-﻿@model IEnumerable<collegeGroup>
-@*<form class="row g-3 needs-validation" novalidate>*@
+﻿@using EDiary.Models
+@using EDiary.ViewModels
+@model CreateStudentModel
+<form asp-controller="Admin" asp-action="AddStudent" class="row g-3 needs-validation" novalidate>
     <div class="col-md-4">
         <label for="validationCustom02" class="form-label mb-0">Фамилия</label>
         <input type="text" class="form-control" id="validationCustom02" required>
@@ -30,14 +32,14 @@
             <option>1</option>
             <option>56</option>
         </datalist>
-        <!--<datalist id="groups">-->
-        @*@foreach (var group in Model)
+        <datalist id="groups">
+        @foreach (var group in Model.groups)
             {
                <option>@group.groupName</option>
-            }*@
-        <!--</datalist>-->
+            }
+        </datalist>
     </div>
     <div class="col-12">
         <button class="btn btn-primary" type="submit">Сохранить учащегося</button>
     </div>
-@*</form>*@
+</form>
