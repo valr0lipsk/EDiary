@@ -129,38 +129,38 @@ namespace EDiary.Controllers
                                {
                                    teacherId = tr.teacherId
                                };
-            var usersLINQ = from us in context.users
-                            join tr in context.teachers on us.idUser equals tr.teacherUser
-                            join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                            join sub in context.subjects on subTaught.subjectId equals sub.subjectId
-                            join aspuser in context.Users on us.userId equals aspuser.Id
-                            where tr.teacherRole == "teacher"
-                            select new Users
-                            {
-                                userLastname = us.userLastname,
-                                userName = us.userName,
-                                userSurname = us.userSurname
-                            };
-            var subjectsLINQ = from us in context.users
+            var usersLINQ =  from us in context.users
                              join tr in context.teachers on us.idUser equals tr.teacherUser
                              join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
                              join sub in context.subjects on subTaught.subjectId equals sub.subjectId
                              join aspuser in context.Users on us.userId equals aspuser.Id
                              where tr.teacherRole == "teacher"
-                             select new Subject
+                             select new Users
                              {
-                                 subjectName=sub.subjectName
+                                 userLastname = us.userLastname,
+                                 userName = us.userName,
+                                 userSurname = us.userSurname
                              };
-            var aspusersLINQ = from us in context.users
-                               join tr in context.teachers on us.idUser equals tr.teacherUser
-                               join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                               join sub in context.subjects on subTaught.subjectId equals sub.subjectId
-                               join aspuser in context.Users on us.userId equals aspuser.Id
-                               where tr.teacherRole == "teacher"
-                               select new IdentityUser
-                               {
-                                   UserName = aspuser.UserName
-                               };
+            var subjectsLINQ =  from us in context.users
+                                join tr in context.teachers on us.idUser equals tr.teacherUser
+                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                                join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                                join aspuser in context.Users on us.userId equals aspuser.Id
+                                where tr.teacherRole=="teacher"
+                                select new Subject
+                                {
+                                    subjectName = sub.subjectName
+                                };
+            var aspusersLINQ =  from us in context.users
+                                join tr in context.teachers on us.idUser equals tr.teacherUser
+                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                                join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                                join aspuser in context.Users on us.userId equals aspuser.Id
+                                where tr.teacherRole == "teacher"
+                                select new IdentityUser
+                                {
+                                    UserName = aspuser.UserName
+                                };
             var teachers = teachersLINQ.ToList();
             var subjects = subjectsLINQ.ToList();
             var users = usersLINQ.ToList();
