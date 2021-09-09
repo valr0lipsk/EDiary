@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using EDiary.Repositories;
+using System.Collections.Generic;
+
 namespace EDiary.Controllers
 {
     [Authorize]
