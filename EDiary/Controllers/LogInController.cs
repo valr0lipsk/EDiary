@@ -18,15 +18,17 @@ namespace EDiary.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) => (this.userManager, this.signInManager) = (userManager, signInManager);
 
+        //представление авторизации
         [AllowAnonymous]
         public IActionResult Login()
         {
             return View(new loginViewModel());
         }
- 
+        
+        //авторизация
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(loginViewModel loginModel, string returnUrl)
+        public async Task<IActionResult> Login(loginViewModel loginModel)
         {
             if (ModelState.IsValid)
             {
@@ -56,12 +58,15 @@ namespace EDiary.Controllers
             return View(loginModel);
         }
 
+        //выход
         [Authorize]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Login", "LogIn");
         }
+        
+        //ошибка
         public IActionResult AlertMessage()
         {
             return PartialView("~/Views/Login/_alertMessage.cshtml");

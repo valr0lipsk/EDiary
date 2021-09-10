@@ -7,11 +7,11 @@
     </div>
     <div class="col-md-5">
         <label for="validationCustom02" class="form-label mb-0">Преподаватель</label>
-        <input asp-for="teacherId" type="text" class="form-control" id="validationCustom02" list="teachers" required>
+        <input asp-for="teacherId" type="text" class="form-control"  id="validationCustom02" list="teachers" required>
         <datalist id="teachers">
                 @foreach (var teacher in Model.Users.Zip(Model.Teachers))
                  {
-                    <option>@teacher.First.userSurname @teacher.First.userName @teacher.First.userLastname</option>
+                    <option data-id="@teacher.Second.teacherId">@teacher.First.userSurname @teacher.First.userName @teacher.First.userLastname</option>
                  }
             </datalist>
     </div>
@@ -21,11 +21,11 @@
         <datalist id="groups">
                 @foreach (var group in Model.Groups)
                  {
-                    <option>@group.groupName</option>
+                    <option data-id="@group.groupId">@group.groupName</option>
                  }
             </datalist>
     </div>
     <div class="col-12">
-        <button asp-controller="Admin" asp-action="AddSubject" class="btn btn-primary" type="submit">Сохранить предмет</button>
+        <button class="btn btn-primary" type="submit">Сохранить предмет</button>
     </div>
 </form>

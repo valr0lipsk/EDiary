@@ -18,9 +18,9 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        private SignInManager<IdentityUser> signInManager;
-        public TeacherController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context)=> (this.userManager, this.signInManager, this.context) = (userManager, signInManager, context);
+        public TeacherController(UserManager<IdentityUser> userManager, EDContext context)=> (this.userManager, this.context) = (userManager, context);
 
+        //представление препода(фамилия, предметы и группы)
         public IActionResult Teacher()
         {
             var teacherNameLINQ = (from user in context.users

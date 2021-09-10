@@ -16,9 +16,9 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        private SignInManager<IdentityUser> signInManager;
-        public StudentController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context) => (this.userManager, this.signInManager, this.context) = (userManager, signInManager, context);
+        public StudentController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
 
+        //представление ученика(имя)
         public IActionResult Student()
         {
             var studentNameLINQ = (from user in context.users

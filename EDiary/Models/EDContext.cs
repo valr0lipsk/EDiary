@@ -27,6 +27,7 @@ namespace EDiary.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             //добавление ролей
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
             {
@@ -46,6 +47,7 @@ namespace EDiary.Models
                 Name = "student",
                 NormalizedName = "STUDENT"
             });
+
             //1-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -68,6 +70,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 1
             });
+
             //2-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -90,6 +93,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 2
             });
+
             //1-ый студент
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -113,6 +117,7 @@ namespace EDiary.Models
                studentRole="student",
                studentUser=3
             });
+
             //2-ой студент
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -136,6 +141,7 @@ namespace EDiary.Models
                 studentRole = "student",
                 studentUser = 8
             });
+
             //добавление админа
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -150,6 +156,7 @@ namespace EDiary.Models
                 adminRole = "admin",
                 adminUser = "4"
             });
+
             //3-ий препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -172,6 +179,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 4
             });
+
             //4-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -194,6 +202,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 5
             });
+
             //5-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -216,6 +225,7 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = 6
             });
+
             //6-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
