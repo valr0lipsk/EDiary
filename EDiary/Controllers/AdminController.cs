@@ -176,10 +176,13 @@ namespace EDiary.Controllers
             var subjectsLINQ = from sub in context.subjects
                                join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                join tr in context.teachers on subTaught.teacherId equals tr.teacherId
-                               where tr.teacherRole=="teacher"
+                               where tr.teacherRole == "teacher"
                                select new Subject
                                {
-                                   subjectName = sub.subjectName
+                                   subjectName = string.Join(", ", from sub in context.subjects
+                                                                           join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                                                                           join tr in context.teachers on subTaught.teacherId equals tr.teacherId
+                                                                           where tr.teacherRole == "teacher" select sub.subjectName)
                                };
             var aspusersLINQ = from us in context.users
                                join tr in context.teachers on us.idUser equals tr.teacherUser
