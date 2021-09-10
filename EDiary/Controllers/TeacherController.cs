@@ -57,7 +57,7 @@ namespace EDiary.Controllers
                             };
             var subjects = subjectsLINQ.ToList();
             var groups = groupLINQ.ToList();
-            var teacherSubjectsGroups = new TeacherGroupSubject { Subjects = subjects, Groups = groups, Users = teacherFullname };
+            var teacherSubjectsGroups = new TeacherGroupSubjectModel { Subjects = subjects, Groups = groups, Users = teacherFullname };
             return View(teacherSubjectsGroups);
         }
     }

@@ -1,6 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
-@model AspUserTeacherSubject
+@model TableTeacherModel
 <table class="table table-hover table-bordered">
     @*Таблица преподов*@
     <thead>
@@ -14,21 +14,38 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var teacherUserSubject in Model.Users.Zip(Model.Teachers.Zip(Model.Subjects.Zip(Model.AspUsers))))
-            {
-               <tr>
-                  <td>@teacherUserSubject.Second.First.teacherId</td>
-                  <td>@teacherUserSubject.Second.Second.Second.UserName</td>
-                  <td>@teacherUserSubject.First.userSurname</td>
-                  <td>@teacherUserSubject.First.userName</td>
-                  <td>@teacherUserSubject.First.userLastname</td>
-                  <td>
-
-                      <ul>
-                          @teacherUserSubject.Second.Second.First.subjectName
-                      </ul>
-                  </td>
-               </tr>
-            }
+        @*@foreach (var teacherUserSubject in Model.Users.Zip(Model.Teachers.Zip(Model.AspUsers)))
+        {
+            <tr>
+                <td>@teacherUserSubject.Second.First.teacherId</td>
+                <td>@teacherUserSubject.Second.Second.UserName</td>
+                <td>@teacherUserSubject.First.userSurname</td>
+                <td>@teacherUserSubject.First.userName</td>
+                <td>@teacherUserSubject.First.userLastname</td>
+                <td>
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <ul>
+                            @subject.subjectName
+                        </ul>
+                    }
+                </td>
+            </tr>
+        }*@
+        @foreach (var teacherUserSubject in Model.Teachers.Zip(Model.Subjects.Zip(Model.Users.Zip(Model.AspUsers))))
+        {
+            <tr>
+                <td>@teacherUserSubject.First.teacherId</td>
+                <td>@teacherUserSubject.Second.Second.Second.UserName</td>
+                <td>@teacherUserSubject.Second.Second.First.userSurname</td>
+                <td>@teacherUserSubject.Second.Second.First.userName</td>
+                <td>@teacherUserSubject.Second.Second.First.userLastname</td>
+                <td>
+                        <ul>
+                           @teacherUserSubject.Second.First.subjectName
+                        </ul>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

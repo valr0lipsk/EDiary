@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class CreateStudentModel
+    public class AddStudentModel
     {
         [Required]
         [Display(Name = "Фамилия студента")]

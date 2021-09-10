@@ -1,4 +1,6 @@
-﻿<form class="row g-3 needs-validation" novalidate>
+﻿@using EDiary.ViewModels
+@model AddSubjectModel
+<form class="row g-3 needs-validation" novalidate>
     <div class="col-md-5">
         <label for="validationCustom02" class="form-label mb-0">Название предмета</label>
         <input type="text" class="form-control" id="validationCustom02" required>
@@ -7,29 +9,21 @@
         <label for="validationCustom02" class="form-label mb-0">Преподаватель</label>
         <input type="text" class="form-control" id="validationCustom02" list="teachers" required>
         <datalist id="teachers">
-            <option>1</option>
-            <option>56</option>
-        </datalist>
-        @*<datalist id="teacher">
-                @foreach (var teacher in Model)
+                @foreach (var teacher in Model.Users.Zip(Model.Teachers))
                  {
-                    <option>@teacher</option>
+                    <option>@teacher.First.userSurname @teacher.First.userName @teacher.First.userLastname</option>
                  }
-            </datalist>*@
+            </datalist>
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom02" class="form-label mb-0">Группа</label>
         <input type="text" class="form-control" id="validationCustom02" list="groups" required>
         <datalist id="groups">
-            <option>1</option>
-            <option>56</option>
-        </datalist>
-        @*<datalist id="groups">
-                @foreach (var group in Model)
+                @foreach (var group in Model.Groups)
                  {
-                    <option>@group</option>
+                    <option>@group.groupName</option>
                  }
-            </datalist>*@
+            </datalist>
     </div>
     <div class="col-12">
         <button class="btn btn-primary" type="submit">Сохранить предмет</button>

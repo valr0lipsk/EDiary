@@ -1,4 +1,7 @@
-﻿<table class="table table-hover table-bordered">
+﻿@using EDiary.Models
+@using EDiary.ViewModels
+@model TeacherGroupSubject
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -8,14 +11,14 @@
         </tr>
     </thead>
     <tbody>
-        @*@foreach (var subject in Model)
+        @foreach (var teacherGroupSubject in Model.Users.Zip(Model.Subjects.Zip(Model.Groups)))
         {
             <tr>
-                <td>@subject.Id</td>
-                <td>@subject.Name</td>
-                <td>@subject.Teacher</td>
-                <td>@subject.Group</td>
+                <td>@teacherGroupSubject.Second.First.subjectId</td>
+                <td>@teacherGroupSubject.Second.First.subjectName</td>
+                <td>@teacherGroupSubject.First.userSurname @teacherGroupSubject.First.userName @teacherGroupSubject.First.userLastname</td>
+                <td>@teacherGroupSubject.Second.Second.groupName</td>
             </tr>
-        }*@
+        }
     </tbody>
 </table>
