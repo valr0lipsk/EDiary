@@ -32,17 +32,17 @@
                 </td>
             </tr>
         }*@
-        @foreach (var teacherUserSubject in Model.Teachers.Zip(Model.Subjects.Zip(Model.Users.Zip(Model.AspUsers))))
+        @foreach (var teacherUserSubject in Model.Teachers.Zip(Model.Users.Zip(Model.AspUsers.Zip(Model.Subjects))))
         {
             <tr>
                 <td>@teacherUserSubject.First.teacherId</td>
-                <td>@teacherUserSubject.Second.Second.Second.UserName</td>
-                <td>@teacherUserSubject.Second.Second.First.userSurname</td>
-                <td>@teacherUserSubject.Second.Second.First.userName</td>
-                <td>@teacherUserSubject.Second.Second.First.userLastname</td>
+                <td>@teacherUserSubject.Second.Second.First.UserName</td>
+                <td>@teacherUserSubject.Second.First.userSurname</td>
+                <td>@teacherUserSubject.Second.First.userName</td>
+                <td>@teacherUserSubject.Second.First.userLastname</td>
                 <td>
                         <ul>
-                           @teacherUserSubject.Second.First.subjectName
+                           @teacherUserSubject.Second.Second.Second.subjectName 
                         </ul>
                 </td>
             </tr>

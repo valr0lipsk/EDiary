@@ -11,13 +11,13 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var teacherGroupSubject in Model.Users.Zip(Model.Subjects.Zip(Model.Groups)))
+        @foreach (var teacherGroupSubject in Model.Users.Zip(Model.Subjects.Zip(Model.Groups.Zip(Model.subjectTaughts))))
         {
             <tr>
-                <td>@teacherGroupSubject.Second.First.subjectId</td>
+                <td>@teacherGroupSubject.Second.Second.Second.tsubjectId</td>
                 <td>@teacherGroupSubject.Second.First.subjectName</td>
                 <td>@teacherGroupSubject.First.userSurname @teacherGroupSubject.First.userName @teacherGroupSubject.First.userLastname</td>
-                <td>@teacherGroupSubject.Second.Second.groupName</td>
+                <td>@teacherGroupSubject.Second.Second.First.groupName</td>
             </tr>
         }
     </tbody>
