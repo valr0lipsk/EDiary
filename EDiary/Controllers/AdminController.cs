@@ -125,11 +125,9 @@ namespace EDiary.Controllers
         public IActionResult ShowTeachers()
         {
             var teachersTable = from tr in context.teachers
-                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                                join sub in context.subjects on subTaught.subjectId equals sub.subjectId
                                 join us in context.users on tr.teacherUser equals us.idUser
                                 join aspuser in context.Users on us.userId equals aspuser.Id
-                                where tr.teacherId == subTaught.teacherId
+                                where tr.teacherRole=="teacher"
                                 select new TableTeacherModel
                                 {
                                     teacherId = tr.teacherId,
@@ -138,12 +136,11 @@ namespace EDiary.Controllers
                                     teacherSurname = us.userSurname,
                                     teacherLogin = aspuser.UserName,
                                     subjectName = string.Join(", ", (from sub in context.subjects
-                                                                     join tr in context.teachers on subTaught.teacherId equals tr.teacherId
                                                                      join us in context.users on tr.teacherUser equals us.idUser
                                                                      join aspuser in context.Users on us.userId equals aspuser.Id
                                                                      join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                                      where subTaught.teacherId == tr.teacherId
-                                                                     select sub.subjectName).ToArray())
+                                                                     select sub.subjectName.Trim()).ToArray())
                                 };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml",teachersTable);
         }

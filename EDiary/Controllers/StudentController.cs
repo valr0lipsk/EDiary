@@ -21,7 +21,7 @@ namespace EDiary.Controllers
         //представление ученика(имя)
         public IActionResult Student()
         {
-            var studentNameLINQ = (from user in context.users
+            var studentFullName = (from user in context.users
                         join aspusers in context.Users on user.userId equals aspusers.Id
                         where user.userId == userManager.GetUserId(User)
                         select new Users
@@ -29,9 +29,8 @@ namespace EDiary.Controllers
                             userSurname = user.userSurname,
                             userName = user.userName,
                             userLastname = user.userLastname
-                        });
-            var studentFullname = studentNameLINQ.ToList();
-            return View(studentFullname);
+                        }).ToList();
+            return View(studentFullName);
         }
     }
 }
