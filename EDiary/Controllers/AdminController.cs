@@ -125,22 +125,27 @@ namespace EDiary.Controllers
         public IActionResult ShowTeachers()
         {
             var teachersTable = from tr in context.teachers
-                               join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                               join sub in context.subjects on subTaught.subjectId equals sub.subjectId
-                               join us in context.users on tr.teacherUser equals us.idUser
-                               join aspuser in context.Users on us.userId equals aspuser.Id
-                               where tr.teacherId == subTaught.teacherId
-                               select new Teacher
-                               {
-                                   teacherId = tr.teacherId,
-                                   teacherLastname = us.userLastname,
-                                   userName = us.userName,
-                                   userSurname = us.userSurname,
-                                   UserName = aspuser.UserName
-                               };
-
-     
-            return PartialView("~/Views/Admin/_tableTeacher.cshtml",aspUserTeacherSubject);
+                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                                join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+                                join us in context.users on tr.teacherUser equals us.idUser
+                                join aspuser in context.Users on us.userId equals aspuser.Id
+                                where tr.teacherId == subTaught.teacherId
+                                select new TableTeacherModel
+                                {
+                                    teacherId = tr.teacherId,
+                                    teacherLastname = us.userLastname,
+                                    teacherName = us.userName,
+                                    teacherSurname = us.userSurname,
+                                    teacherLogin = aspuser.UserName,
+                                    subjectName = string.Join(", ", (from sub in context.subjects
+                                                                     join tr in context.teachers on subTaught.teacherId equals tr.teacherId
+                                                                     join us in context.users on tr.teacherUser equals us.idUser
+                                                                     join aspuser in context.Users on us.userId equals aspuser.Id
+                                                                     join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                                                                     where subTaught.teacherId == tr.teacherId
+                                                                     select sub.subjectName).ToArray())
+                                };
+            return PartialView("~/Views/Admin/_tableTeacher.cshtml",teachersTable);
         }
 
         //таблица предметов

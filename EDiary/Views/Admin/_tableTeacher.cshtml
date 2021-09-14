@@ -1,6 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
-@model TableTeacherModel
+@model IEnumerable<TableTeacherModel>
 <table class="table table-hover table-bordered">
     @*Таблица преподов*@
     <thead>
@@ -32,17 +32,17 @@
                 </td>
             </tr>
         }*@
-        @foreach (var teacherUserSubject in Model.Teachers.Zip(Model.Users.Zip(Model.AspUsers.Zip(Model.Subjects))))
+        @foreach (var teacherUserSubject in Model)
         {
             <tr>
-                <td>@teacherUserSubject.First.teacherId</td>
-                <td>@teacherUserSubject.Second.Second.First.UserName</td>
-                <td>@teacherUserSubject.Second.First.userSurname</td>
-                <td>@teacherUserSubject.Second.First.userName</td>
-                <td>@teacherUserSubject.Second.First.userLastname</td>
+                <td>@teacherUserSubject.teacherId</td>
+                <td>@teacherUserSubject.teacherLogin</td>
+                <td>@teacherUserSubject.teacherSurname</td>
+                <td>@teacherUserSubject.teacherName</td>
+                <td>@teacherUserSubject.teacherLastname</td>
                 <td>
                         <ul>
-                           @teacherUserSubject.Second.Second.Second.subjectName 
+                           @teacherUserSubject.subjectName 
                         </ul>
                 </td>
             </tr>
