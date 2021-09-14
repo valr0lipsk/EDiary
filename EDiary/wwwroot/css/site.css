@@ -127,7 +127,7 @@ body {
     background-image: url(source/background-3.jpg)
 }
 
-table {
+._table {
     display: block;
     overflow: auto;
     max-width: 100%;
@@ -212,10 +212,3 @@ tr, td{
     text-align: center;
     text-anchor:middle;
 }
-/*thead{
-    position:static;
-}
-.fixed-row{
-    position:sticky;
-}
-*/

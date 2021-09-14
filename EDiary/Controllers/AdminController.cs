@@ -219,7 +219,8 @@ namespace EDiary.Controllers
                                where tr.teacherRole == "teacher"
                                select new Subject
                                {
-                                   subjectName = sub.subjectName
+                                   subjectName = sub.subjectName,
+
                                };
             var subTaughtLINQ = from sub in context.subjects
                                 join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
