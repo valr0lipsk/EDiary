@@ -74,8 +74,6 @@ namespace EDiary.Controllers
         //добавление предмета
         public IActionResult AddSubject(AddSubjectModel addSubject)
         {
-            Subject subject = new Subject { subjectName = addSubject.subjectName };
-            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
             var usersLINQ = from us in context.users
                             join tr in context.teachers on us.idUser equals tr.teacherUser
                             join aspuser in context.Users on us.userId equals aspuser.Id
@@ -97,8 +95,17 @@ namespace EDiary.Controllers
             var groups = context.groups.ToList();
             var users = usersLINQ.ToList();
             var teachers = teachersLINQ.ToList();
-            addSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers=teachers };
+            addSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers = teachers };
             return PartialView("~/Views/Admin/_addSubject.cshtml", addSubject);
+        }
+        public IActionResult CreateSubject(AddSubjectModel addSubject)
+        {
+            Subject subject = new Subject { subjectName = addSubject.subjectName };
+            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
+            context.subjects.Add(subject);
+            context.subjectTaughts.Add(subjectTaught);
+            context.SaveChanges();
+            return RedirectToAction("Admin","Admin");
         }
 
         //таблица студентов

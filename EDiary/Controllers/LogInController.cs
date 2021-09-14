@@ -28,6 +28,7 @@ namespace EDiary.Controllers
         //авторизация
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(loginViewModel loginModel)
         {
             if (ModelState.IsValid)
