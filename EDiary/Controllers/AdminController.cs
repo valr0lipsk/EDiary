@@ -124,7 +124,7 @@ namespace EDiary.Controllers
         //таблица преподов
         public IActionResult ShowTeachers()
         {
-            var teachersLINQ = from tr in context.teachers
+            var teachersTable = from tr in context.teachers
                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
                                join sub in context.subjects on subTaught.subjectId equals sub.subjectId
                                join us in context.users on tr.teacherUser equals us.idUser
@@ -132,50 +132,14 @@ namespace EDiary.Controllers
                                where tr.teacherId == subTaught.teacherId
                                select new Teacher
                                {
-                                   teacherId = tr.teacherId
-                               };
-            var usersLINQ =  from us in context.users
-                             join tr in context.teachers on us.idUser equals tr.teacherUser
-                             join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                             join sub in context.subjects on subTaught.subjectId equals sub.subjectId
-                             join aspuser in context.Users on us.userId equals aspuser.Id
-                             where tr.teacherId == subTaught.teacherId
-                             select new Users
-                             {
-                                 userLastname = us.userLastname,
-                                 userName = us.userName,
-                                 userSurname = us.userSurname
-                             };
-            var subjectsLINQ = from sub in context.subjects
-                               join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                               join tr in context.teachers on subTaught.teacherId equals tr.teacherId
-                               where tr.teacherId == subTaught.teacherId
-                               select new Subject
-                               {
-                                   subjectName = string.Join(", ", (from sub in context.subjects
-                                                                    join tr in context.teachers on subTaught.teacherId equals tr.teacherId
-                                                                    join us in context.users on tr.teacherUser equals us.idUser
-                                                                    join aspuser in context.Users on us.userId equals aspuser.Id
-                                                                    join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                                                    where subTaught.teacherId==tr.teacherId
-                                                                    select sub.subjectName).ToArray())
-
-                               };
-            var aspusersLINQ = from us in context.users
-                               join tr in context.teachers on us.idUser equals tr.teacherUser
-                               join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                               join sub in context.subjects on subTaught.subjectId equals sub.subjectId
-                               join aspuser in context.Users on us.userId equals aspuser.Id
-                               where tr.teacherId == subTaught.teacherId
-                               select new IdentityUser
-                               {
+                                   teacherId = tr.teacherId,
+                                   teacherLastname = us.userLastname,
+                                   userName = us.userName,
+                                   userSurname = us.userSurname,
                                    UserName = aspuser.UserName
-                               }; 
-            var teachers = teachersLINQ.ToList();
-            var subjects = subjectsLINQ.ToList();
-            var users = usersLINQ.ToList();
-            var aspusers = aspusersLINQ.ToList();
-            var aspUserTeacherSubject = new TableTeacherModel { Subjects = subjects, Teachers = teachers, Users = users, AspUsers = aspusers};
+                               };
+
+     
             return PartialView("~/Views/Admin/_tableTeacher.cshtml",aspUserTeacherSubject);
         }
 
