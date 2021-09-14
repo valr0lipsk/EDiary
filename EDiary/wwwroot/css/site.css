@@ -131,6 +131,7 @@ table {
     display: block;
     overflow: auto;
     max-width: 100%;
+    max-height: 100%;
 }
 
 #onTop {
@@ -211,4 +212,10 @@ tr, td{
     text-align: center;
     text-anchor:middle;
 }
-
+/*thead{
+    position:static;
+}
+.fixed-row{
+    position:sticky;
+}
+*/
