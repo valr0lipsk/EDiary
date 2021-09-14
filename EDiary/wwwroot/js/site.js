@@ -184,7 +184,7 @@ $(function () {
         var OriginalContent = $(this).text();
 
         $(this).addClass("cellEditing");
-        $(this).html("<input type='text' value='" + OriginalContent + "' />");
+        $(this).html("<input type='text' class='table-td' value='" + OriginalContent + "' />");
         $(this).children().first().focus();
 
         $(this).children().first().keypress(function (e) {
