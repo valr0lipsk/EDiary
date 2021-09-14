@@ -271,3 +271,8 @@ tr, td{
 .sticky-table table tr.sticky-header td.sticky-cell, .sticky-table table tr.sticky-header th.sticky-cell{
     z-index: 15;
 }
+
+.table-td{
+    height:90%;
+    width: 100%;
+}
