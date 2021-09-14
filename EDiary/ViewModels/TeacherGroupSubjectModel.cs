@@ -13,5 +13,12 @@ namespace EDiary.ViewModels
         public IEnumerable<Users> Users { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
         public IEnumerable<subjectTaught> subjectTaughts { get; set; }
+        public int tsubjectId { get; set; }
+        public string teacherSurname { get; set; }
+        public string teacherName { get; set; }
+        public string teacherLastname { get; set; }
+        public string subjectName { get; set; }
+        public string groups { get; set; }
+
     }
 }
