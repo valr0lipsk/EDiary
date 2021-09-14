@@ -213,15 +213,9 @@ tr, td{
     text-anchor:middle;
 }
 
-
-
-
 .sticky-table {
     max-width: 100%;
-    /* max-height: 80vh; */
     overflow: auto;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     padding-right: 0 !important;
