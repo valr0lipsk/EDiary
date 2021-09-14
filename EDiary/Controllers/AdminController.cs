@@ -16,7 +16,8 @@ namespace EDiary.Controllers
     {
         UserManager<IdentityUser> userManager;
         EDContext context;
-        public AdminController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager,context);
+        public AdminController(UserManager<IdentityUser> userManager, EDContext context) 
+            => (this.userManager, this.context) = (userManager,context);
 
         //генерация пароля
         public static string generatePassword()
