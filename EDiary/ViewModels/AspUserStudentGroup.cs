@@ -9,9 +9,12 @@ namespace EDiary.ViewModels
 {
     public class AspUserStudentGroup
     {
-       public IEnumerable<Users> Users { get; set; }
-       public IEnumerable<Student> Students { get; set; }
-       public IEnumerable<collegeGroup> Groups { get; set; }
-       public IEnumerable<IdentityUser> AspUsers { get; set; }
+        public int studentId { get; set; }
+        public string studentLastname { get; set; }
+        public string studentName { get; set; }
+        public string studentSurname { get; set; }
+        public string groupName { get; set; }
+        public string studentLogin { get; set; }
+
     }
 }
