@@ -104,49 +104,20 @@ namespace EDiary.Controllers
         //таблица студентов
         public IActionResult ShowStudents()
         {
-            var studentsLINQ = from us in context.users
-                               join st in context.students on us.idUser equals st.studentUser
-                               join gr in context.groups on st.studentGroup equals gr.groupId
-                               join aspuser in context.Users on us.userId equals aspuser.Id
-                               where st.studentRole == "student"
-                               select new Student
-                               {
-                                   studentId = st.studentId
-                               };
-            var usersLINQ = from us in context.users
-                            join st in context.students on us.idUser equals st.studentUser
-                            join gr in context.groups on st.studentGroup equals gr.groupId
-                            join aspuser in context.Users on us.userId equals aspuser.Id
-                            where st.studentRole=="student"
-                            select new Users
-                            {
-                                userLastname = us.userLastname,
-                                userName = us.userName,
-                                userSurname = us.userSurname
-                            };
-            var groupsLINQ = from us in context.users
-                             join st in context.students on us.idUser equals st.studentUser
-                             join gr in context.groups on st.studentGroup equals gr.groupId
-                             join aspuser in context.Users on us.userId equals aspuser.Id
-                             where st.studentRole == "student"
-                             select new collegeGroup
-                             {
-                                 groupName = gr.groupName
-                             };
-            var aspusersLINQ = from us in context.users
-                             join st in context.students on us.idUser equals st.studentUser
-                             join gr in context.groups on st.studentGroup equals gr.groupId
-                             join aspuser in context.Users on us.userId equals aspuser.Id
-                             where st.studentRole == "student"
-                             select new IdentityUser
-                             {
-                                 UserName=aspuser.UserName
-                             };
-            var students = studentsLINQ.ToList();
-            var groups = groupsLINQ.ToList();
-            var users = usersLINQ.ToList();
-            var aspusers = aspusersLINQ.ToList();
-            var aspUserStudentGroup = new AspUserStudentGroup { Students = students, Groups = groups, Users = users, AspUsers = aspusers };
+            var aspUserStudentGroup = from us in context.users
+                                      join st in context.students on us.idUser equals st.studentUser
+                                      join gr in context.groups on st.studentGroup equals gr.groupId
+                                      join aspuser in context.Users on us.userId equals aspuser.Id
+                                      where st.studentRole == "student"
+                                      select new AspUserStudentGroup
+                                      {
+                                          studentId = st.studentId,
+                                          studentLogin=aspuser.UserName,
+                                          studentSurname=us.userSurname,
+                                          studentName=us.userSurname,
+                                          studentLastname=us.userLastname,
+                                          groupName=gr.groupName
+                                      };
             return PartialView("~/Views/Admin/_tableStudent.cshtml", aspUserStudentGroup);
         }
         

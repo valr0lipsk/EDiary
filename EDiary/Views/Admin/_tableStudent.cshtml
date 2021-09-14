@@ -1,6 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
-@model AspUserStudentGroup
+@model IEnumerable<AspUserStudentGroup>
 <table class="table table-hover table-bordered">
     @*Таблица студентов*@
     <thead>
@@ -14,15 +14,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var userStudentGroup in Model.Users.Zip(Model.Students.Zip(Model.Groups.Zip(Model.AspUsers))))
+        @foreach (var userStudentGroup in Model)
             {
                <tr>
-                   <td>@userStudentGroup.Second.First.studentId</td>
-                   <td>@userStudentGroup.Second.Second.Second.UserName</td>
-                   <td>@userStudentGroup.First.userSurname</td>
-                   <td>@userStudentGroup.First.userName</td>
-                   <td>@userStudentGroup.First.userLastname</td>
-                   <td>@userStudentGroup.Second.Second.First.groupName</td>
+                   <td>@userStudentGroup.studentId</td>
+                   <td>@userStudentGroup.studentLogin</td>
+                   <td>@userStudentGroup.studentSurname</td>
+                   <td>@userStudentGroup.studentName</td>
+                   <td>@userStudentGroup.studentLastname</td>
+                   <td>@userStudentGroup.groupName</td>
                </tr>
             }
     </tbody>
