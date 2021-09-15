@@ -36,10 +36,10 @@
                 <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
-                        <ol class="list-group list-group-flush list-group-numbered">
+                        <ol id="list" class="list-group list-group-flush list-group-numbered">
                             @foreach (var subjectsGroups in Model.Subjects.Zip(Model.Groups))
                             {
-                               <li class="list-group-item" data-id="@subjectsGroups.First.subjectId"><a href="">@subjectsGroups.First.subjectName (@subjectsGroups.Second.groupName)</a></li>
+                               <li class="list-group-item" data-id="@subjectsGroups.First.subjectId"><a href="" сlass="subject-but">@subjectsGroups.First.subjectName (@subjectsGroups.Second.groupName)</a></li>
                             }
                         </ol>
                     </div>

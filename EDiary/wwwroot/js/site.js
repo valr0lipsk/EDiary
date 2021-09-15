@@ -41,8 +41,24 @@ $(document).ready(function () {
     $('#allSb').click(function () {
         $("#partialDiv").load('/Admin/ShowSubjects');
     })
-}
-);
+
+    //получение айди предмета преподавателя в списке его предметов
+    $('#list li').click(function () {
+        var subId = $(this).attr("data-id");
+        alert(subId);
+        $.ajax({
+            type: "POST",
+            url: "@(Url.Action('Jurnal', 'Marks'))",
+            data: { id: subId },
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            async: true,
+            success: function (result) {
+                window.location.href = "/Marks/Jurnal";
+            }
+        });
+    })
+});
 
 jQuery(document).on('stickyTable', function () {
     var positionStickySupport = (function () {
