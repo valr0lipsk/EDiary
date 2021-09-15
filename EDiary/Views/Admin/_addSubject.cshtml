@@ -7,7 +7,7 @@
     </div>
     <div class="col-md-5">
         <label for="validationCustom02" class="form-label mb-0">Преподаватель</label>
-        <input asp-for="teacherId" data="@Model.teacherId" type="text" class="form-control" id="validationCustom02" list="teachers" required value="">
+        <input asp-for="teacherId" type="text" class="form-control" id="validationCustom02" list="teachers" required value="">
         <datalist id="teachers">
                 @foreach (var teacher in Model.Users.Zip(Model.Teachers))
                  {
@@ -17,7 +17,7 @@
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom02" class="form-label mb-0">Группа</label>
-        <input asp-for="groupId" data="@Model.groupId" type="text" class="form-control" id="validationCustom02" list="groups" required value="">
+        <input asp-for="groupId" type="text" class="form-control" id="validationCustom02" list="groups" required value="">
         <datalist id="groups">
                 @foreach (var group in Model.Groups)
                  {
