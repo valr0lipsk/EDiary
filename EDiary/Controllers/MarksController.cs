@@ -13,5 +13,12 @@ namespace EDiary.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Jurnal(int id)
+        {
+            var subid = id;
+            return View();
+        }
     }
 }
