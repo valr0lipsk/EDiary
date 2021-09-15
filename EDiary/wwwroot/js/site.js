@@ -174,12 +174,7 @@ $(document).ready(function () {
 });
 
 $(function () {
-    $("#btn_newrow").click(function () {
-        var test = "<tr><td>1</td><td>name</td><td>email</td><td>phone</td></tr>";
-        $(".editableTable tbody").append(test);
-    });
-
-    $('.editableTable').on('dblclick', 'td', function () {
+    $('.editableTable').on('click', 'td', function () {
 
         var OriginalContent = $(this).text();
 
