@@ -58,6 +58,11 @@ $(document).ready(function () {
             }
         });
     })
+
+    //получение айди группы из списка в добавлении предмета
+    $('#groups option').select(function () {
+        alert('alert')
+    })
 });
 
 jQuery(document).on('stickyTable', function () {
