@@ -11,7 +11,7 @@
         <datalist id="teachers">
                 @foreach (var teacher in Model.Users.Zip(Model.Teachers))
                  {
-                    <option>@teacher.First.userSurname @teacher.First.userName @teacher.First.userLastname</option>
+                    <option data="@teacher.Second.teacherId">@teacher.First.userSurname @teacher.First.userName @teacher.First.userLastname</option>
                  }
         </datalist>
     </div>
@@ -21,7 +21,7 @@
         <datalist id="groups">
                 @foreach (var group in Model.Groups)
                  {
-                    <option>@group.groupName</option>
+                    <option data="@group.groupId">@group.groupName</option>
                  }
         </datalist>
     </div>
