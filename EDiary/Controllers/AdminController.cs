@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EDiary.Repositories;
 using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EDiary.Controllers
 {
@@ -96,13 +97,15 @@ namespace EDiary.Controllers
             var users = usersLINQ.ToList();
             var teachers = teachersLINQ.ToList();
             addSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers = teachers };
+            ViewBag.teacher = new SelectList(context.teachers, "teacherId", "teacherRole");
             return PartialView("~/Views/Admin/_addSubject.cshtml", addSubject);
         }
         public IActionResult CreateSubject(AddSubjectModel addSubject)
         {
             Subject subject = new Subject { subjectName = addSubject.subjectName };
-            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
             context.subjects.Add(subject);
+            context.SaveChanges();
+            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
             context.subjectTaughts.Add(subjectTaught);
             context.SaveChanges();
             return RedirectToAction("Admin","Admin");
