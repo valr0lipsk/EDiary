@@ -74,8 +74,6 @@ namespace EDiary.Controllers
         //добавление предмета
         public IActionResult AddSubject(AddSubjectModel addSubject)
         {
-            Subject subject = new Subject { subjectName = addSubject.subjectName };
-            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
             var usersLINQ = from us in context.users
                             join tr in context.teachers on us.idUser equals tr.teacherUser
                             join aspuser in context.Users on us.userId equals aspuser.Id
@@ -97,8 +95,17 @@ namespace EDiary.Controllers
             var groups = context.groups.ToList();
             var users = usersLINQ.ToList();
             var teachers = teachersLINQ.ToList();
-            addSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers=teachers };
+            addSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers = teachers };
             return PartialView("~/Views/Admin/_addSubject.cshtml", addSubject);
+        }
+        public IActionResult CreateSubject(AddSubjectModel addSubject)
+        {
+            Subject subject = new Subject { subjectName = addSubject.subjectName };
+            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
+            context.subjects.Add(subject);
+            context.subjectTaughts.Add(subjectTaught);
+            context.SaveChanges();
+            return RedirectToAction("Admin","Admin");
         }
 
         //таблица студентов
@@ -125,11 +132,9 @@ namespace EDiary.Controllers
         public IActionResult ShowTeachers()
         {
             var teachersTable = from tr in context.teachers
-                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                                join sub in context.subjects on subTaught.subjectId equals sub.subjectId
                                 join us in context.users on tr.teacherUser equals us.idUser
                                 join aspuser in context.Users on us.userId equals aspuser.Id
-                                where tr.teacherId == subTaught.teacherId
+                                where tr.teacherRole=="teacher"
                                 select new TableTeacherModel
                                 {
                                     teacherId = tr.teacherId,
@@ -138,12 +143,11 @@ namespace EDiary.Controllers
                                     teacherSurname = us.userSurname,
                                     teacherLogin = aspuser.UserName,
                                     subjectName = string.Join(", ", (from sub in context.subjects
-                                                                     join tr in context.teachers on subTaught.teacherId equals tr.teacherId
                                                                      join us in context.users on tr.teacherUser equals us.idUser
                                                                      join aspuser in context.Users on us.userId equals aspuser.Id
                                                                      join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                                      where subTaught.teacherId == tr.teacherId
-                                                                     select sub.subjectName).ToArray())
+                                                                     select sub.subjectName.Trim()).ToArray())
                                 };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml",teachersTable);
         }

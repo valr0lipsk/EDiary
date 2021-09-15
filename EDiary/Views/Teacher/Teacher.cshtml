@@ -37,9 +37,9 @@
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol class="list-group list-group-flush list-group-numbered">
-                            @foreach (var subjectsGroups in Model.Groups.Zip(Model.Subjects))
+                            @foreach (var subjectsGroups in Model.Subjects.Zip(Model.Groups))
                             {
-                               <li class="list-group-item" data-id="@subjectsGroups.Second.subjectId"><a href="">@subjectsGroups.Second.subjectName (@subjectsGroups.First.groupName)</a></li>
+                               <li class="list-group-item" data-id="@subjectsGroups.First.subjectId"><a href="">@subjectsGroups.First.subjectName (@subjectsGroups.Second.groupName)</a></li>
                             }
                         </ol>
                     </div>
