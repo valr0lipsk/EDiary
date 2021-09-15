@@ -31,9 +31,21 @@ namespace EDiary.Controllers
                 if (char.IsLetterOrDigit(c))
                     pass += c;
             }
-            AddStudentModel createStudentModel = new AddStudentModel();
-            createStudentModel.studentPassword = pass;
-            return createStudentModel.studentPassword;
+            return pass;
+        }
+
+        //генерация логина
+        public static string generateLogin()
+        {
+            string login = "";
+            var r = new Random();
+            while (login.Length < 6)
+            {
+                char c = (char)r.Next(33, 125);
+                if (char.IsDigit(c))
+                    login += c;
+            }
+            return login;
         }
 
         //представление админа
@@ -43,37 +55,56 @@ namespace EDiary.Controllers
         }
 
         //добавление студента
-        public async Task<IActionResult> AddStudent(AddStudentModel createStudent)
+        public IActionResult AddStudent(AddStudentModel stLoginPass)
         {
-            if (ModelState.IsValid)
-            {
-                IdentityUser identityStudentUser = new IdentityUser { UserName = createStudent.studentLogin, PasswordHash=createStudent.studentPassword };
-                Users studentUser = new Users {userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname, userId=identityStudentUser.Id };
-                Student student = new Student {studentUser=studentUser.idUser, studentRole = "student", studentGroup = createStudent.studentGroup};
-                var user = await userManager.CreateAsync(identityStudentUser, createStudent.studentPassword);
-                if (user.Succeeded)
-                {
-                    return RedirectToAction("AddStudent");
-                }
-                else
-                {
-                    foreach (var error in user.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-            }
-            return PartialView("~/Views/Admin/_addStudent.cshtml", createStudent);
+            var stLogin = generateLogin();
+            var stPass = generatePassword();
+            var groups = context.groups.ToList();
+            ViewBag.stLogin = stLogin;
+            ViewBag.stPass = stPass;
+            stLoginPass = new AddStudentModel { groups = groups };
+            return PartialView("~/Views/Admin/_addStudent.cshtml", stLoginPass);
+        }
+        public IActionResult CreateStudent(AddStudentModel createStudent)
+        {
+            IdentityUser identityStudentUser = new IdentityUser { UserName = createStudent.studentLogin, NormalizedUserName=createStudent.studentLogin.ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
+            context.Users.Add(identityStudentUser);
+            context.SaveChanges();
+            Users studentUser = new Users { userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname, userId = identityStudentUser.Id };
+            context.users.Add(studentUser);
+            context.SaveChanges();
+            Student student = new Student { studentRole = "student", studentGroup = createStudent.studentGroup, studentUser=studentUser.idUser };
+            context.users.Add(studentUser);
+            context.SaveChanges();
+            return RedirectToAction("Admin", "Admin");
         }
 
         //добавление препода
-        public IActionResult AddTeacher()
+        public IActionResult AddTeacher(AddTeacherModel createTeacher)
         {
-            return PartialView("~/Views/Admin/_addTeacher.cshtml");
+            var trLogin = generateLogin();
+            var trPass = generatePassword();
+            var groups = context.groups.ToList();
+            ViewBag.trLogin = trLogin;
+            ViewBag.trPass = trPass;
+            createTeacher = new AddTeacherModel { groups = groups };
+            return PartialView("~/Views/Admin/_addTeacher.cshtml", createTeacher);
         }
-
+        public IActionResult CreateTeacher(AddTeacherModel createTeacher)
+        {
+            IdentityUser identityTeacherUser = new IdentityUser { UserName = createTeacher.teacherLogin, NormalizedUserName = createTeacher.teacherLogin.ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
+            context.Users.Add(identityTeacherUser);
+            context.SaveChanges();
+            Users teacherUser = new Users { userSurname = createTeacher.teacherSurname, userName = createTeacher.teacherName, userLastname = createTeacher.teacherLastname, userId = identityTeacherUser.Id };
+            context.users.Add(teacherUser);
+            context.SaveChanges();
+            Teacher teacher = new Teacher { teacherRole = "teacher", teacherUser = teacherUser.idUser };
+            context.teachers.Add(teacher);
+            context.SaveChanges();
+            return RedirectToAction("Admin", "Admin");
+        }
         //добавление предмета
-        public IActionResult AddSubject(AddSubjectModel addSubject)
+        public IActionResult AddSubject(AddSubjectModel createSubject)
         {
             var usersLINQ = from us in context.users
                             join tr in context.teachers on us.idUser equals tr.teacherUser
@@ -96,16 +127,15 @@ namespace EDiary.Controllers
             var groups = context.groups.ToList();
             var users = usersLINQ.ToList();
             var teachers = teachersLINQ.ToList();
-            addSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers = teachers };
-            ViewBag.teacher = new SelectList(context.teachers, "teacherId", "teacherRole");
-            return PartialView("~/Views/Admin/_addSubject.cshtml", addSubject);
+            createSubject = new AddSubjectModel { Groups = groups, Users = users, Teachers = teachers };
+            return PartialView("~/Views/Admin/_addSubject.cshtml", createSubject);
         }
         public IActionResult CreateSubject(AddSubjectModel addSubject)
         {
             Subject subject = new Subject { subjectName = addSubject.subjectName };
             context.subjects.Add(subject);
             context.SaveChanges();
-            subjectTaught subjectTaught = new subjectTaught { teacherId = addSubject.teacherId, groupId = addSubject.groupId, subjectId = subject.subjectId };
+            subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = addSubject.teacherId, groupId = addSubject.groupId };
             context.subjectTaughts.Add(subjectTaught);
             context.SaveChanges();
             return RedirectToAction("Admin","Admin");

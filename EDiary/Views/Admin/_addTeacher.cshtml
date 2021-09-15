@@ -1,42 +1,40 @@
-﻿<form class="row g-3 needs-validation" novalidate>
+﻿@using EDiary.ViewModels
+@model AddTeacherModel
+<form class="row g-3 needs-validation" novalidate>
     <div class="col-md-4">
         <label for="validationCustom02" class="form-label mb-0">Фамилия</label>
-        <input type="text" class="form-control" id="validationCustom02" required>
+        <input asp-for="teacherSurname" type="text" class="form-control" id="validationCustom02" required>
     </div>
     <div class="col-md-4">
         <label for="validationCustom01" class="form-label mt-2 mb-0">Имя</label>
-        <input type="text" class="form-control" id="validationCustom01" required>
+        <input asp-for="teacherName" type="text" class="form-control" id="validationCustom01" required>
     </div>
     <div class="col-md-4">
         <label for="validationCustom03" class="form-label mt-2 mb-0">Отчество</label>
-        <input type="text" class="form-control" id="validationCustom03" required>
+        <input asp-for="teacherLastname" type="text" class="form-control" id="validationCustom03">
     </div>
     <div class="col-md-4">
         <label for="validationCustomUsername" class="form-label mt-2 mb-0">Имя пользователя</label>
         <div class="input-group has-validation">
             <span class="input-group-text b-r-0" id="inputGroupPrepend">tr</span>
-            <input type="text" class="form-control" id="validationCustomUsername" disabled readonly="readonly" aria-describedby="inputGroupPrepend" required>
+            <input asp-for="teacherLogin" type="text" class="form-control" id="validationCustomUsername" disabled readonly="readonly" aria-describedby="inputGroupPrepend" required value="@ViewBag.trLogin">
         </div>
     </div>
     <div class="col-md-4">
         <label for="validationCustom03" class="form-label mt-2 mb-0">Пароль</label>
-        <input type="text" class="form-control" disabled id="validationCustomPassword" required value="">
+        <input asp-for="teacherPassword" type="text" class="form-control" disabled id="validationCustomPassword" required value="@ViewBag.trPass">
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom02" class="form-label mt-2 mb-0">Курируемая группа</label>
-        <input type="text" class="form-control" id="validationCustom02" list="groups" required>
+        <input asp-for="curatorGroup" type="text" class="form-control" id="validationCustom02" list="groups">
         <datalist id="groups">
-            <option>1</option>
-            <option>56</option>
+            @foreach (var group in Model.groups)
+             {
+                <option data="@group.groupId">@group.groupName</option>
+             }
         </datalist>
-        @*<datalist id="groups">
-                @foreach (var group in Model)
-                 {
-                    <option>@group</option>
-                 }
-            </datalist>*@
     </div>
     <div class="col-12">
-        <button class="btn btn-primary" type="submit">Сохранить преподавателя</button>
+        <button asp-action="CreateTeacher" class="btn btn-primary" type="submit">Сохранить преподавателя</button>
     </div>
 </form>
