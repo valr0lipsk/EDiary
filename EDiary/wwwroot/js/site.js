@@ -58,10 +58,23 @@ $(document).ready(function () {
     })
 
     //получение айди группы из листа групп в добавлении учащегося
-    $('#groupSt option').each(function () {
-        var subId = $(this).attr("data-id");
-        alert(subId);
-    })
+    //$('#groupSt option').each(function () {
+    //    var subId = $(this).attr("data-id");
+    //    alert(subId);
+    //})
+    $('#validationCustom04').change(function () {
+        var groupId = $("#groupsSt option[value='" + $('#validationCustom04').val() + "']").attr('data-id');
+        alert(groupId);
+    });
+    //$('#groupsSt').change(function () {
+    //    var groupId = $(this).find(':selected').data('id');
+    //    console.log(groupId);
+    //})
+    //$('#groupsSt option').each(function () {
+    //        var groupId = $("#groupsSt option :selected").attr("data-id")
+    //        alert(groupId)
+    //})
+
 });
 
 jQuery(document).on('stickyTable', function () {
