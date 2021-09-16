@@ -45,12 +45,10 @@ $(document).ready(function () {
     //получение айди предмета преподавателя в списке его предметов
     $('#list li').click(function () {
         var subId = $(this).attr("data-id");
-        alert(subId);
         $.ajax({
             type: "POST",
-            url: "@(Url.Action('Jurnal', 'Marks'))",
-            data: { id: subId },
-            contentType: "application/json; charset=utf-8",
+            url: "/Marks/Jurnal",
+            data: { 'id': subId },
             cache: false,
             async: true,
             success: function (result) {
@@ -59,10 +57,6 @@ $(document).ready(function () {
         });
     })
 
-    //получение айди группы из списка в добавлении предмета
-    $('#groups option').select(function () {
-        alert('alert')
-    })
 });
 
 jQuery(document).on('stickyTable', function () {

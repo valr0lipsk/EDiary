@@ -21,9 +21,9 @@
                                 @if (signInManager.IsSignedIn(User))
                                 {
                                     @foreach (var teacherName in Model.Users)
-                                    {
+                                     {
                                     <label class="mt-0" style="font-size: 115%">@teacherName.userSurname @teacherName.userName @teacherName.userLastname</label>
-                                    }
+                                     }
                                 }
                             </div>
                         </div>
@@ -38,9 +38,9 @@
                         <h4>Мои предметы:</h4>
                         <ol id="list" class="list-group list-group-flush list-group-numbered">
                             @foreach (var subjectsGroups in Model.Subjects.Zip(Model.Groups))
-                            {
+                             {
                                <li class="list-group-item" data-id="@subjectsGroups.First.subjectId"><a href="" сlass="subject-but">@subjectsGroups.First.subjectName (@subjectsGroups.Second.groupName)</a></li>
-                            }
+                             }
                         </ol>
                     </div>
                 </div>
