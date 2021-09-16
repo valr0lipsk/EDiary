@@ -8,10 +8,10 @@
             <div class="row h-100">
                 <div class="col-12 h-100 text-center">
                     <h3 class="p-0">Журнал предмета: 
-                        @*@foreach (var subject in Model.Subjects)
+                        @foreach (var subject in Model.Subjects)
                          {
                             @subject.subjectName
-                         }*@
+                         }
                     </h3>
                 </div>
                 <div class="col-12 h-100">
@@ -21,10 +21,10 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
                             </div>
                             <div class="row pl-3">
-                               @*@foreach (var group in Model.Groups)
+                               @foreach (var group in Model.Groups)
                                 {
                                    <label>@group.groupName</label>
-                                }*@
+                                }
                             </div>
                         </div>
                     </div>
@@ -34,10 +34,10 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
                             </div>
                             <div class="row pl-3">
-                               @*@foreach (var trFullname in Model.Users)
+                               @foreach (var trFullname in Model.Users)
                                 { 
                                     <label>@trFullname.userSurname @trFullname.userName @trFullname.userLastname</label>
-                                }*@
+                                }
                             </div>
                         </div>
                     </div>
