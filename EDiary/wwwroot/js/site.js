@@ -47,12 +47,12 @@ $(document).ready(function () {
         var subId = $(this).attr("data-id");
         $.ajax({
             type: "POST",
-            url: "/Marks/Jurnal",
+            url: "/Marks/Jurnal?id=" + subId,
             data: { 'id': subId },
             cache: false,
             async: true,
             success: function (result) {
-                window.location.href = "/Marks/Jurnal";
+                window.location.href = "/Marks/Jurnal?id=" + subId;
             }
         });
     })
