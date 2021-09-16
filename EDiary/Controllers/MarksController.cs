@@ -9,12 +9,12 @@ namespace EDiary.Controllers
     public class MarksController : Controller
     {
         //представление журнала
-        public IActionResult Jurnal()
-        {
-            return View();
-        }
+        //public IActionResult Jurnal()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Jurnal(int id)
         {
             var subid = id;
