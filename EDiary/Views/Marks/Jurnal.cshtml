@@ -1,10 +1,18 @@
-﻿<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+﻿@using EDiary.ViewModels
+@model TeacherGroupSubjectModel
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<form asp-controller="Marks" asp-action="Jurnal">
 <div class="container h-100">
     <div class="row h-100">
         <div class="col-12 jurnalF h-100 p-3">
             <div class="row h-100">
                 <div class="col-12 h-100 text-center">
-                    <h3 class="p-0">Журнал предмета: "Математика"</h3>
+                    <h3 class="p-0">Журнал предмета: 
+                        @*@foreach (var subject in Model.Subjects)
+                         {
+                            @subject.subjectName
+                         }*@
+                    </h3>
                 </div>
                 <div class="col-12 h-100">
                     <div class="row h-100 mt-3">
@@ -13,7 +21,10 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
                             </div>
                             <div class="row pl-3">
-                                <label>8к2492</label>
+                               @*@foreach (var group in Model.Groups)
+                                {
+                                   <label>@group.groupName</label>
+                                }*@
                             </div>
                         </div>
                     </div>
@@ -23,7 +34,10 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
                             </div>
                             <div class="row pl-3">
-                                <label>Тынкович Валентина Владимировна</label>
+                               @*@foreach (var trFullname in Model.Users)
+                                { 
+                                    <label>@trFullname.userSurname @trFullname.userName @trFullname.userLastname</label>
+                                }*@
                             </div>
                         </div>
                     </div>
@@ -504,3 +518,4 @@
         </div>
     </div>
 </div>
+</form>
