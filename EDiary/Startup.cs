@@ -94,7 +94,7 @@ namespace EDiary
             //настройка маршрутизации
             app.UseEndpoints(endpoints =>
             {
-                  endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
             });
 
         }

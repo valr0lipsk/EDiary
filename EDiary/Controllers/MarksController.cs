@@ -26,31 +26,24 @@ namespace EDiary.Controllers
         public IActionResult Jurnal(int id)
         {
             var subid = id;
-            var teacherFullName = (from user in context.users
-                                   join tr in context.teachers on user.idUser equals tr.teacherUser
-                                   join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                                   join aspusers in context.Users on user.userId equals aspusers.Id
-                                   where subTaught.tsubjectId == subid
-                                   select new Users
-                                   {
-                                       userSurname = user.userSurname,
-                                       userName = user.userName,
-                                       userLastname = user.userLastname
-                                   }).ToList();
-            var subjects = (from user in context.users
-                            join tr in context.teachers on user.idUser equals tr.teacherUser
-                            join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                            join st in context.subjects on subTaught.subjectId equals st.subjectId
-                            join gr in context.groups on subTaught.groupId equals gr.groupId
-                            join aspusers in context.Users on user.userId equals aspusers.Id
-                            where subTaught.tsubjectId == subid
-                            select new Subject
-                            {
-                                subjectName = st.subjectName
-                            }).ToList();
+            var teacherGroup = (from user in context.users
+                                join tr in context.teachers on user.idUser equals tr.teacherUser
+                                join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                                join st in context.subjects on subTaught.subjectId equals st.subjectId
+                                join gr in context.groups on subTaught.groupId equals gr.groupId
+                                join aspusers in context.Users on user.userId equals aspusers.Id
+                                where subTaught.tsubjectId == subid
+                                select new TeacherGroupSubjectModel
+                                {
+                                    teacherSurname = user.userSurname,
+                                    teacherName = user.userName,
+                                    teacherLastname = user.userLastname,
+                                    groups = gr.groupName,
+                                    subjectName = st.subjectName
+                                }).ToList();
             var group = (from user in context.users
                          join tr in context.teachers on user.idUser equals tr.teacherUser
-                         join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+                         join subTaught in context.subjectTaughts on subid equals subTaught.tsubjectId
                          join st in context.subjects on subTaught.subjectId equals st.subjectId
                          join gr in context.groups on subTaught.groupId equals gr.groupId
                          join aspusers in context.Users on user.userId equals aspusers.Id
@@ -59,7 +52,6 @@ namespace EDiary.Controllers
                          {
                              groupName = gr.groupName,
                          }).ToList();
-            var teacherGroup = new TeacherGroupSubjectModel { Groups = group, Subjects = subjects, Users = teacherFullName };
             return View(teacherGroup);
         }
     }
