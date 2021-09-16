@@ -57,6 +57,9 @@ namespace EDiary.Controllers
             var teacherSubjectsGroups = new TeacherGroupSubjectModel { Subjects = subjects, Groups = group, Users = teacherFullName };
             return View(teacherSubjectsGroups);
         }
-
+        public IActionResult Jurnal()
+        {
+            return RedirectToAction("Jurnal", "Marks");
+        }
     }
 }
