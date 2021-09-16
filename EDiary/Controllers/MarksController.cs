@@ -18,11 +18,12 @@ namespace EDiary.Controllers
         public MarksController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
 
         //представление журнала
-        public IActionResult Jurnal()
-        {
-            return View();
-        }
+        //public IActionResult Jurnal()
+        //{
+        //    return View();
+        //}
 
+        [HttpGet]
         public IActionResult Jurnal(int id)
         {
             var subid = id;

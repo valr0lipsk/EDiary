@@ -46,7 +46,7 @@ $(document).ready(function () {
     $('#list li').click(function () {
         var subId = $(this).attr("data-id");
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "/Marks/Jurnal?id=" + subId,
             data: { 'id': subId },
             cache: false,
@@ -57,6 +57,11 @@ $(document).ready(function () {
         });
     })
 
+    //получение айди группы из листа групп в добавлении учащегося
+    $('#groupSt option').each(function () {
+        var subId = $(this).attr("data-id");
+        alert(subId);
+    })
 });
 
 jQuery(document).on('stickyTable', function () {

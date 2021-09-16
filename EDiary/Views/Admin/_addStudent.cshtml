@@ -22,12 +22,12 @@
     </div>
     <div class="col-md-4">
         <label for="validationCustomPassword" class="form-label mt-2 mb-0">Пароль</label>
-        <input type="text" class="form-control" id="CustomPassword" required value="@ViewBag.stPass">
+        <input type="text" class="form-control" id="CustomPassword" required disabled readonly="readonly" value="@ViewBag.stPass">
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom02" class="form-label mt-2 mb-0">Группа</label>
-        <input asp-for="studentGroup" type="text" class="form-control" id="validationCustom02" list="groups" required value="">
-        <datalist id="groups">
+        <input asp-for="studentGroup" type="text" class="form-control" id="validationCustom02" list="groupsSt" value="">
+        <datalist id="groupsSt">
             @foreach (var group in Model.groups)
              {
                 <option data-id="@group.groupId">@group.groupName</option>
