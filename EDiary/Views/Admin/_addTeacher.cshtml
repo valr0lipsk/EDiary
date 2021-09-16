@@ -26,7 +26,7 @@
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom02" class="form-label mt-2 mb-0">Курируемая группа</label>
-        <input asp-for="curatorGroup" type="text" class="form-control" id="validationCustom02" list="groups">
+        <input asp-for="curatorGroup" type="text" class="form-control" id="validationCustom02" list="groups" value="">
         <datalist id="groups">
             @foreach (var group in Model.groups)
              {
