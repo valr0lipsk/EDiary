@@ -65,9 +65,10 @@ namespace EDiary.Controllers
             stLoginPass = new AddStudentModel { groups = groups };
             return PartialView("~/Views/Admin/_addStudent.cshtml", stLoginPass);
         }
+
         public IActionResult CreateStudent(AddStudentModel createStudent)
         {
-            IdentityUser identityStudentUser = new IdentityUser { UserName = createStudent.studentLogin, NormalizedUserName=createStudent.studentLogin.ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
+            IdentityUser identityStudentUser = new IdentityUser { UserName = "st"+createStudent.studentLogin, NormalizedUserName=("st"+createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
             context.Users.Add(identityStudentUser);
             context.SaveChanges();
             Users studentUser = new Users { userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname, userId = identityStudentUser.Id };
@@ -76,7 +77,7 @@ namespace EDiary.Controllers
             Student student = new Student { studentRole = "student", studentGroup = createStudent.studentGroup, studentUser=studentUser.idUser };
             context.users.Add(studentUser);
             context.SaveChanges();
-            return RedirectToAction("Admin", "Admin");
+            return RedirectToAction("Admin", "AddStudent");
         }
 
         //добавление препода
