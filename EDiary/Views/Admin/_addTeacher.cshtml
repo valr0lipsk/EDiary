@@ -17,12 +17,12 @@
         <label for="validationCustomUsername" class="form-label mt-2 mb-0">Имя пользователя</label>
         <div class="input-group has-validation">
             <span class="input-group-text b-r-0" id="inputGroupPrepend">tr</span>
-            <input asp-for="teacherLogin" type="text" class="form-control" id="validationCustomUsername" disabled readonly="readonly" aria-describedby="inputGroupPrepend" required value="@ViewBag.trLogin">
+            <input asp-for="teacherLogin" type="text" class="form-control" id="validationCustomUsername" readonly="readonly" aria-describedby="inputGroupPrepend" required value="@ViewBag.trLogin">
         </div>
     </div>
     <div class="col-md-4">
         <label for="validationCustom03" class="form-label mt-2 mb-0">Пароль</label>
-        <input asp-for="teacherPassword" type="text" class="form-control" disabled readonly="readonly" id="validationCustomPassword" required value="@ViewBag.trPass">
+        <input asp-for="teacherPassword" type="text" class="form-control" readonly="readonly" id="validationCustomPassword" required value="@ViewBag.trPass">
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom02" class="form-label mt-2 mb-0">Курируемая группа</label>
@@ -30,7 +30,7 @@
         <datalist id="groups">
             @foreach (var group in Model.groups)
              {
-                <option data-id="@group.groupId">@group.groupName</option>
+                <option value="@group.groupName"></option>
              }
         </datalist>
     </div>

@@ -15,8 +15,10 @@
                             </div>
                         </div>
                         <div class="col-lg-6 col-4 ml-lg-0 ml-3 justify-content-between">
-                            <div class="row ml-2">
+                            <div class="row ml-1">
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
+                            </div>
+                            <div class="row ml-1">
                                 @if (SignInManager.IsSignedIn(User))
                                 {
                                     @foreach (var studentName in Model)
