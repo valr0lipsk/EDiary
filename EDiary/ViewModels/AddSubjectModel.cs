@@ -8,10 +8,11 @@ namespace EDiary.ViewModels
 {
     public class AddSubjectModel
     {
+        public string teacherFullName { get; set; }
         public string subjectName { get; set; }
         public int subjectId { get; set; }
         public int teacherId { get; set; }
-        public int groupId { get; set; }
+        public string groupName { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
         public IEnumerable<Users> Users { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }

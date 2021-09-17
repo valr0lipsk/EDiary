@@ -55,45 +55,45 @@ namespace EDiary.Controllers
         }
 
         //добавление студента
-        public IActionResult AddStudent(AddStudentModel stLoginPass)
+        public IActionResult AddStudent(AddStudentModel stGroup)
         {
             var stLogin = generateLogin();
             var stPass = generatePassword();
             var groups = context.groups.ToList();
             ViewBag.stLogin = stLogin;
             ViewBag.stPass = stPass;
-            stLoginPass = new AddStudentModel { groups = groups };
-            return PartialView("~/Views/Admin/_addStudent.cshtml", stLoginPass);
+            stGroup = new AddStudentModel { groups = groups };
+            return PartialView("~/Views/Admin/_addStudent.cshtml", stGroup);
         }
 
         public IActionResult CreateStudent(AddStudentModel createStudent)
         {
-            IdentityUser identityStudentUser = new IdentityUser { UserName = "st"+createStudent.studentLogin, NormalizedUserName=("st"+createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
+            IdentityUser identityStudentUser = new IdentityUser { Id = context.Users.OrderBy(id => id.Id).Select(user => int.Parse(user.Id) + 1).Last().ToString(), UserName = "st" + createStudent.studentLogin, NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
             context.Users.Add(identityStudentUser);
             context.SaveChanges();
             Users studentUser = new Users { userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname, userId = identityStudentUser.Id };
             context.users.Add(studentUser);
             context.SaveChanges();
-            Student student = new Student { studentRole = "student", studentGroup = createStudent.studentGroup, studentUser=studentUser.idUser };
-            context.users.Add(studentUser);
+            Student student = new Student { studentRole = "student", studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = studentUser.idUser };
+            context.students.Add(student);
             context.SaveChanges();
-            return RedirectToAction("Admin", "AddStudent");
+            return RedirectToAction("AddStudent");
         }
 
         //добавление препода
-        public IActionResult AddTeacher(AddTeacherModel createTeacher)
+        public IActionResult AddTeacher(AddTeacherModel curGroup)
         {
             var trLogin = generateLogin();
             var trPass = generatePassword();
             var groups = context.groups.ToList();
             ViewBag.trLogin = trLogin;
             ViewBag.trPass = trPass;
-            createTeacher = new AddTeacherModel { groups = groups };
-            return PartialView("~/Views/Admin/_addTeacher.cshtml", createTeacher);
+            curGroup = new AddTeacherModel { groups = groups };
+            return PartialView("~/Views/Admin/_addTeacher.cshtml", curGroup);
         }
         public IActionResult CreateTeacher(AddTeacherModel createTeacher)
         {
-            IdentityUser identityTeacherUser = new IdentityUser { UserName = createTeacher.teacherLogin, NormalizedUserName = createTeacher.teacherLogin.ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
+            IdentityUser identityTeacherUser = new IdentityUser { Id = context.Users.OrderBy(id => id.Id).Select(user => int.Parse(user.Id) + 1).Last().ToString(), UserName = "tr" + createTeacher.teacherLogin, NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
             context.Users.Add(identityTeacherUser);
             context.SaveChanges();
             Users teacherUser = new Users { userSurname = createTeacher.teacherSurname, userName = createTeacher.teacherName, userLastname = createTeacher.teacherLastname, userId = identityTeacherUser.Id };
@@ -101,6 +101,9 @@ namespace EDiary.Controllers
             context.SaveChanges();
             Teacher teacher = new Teacher { teacherRole = "teacher", teacherUser = teacherUser.idUser };
             context.teachers.Add(teacher);
+            context.SaveChanges();
+            collegeGroup group = new collegeGroup { curatorId = (from tr in context.teachers join gr in context.groups on tr.teacherId equals gr.curatorId where gr.groupName == createTeacher.curatorGroup select teacher.teacherId).First() };
+            context.groups.Update(group);
             context.SaveChanges();
             return RedirectToAction("Admin", "Admin");
         }
@@ -136,7 +139,7 @@ namespace EDiary.Controllers
             Subject subject = new Subject { subjectName = addSubject.subjectName };
             context.subjects.Add(subject);
             context.SaveChanges();
-            subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = addSubject.teacherId, groupId = addSubject.groupId };
+            subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = (from us in context.users from tr in context.teachers where (us.userSurname + " " + us.userName + " " + us.userLastname).Trim() == addSubject.teacherFullName.Trim() select tr.teacherId).First(),/*(from us in context.users join tr in context.teachers on us.idUser equals tr.teacherUser where addSubject.teacherFullName.Trim()== (us.userSurname + "" + us.userName + "" + us.userLastname).Trim() select tr.teacherId).First(),*/ groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName).Select(gr => gr.groupId).First() };
             context.subjectTaughts.Add(subjectTaught);
             context.SaveChanges();
             return RedirectToAction("Admin","Admin");
