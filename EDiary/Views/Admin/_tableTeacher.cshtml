@@ -14,24 +14,6 @@
         </tr>
     </thead>
     <tbody>
-        @*@foreach (var teacherUserSubject in Model.Users.Zip(Model.Teachers.Zip(Model.AspUsers)))
-        {
-            <tr>
-                <td>@teacherUserSubject.Second.First.teacherId</td>
-                <td>@teacherUserSubject.Second.Second.UserName</td>
-                <td>@teacherUserSubject.First.userSurname</td>
-                <td>@teacherUserSubject.First.userName</td>
-                <td>@teacherUserSubject.First.userLastname</td>
-                <td>
-                    @foreach (var subject in Model.Subjects)
-                    {
-                        <ul>
-                            @subject.subjectName
-                        </ul>
-                    }
-                </td>
-            </tr>
-        }*@
         @foreach (var teacherUserSubject in Model)
         {
             <tr>
