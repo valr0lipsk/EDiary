@@ -139,7 +139,7 @@ namespace EDiary.Controllers
             Subject subject = new Subject { subjectName = addSubject.subjectName };
             context.subjects.Add(subject);
             context.SaveChanges();
-            subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = (from us in context.users from tr in context.teachers where (us.userSurname + " " + us.userName + " " + us.userLastname).Trim() == addSubject.teacherFullName.Trim() select tr.teacherId).First(),/*(from us in context.users join tr in context.teachers on us.idUser equals tr.teacherUser where addSubject.teacherFullName.Trim()== (us.userSurname + "" + us.userName + "" + us.userLastname).Trim() select tr.teacherId).First(),*/ groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName).Select(gr => gr.groupId).First() };
+            subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = (from tr in context.teachers join us in context.users on tr.teacherUser equals us.idUser where (us.userSurname + " " + us.userName + " " + us.userLastname).Trim() == addSubject.teacherFullName.Trim() select tr.teacherId).First(),/*(from us in context.users join tr in context.teachers on us.idUser equals tr.teacherUser where addSubject.teacherFullName.Trim()== (us.userSurname + "" + us.userName + "" + us.userLastname).Trim() select tr.teacherId).First(),*/ groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName).Select(gr => gr.groupId).First() };
             context.subjectTaughts.Add(subjectTaught);
             context.SaveChanges();
             return RedirectToAction("Admin","Admin");
