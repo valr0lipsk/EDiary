@@ -77,7 +77,7 @@ namespace EDiary.Controllers
             Student student = new Student { studentRole = "student", studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = studentUser.idUser };
             context.students.Add(student);
             context.SaveChanges();
-            return RedirectToAction("AddStudent");
+            return RedirectToAction("Admin", "Admin");
         }
 
         //добавление препода

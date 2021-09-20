@@ -1,5 +1,5 @@
 ﻿@using EDiary.ViewModels
-@model IEnumerable<TeacherGroupSubjectModel>
+@model JurnalModel
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <form asp-controller="Marks" asp-action="Jurnal">
 <div class="container h-100">
@@ -8,7 +8,7 @@
             <div class="row h-100">
                 <div class="col-12 h-100 text-center">
                     <h3 class="p-0">Журнал предмета: 
-                        @foreach (var subject in Model)
+                        @foreach (var subject in Model.TeacherJurnal)
                          {
                             @subject.subjectName
                          }
@@ -21,7 +21,7 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
                             </div>
                             <div class="row pl-3">
-                               @foreach (var group in Model)
+                               @foreach (var group in Model.TeacherJurnal)
                                 {
                                    <label>@group.groups</label>
                                 }
@@ -34,7 +34,7 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
                             </div>
                             <div class="row pl-3">
-                               @foreach (var trFullname in Model)
+                               @foreach (var trFullname in Model.TeacherJurnal)
                                 { 
                                     <label>@trFullname.teacherSurname @trFullname.teacherName @trFullname.teacherLastname</label>
                                 }
@@ -49,7 +49,11 @@
                 <table class="table _table table-hover table-bordered editableTable">
                     <thead>
                         <tr>
-                            <th>@*Фамилия\Дата*@</th>
+                            @foreach (var dateLesson in Model.StudentJurnal)
+                            {
+                            <th class="vt-text">@dateLesson.lessonDate</th>
+                            }
+                            @*<th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
@@ -72,446 +76,23 @@
                             <th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
+                            <th class="vt-text">01.01.2021</th>*@
                         </tr>
                     </thead>
                     <tbody>
+                        @for (int i = 0; i < Model.StudentJurnal.Count(); i++)
+                        {
                         <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
+                            @foreach (var student in Model.StudentJurnal)
+                            {
+                            <th class="sticky-cell">@student.studentSurname</th>
+                            }
+                            @foreach (var mark in Model.StudentJurnal)
+                            {
+                            <td>@mark.studentMark</td>
+                            }
                         </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <th class="sticky-cell">Бичевская</th>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>9</td>
-                        </tr>
+                        }
                     </tbody>
                 </table>
             </div>
