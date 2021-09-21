@@ -8,7 +8,7 @@
             <div class="row h-100">
                 <div class="col-12 h-100 text-center">
                     <h3 class="p-0">Журнал предмета: 
-                        @foreach (var subject in Model.TeacherJurnal)
+                        @foreach (var subject in Model.Subjects)
                          {
                             @subject.subjectName
                          }
@@ -21,9 +21,9 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
                             </div>
                             <div class="row pl-3">
-                               @foreach (var group in Model.TeacherJurnal)
+                               @foreach (var group in Model.Groups)
                                 {
-                                   <label>@group.groups</label>
+                                   <label>@group.groupName</label>
                                 }
                             </div>
                         </div>
@@ -34,9 +34,9 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
                             </div>
                             <div class="row pl-3">
-                               @foreach (var trFullname in Model.TeacherJurnal)
+                               @foreach (var trFullname in Model.Teachers)
                                 { 
-                                    <label>@trFullname.teacherSurname @trFullname.teacherName @trFullname.teacherLastname</label>
+                                    <label>@trFullname.userSurname @trFullname.userName @trFullname.userLastname</label>
                                 }
                             </div>
                         </div>
@@ -48,10 +48,12 @@
             <div class="row h-100 sticky-table sticky-ltr-cells m-1">
                 <table class="table _table table-hover table-bordered editableTable">
                     <thead>
+                        
                         <tr>
-                            @foreach (var dateLesson in Model.StudentJurnal)
+                            <th></th>
+                            @foreach (var dateLesson in Model.Lessons)
                             {
-                            <th class="vt-text">@dateLesson.lessonDate</th>
+                            <th class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
                             }
                             @*<th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
@@ -80,16 +82,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.StudentJurnal.Count(); i++)
+                        @foreach (var studentMark in Model.Students.Zip(Model.Marks))
                         {
                         <tr>
-                            @foreach (var student in Model.StudentJurnal)
+                            <th class="sticky-cell">@studentMark.First.userSurname</th>
+                            @for (int marks = 0; marks < Model.Marks.Count(); marks++) 
                             {
-                            <th class="sticky-cell">@student.studentSurname</th>
-                            }
-                            @foreach (var mark in Model.StudentJurnal)
-                            {
-                            <td>@mark.studentMark</td>
+                            <td>@studentMark.Second.mark</td>
                             }
                         </tr>
                         }

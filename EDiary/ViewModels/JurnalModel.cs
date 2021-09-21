@@ -8,7 +8,14 @@ namespace EDiary.ViewModels
 {
     public class JurnalModel
     {
-        public IEnumerable<StudentsJurnalModel> StudentJurnal { get; set; }
-        public IEnumerable<TeacherJurnalModel> TeacherJurnal { get; set; }
+        public IEnumerable<Users> Teachers { get; set; }
+        public IEnumerable<Users> Students { get; set; }
+        public IEnumerable<Lesson> Lessons { get; set; }
+        public IEnumerable<Mark> Marks { get; set; }
+        public IEnumerable<collegeGroup> Groups { get; set; }
+        public IEnumerable<Subject> Subjects { get; set; }
+
+        //public IEnumerable<StudentsJurnalModel> StudentJurnal { get; set; }
+        //public IEnumerable<TeacherJurnalModel> TeacherJurnal { get; set; }
     }
 }
