@@ -48,12 +48,11 @@
             <div class="row h-100 sticky-table sticky-ltr-cells m-1">
                 <table class="table _table table-hover table-bordered editableTable">
                     <thead>
-                        
                         <tr>
                             <th></th>
                             @foreach (var dateLesson in Model.Lessons)
                             {
-                            <th class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
+                            <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
                             }
                             @*<th class="vt-text">01.01.2021</th>
                             <th class="vt-text">01.01.2021</th>
@@ -82,13 +81,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var studentMark in Model.Students.Zip(Model.Marks))
+                        @foreach (var studentMark in Model.Students.Zip(Model.Marks).Zip(Model.StudentsId).Zip(Model.setMarks))
                         {
                         <tr>
-                            <th class="sticky-cell">@studentMark.First.userSurname</th>
+                            <th data-idStud="@studentMark.First.Second.studentId" class="sticky-cell">@studentMark.First.First.First.userSurname</th>
                             @for (int marks = 0; marks < Model.Marks.Count(); marks++) 
                             {
-                            <td>@studentMark.Second.mark</td>
+                            <td data-idMark="@studentMark.Second.setmarkId @studentMark.Second.studentId">@studentMark.First.First.Second.mark</td>
                             }
                         </tr>
                         }
