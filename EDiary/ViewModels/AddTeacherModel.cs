@@ -30,7 +30,7 @@ namespace EDiary.ViewModels
         public string teacherPassword { get; set; }
         
         [Display(Name = "Курируемая группа")]
-        public int curatorGroup { get; set; }
+        public string curatorGroup { get; set; }
 
         public IEnumerable<collegeGroup> groups { get; set; }
     }
