@@ -22,27 +22,6 @@ namespace EDiary.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public IActionResult Jurnal(int id)
-        //{
-        //    var subid = id;
-        //    var teacherGroup = (from user in context.users
-        //                        join tr in context.teachers on user.idUser equals tr.teacherUser
-        //                        join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-        //                        join st in context.subjects on subTaught.subjectId equals st.subjectId
-        //                        join gr in context.groups on subTaught.groupId equals gr.groupId
-        //                        join aspusers in context.Users on user.userId equals aspusers.Id
-        //                        where subTaught.tsubjectId == subid
-        //                        select new TeacherGroupSubjectModel
-        //                        {
-        //                            teacherSurname = user.userSurname,
-        //                            teacherName = user.userName,
-        //                            teacherLastname = user.userLastname,
-        //                            groups = gr.groupName,
-        //                            subjectName = st.subjectName
-        //                        }).ToList();
-        //    return View(teacherGroup);
-        //}
         [HttpGet]
         public IActionResult Jurnal(int id)
         {
@@ -108,7 +87,6 @@ namespace EDiary.Controllers
                                 studentId = setMark.studentId
                             }).ToList();
 
-            //var studentJurnal = new StudentsJurnalModel { Users = studentsJurnal, Marks = markJurnal, Lessons = lessonJurnal };
             var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks };
             return View(jurnal);
         }
