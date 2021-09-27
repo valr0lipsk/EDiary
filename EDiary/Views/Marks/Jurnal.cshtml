@@ -69,7 +69,7 @@
                                 var sm = Model.setMarks.Where(x => x.studentId == studentMark.idUser && x.lessonId == dateLesson.lessonId).FirstOrDefault();
                                 if (sm != null)
                                  {
-                                    <td>@sm.mark.mark</td>
+                                    <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId">@sm.mark.mark</td>
                                  }
                                 else
                                 {

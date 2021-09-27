@@ -50,10 +50,10 @@ $(document).ready(function () {
             url: "/Marks/Jurnal?id=" + subId,
             data: { 'id': subId },
             cache: false,
-            async: true,
-            success: function (result) {
-                window.location.href = "/Marks/Jurnal?id=" + subId;
-            }
+            async: true
+            //success: function (result) {
+            //    window.location.href = "/Marks/Jurnal?id=" + subId;
+            //}
         });
     })
 });
