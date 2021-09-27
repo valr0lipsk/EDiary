@@ -116,17 +116,13 @@ namespace EDiary.Controllers
                                      userName = user.userName,
                                      userLastname = user.userLastname
                                  }).ToList();
-            var groupJurnal = (from user in context.users
-                                 join tr in context.teachers on user.idUser equals tr.teacherUser
-                                 join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
-                                 join st in context.subjects on subTaught.subjectId equals st.subjectId
-                                 join gr in context.groups on subTaught.groupId equals gr.groupId
-                                 join aspusers in context.Users on user.userId equals aspusers.Id
-                                 where subTaught.tsubjectId == subid
-                                 select new collegeGroup
-                                 {
-                                     groupName = gr.groupName,
-                                 }).ToList();
+            var groupJurnal = (from subTaught in context.subjectTaughts
+                               join gr in context.groups on subTaught.groupId equals gr.groupId
+                               where subTaught.tsubjectId == subid
+                               select new collegeGroup
+                               {
+                                   groupName = gr.groupName,
+                               }).ToList();
 
             var subjectJurnal = (from subTaught in context.subjectTaughts
                                  join st in context.subjects on subTaught.subjectId equals st.subjectId
