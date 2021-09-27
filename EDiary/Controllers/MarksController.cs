@@ -105,7 +105,7 @@ namespace EDiary.Controllers
             //                      studentMark = mark.mark
             //                  }).ToList();
 
-            /*преподователь, группа и предмет*/
+            /*преподаватель, группа и предмет*/
             var teacherJurnal = (from user in context.users
                                  join tr in context.teachers on user.idUser equals tr.teacherUser
                                  join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
@@ -130,16 +130,13 @@ namespace EDiary.Controllers
                                  {
                                      groupName = gr.groupName,
                                  }).ToList();
-            var subjectJurnal = (from user in context.users
-                                 join tr in context.teachers on user.idUser equals tr.teacherUser
-                                 join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+
+            var subjectJurnal = (from subTaught in context.subjectTaughts
                                  join st in context.subjects on subTaught.subjectId equals st.subjectId
-                                 join gr in context.groups on subTaught.groupId equals gr.groupId
-                                 join aspusers in context.Users on user.userId equals aspusers.Id
                                  where subTaught.tsubjectId == subid
                                  select new Subject
                                  {
-                                     subjectName = st.subjectName
+                                   subjectName = st.subjectName
                                  }).ToList();
             /*студенты*/
             var studentsJurnal = (from st in context.students

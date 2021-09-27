@@ -22,4 +22,6 @@
     <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>
