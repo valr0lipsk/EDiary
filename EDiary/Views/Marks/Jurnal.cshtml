@@ -52,44 +52,30 @@
                         <tr>
                             <th></th>
                             @foreach (var dateLesson in Model.Lessons)
-                            {
+                             {
                             <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
-                            }
-                            @*<th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>
-                            <th class="vt-text">01.01.2021</th>*@
+                             }
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var studentMark in Model.Students.Zip(Model.Marks).Zip(Model.StudentsId).Zip(Model.setMarks))
+                        @*@foreach (var studentMark in Model.Students.Zip(Model.Marks).Zip(Model.StudentsId).Zip(Model.setMarks))*@
+                        @foreach (var studentMark in Model.Students)
                         {
                         <tr>
-                            <th data-idStud="@studentMark.First.Second.studentId" class="sticky-cell">@studentMark.First.First.First.userSurname</th>
-                            @for (int marks = 0; marks < Model.Marks.Count(); marks++) 
+                            <th data-idStud="@studentMark.idUser" class="sticky-cell">@studentMark.userSurname</th>
+
+                            @foreach (var dateLesson in Model.Lessons)
                             {
-                            <td data-idMark="@studentMark.Second.setmarkId @studentMark.Second.studentId">@studentMark.First.First.Second.mark</td>
-                            }
+                                var sm = Model.setMarks.Where(x => x.studentId == studentMark.idUser && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                if (sm != null)
+                                 {
+                                    <td>@sm.mark.mark</td>
+                                 }
+                                else
+                                {
+                                    <td></td>
+                                }
+                             }
                         </tr>
                         }
                     </tbody>
