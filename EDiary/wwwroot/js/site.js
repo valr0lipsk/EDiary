@@ -51,9 +51,6 @@ $(document).ready(function () {
             data: { 'id': subId },
             cache: false,
             async: true
-            //success: function (result) {
-            //    window.location.href = "/Marks/Jurnal?id=" + subId;
-            //}
         });
     })
 });
