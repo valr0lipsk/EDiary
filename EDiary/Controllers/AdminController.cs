@@ -160,7 +160,7 @@ namespace EDiary.Controllers
                                           studentSurname=us.userSurname,
                                           studentName=us.userSurname,
                                           studentLastname=us.userLastname,
-                                          groupName=gr.groupName
+                                          groupName=gr.groupName,
                                       };
             return PartialView("~/Views/Admin/_tableStudent.cshtml", aspUserStudentGroup);
         }
