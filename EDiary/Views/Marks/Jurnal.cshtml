@@ -53,31 +53,30 @@
                             <th></th>
                             @foreach (var dateLesson in Model.Lessons)
                              {
-                            <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
+                                 <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
                              }
                         </tr>
                     </thead>
                     <tbody>
-                        @*@foreach (var studentMark in Model.Students.Zip(Model.Marks).Zip(Model.StudentsId).Zip(Model.setMarks))*@
                         @foreach (var studentMark in Model.Students)
-                        {
-                        <tr>
+                         {
+                         <tr>
                             <th data-idStud="@studentMark.idUser" class="sticky-cell">@studentMark.userSurname</th>
 
                             @foreach (var dateLesson in Model.Lessons)
-                            {
+                             {
                                 var sm = Model.setMarks.Where(x => x.studentId == studentMark.idUser && x.lessonId == dateLesson.lessonId).FirstOrDefault();
                                 if (sm != null)
-                                 {
+                                {
                                     <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId">@sm.mark.mark</td>
-                                 }
+                                }
                                 else
                                 {
                                     <td></td>
                                 }
                              }
                         </tr>
-                        }
+                         }
                     </tbody>
                 </table>
             </div>
