@@ -102,7 +102,8 @@ namespace EDiary.Controllers
             Teacher teacher = new Teacher { teacherRole = "teacher", teacherUser = teacherUser.idUser };
             context.teachers.Add(teacher);
             context.SaveChanges();
-            collegeGroup group = new collegeGroup { curatorId = (from tr in context.teachers join gr in context.groups on tr.teacherId equals gr.curatorId where gr.groupName == createTeacher.curatorGroup select teacher.teacherId).First() };
+            collegeGroup group = context.groups.First(grId => grId.curatorId == (from tr in context.teachers join gr in context.groups on tr.teacherId equals gr.curatorId where gr.groupName == createTeacher.curatorGroup select tr.teacherId).First());
+            //{ curatorId = (from tr in context.teachers join gr in context.groups on tr.teacherId equals gr.curatorId where gr.groupName == createTeacher.curatorGroup select teacher.teacherId).First() };
             context.groups.Update(group);
             context.SaveChanges();
             return RedirectToAction("Admin", "Admin");
