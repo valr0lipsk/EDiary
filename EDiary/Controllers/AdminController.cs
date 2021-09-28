@@ -68,7 +68,7 @@ namespace EDiary.Controllers
 
         public IActionResult CreateStudent(AddStudentModel createStudent)
         {
-            IdentityUser identityStudentUser = new IdentityUser { Id = context.Users.OrderBy(id => id.Id).Select(user => int.Parse(user.Id) + 1).Last().ToString(), UserName = "st" + createStudent.studentLogin, NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
+            IdentityUser identityStudentUser = new IdentityUser { Id = createStudent.studentLogin, UserName = "st" + createStudent.studentLogin, NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
             context.Users.Add(identityStudentUser);
             context.SaveChanges();
             Users studentUser = new Users { userSurname = createStudent.studentSurname, userName = createStudent.studentName, userLastname = createStudent.studentLastname, userId = identityStudentUser.Id };
@@ -93,7 +93,7 @@ namespace EDiary.Controllers
         }
         public IActionResult CreateTeacher(AddTeacherModel createTeacher)
         {
-            IdentityUser identityTeacherUser = new IdentityUser { Id = context.Users.OrderBy(id => id.Id).Select(user => int.Parse(user.Id) + 1).Last().ToString(), UserName = "tr" + createTeacher.teacherLogin, NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
+            IdentityUser identityTeacherUser = new IdentityUser { Id = createTeacher.teacherLogin, UserName = "tr" + createTeacher.teacherLogin, NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
             context.Users.Add(identityTeacherUser);
             context.SaveChanges();
             Users teacherUser = new Users { userSurname = createTeacher.teacherSurname, userName = createTeacher.teacherName, userLastname = createTeacher.teacherLastname, userId = identityTeacherUser.Id };
@@ -102,8 +102,8 @@ namespace EDiary.Controllers
             Teacher teacher = new Teacher { teacherRole = "teacher", teacherUser = teacherUser.idUser };
             context.teachers.Add(teacher);
             context.SaveChanges();
-            collegeGroup group = context.groups.First(grId => grId.curatorId == (from tr in context.teachers join gr in context.groups on tr.teacherId equals gr.curatorId where gr.groupName == createTeacher.curatorGroup select tr.teacherId).First());
-            //{ curatorId = (from tr in context.teachers join gr in context.groups on tr.teacherId equals gr.curatorId where gr.groupName == createTeacher.curatorGroup select teacher.teacherId).First() };
+            var group = context.groups.Where(grId => grId.groupName ==  createTeacher.curatorGroup).First();
+            group.curatorId = teacher.teacherId;
             context.groups.Update(group);
             context.SaveChanges();
             return RedirectToAction("Admin", "Admin");
