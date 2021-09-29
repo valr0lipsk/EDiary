@@ -47,10 +47,13 @@ $(document).ready(function () {
         var subId = $(this).attr("data-id");
         $.ajax({
             type: "GET",
-            url: "/Marks/Jurnal?id=" + subId,
+            //url: "/Marks/Jurnal?id=" + subId,
             data: { 'id': subId },
             cache: false,
-            async: true
+            async: true,
+            success: function (result) {
+                window.location.href = "/Marks/Jurnal?id=" + subId;
+            }
         });
     })
 });
