@@ -1,5 +1,6 @@
 ﻿using EDiary.Models;
 using EDiary.Service;
+using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,15 @@ namespace EDiary.Controllers
                             userLastname = user.userLastname
                         }).ToList();
             return View(studentFullName);
+        }
+        //смена пароля преподавателя
+        public IActionResult ChangePassword(StudentChangePassword student)
+        {
+            var studentUser = context.Users.Where(stId => stId.Id == userManager.GetUserId(User)).First();
+            studentUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, student.studentPassword);
+            context.Users.Update(studentUser);
+            context.SaveChanges();
+            return RedirectToAction("Student", "Student");
         }
     }
 }
