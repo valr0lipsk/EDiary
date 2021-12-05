@@ -13,17 +13,33 @@ namespace EDiary.Models
         [Key]
         public int teacherId { get; set; }
 
+        [Display(Name = "Фамилия")]
+        [StringLength(15)]
+        public string teacherSurname { get; set; }
+
+        [Display(Name = "Имя")]
+        [StringLength(15)]
+        public string teacherName { get; set; }
+
+        [Display(Name = "Отчество")]
+        [StringLength(15)]
+        public string teacherLastname { get; set; }
+
+        [Display(Name = "Аватарка")]
+        [StringLength(100)]
+        public string teacherPic { get; set; }
+
         [Display(Name = "Роль")]
         [Required]
         public string teacherRole { get; set; }
 
         [Required]
-        public int teacherUser { get; set; }
+        public string teacherUser { get; set; }
 
         [ForeignKey("teacherRole")]
         public IdentityRole role { get; set; }
 
         [ForeignKey("teacherUser")]
-        public Users user { get; set; }
+        public IdentityUser user { get; set; }
     }
 }

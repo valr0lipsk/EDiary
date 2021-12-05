@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class AspUserStudentGroup
+    public class AspStudentGroup
     {
         public int studentId { get; set; }
         public string studentLastname { get; set; }

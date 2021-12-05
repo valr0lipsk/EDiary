@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class TableTeacherModel
+    public class AspTeacherSubject
     {
-        public IEnumerable<Users> Users { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
         public IEnumerable<IdentityUser> AspUsers { get; set; }

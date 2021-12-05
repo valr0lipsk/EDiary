@@ -7,11 +7,11 @@
     </div>
     <div class="col-md-5">
         <label for="validationCustom02" class="form-label mb-0">Преподаватель</label>
-        <input asp-for="teacherFullName" type="text" class="form-control" id="validationCustom02" list="teachers" required value="">
+        <input asp-for="teacher" type="text" class="form-control" id="validationCustom02" list="teachers" required value="">
         <datalist id="teachers">
-                @foreach (var teacher in Model.Users)
+                @foreach (var teacher in Model.Teachers)
                  {
-                    <option>@teacher.userSurname @teacher.userName @teacher.userLastname</option>
+                    <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
                  }
         </datalist>
     </div>
