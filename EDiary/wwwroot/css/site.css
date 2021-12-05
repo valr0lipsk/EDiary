@@ -70,7 +70,6 @@ button.accept-policy {
     border-radius: 40px;
     margin-top: 8.5%;*/
     min-width: 120vh;
-    height: 580px;
     background: #FFFFFF;
     margin: 0 auto;
     box-shadow: 0.5px 0.5px 8px #BA55D3;
@@ -79,7 +78,12 @@ button.accept-policy {
 .welcome__img {
     /*background: url("./source/фон.png") center no-repeat;*/
     background: url("./source/фонпнг_текст.png") center no-repeat;
+    min-height: 87vh;
     background-size: cover;
+}
+
+.brder {
+    border-bottom: 3px solid #800080;
 }
 
 .input {
