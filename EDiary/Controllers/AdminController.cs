@@ -146,7 +146,7 @@ namespace EDiary.Controllers
             var teachersTable = from teacher in context.teachers
                                 join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
                                 where teacher.teacherRole=="teacher"
-                                select new AspTeacherSubject
+                                select new AspTeacherSubjectGroup
                                 {
                                     teacherId = teacher.teacherId,
                                     teacherLastname = teacher.teacherLastname,
@@ -164,19 +164,20 @@ namespace EDiary.Controllers
         //таблица предметов
         public IActionResult ShowSubjects()
         {
-            var teacherGroupSubject = (from teacher in context.teachers
-                                       join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
-                                       join sub in context.subjects on subTaught.subjectId equals sub.subjectId
+            var teacherGroupSubject = (from sub in context.subjects
+                                       join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                                       join teacher in context.teachers on subTaught.teacherId equals teacher.teacherId
                                        join gr in context.groups on subTaught.groupId equals gr.groupId
-                                       join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                       where teacher.teacherRole == "teacher"
-                                       select new TeacherGroupSubjectModel
+                                       orderby subTaught.tsubjectId
+                                       select new AspTeacherSubjectGroup
                                        {
                                            tsubjectId = subTaught.tsubjectId,
-                                           subjectName = teacher.teacherName,
+                                           subjectName = sub.subjectName,
                                            groups = gr.groupName,
-                                           teacherFullName = string.Join(", ", (teacher.teacherSurname + " " + teacher.teacherName + " " + teacher.teacherLastname).Trim().ToArray())
-                                       }).ToList();
+                                           teacherSurname = teacher.teacherSurname,
+                                           teacherName = teacher.teacherName,
+                                           teacherLastname = teacher.teacherLastname
+                                       });
 
             return PartialView("~/Views/Admin/_tableSubject.cshtml", teacherGroupSubject);
         }

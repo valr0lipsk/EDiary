@@ -55,12 +55,12 @@ namespace EDiary.Controllers
                                  groupName = gr.groupName,
                              }).ToList();
 
-            var teacherSubjectsGroups = new TeacherGroupSubjectModel { Subjects = subjects, Groups = group, Teachers = teacherName };
+            var teacherSubjectsGroups = new AspTeacherSubjectGroup { Subjects = subjects, Groups = group, Teachers = teacherName };
             return View(teacherSubjectsGroups);
         }
 
         //смена пароля преподавателя
-        public IActionResult ChangePassword(TeacherGroupSubjectModel teacher)
+        public IActionResult ChangePassword(AspTeacherSubjectGroup teacher)
         {
             var teacherUser = context.Users.Where(trId => trId.Id == userManager.GetUserId(User)).First();
             teacherUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, teacher.teacherPassword);
