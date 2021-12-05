@@ -57,6 +57,15 @@ namespace EDiary.Controllers
             var teacherSubjectsGroups = new TeacherGroupSubjectModel { Subjects = subjects, Groups = group, Users = teacherFullName };
             return View(teacherSubjectsGroups);
         }
+        //смена пароля преподавателя
+        public IActionResult ChangePassword(TeacherGroupSubjectModel teacher)
+        {
+            var teacherUser = context.Users.Where(trId => trId.Id == userManager.GetUserId(User)).First();
+            teacherUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, teacher.teacherPassword);
+            context.Users.Update(teacherUser);
+            context.SaveChanges();
+            return RedirectToAction("Teacher", "Teacher");
+        }
         public IActionResult Jurnal()
         {
             return RedirectToAction("Jurnal", "Marks");

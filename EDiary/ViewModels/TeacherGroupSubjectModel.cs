@@ -19,6 +19,7 @@ namespace EDiary.ViewModels
         public string teacherLastname { get; set; }
         public string subjectName { get; set; }
         public string groups { get; set; }
+        public string teacherPassword { get; set; }
 
     }
 }
