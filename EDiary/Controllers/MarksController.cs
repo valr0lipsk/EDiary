@@ -26,16 +26,16 @@ namespace EDiary.Controllers
         public IActionResult Jurnal(int id)
         {
             var subid = id;
+
             /*преподаватель, группа и предмет*/
-            var teacherJurnal = (from user in context.users
-                                 join tr in context.teachers on user.idUser equals tr.teacherUser
-                                 join subTaught in context.subjectTaughts on tr.teacherId equals subTaught.teacherId
+            var teacherJurnal = (from teacher in context.teachers 
+                                 join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
                                  where subTaught.tsubjectId == subid
-                                 select new Users
+                                 select new Teacher
                                  {
-                                     userSurname = user.userSurname,
-                                     userName = user.userName,
-                                     userLastname = user.userLastname
+                                     teacherSurname = teacher.teacherSurname,
+                                     teacherName = teacher.teacherName,
+                                     teacherLastname = teacher.teacherLastname
                                  }).ToList();
 
             var groupJurnal = (from subTaught in context.subjectTaughts
@@ -53,19 +53,18 @@ namespace EDiary.Controllers
                                  {
                                    subjectName = st.subjectName
                                  }).ToList();
+
             /*студенты*/
-            var studentsJurnal = (from st in context.students
-                                  join user in context.users on st.studentUser equals user.idUser
-                                  select new Users
+            var studentsJurnal = (from student in context.students
+                                  select new Student
                                   {
-                                      idUser = st.studentId,
-                                      userSurname = user.userSurname,
-                                      userName = user.userName,
-                                      userLastname = user.userLastname
+                                      studentId = student.studentId,
+                                      studentSurname = student.studentSurname,
+                                      studentName = student.studentName,
+                                      studentLastname = student.studentLastname
                                   }).ToList();
 
             var lessonJurnal = (from lesson in context.lessons
-                                //join setMark in context.setMarks on lesson.lessonId equals setMark.lessonId
                                 where lesson.tsubjectId == subid
                                 select new Lesson
                                 {
@@ -74,7 +73,7 @@ namespace EDiary.Controllers
                                 }).ToList();
 
             var setMarks = (from setMark in context.setMarks
-                            join st in context.students on setMark.studentId equals st.studentId
+                            join student in context.students on setMark.studentId equals student.studentId
                             join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
                             join mark in context.marks on setMark.markId equals mark.markId
                             join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId

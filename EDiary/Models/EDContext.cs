@@ -18,12 +18,9 @@ namespace EDiary.Models
         public DbSet<setMark> setMarks { get; set; }
         public DbSet<Subject> subjects { get; set; }
         public DbSet<subjectTaught> subjectTaughts { get; set; }
-        public DbSet<Users> users { get; set; }
         public DbSet<Teacher> teachers { get; set; }
         public DbSet<Student> students { get; set; }
-        public EDContext(DbContextOptions<EDContext> options):base(options)
-        {
-        }
+        public EDContext(DbContextOptions<EDContext> options):base(options) {}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -56,19 +53,14 @@ namespace EDiary.Models
                 NormalizedUserName = "TR000001",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "cH854jV9")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 1,
-                userSurname = "Тынкович",
-                userName = "Валентина",
-                userLastname = "Владимировна",
-                userId = "1",
-            });
             modelBuilder.Entity<Teacher>().HasData(new Teacher
             {
                 teacherId = 1,
+                teacherSurname = "Тынкович",
+                teacherName = "Валентина",
+                teacherLastname = "Владимировна",
                 teacherRole = "teacher",
-                teacherUser = 1
+                teacherUser = "1"
             });
 
             //2-ый препод
@@ -79,19 +71,14 @@ namespace EDiary.Models
                 NormalizedUserName = "TR000002",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "6Z21AsZ1")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 2,
-                userSurname = "Лазицкас",
-                userName = "Екатерина",
-                userLastname = "Александровна",
-                userId = "2",
-            });
             modelBuilder.Entity<Teacher>().HasData(new Teacher
             {
                 teacherId = 2,
+                teacherSurname = "Лазицкас",
+                teacherName = "Екатерина",
+                teacherLastname = "Александровна",
                 teacherRole = "teacher",
-                teacherUser = 2
+                teacherUser = "2"
             });
 
             //1-ый студент
@@ -102,20 +89,15 @@ namespace EDiary.Models
                 NormalizedUserName = "ST000001",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4u6tv3Sm")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 3,
-                userSurname = "Купреенко",
-                userName = "Александр",
-                userLastname = "Андреевич",
-                userId = "3",
-            });
             modelBuilder.Entity<Student>().HasData(new Student
             {
-               studentId=1,
-               studentGroup=2,
-               studentRole="student",
-               studentUser=3
+                studentId = 1,
+                studentSurname = "Купреенко",
+                studentName = "Александр",
+                studentLastname = "Андреевич",
+                studentGroup = 2,
+                studentRole = "student",
+                studentUser ="3"
             });
 
             //2-ой студент
@@ -126,20 +108,15 @@ namespace EDiary.Models
                 NormalizedUserName = "ST000002",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4iNvZYI9")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 8,
-                userSurname = "Липская",
-                userName = "Валерия",
-                userLastname = "Александровна",
-                userId = "9",
-            });
             modelBuilder.Entity<Student>().HasData(new Student
             {
                 studentId = 2,
+                studentSurname = "Липская",
+                studentName = "Валерия",
+                studentLastname = "Александровна",
                 studentGroup = 2,
                 studentRole = "student",
-                studentUser = 8
+                studentUser = "9"
             });
 
             //добавление админа
@@ -165,19 +142,14 @@ namespace EDiary.Models
                 NormalizedUserName = "TR000003",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "3ApHY46c")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 4,
-                userSurname = "Терешко",
-                userName = "Ольга",
-                userLastname = "Николаевна",
-                userId = "5",
-            });
             modelBuilder.Entity<Teacher>().HasData(new Teacher
             {
                 teacherId = 3,
+                teacherSurname = "Терешко",
+                teacherName = "Ольга",
+                teacherLastname = "Николаевна",
                 teacherRole = "teacher",
-                teacherUser = 4
+                teacherUser = "5"
             });
 
             //4-ый препод
@@ -188,19 +160,14 @@ namespace EDiary.Models
                 NormalizedUserName = "TR000004",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "56W3gpHz")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 5,
-                userSurname = "Апанасевич",
-                userName = "Сергей",
-                userLastname = "Александрович",
-                userId = "6",
-            });
             modelBuilder.Entity<Teacher>().HasData(new Teacher
             {
                 teacherId = 4,
+                teacherSurname = "Апанасевич",
+                teacherName = "Сергей",
+                teacherLastname = "Александрович",
                 teacherRole = "teacher",
-                teacherUser = 5
+                teacherUser = "6"
             });
 
             //5-ый препод
@@ -211,19 +178,14 @@ namespace EDiary.Models
                 NormalizedUserName = "TR000005",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "ph2jCcD8")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 6,
-                userSurname = "Карпович",
-                userName = "Дарья",
-                userLastname = "Валерьевна",
-                userId = "7",
-            });
             modelBuilder.Entity<Teacher>().HasData(new Teacher
             {
                 teacherId = 5,
+                teacherSurname = "Карпович",
+                teacherName = "Дарья",
+                teacherLastname = "Валерьевна",
                 teacherRole = "teacher",
-                teacherUser = 6
+                teacherUser = "7"
             });
 
             //6-ый препод
@@ -234,19 +196,14 @@ namespace EDiary.Models
                 NormalizedUserName = "TR000006",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "7jOD2Cof")
             });
-            modelBuilder.Entity<Users>().HasData(new Users
-            {
-                idUser = 7,
-                userSurname = "Гордеюк",
-                userName = "Анастасия",
-                userLastname = "Владимировна",
-                userId = "8",
-            });
             modelBuilder.Entity<Teacher>().HasData(new Teacher
             {
                 teacherId = 6,
+                teacherSurname = "Гордеюк",
+                teacherName = "Анастасия",
+                teacherLastname = "Владимировна",
                 teacherRole = "teacher",
-                teacherUser = 7
+                teacherUser = "8"
             });
 
         }

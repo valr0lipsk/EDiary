@@ -22,14 +22,14 @@ namespace EDiary.Controllers
         //представление ученика(имя)
         public IActionResult Student()
         {
-            var studentFullName = (from user in context.users
-                        join aspusers in context.Users on user.userId equals aspusers.Id
-                        where user.userId == userManager.GetUserId(User)
-                        select new Users
+            var studentFullName = (from student in context.students
+                        join aspusers in context.Users on student.studentUser equals aspusers.Id
+                        where student.studentUser == userManager.GetUserId(User)
+                        select new Student
                         {
-                            userSurname = user.userSurname,
-                            userName = user.userName,
-                            userLastname = user.userLastname
+                            studentSurname = student.studentSurname,
+                            studentName = student.studentName,
+                            studentLastname = student.studentLastname
                         }).ToList();
             return View(studentFullName);
         }

@@ -35,9 +35,9 @@
                                 <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
                             </div>
                             <div class="row pl-3">
-                               @foreach (var trFullname in Model.Teachers)
+                               @foreach (var teacher in Model.Teachers)
                                 { 
-                                    <label>@trFullname.userSurname @trFullname.userName @trFullname.userLastname</label>
+                                    <label>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</label>
                                 }
                             </div>
                         </div>
@@ -58,14 +58,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var studentMark in Model.Students)
+                        @foreach (var student in Model.Students)
                          {
                          <tr>
-                            <th data-idStud="@studentMark.idUser" class="sticky-cell">@studentMark.userSurname</th>
+                             <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1). @student.studentLastname.Substring(0,1).</th>
 
                             @foreach (var dateLesson in Model.Lessons)
                              {
-                                var sm = Model.setMarks.Where(x => x.studentId == studentMark.idUser && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
                                 if (sm != null)
                                 {
                                     <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId">@sm.mark.mark</td>
@@ -75,7 +75,7 @@
                                     <td></td>
                                 }
                              }
-                        </tr>
+                         </tr>
                          }
                     </tbody>
                 </table>

@@ -10,7 +10,6 @@ namespace EDiary.ViewModels
     {
         public IEnumerable<collegeGroup> Groups { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
-        public IEnumerable<Users> Users { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
         public IEnumerable<subjectTaught> subjectTaughts { get; set; }
         public int tsubjectId { get; set; }
@@ -20,6 +19,7 @@ namespace EDiary.ViewModels
         public string subjectName { get; set; }
         public string groups { get; set; }
         public string teacherPassword { get; set; }
+        public string teacherFullName { get; set; }
 
     }
 }

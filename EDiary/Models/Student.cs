@@ -13,6 +13,22 @@ namespace EDiary.Models
         [Key]
         public int studentId { get; set; }
 
+        [Display(Name = "Фамилия")]
+        [StringLength(15)]
+        public string studentSurname { get; set; }
+
+        [Display(Name = "Имя")]
+        [StringLength(15)]
+        public string studentName { get; set; }
+
+        [Display(Name = "Отчество")]
+        [StringLength(15)]
+        public string studentLastname { get; set; }
+
+        [Display(Name = "Аватарка")]
+        [StringLength(100)]
+        public string studentPic { get; set; }
+
         [Display(Name = "Группа")]
         [Required]
         public int studentGroup { get; set; }
@@ -22,7 +38,7 @@ namespace EDiary.Models
         public string studentRole { get; set; }
 
         [Required]
-        public int studentUser { get; set; }
+        public string studentUser { get; set; }
 
         [ForeignKey("studentRole")]
         public IdentityRole role { get; set; }
@@ -31,6 +47,6 @@ namespace EDiary.Models
         public collegeGroup group { get; set; }
 
         [ForeignKey("studentUser")]
-        public Users user { get; set; }
+        public IdentityUser user { get; set; }
     }
 }

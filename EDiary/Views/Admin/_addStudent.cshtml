@@ -17,12 +17,12 @@
         <label for="validationCustomUsername" class="form-label mt-2 mb-0">Имя пользователя</label>
         <div class="input-group has-validation">
             <span class="input-group-text b-r-0" id="inputGroupPrepend">st</span>
-            <input asp-for="studentLogin" type="text" class="form-control" id="validationCustomUsername" readonly required aria-describedby="inputGroupPrepend" value="@ViewBag.stLogin">
+            <input asp-for="studentLogin" type="text" class="form-control" id="validationCustomUsername" readonly required aria-describedby="inputGroupPrepend" value="@ViewBag.studentLogin">
         </div>
     </div>
     <div class="col-md-4">
         <label for="validationCustomPassword" class="form-label mt-2 mb-0">Пароль</label>
-        <input asp-for="studentPassword" type="text" class="form-control" id="CustomPassword" readonly required value="@ViewBag.stPass">
+        <input asp-for="studentPassword" type="text" class="form-control" id="CustomPassword" readonly required value="@ViewBag.studentPass">
     </div>
     <div class="col-md-3 mb-3">
         <label for="validationCustom04" class="form-label mt-2 mb-0">Группа</label>

@@ -21,9 +21,9 @@
                             <div class="row ml-1">
                                 @if (signInManager.IsSignedIn(User))
                                 {
-                                    @foreach (var teacherName in Model.Users)
+                                    @foreach (var teacherName in Model.Teachers)
                                      {
-                                    <label class="mt-0" style="font-size: 115%">@teacherName.userSurname @teacherName.userName @teacherName.userLastname</label>
+                                        <label class="mt-0" style="font-size: 115%">@teacherName.teacherSurname @teacherName.teacherName @teacherName.teacherLastname</label>
                                      }
                                 }
                             </div>
@@ -38,10 +38,13 @@
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol id="list" class="list-group list-group-flush list-group-numbered">
-                            @foreach (var subjectsGroups in Model.Subjects.Zip(Model.Groups))
-                             {
-                               <li class="list-group-item" data-id="@subjectsGroups.First.subjectId"><a href="" сlass="subject-but">@subjectsGroups.First.subjectName (@subjectsGroups.Second.groupName)</a></li>
-                             }
+                           @foreach (var subject in Model.Subjects)
+                            {
+                               @foreach (var group in Model.Groups)
+                                {
+                                    <li class="list-group-item" data-id="@subject.subjectId"><a href="" сlass="subject-but">@subject.subjectName (@group.groupName)</a></li>
+                                }
+                            }
                         </ol>
                     </div>
                 </div>
