@@ -8,24 +8,28 @@
             <div class="welcome__img col-6">
             </div>
             <div class="col-6">
-                <div class="row">
-                    <form asp-area="" asp-controller="LogIn" asp-action="Login" method="post" asp-route-returnUrl="@ViewBag.returnUrl" class="row h-100 align-content-center justify-content-center ">
-                        <div class="row h-100 align-content-center w-100 justify-content-center ">
-                            <h1 class="mb-md-5 mb-5">Авторизация</h1>
+                <div class="row mh-100 align-items-center justify-content-center">
+                    <form asp-area="" asp-controller="LogIn" asp-action="Login" method="post" asp-route-returnUrl="@ViewBag.returnUrl" class="col-10 h-100 align-content-center align-items-center justify-content-start">
+                        <div class="row h-100 align-content-center w-100 justify-content-start">
+                            <h2 class="mb-md-5 mb-5 p-xl-3 p-lg-2 p-md-1">Вход</h2>
                             <div id="alertDiv">
 
                             </div>
-                            <div class="d-flex w-100 h-25 flex-column justify-content-center align-items-center">
-                                <input asp-for="userName" class="form-control shdw input pl-4 pr-4 col-md-5 col-6 w-100 m-1" id="inputLogin" type="text" placeholder="login" required/><span asp-validation-for="userName"></span>
-                                <input asp-for="Password" class="form-control shdw input pl-4 pr-4 col-md-5 col-6 w-100 m-1" id="inputPassword" type="password" placeholder="password" required/><span asp-validation-for="Password"></span>
-                                <div class="col flex-row col-md-5 col-7 m-0 ml-3 align-items-center">
-                                    <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
-                                    <label style="font-size: 90%">
-                                        Запомнить меня
-                                    </label>
+                            <div class="col-12 mt-3 d-flex flex-column justify-content-center align-items-center">
+                                <div class="row w-100 justify-content-center align-items-center">
+                                    <input asp-for="userName" class="form-control col-12 w-100 m-1 mb-4 brder" id="inputLogin" type="text" placeholder="Логин" required /><span asp-validation-for="userName"></span>
+                                    <input asp-for="Password" class="form-control col-12 w-100 m-1 mb-2 brder" id="inputPassword" type="password" placeholder="Пароль" required /><span asp-validation-for="Password"></span>
+                                    <div class="col flex-row col-md-5 col-7 m-0 ml-3 align-items-center">
+                                        <div class="row">
+                                            <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
+                                            <label style="font-size: 90%">
+                                                Запомнить меня
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <input type="submit" class="btn col-md-3 mt-1 col-5 h1 button shdw rounded-pill" id="btnLog" style="height: 10%; font-size: 130%" value="Войти" />
                                 </div>
                             </div>
-                            <input type="submit" class="btn col-md-3 mt-1 col-5 h1 button shdw rounded-pill" id="btnLog" style="height: 10%; font-size: 130%" value="Войти" />
                         </div>
                     </form>
                 </div>
