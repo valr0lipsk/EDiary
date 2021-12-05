@@ -73,7 +73,7 @@ button.accept-policy {
     height: 580px;
     background: #FFFFFF;
     margin: 0 auto;
-    box-shadow: 0.5px 0.5px 10px indigo;
+    box-shadow: 0.5px 0.5px 8px #BA55D3;
 }
 
 .welcome__img {
@@ -136,7 +136,7 @@ body {
     margin-bottom: 60px;
     height: 100%;
     /*background-image: url(source/background-3.jpg)*/
-    background-color: #9932CC;
+    background-color: #d6b7ef;
 }
 
 ._table {
