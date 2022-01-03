@@ -98,12 +98,29 @@ namespace EDiary.Migrations
                     b.Property<int>("studentGroup")
                         .HasColumnType("int");
 
+                    b.Property<string>("studentLastname")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("studentName")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("studentPic")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("studentRole")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("studentUser")
-                        .HasColumnType("int");
+                    b.Property<string>("studentSurname")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("studentUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("studentId");
 
@@ -120,15 +137,21 @@ namespace EDiary.Migrations
                         {
                             studentId = 1,
                             studentGroup = 2,
+                            studentLastname = "Андреевич",
+                            studentName = "Александр",
                             studentRole = "student",
-                            studentUser = 3
+                            studentSurname = "Купреенко",
+                            studentUser = "3"
                         },
                         new
                         {
                             studentId = 2,
                             studentGroup = 2,
+                            studentLastname = "Александровна",
+                            studentName = "Валерия",
                             studentRole = "student",
-                            studentUser = 8
+                            studentSurname = "Липская",
+                            studentUser = "9"
                         });
                 });
 
@@ -156,12 +179,29 @@ namespace EDiary.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("teacherLastname")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("teacherName")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("teacherPic")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("teacherRole")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("teacherUser")
-                        .HasColumnType("int");
+                    b.Property<string>("teacherSurname")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("teacherUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("teacherId");
 
@@ -175,138 +215,56 @@ namespace EDiary.Migrations
                         new
                         {
                             teacherId = 1,
+                            teacherLastname = "Владимировна",
+                            teacherName = "Валентина",
                             teacherRole = "teacher",
-                            teacherUser = 1
+                            teacherSurname = "Тынкович",
+                            teacherUser = "1"
                         },
                         new
                         {
                             teacherId = 2,
+                            teacherLastname = "Александровна",
+                            teacherName = "Екатерина",
                             teacherRole = "teacher",
-                            teacherUser = 2
+                            teacherSurname = "Лазицкас",
+                            teacherUser = "2"
                         },
                         new
                         {
                             teacherId = 3,
+                            teacherLastname = "Николаевна",
+                            teacherName = "Ольга",
                             teacherRole = "teacher",
-                            teacherUser = 4
+                            teacherSurname = "Терешко",
+                            teacherUser = "5"
                         },
                         new
                         {
                             teacherId = 4,
+                            teacherLastname = "Александрович",
+                            teacherName = "Сергей",
                             teacherRole = "teacher",
-                            teacherUser = 5
+                            teacherSurname = "Апанасевич",
+                            teacherUser = "6"
                         },
                         new
                         {
                             teacherId = 5,
+                            teacherLastname = "Валерьевна",
+                            teacherName = "Дарья",
                             teacherRole = "teacher",
-                            teacherUser = 6
+                            teacherSurname = "Карпович",
+                            teacherUser = "7"
                         },
                         new
                         {
                             teacherId = 6,
+                            teacherLastname = "Владимировна",
+                            teacherName = "Анастасия",
                             teacherRole = "teacher",
-                            teacherUser = 7
-                        });
-                });
-
-            modelBuilder.Entity("EDiary.Models.Users", b =>
-                {
-                    b.Property<int>("idUser")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("userId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("userLastname")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("userName")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("userPic")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("userSurname")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("idUser");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("users");
-
-                    b.HasData(
-                        new
-                        {
-                            idUser = 1,
-                            userId = "1",
-                            userLastname = "Владимировна",
-                            userName = "Валентина",
-                            userSurname = "Тынкович"
-                        },
-                        new
-                        {
-                            idUser = 2,
-                            userId = "2",
-                            userLastname = "Александровна",
-                            userName = "Екатерина",
-                            userSurname = "Лазицкас"
-                        },
-                        new
-                        {
-                            idUser = 3,
-                            userId = "3",
-                            userLastname = "Андреевич",
-                            userName = "Александр",
-                            userSurname = "Купреенко"
-                        },
-                        new
-                        {
-                            idUser = 8,
-                            userId = "9",
-                            userLastname = "Александровна",
-                            userName = "Валерия",
-                            userSurname = "Липская"
-                        },
-                        new
-                        {
-                            idUser = 4,
-                            userId = "5",
-                            userLastname = "Николаевна",
-                            userName = "Ольга",
-                            userSurname = "Терешко"
-                        },
-                        new
-                        {
-                            idUser = 5,
-                            userId = "6",
-                            userLastname = "Александрович",
-                            userName = "Сергей",
-                            userSurname = "Апанасевич"
-                        },
-                        new
-                        {
-                            idUser = 6,
-                            userId = "7",
-                            userLastname = "Валерьевна",
-                            userName = "Дарья",
-                            userSurname = "Карпович"
-                        },
-                        new
-                        {
-                            idUser = 7,
-                            userId = "8",
-                            userLastname = "Владимировна",
-                            userName = "Анастасия",
-                            userSurname = "Гордеюк"
+                            teacherSurname = "Гордеюк",
+                            teacherUser = "8"
                         });
                 });
 
@@ -416,21 +374,21 @@ namespace EDiary.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "6446b526-52e9-41c0-b850-1a5e4b99c381",
+                            ConcurrencyStamp = "933b10d2-fd2b-4a91-97e6-538b43279aea",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "teacher",
-                            ConcurrencyStamp = "60f9c56d-ce15-416a-8edf-ca5f0cde13bc",
+                            ConcurrencyStamp = "b8ca4c7e-2dd7-47c0-b971-5d9194397220",
                             Name = "teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
                             Id = "student",
-                            ConcurrencyStamp = "1e422cb9-c913-4a81-9d75-8538667927f5",
+                            ConcurrencyStamp = "525c7e56-2ab5-4c9c-9c34-6db7edc1b3c2",
                             Name = "student",
                             NormalizedName = "STUDENT"
                         });
@@ -529,13 +487,13 @@ namespace EDiary.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "29ce752a-2461-4218-8116-51971ecb44c8",
+                            ConcurrencyStamp = "52e93dc6-d93f-491a-9000-7bda04730073",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000001",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBS3MRie4uXankN3S18pI9xDiCnW/cZkzAJyq1k2XGREMbyRh9vJTqfusRxcwu50Cw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMJM/DuksW0DlBgNzFqWfVVpupbd4QrTvBv3jxlthTFppyTP1cCiKorWNcqeb6g/yQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2d7eed49-057a-4524-b04e-9646fc940b9f",
+                            SecurityStamp = "908e8432-dacf-4af1-90f9-297d805deb68",
                             TwoFactorEnabled = false,
                             UserName = "tr000001"
                         },
@@ -543,13 +501,13 @@ namespace EDiary.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "66a37de0-36f1-4d8a-90d2-5d468b92e703",
+                            ConcurrencyStamp = "73c30f7c-b545-4c7b-9dbf-315d051de81e",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000002",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKg9UshVU5XTB+RNi9JqZFESscBe8UQRmpHZIqVQQOlUcpLlqdanht31tRdezNx5bA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDOm2g+IYS/pUVo3TV10PGSHrnwHFWS7JcRFn3kEtCSHEs4DYkAwkulmkyL6TZUdfg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8be80201-09e3-4aaa-b7dd-09d7474d4103",
+                            SecurityStamp = "a29cb328-b31e-4460-8f26-091ac485b87e",
                             TwoFactorEnabled = false,
                             UserName = "tr000002"
                         },
@@ -557,13 +515,14 @@ namespace EDiary.Migrations
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "67c26613-d424-4009-9954-cdc0a23b1504",
+                            ConcurrencyStamp = "53dc681d-4ce9-4752-a9ca-88fc9a0dfc14",
+                            Email = "kuper2468@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000001",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEJrksuRCfXUVRtIb7E8Ai1YDMC4lq2vRpSt7BoRYeCo4D7jt0FdFKF91giZ59eXaQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELuhlXX0fQRIRCJtwgat/4Km+cuLZf93Rx4NkJ2UOjWnpvR8ZleRmPMUOIDdLede+Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ba2c26dc-6ec4-4997-bd24-64a889b29059",
+                            SecurityStamp = "00e92777-a773-483b-8f78-18b5d4150b03",
                             TwoFactorEnabled = false,
                             UserName = "st000001"
                         },
@@ -571,13 +530,13 @@ namespace EDiary.Migrations
                         {
                             Id = "9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e1f299cc-74fe-4bb8-9f13-83faafe5b478",
+                            ConcurrencyStamp = "1db18ad2-1897-42f5-8b34-e67accfd0026",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000002",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFPyvQIr3Y41+dEx2XcIMcS/nuh/JURvE62ZMhZZuQLMk4QQLYn0/X3lfSrmpfPIpQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOWyOURmQGYvuVl5PkfaJmdjC32NFch7+qyp2Xnd1+Xjtaq0hLvXYGLBODXlbaIi0Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "033fea3f-9d06-428b-b214-80f53958b3cd",
+                            SecurityStamp = "7467c81c-1521-425d-9228-897962cbb9e8",
                             TwoFactorEnabled = false,
                             UserName = "st000002"
                         },
@@ -585,13 +544,13 @@ namespace EDiary.Migrations
                         {
                             Id = "4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1fad3941-3724-40d2-9188-780235ec5a3b",
+                            ConcurrencyStamp = "cdf30b14-9e02-48c2-a3f5-3cced813291f",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEP0nRxoj16gpr3cBCa6nRf1YCpRYthXSmFCUtiNic71Hov2Eifh1lztp1pzIWYrtw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGgKEJkM7tU4LRJVD4re8qfOfYGqD6FhMWHIQIVcjAN3p8/GpL7TEBhzEKqW61xSzQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "14982564-74fc-4681-a210-538f95009dfe",
+                            SecurityStamp = "260e29ea-0082-4940-a09e-8761451317f0",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -599,13 +558,13 @@ namespace EDiary.Migrations
                         {
                             Id = "5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b2f888b0-24ab-42a6-83a3-0829cb1b41b3",
+                            ConcurrencyStamp = "98322ef5-7531-410a-93db-f0222a4669d9",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000003",
-                            PasswordHash = "AQAAAAEAACcQAAAAECPLCKBZSJkRKWV6DHgxeiwPFsZmH8bwgk+HeVi+rKn2D1Sk/3RhEQCNF0YeaOeDRg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECpG4tLhqdKGsG0owU0ImiV94D69zZENROnWIIt2cyFky5PloakgNqBLqWvOIH0/cA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0b9176e3-fbe6-4ab5-a8d5-ec4a4e1a9da1",
+                            SecurityStamp = "bab74e20-e0b9-456e-90cb-4d8e0ba97644",
                             TwoFactorEnabled = false,
                             UserName = "tr000003"
                         },
@@ -613,13 +572,13 @@ namespace EDiary.Migrations
                         {
                             Id = "6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b2eb8712-6e00-44d1-915e-cfc55e611edf",
+                            ConcurrencyStamp = "0fa25c7c-8259-4317-950b-d9fab5602076",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000004",
-                            PasswordHash = "AQAAAAEAACcQAAAAELsYbcyCxtlGC9kFIil5cwEzO6f/ug4HB9BLsZJpBw5ifAKM6GoVXIoQy+nOg5OwsQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL97ZvPszzMZucDMiWmzekrYjyuXSrbXZp7DYqKNXCPugN9XUwDZ9kecClcvQv3dSA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e1c85d3-19c9-4ec5-9321-3a75887cf33b",
+                            SecurityStamp = "7a3c17c0-45b3-4d9a-bcca-e288fcef3685",
                             TwoFactorEnabled = false,
                             UserName = "tr000004"
                         },
@@ -627,13 +586,13 @@ namespace EDiary.Migrations
                         {
                             Id = "7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4bf0f56c-e21f-43d1-a221-51d2f39caaf1",
+                            ConcurrencyStamp = "a35c8346-b031-4b53-a770-ef3b012e4e94",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000005",
-                            PasswordHash = "AQAAAAEAACcQAAAAELTSJfPVnYf4NToCJO5Z2vig68CKtmM6WWnjOep/R4PyNY1HGuNbcpN7xU7uESbMtw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELhfHqf2bkaJ7Aph8gE9pdrzdmOfboX3Vpe4TW8laPYshIk8HdLcBO9ROGG3q8O0/g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b399542f-be1d-44b2-9154-cb7a6b7cef28",
+                            SecurityStamp = "ecea44ae-b2be-4b09-b3de-6450d3c09c37",
                             TwoFactorEnabled = false,
                             UserName = "tr000005"
                         },
@@ -641,13 +600,13 @@ namespace EDiary.Migrations
                         {
                             Id = "8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f52161c0-e6ef-480f-95b0-9105d571c0db",
+                            ConcurrencyStamp = "43e0e176-4980-45c1-bb54-2912000de14b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000006",
-                            PasswordHash = "AQAAAAEAACcQAAAAEE3a2HK3M7J3kU1Z5qbXErRDK8hQt16STbxe0Qij/A2KunEWDc7pgRx0iK4tuN8WCw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELK0VjkZcdzPdipzWehPelKF18APtsHO6asSjzmTQ6wUEs091gMkAuCXXM2He872mg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "daab1e03-a0de-4d9d-a28e-41fc50791614",
+                            SecurityStamp = "56845e4d-97f9-40bc-96fa-0b0ee4b32784",
                             TwoFactorEnabled = false,
                             UserName = "tr000006"
                         });
@@ -777,7 +736,7 @@ namespace EDiary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EDiary.Models.Users", "user")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "user")
                         .WithMany()
                         .HasForeignKey("studentUser")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -798,7 +757,7 @@ namespace EDiary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EDiary.Models.Users", "user")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "user")
                         .WithMany()
                         .HasForeignKey("teacherUser")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -807,17 +766,6 @@ namespace EDiary.Migrations
                     b.Navigation("role");
 
                     b.Navigation("user");
-                });
-
-            modelBuilder.Entity("EDiary.Models.Users", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "identityUser")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("identityUser");
                 });
 
             modelBuilder.Entity("EDiary.Models.collegeGroup", b =>

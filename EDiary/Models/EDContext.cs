@@ -87,6 +87,7 @@ namespace EDiary.Models
                 Id = "3",
                 UserName = "st000001",
                 NormalizedUserName = "ST000001",
+                Email="kuper2468@gmail.com",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4u6tv3Sm")
             });
             modelBuilder.Entity<Student>().HasData(new Student
