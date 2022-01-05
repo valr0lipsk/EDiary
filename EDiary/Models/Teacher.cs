@@ -28,8 +28,7 @@ namespace EDiary.Models
         public string teacherLastname { get; set; }
 
         [Display(Name = "Аватарка")]
-        [StringLength(100)]
-        public string teacherPic { get; set; }
+        public byte[] teacherPic { get; set; }
 
         [Display(Name = "Роль")]
         [Required]

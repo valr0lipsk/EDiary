@@ -69,9 +69,7 @@ namespace EDiary.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = (from users in context.Users
-                            where users.Email == model.Email
-                            select new IdentityUser { }).First();
+                var user = await userManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
                     // пользователь с данным email может отсутствовать в бд
@@ -83,8 +81,7 @@ namespace EDiary.Controllers
                 var code = await userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                 EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync(model.Email, "Reset Password",
-                    $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                await emailService.SendEmailAsync(model.Email, "Сброс пароля", $"Для сброса пароля перейдите по ссылке: <a href='{callbackUrl}'>Сбросить пароль</a>");
                 return View("ForgotPasswordInfo");
             }
             return View(model);
@@ -103,9 +100,7 @@ namespace EDiary.Controllers
             {
                 return View(model);
             }
-            var user = (from users in context.Users
-                        where users.Email == model.Email
-                        select new IdentityUser { }).First();
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 return View("ResetPasswordInfo");
