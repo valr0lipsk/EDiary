@@ -131,7 +131,8 @@ namespace EDiary.Controllers
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentSurname,
                                           studentLastname = student.studentLastname,
-                                          groupName = gr.groupName
+                                          groupName = gr.groupName,
+                                          studentEmail= aspuser.Email
                                       };
             return PartialView("~/Views/Admin/_tableStudent.cshtml", aspUserStudentGroup);
         }
@@ -149,6 +150,7 @@ namespace EDiary.Controllers
                                     teacherName = teacher.teacherName,
                                     teacherSurname = teacher.teacherSurname,
                                     teacherLogin = aspuser.UserName,
+                                    teacherEmail=aspuser.Email,
                                     subjectName = string.Join(", ", (from sub in context.subjects
                                                                      join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                                      where subTaught.teacherId == teacher.teacherId
@@ -169,7 +171,7 @@ namespace EDiary.Controllers
                                        {
                                            tsubjectId = subTaught.tsubjectId,
                                            subjectName = sub.subjectName,
-                                           groups = gr.groupName,
+                                           groupName = gr.groupName,
                                            teacherSurname = teacher.teacherSurname,
                                            teacherName = teacher.teacherName,
                                            teacherLastname = teacher.teacherLastname

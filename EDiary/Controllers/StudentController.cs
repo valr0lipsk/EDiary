@@ -24,14 +24,15 @@ namespace EDiary.Controllers
         public IActionResult Student()
         {
             var studentFullName = (from student in context.students
-                        join aspusers in context.Users on student.studentUser equals aspusers.Id
-                        where student.studentUser == userManager.GetUserId(User)
-                        select new Student
-                        {
-                            studentSurname = student.studentSurname,
-                            studentName = student.studentName,
-                            studentLastname = student.studentLastname
-                        }).ToList();
+                                   join aspusers in context.Users on student.studentUser equals aspusers.Id
+                                   where student.studentUser == userManager.GetUserId(User)
+                                   select new Student
+                                   {
+                                       studentSurname = student.studentSurname,
+                                       studentName = student.studentName,
+                                       studentLastname = student.studentLastname,
+                                       studentPic = student.studentPic
+                                   }).ToList();
             return View(studentFullName);
         }
 
@@ -44,23 +45,21 @@ namespace EDiary.Controllers
             context.SaveChanges();
             return RedirectToAction("Student", "Student");
         }
-        
+
+        //добавление аватарочки студента
         [HttpPost]
-        public IActionResult AddPicture(AvatarModel picture)
+        public IActionResult AddPicture(AvatarModel studentPicture)
         {
             var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).First();
-            if (student.studentPic != null)
+            byte[] pic = null;
+            using (var binaryReader = new BinaryReader(studentPicture.Picture.OpenReadStream()))
             {
-                byte[] pic = null;
-                using (var binaryReader = new BinaryReader(picture.Picture.OpenReadStream()))
-                {
-                    pic = binaryReader.ReadBytes((int)picture.Picture.Length);
-                }
-                student.studentPic = pic;
+                pic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
             }
+            student.studentPic = pic;
             context.students.Update(student);
             context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Student","Student");
         }
     }
 }

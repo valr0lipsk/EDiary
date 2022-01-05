@@ -11,8 +11,26 @@
                     <div class="row">
                         <div class="col-lg-3 col-5 flex-column justify-content-around">
                             <div class="accountIcon">
-                                <img src="~/css/source/user-image.png" class="accountIcon" />
+                                @foreach (var teacher in Model.Teachers)
+                                {
+                                    @if (teacher.teacherPic != null)
+                                    {
+                                        <img class="accountIcon" src="data:image/jpeg;base64,@(Convert.ToBase64String(teacher.teacherPic))" />
+                                    }
+                                    @if (teacher.teacherPic == null)
+                                    {
+                                        <img src="~/css/source/user-image.png" class="accountIcon" />
+                                    }
+                                }
                             </div>
+                            <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
+                                <p>
+                                    <input name="Picture" type="file" class="form-control" />
+                                </p>
+                                <p>
+                                    <input type="submit" value="Добавить" />
+                                </p>
+                            </form>
                         </div>
                         <div class="col-lg-6 col-4 ml-lg-0 ml-3 justify-content-between">
                             <div class="row ml-1">
@@ -38,12 +56,9 @@
                     <div class="row flex-column">
                         <h4>Мои предметы:</h4>
                         <ol id="list" class="list-group list-group-flush list-group-numbered">
-                           @foreach (var subject in Model.Subjects)
+                           @foreach (var subjectGroup in Model.subjectGroups)
                             {
-                               @foreach (var group in Model.Groups)
-                                {
-                                    <li class="list-group-item" data-id="@subject.subjectId"><a href="" сlass="subject-but">@subject.subjectName (@group.groupName)</a></li>
-                                }
+                               <li class="list-group-item" data-id="@subjectGroup.tsubjectId"><a href="" сlass="subject-but">@subjectGroup.subjectName (@subjectGroup.groupName)</a></li>
                             }
                         </ol>
                     </div>

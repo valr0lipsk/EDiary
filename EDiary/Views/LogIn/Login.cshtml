@@ -21,12 +21,13 @@
                                     <input asp-for="Password" class="form-control col-12 w-100 m-1 mb-2 brder" id="inputPassword" type="password" placeholder="Пароль" required /><span asp-validation-for="Password"></span>
                                     <div class="col flex-row col-md-5 col-7 m-0 ml-3 align-items-center">
                                         <div class="row">
-                                            <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>                                      
+                                            <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
                                             <label style="font-size: 90%">
                                                 Запомнить меня
                                             </label>
                                         </div>
                                     </div>
+                                    @*<a asp-action="ForgotPassword">Забыли пароль</a>*@
                                     <input type="submit" class="btn col-md-3 mt-1 col-5 h1 button shdw rounded-pill" id="btnLog" style="height: 10%; font-size: 130%" value="Войти" />
                                 </div>
                             </div>

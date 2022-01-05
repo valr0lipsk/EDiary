@@ -16,14 +16,15 @@
     <tbody>
         @foreach (var teacherUserSubject in Model)
         {
-            <tr>
-                <td>@teacherUserSubject.teacherId</td>
-                <td>@teacherUserSubject.teacherLogin</td>
-                <td>@teacherUserSubject.teacherSurname</td>
-                <td>@teacherUserSubject.teacherName</td>
-                <td>@teacherUserSubject.teacherLastname</td>
-                <td>@teacherUserSubject.subjectName</td>
-            </tr>
+        <tr>
+            <td>@teacherUserSubject.teacherId</td>
+            <td>@teacherUserSubject.teacherLogin</td>
+            <td>@teacherUserSubject.teacherEmail</td>
+            <td>@teacherUserSubject.teacherSurname</td>
+            <td>@teacherUserSubject.teacherName</td>
+            <td>@teacherUserSubject.teacherLastname</td>
+            <td>@teacherUserSubject.subjectName</td>
+        </tr>
         }
     </tbody>
 </table>

@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,40 +24,32 @@ namespace EDiary.Controllers
         //представление препода(фамилия, предметы и группы)
         public IActionResult Teacher()
         {
-            var teacherName = (from teacher in context.teachers
-                                       join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                       where teacher.teacherUser == userManager.GetUserId(User)
-                                       select new Teacher
-                                       {
-                                           teacherSurname = teacher.teacherSurname,
-                                           teacherName = teacher.teacherName,
-                                           teacherLastname = teacher.teacherLastname
-                                       }).ToList();
+            var teacherNamePic = (from teacher in context.teachers
+                               join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                               where teacher.teacherUser == userManager.GetUserId(User)
+                               select new Teacher
+                               {
+                                   teacherSurname = teacher.teacherSurname,
+                                   teacherName = teacher.teacherName,
+                                   teacherLastname = teacher.teacherLastname,
+                                   teacherPic = teacher.teacherPic
+                               }).ToList();
 
-            var subjects = (from tsub in context.subjectTaughts
-                                join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                                join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                                join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                where aspusers.Id == userManager.GetUserId(User)
-                                select new Subject
-                                {
-                                    subjectName = subject.subjectName,
-                                    subjectId = tsub.tsubjectId
-                                }).ToList();
+            var subjectGroups = (from tsub in context.subjectTaughts
+                          join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                          join gr in context.groups on tsub.groupId equals gr.groupId
+                          join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
+                          join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                          where teacher.teacherUser == userManager.GetUserId(User)
+                          select new SubjectGroup
+                          {
+                              groupName = gr.groupName,
+                              subjectName = subject.subjectName,
+                              tsubjectId = tsub.tsubjectId
+                          }).ToList();
 
-            var group = (from tsub in context.subjectTaughts
-                             join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                             join gr in context.groups on tsub.groupId equals gr.groupId
-                             join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                             join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                             where aspusers.Id == userManager.GetUserId(User)
-                             select new collegeGroup
-                             {
-                                 groupName = gr.groupName,
-                             }).ToList();
-
-            var teacherSubjectsGroups = new AspTeacherSubjectGroup { Subjects = subjects, Groups = group, Teachers = teacherName };
-            return View(teacherSubjectsGroups);
+            AspTeacherSubjectGroup teacherSubjectGroup = new AspTeacherSubjectGroup { Teachers= teacherNamePic, subjectGroups=subjectGroups};
+            return View(teacherSubjectGroup);
         }
 
         //смена пароля преподавателя
@@ -68,6 +61,23 @@ namespace EDiary.Controllers
             context.SaveChanges();
             return RedirectToAction("Teacher", "Teacher");
         }
+
+        //добавление аватарочки студента
+        [HttpPost]
+        public IActionResult AddPicture(AvatarModel teacherPicture)
+        {
+            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
+            byte[] pic = null;
+            using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))
+            {
+                pic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
+            }
+            teacher.teacherPic = pic;
+            context.teachers.Update(teacher);
+            context.SaveChanges();
+            return RedirectToAction("Teacher", "Teacher");
+        }
+
         public IActionResult Jurnal() => RedirectToAction("Jurnal", "Marks");
     }
 }

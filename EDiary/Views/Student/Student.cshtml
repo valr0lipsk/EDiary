@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using EDiary.Models
+@using EDiary.ViewModels
 @model IEnumerable<Student>
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> userManager
@@ -11,26 +12,26 @@
                     <div class="row">
                         <div class="col-lg-3 col-5 flex-column justify-content-around">
                             <div class="accountIcon">
-                                <form asp-action="AddPicture" asp-controller="Student" method="post" enctype="multipart/form-data">
-                                    <p>
-                                        <input name="Picture" type="file" class="form-control" />
-                                    </p>
-                                    <p>
-                                        <input type="submit" value="Добавить" />
-                                    </p>
-                                </form>
                                 @foreach (var student in Model)
                                 {
-                                    if (student.studentPic != null)
+                                    @if (student.studentPic != null)
                                     {
-                                        <img class="accountIcon" src="data:image/jpeg;base64,@student.studentPic" />
+                                        <img class="accountIcon" src="data:image/jpeg;base64,@(Convert.ToBase64String(student.studentPic))" />
                                     }
-                                    else
+                                    @if(student.studentPic == null)
                                     {
                                         <img src="~/css/source/user-image.png" class="accountIcon" />
                                     }
                                 }
                             </div>
+                            <form asp-action="AddPicture" asp-controller="Student" method="post" enctype="multipart/form-data">
+                                <p>
+                                    <input name="Picture" type="file" class="form-control" />
+                                </p>
+                                <p>
+                                    <input type="submit" value="Добавить" />
+                                </p>
+                            </form>
                         </div>
                         <div class="col-lg-6 col-4 ml-lg-0 ml-3 justify-content-between">
                             <div class="row ml-1">
