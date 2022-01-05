@@ -15,10 +15,12 @@ namespace EDiary.Models
 
         [Display(Name = "Фамилия")]
         [StringLength(15)]
+        [Required]
         public string teacherSurname { get; set; }
 
         [Display(Name = "Имя")]
         [StringLength(15)]
+        [Required]
         public string teacherName { get; set; }
 
         [Display(Name = "Отчество")]

@@ -28,11 +28,14 @@ namespace EDiary
 
         public void ConfigureServices(IServiceCollection services)
         {
+            
             //конфиг
             Configuration.Bind("Project", new Config());
             //добавление контекста данных
             services.AddDbContext<EDContext>(options => options.UseSqlServer(Config.ConnectionString));
             services.AddControllersWithViews();
+            //подключения сервиса отправки на почту
+            services.AddTransient<EmailService>();
             //подключение интерфейсов и репозиториев
             services.AddTransient<IGroupRepository, GroupRepository>();
             services.AddTransient<ILessonRepository, LessonRepository>();

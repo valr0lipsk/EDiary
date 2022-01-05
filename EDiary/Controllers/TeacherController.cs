@@ -68,9 +68,6 @@ namespace EDiary.Controllers
             context.SaveChanges();
             return RedirectToAction("Teacher", "Teacher");
         }
-        public IActionResult Jurnal()
-        {
-            return RedirectToAction("Jurnal", "Marks");
-        }
+        public IActionResult Jurnal() => RedirectToAction("Jurnal", "Marks");
     }
 }

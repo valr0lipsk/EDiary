@@ -33,6 +33,7 @@ namespace EDiary.Controllers
                         }).ToList();
             return View(studentFullName);
         }
+
         //смена пароля преподавателя
         public IActionResult ChangePassword(StudentChangePassword student)
         {

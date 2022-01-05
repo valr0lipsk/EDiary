@@ -17,17 +17,15 @@ namespace EDiary.Controllers
         public MarksController(EDContext context) => this.context = context;
 
         //представление журнала
-        public IActionResult Jurnal()
-        {
-            return View();
-        }
+        public IActionResult Jurnal() => View();
 
+        //журнал предмета и группы
         [HttpGet]
         public IActionResult Jurnal(int id)
         {
             var subid = id;
 
-            /*преподаватель, группа и предмет*/
+            //преподаватель
             var teacherJurnal = (from teacher in context.teachers 
                                  join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
                                  where subTaught.tsubjectId == subid
@@ -37,7 +35,7 @@ namespace EDiary.Controllers
                                      teacherName = teacher.teacherName,
                                      teacherLastname = teacher.teacherLastname
                                  }).ToList();
-
+            //группы
             var groupJurnal = (from subTaught in context.subjectTaughts
                                join gr in context.groups on subTaught.groupId equals gr.groupId
                                where subTaught.tsubjectId == subid
@@ -46,6 +44,7 @@ namespace EDiary.Controllers
                                    groupName = gr.groupName,
                                }).ToList();
 
+            //предмет
             var subjectJurnal = (from subTaught in context.subjectTaughts
                                  join st in context.subjects on subTaught.subjectId equals st.subjectId
                                  where subTaught.tsubjectId == subid
@@ -54,7 +53,7 @@ namespace EDiary.Controllers
                                    subjectName = st.subjectName
                                  }).ToList();
 
-            /*студенты*/
+            //студенты
             var studentsJurnal = (from student in context.students
                                   select new Student
                                   {
@@ -63,7 +62,7 @@ namespace EDiary.Controllers
                                       studentName = student.studentName,
                                       studentLastname = student.studentLastname
                                   }).ToList();
-
+            //занятие
             var lessonJurnal = (from lesson in context.lessons
                                 where lesson.tsubjectId == subid
                                 select new Lesson
@@ -72,6 +71,7 @@ namespace EDiary.Controllers
                                     lessonDate = lesson.lessonDate
                                 }).ToList();
 
+            //выставленные отметки
             var setMarks = (from setMark in context.setMarks
                             join student in context.students on setMark.studentId equals student.studentId
                             join lesson in context.lessons on setMark.lessonId equals lesson.lessonId

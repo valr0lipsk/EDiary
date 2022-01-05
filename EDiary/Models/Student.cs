@@ -15,10 +15,12 @@ namespace EDiary.Models
 
         [Display(Name = "Фамилия")]
         [StringLength(15)]
+        [Required]
         public string studentSurname { get; set; }
 
         [Display(Name = "Имя")]
         [StringLength(15)]
+        [Required]
         public string studentName { get; set; }
 
         [Display(Name = "Отчество")]
@@ -40,11 +42,11 @@ namespace EDiary.Models
         [Required]
         public string studentUser { get; set; }
 
-        [ForeignKey("studentRole")]
-        public IdentityRole role { get; set; }
-
         [ForeignKey("studentGroup")]
         public collegeGroup group { get; set; }
+
+        [ForeignKey("studentRole")]
+        public IdentityRole role { get; set; }
 
         [ForeignKey("studentUser")]
         public IdentityUser user { get; set; }

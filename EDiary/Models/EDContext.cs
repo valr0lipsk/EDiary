@@ -87,7 +87,8 @@ namespace EDiary.Models
                 Id = "3",
                 UserName = "st000001",
                 NormalizedUserName = "ST000001",
-                Email="kuper2468@gmail.com",
+                Email = "kuper2468@gmail.com",
+                EmailConfirmed = true,
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4u6tv3Sm")
             });
             modelBuilder.Entity<Student>().HasData(new Student
@@ -206,7 +207,25 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = "8"
             });
-
+            //1-ая группа
+            modelBuilder.Entity<collegeGroup>().HasData(new collegeGroup
+            {
+               groupId=1,
+               groupName="8к2491",
+               curatorId=6
+            });
+            modelBuilder.Entity<collegeGroup>().HasData(new collegeGroup
+            {
+                groupId = 2,
+                groupName = "8к2492",
+                curatorId = 2
+            });
+            modelBuilder.Entity<collegeGroup>().HasData(new collegeGroup
+            {
+                groupId = 3,
+                groupName = "8к2493",
+                curatorId = 5
+            });
         }
     }
 

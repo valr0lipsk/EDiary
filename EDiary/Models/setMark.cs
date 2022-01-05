@@ -21,7 +21,6 @@ namespace EDiary.Models
         public int studentId { get; set; }
 
         [Display(Name = "Оценка")]
-        [Required]
         public int markId { get; set; }
 
         [ForeignKey("studentId")]

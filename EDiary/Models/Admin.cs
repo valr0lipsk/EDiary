@@ -13,16 +13,16 @@ namespace EDiary.Models
         [Key]
         public int adminId { get; set; }
 
+        [Required]
+        public string adminUser { get; set; }
+
         [Display(Name = "Роль")]
         [Required]
         public string adminRole { get; set; }
 
-        [Required]
-        public string adminUser { get; set; }
-
         [ForeignKey("adminRole")]
         public IdentityRole role { get; set; }
-        
+
         [ForeignKey("adminUser")]
         public IdentityUser adUser { get; set; }
 

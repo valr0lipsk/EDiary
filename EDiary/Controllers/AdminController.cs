@@ -17,8 +17,7 @@ namespace EDiary.Controllers
     {
         UserManager<IdentityUser> userManager;
         EDContext context;
-        public AdminController(UserManager<IdentityUser> userManager, EDContext context) 
-            => (this.userManager, this.context) = (userManager,context);
+        public AdminController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager,context);
 
         //генерация пароля
         public static string generatePassword()
@@ -49,10 +48,7 @@ namespace EDiary.Controllers
         }
 
         //представление админа
-        public IActionResult Admin()
-        {
-            return View();
-        }
+        public IActionResult Admin() => View();
 
         //добавление студента
         public IActionResult AddStudent(AddStudentModel stGroup)
@@ -82,8 +78,8 @@ namespace EDiary.Controllers
             var teacherLogin = generateLogin();
             var teacherPass = generatePassword();
             var groups = context.groups.ToList();
-            ViewBag.teachersLogin = teacherLogin;
-            ViewBag.teachersPass = teacherPass;
+            ViewBag.teacherLogin = teacherLogin;
+            ViewBag.teacherPass = teacherPass;
             curGroup = new AddTeacherModel { groups = groups };
             return PartialView("~/Views/Admin/_addTeacher.cshtml", curGroup);
         }
