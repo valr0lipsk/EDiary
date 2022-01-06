@@ -53,16 +53,34 @@ namespace EDiary.Controllers
         }
 
         //смена пароля преподавателя
-        public IActionResult ChangePassword(AspTeacherSubjectGroup teacher)
+        public IActionResult ChangePassword() => View("ChangePasswordTeacher");
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(TeacherChangePassword teacherPassword)
         {
-            var teacherUser = context.Users.Where(trId => trId.Id == userManager.GetUserId(User)).First();
-            teacherUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, teacher.teacherPassword);
-            context.Users.Update(teacherUser);
-            context.SaveChanges();
-            return RedirectToAction("Teacher", "Teacher");
+            if (ModelState.IsValid)
+            {
+                IdentityUser student = await userManager.FindByIdAsync(userManager.GetUserId(User));
+                if (student != null)
+                {
+                    IdentityResult result = await userManager.ChangePasswordAsync(student, teacherPassword.oldTeacherPassword, teacherPassword.newTeacherPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Teacher", "Teacher");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+            }
+            return View(teacherPassword);
         }
 
-        //добавление аватарочки студента
+        //добавление аватарочки преподавателя
         [HttpPost]
         public IActionResult AddPicture(AvatarModel teacherPicture)
         {
@@ -78,6 +96,7 @@ namespace EDiary.Controllers
             return RedirectToAction("Teacher", "Teacher");
         }
 
+        //представление журнала
         public IActionResult Jurnal() => RedirectToAction("Jurnal", "Marks");
     }
 }
