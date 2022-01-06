@@ -69,12 +69,9 @@ namespace EDiary.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
+                IdentityUser user = (from us in context.Users where us.Email.Trim() == model.Email.Trim() select new IdentityUser{ Email=model.Email.Trim()}).First();
                 if (user == null)
                 {
-                    // пользователь с данным email может отсутствовать в бд
-                    // тем не менее мы выводим стандартное сообщение, чтобы скрыть 
-                    // наличие или отсутствие пользователя в бд
                     return View("Login");
                 }
 
@@ -100,7 +97,7 @@ namespace EDiary.Controllers
             {
                 return View(model);
             }
-            var user = await userManager.FindByEmailAsync(model.Email);
+            IdentityUser user = (from us in context.Users where us.Email.Trim() == model.Email.Trim() select new IdentityUser { Email = model.Email.Trim() }).First();
             if (user == null)
             {
                 return View("ResetPasswordInfo");

@@ -7,6 +7,7 @@ namespace EDiary.ViewModels
 {
     public class StudentChangePassword
     {
-        public string studentPassword { get; set; }
+        public string oldStudentPassword { get; set; }
+        public string newStudentPassword { get; set; }
     }
 }

@@ -37,15 +37,33 @@ namespace EDiary.Controllers
         }
 
         //смена пароля студента
-        public IActionResult ChangePassword(StudentChangePassword student)
-        {
-            var studentUser = context.Users.Where(stId => stId.Id == userManager.GetUserId(User)).First();
-            studentUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, student.studentPassword);
-            context.Users.Update(studentUser);
-            context.SaveChanges();
-            return RedirectToAction("Student", "Student");
-        }
+        public IActionResult ChangePassword() => View("ChangePasswordStudent");
 
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(StudentChangePassword studentPassword)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityUser student = await userManager.FindByIdAsync(userManager.GetUserId(User));
+                if (student != null)
+                {
+                    IdentityResult result = await userManager.ChangePasswordAsync(student, studentPassword.oldStudentPassword, studentPassword.newStudentPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Student", "Student");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+            }
+            return View(studentPassword);
+        }
+        
         //добавление аватарочки студента
         [HttpPost]
         public IActionResult AddPicture(AvatarModel studentPicture)
@@ -59,7 +77,7 @@ namespace EDiary.Controllers
             student.studentPic = pic;
             context.students.Update(student);
             context.SaveChanges();
-            return RedirectToAction("Student","Student");
+            return RedirectToAction("Student", "Student");
         }
     }
 }
