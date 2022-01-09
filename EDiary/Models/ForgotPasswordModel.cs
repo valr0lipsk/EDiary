@@ -10,6 +10,6 @@ namespace EDiary.Models
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string userEmail { get; set; }
     }
 }

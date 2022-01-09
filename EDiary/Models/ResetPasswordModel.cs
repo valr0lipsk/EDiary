@@ -10,18 +10,18 @@ namespace EDiary.Models
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string userEmail { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "Пароль должен сожержать не менее 8 символов", MinimumLength = 8)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string newPassword { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля")]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        public string ConfirmPassword { get; set; }
+        [Compare("newPassword", ErrorMessage = "Пароли не совпадают")]
+        public string confirmPassword { get; set; }
 
-        public string Code { get; set; }
+        public string userCode { get; set; }
     }
 }

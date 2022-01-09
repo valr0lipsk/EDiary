@@ -65,44 +65,44 @@ namespace EDiary.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel forgotPassword)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = (from us in context.Users where us.Email.Trim() == model.Email.Trim() select new IdentityUser{ Email=model.Email.Trim()}).First();
+                var user = await userManager.FindByEmailAsync(forgotPassword.userEmail.Trim());
                 if (user == null)
                 {
                     return View("Login");
                 }
 
-                var code = await userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                var userCode = await userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = userCode }, protocol: HttpContext.Request.Scheme);
                 EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync(model.Email, "Сброс пароля", $"Для сброса пароля перейдите по ссылке: <a href='{callbackUrl}'>Сбросить пароль</a>");
+                await emailService.SendEmailAsync(forgotPassword.userEmail, "Сброс пароля", $"Для сброса пароля перейдите по ссылке: <a href='{callbackUrl}'>Сбросить пароль</a>");
                 return View("ForgotPasswordInfo");
             }
-            return View(model);
+            return View(forgotPassword);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null) => code == null ? View("Error") : View();
+        public IActionResult ResetPassword(string code=null) => code == null ? View("Error") : View();
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPassword)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(resetPassword);
             }
-            IdentityUser user = (from us in context.Users where us.Email.Trim() == model.Email.Trim() select new IdentityUser { Email = model.Email.Trim() }).First();
+            var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
             if (user == null)
             {
-                return View("ResetPasswordInfo");
+                return View("Error");
             }
-            var result = await userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await userManager.ResetPasswordAsync(user, resetPassword.userCode, resetPassword.newPassword);
             if (result.Succeeded)
             {
                 return View("ResetPasswordInfo");
@@ -111,7 +111,7 @@ namespace EDiary.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-            return View(model);
+            return View(resetPassword);
         }
 
         //выход

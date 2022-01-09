@@ -28,7 +28,6 @@ namespace EDiary
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
             //конфиг
             Configuration.Bind("Project", new Config());
             //добавление контекста данных
