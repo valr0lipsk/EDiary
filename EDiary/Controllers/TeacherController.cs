@@ -80,7 +80,7 @@ namespace EDiary.Controllers
             return View(teacherPassword);
         }
 
-        //добавление аватарочки преподавателя
+        //добавление аватарочки преподавателя (тебе три года, поэтому ты пишешь "аватарочки")?
         [HttpPost]
         public IActionResult AddPicture(AvatarModel teacherPicture)
         {
