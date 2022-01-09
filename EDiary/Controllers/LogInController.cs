@@ -1,5 +1,6 @@
 ﻿using EDiary.Models;
 using EDiary.Service;
+using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -86,9 +87,10 @@ namespace EDiary.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
+        public IActionResult ResetPassword(ResetPasswordModel codePas, string code)
         {
-            return code == null ? View("Error") : View();
+            codePas.userCode = code;
+            return View(codePas);
         }
 
         [HttpPost]
@@ -115,8 +117,43 @@ namespace EDiary.Controllers
                 ModelState.AddModelError(string.Empty, error.Description);
             }
             return View(resetPassword);
-        }
+        }   
 
+        //смена пароля пользователя
+        [Authorize]
+        public IActionResult ChangePassword() => View("ChangePassword");
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(userChangePassword userPassword)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityUser user = await userManager.FindByIdAsync(userManager.GetUserId(User));
+                if (user != null)
+                {
+                    IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
+                    if (result.Succeeded)
+                    {
+                        if (user.UserName.Contains("st")) 
+                        { 
+                            return RedirectToAction("Student", "Student"); 
+                        }
+                        else if (user.UserName.Contains("tr"))
+                        {
+                            return RedirectToAction("Teacher", "Teacher"); 
+                        }
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+            }
+            return View(userPassword);
+        }
         //выход
         [Authorize]
         public async Task<IActionResult> Logout()

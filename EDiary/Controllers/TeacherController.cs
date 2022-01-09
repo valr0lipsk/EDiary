@@ -25,62 +25,34 @@ namespace EDiary.Controllers
         public IActionResult Teacher()
         {
             var teacherNamePic = (from teacher in context.teachers
-                               join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                               where teacher.teacherUser == userManager.GetUserId(User)
-                               select new Teacher
-                               {
-                                   teacherSurname = teacher.teacherSurname,
-                                   teacherName = teacher.teacherName,
-                                   teacherLastname = teacher.teacherLastname,
-                                   teacherPic = teacher.teacherPic
-                               }).ToList();
+                                  join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                                  where teacher.teacherUser == userManager.GetUserId(User)
+                                  select new Teacher
+                                  {
+                                      teacherSurname = teacher.teacherSurname,
+                                      teacherName = teacher.teacherName,
+                                      teacherLastname = teacher.teacherLastname,
+                                      teacherPic = teacher.teacherPic
+                                  }).ToList();
 
             var subjectGroups = (from tsub in context.subjectTaughts
-                          join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                          join gr in context.groups on tsub.groupId equals gr.groupId
-                          join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                          join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                          where teacher.teacherUser == userManager.GetUserId(User)
-                          select new SubjectGroup
-                          {
-                              groupName = gr.groupName,
-                              subjectName = subject.subjectName,
-                              tsubjectId = tsub.tsubjectId
-                          }).ToList();
+                                 join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                                 join gr in context.groups on tsub.groupId equals gr.groupId
+                                 join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
+                                 join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                                 where teacher.teacherUser == userManager.GetUserId(User)
+                                 select new SubjectGroup
+                                 {
+                                     groupName = gr.groupName,
+                                     subjectName = subject.subjectName,
+                                     tsubjectId = tsub.tsubjectId
+                                 }).ToList();
 
-            AspTeacherSubjectGroup teacherSubjectGroup = new AspTeacherSubjectGroup { Teachers= teacherNamePic, subjectGroups=subjectGroups};
+            AspTeacherSubjectGroup teacherSubjectGroup = new AspTeacherSubjectGroup { Teachers = teacherNamePic, subjectGroups = subjectGroups };
             return View(teacherSubjectGroup);
         }
-
-        //смена пароля преподавателя
-        public IActionResult ChangePassword() => View("ChangePasswordTeacher");
-
-        [HttpPost]
-        public async Task<IActionResult> ChangePassword(TeacherChangePassword teacherPassword)
-        {
-            if (ModelState.IsValid)
-            {
-                IdentityUser student = await userManager.FindByIdAsync(userManager.GetUserId(User));
-                if (student != null)
-                {
-                    IdentityResult result = await userManager.ChangePasswordAsync(student, teacherPassword.oldTeacherPassword, teacherPassword.newTeacherPassword);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Teacher", "Teacher");
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
-                }
-            }
-            return View(teacherPassword);
-        }
-
-        //добавление аватарочки преподавателя (тебе три года, поэтому ты пишешь "аватарочки")?
+        
+        //добавление авы преподавателя
         [HttpPost]
         public IActionResult AddPicture(AvatarModel teacherPicture)
         {

@@ -36,35 +36,7 @@ namespace EDiary.Controllers
             return View(studentFullName);
         }
 
-        //смена пароля студента
-        public IActionResult ChangePassword() => View("ChangePasswordStudent");
-
-        [HttpPost]
-        public async Task<IActionResult> ChangePassword(StudentChangePassword studentPassword)
-        {
-            if (ModelState.IsValid)
-            {
-                IdentityUser student = await userManager.FindByIdAsync(userManager.GetUserId(User));
-                if (student != null)
-                {
-                    IdentityResult result = await userManager.ChangePasswordAsync(student, studentPassword.oldStudentPassword, studentPassword.newStudentPassword);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Student", "Student");
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
-                }
-            }
-            return View(studentPassword);
-        }
-        
-        //добавление аватарочки студента
+        //добавление авы студента
         [HttpPost]
         public IActionResult AddPicture(AvatarModel studentPicture)
         {

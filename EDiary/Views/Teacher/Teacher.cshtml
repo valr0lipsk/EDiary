@@ -67,7 +67,7 @@
             <div class="row h-100 align-content-center w-100 flex-column-reverse justify-content-center">
                 <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
                     <div class="row flex-column">
-                        @*<a asp-action="ChangePassword">Сменить пароль</a>*@
+                        @*<a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>*@
                         <h4>Мои предметы:</h4>
                         <ol id="list" class="list-group list-group-flush list-group-numbered">
                             @foreach (var subjectGroup in Model.subjectGroups)
