@@ -52,7 +52,7 @@ namespace EDiary.Controllers
             return View(teacherSubjectGroup);
         }
         
-        //добавление авы преподавателя
+        //добавление фотографии преподавателя
         [HttpPost]
         public IActionResult AddPicture(AvatarModel teacherPicture)
         {

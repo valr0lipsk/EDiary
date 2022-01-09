@@ -36,7 +36,7 @@ namespace EDiary.Controllers
             return View(studentFullName);
         }
 
-        //добавление авы студента
+        //добавление фотографии студента
         [HttpPost]
         public IActionResult AddPicture(AvatarModel studentPicture)
         {
