@@ -55,6 +55,7 @@ namespace EDiary.Controllers
 
             //студенты
             var studentsJurnal = (from student in context.students
+                                  orderby student.studentSurname
                                   select new Student
                                   {
                                       studentId = student.studentId,
@@ -77,6 +78,7 @@ namespace EDiary.Controllers
                             join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
                             join mark in context.marks on setMark.markId equals mark.markId
                             join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                            orderby student.studentSurname
                             where subTaught.tsubjectId == subid
                             select new setMark
                             {
