@@ -20,6 +20,7 @@ namespace EDiary.Models
         public DbSet<subjectTaught> subjectTaughts { get; set; }
         public DbSet<Teacher> teachers { get; set; }
         public DbSet<Student> students { get; set; }
+        public DbSet<lessonType> lessonType { get; set; }
         public EDContext(DbContextOptions<EDContext> options):base(options) {}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

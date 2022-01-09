@@ -21,7 +21,14 @@ namespace EDiary.Models
         [Required]
         public int tsubjectId { get; set; }
 
+        [Display(Name = "Тип занятия")]
+        public int lessonTypeId { get; set; }
+
         [ForeignKey("tsubjectId")]
         public subjectTaught subjectTaught { get; set; }
+
+        [ForeignKey("lessonTypeId")]
+        public lessonType lessType { get; set; }
+
     }
 }
