@@ -60,11 +60,19 @@
                     <tbody>
                         @foreach (var student in Model.Students)
                          {
-                         <tr>
-                             <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1). @student.studentLastname.Substring(0,1).</th>
+                        <tr>
+                            @if (student.studentLastname != null)
+                            {
+                                <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
+                            }
+                            else
+                            {
+                                <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
+                            }
+
 
                             @foreach (var dateLesson in Model.Lessons)
-                             {
+                            {
                                 var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
                                 if (sm != null)
                                 {
@@ -74,8 +82,8 @@
                                 {
                                     <td></td>
                                 }
-                             }
-                         </tr>
+                            }
+                        </tr>
                          }
                     </tbody>
                 </table>
