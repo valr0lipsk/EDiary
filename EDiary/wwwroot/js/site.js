@@ -56,6 +56,11 @@ $(document).ready(function () {
             }
         });
     })
+
+    //модальное окно добавления фото
+    $('#openIconModal').click(function () {
+        $('#iconModal').modal('show');
+    });
 });
 
 
