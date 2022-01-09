@@ -70,15 +70,15 @@ namespace EDiary.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByEmailAsync(forgotPassword.userEmail.Trim());
-                if (user == null)
+                if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
                 {
                     return View("Login");
                 }
 
-                var userCode = await userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = userCode }, protocol: HttpContext.Request.Scheme);
+                var сode = await userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = сode }, protocol: HttpContext.Request.Scheme);
                 EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync(forgotPassword.userEmail, "Сброс пароля", $"Для сброса пароля перейдите по ссылке: <a href='{callbackUrl}'>Сбросить пароль</a>");
+                await emailService.SendEmailAsync(forgotPassword.userEmail.Trim(), "Сброс пароля", $"Для сброса пароля перейдите по ссылке: <a href='{callbackUrl}'>Сбросить пароль</a>");
                 return View("ForgotPasswordInfo");
             }
             return View(forgotPassword);
@@ -86,7 +86,10 @@ namespace EDiary.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code=null) => code == null ? View("Error") : View();
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View();
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -100,7 +103,7 @@ namespace EDiary.Controllers
             var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
             if (user == null)
             {
-                return View("Error");
+                return View("ResetPasswordInfo");
             }
             var result = await userManager.ResetPasswordAsync(user, resetPassword.userCode, resetPassword.newPassword);
             if (result.Succeeded)
