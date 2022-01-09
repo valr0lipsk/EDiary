@@ -34,11 +34,11 @@
                                         </div>
                                         <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
                                             <div class="modal-body">
-                                                <input name="Picture" type="file" class="form-control" />
+                                                <input name="Picture" class="form-control-file" type="file" required/>
                                             </div>
                                             <div class="modal-footer">
-                                                <input type="submit" class="btn btn-primary" value="Добавить" />
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                                <input type="submit" class="btn btn-primary" value="Добавить" />
                                             </div>
                                         </form>
                                     </div>
