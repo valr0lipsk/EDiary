@@ -3,92 +3,115 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="~/js/markTable.js"></script>
 <form asp-controller="Marks" asp-action="Jurnal">
-<div class="container h-100">
-    <div class="row h-100">
-        <div class="col-12 jurnalF h-100 p-3">
-            <div class="row h-100">
-                <div class="col-12 h-100 text-center">
-                    <h3 class="p-0">Журнал предмета: 
-                        @foreach (var subject in Model.Subjects)
-                         {
-                            @subject.subjectName
-                         }
-                    </h3>
-                </div>
-                <div class="col-12 h-100">
-                    <div class="row h-100 mt-3">
-                        <div class="col-4">
-                            <div class="row pl-3">
-                                <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
-                            </div>
-                            <div class="row pl-3">
-                               @foreach (var group in Model.Groups)
-                                {
-                                   <label>@group.groupName</label>
-                                }
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-12 jurnalF h-100 p-3">
+                <div class="row h-100">
+                    <div class="col-12 h-100 text-center">
+                        <h3 class="p-0">
+                            Журнал предмета:
+                            @foreach (var subject in Model.Subjects)
+                            {
+                                @subject.subjectName
+                            }
+                        </h3>
+                    </div>
+                    <div class="col-12 h-100">
+                        <div class="row h-100 mt-3">
+                            <div class="col-4">
+                                <div class="row pl-3">
+                                    <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
+                                </div>
+                                <div class="row pl-3">
+                                    @foreach (var group in Model.Groups)
+                                    {
+                                        <label>@group.groupName</label>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row h-100 mt-2">
-                        <div class="col-lg-4 col-11">
-                            <div class="row pl-3">
-                                <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
-                            </div>
-                            <div class="row pl-3">
-                               @foreach (var teacher in Model.Teachers)
-                                { 
-                                    <label>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</label>
-                                }
+                        <div class="row h-100 mt-2">
+                            <div class="col-lg-4 col-11">
+                                <div class="row pl-3">
+                                    <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
+                                </div>
+                                <div class="row pl-3">
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        <label>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</label>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 accountF h-100 pr-3 pl-3 pb-3">
-            <div class="row h-100 sticky-table sticky-ltr-cells m-1">
-                <table class="table _table table-hover table-bordered editableTable">
-                    <thead>
-                        <tr class="sticky-header">
-                            <th></th>
-                            @foreach (var dateLesson in Model.Lessons)
-                             {
-                                 <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
-                             }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var student in Model.Students)
-                         {
-                        <tr>
-                            @if (student.studentLastname != null)
+            <div class="col-12 accountF h-100 pr-3 pl-3 pb-3">
+                <div class="row h-100 sticky-table sticky-ltr-cells m-1">
+                    <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
+                    <table class="table _table table-hover table-bordered editableTable">
+                        <thead>
+                            <tr class="sticky-header">
+                                <th></th>
+                                @foreach (var dateLesson in Model.Lessons)
+                                {
+                                    <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model.Students)
                             {
-                                <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
-                            }
-                            else
-                            {
-                                <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
-                            }
+                                <tr>
+                                    @if (student.studentLastname != null)
+                                    {
+                                        <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
+                                    }
+                                    else
+                                    {
+                                        <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
+                                    }
 
 
-                            @foreach (var dateLesson in Model.Lessons)
-                            {
-                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                if (sm != null)
-                                {
-                                    <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId" @*contenteditable="true"*@ class="jurnalCell">@sm.mark.mark</td>
-                                }
-                                else
-                                {
-                                    <td @*contenteditable="true"*@ class="jurnalCell"></td>
-                                }
+                                    @foreach (var dateLesson in Model.Lessons)
+                                    {
+                                        var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                        if (sm != null)
+                                        {
+                                            <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId">@sm.mark.mark</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
                             }
-                        </tr>
-                         }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </form>
+<div id="lessModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Выбрать фотографию</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input name="Picture" class="form-control-file" type="file" required accept="image/*" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <input type="submit" class="btn btn-primary" value="Добавить" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,4 @@
 ﻿
-
 $(document).ready(function () {
     //добавить студента
     $('#addSt').click(function () {
@@ -47,16 +46,22 @@ $(document).ready(function () {
         $('#iconModal').modal('show');
     });
 
+    //модальное окно добавления предмета
+    $('#addLessModal').click(function () {
+        $('#lessModal').modal('show');
+    });
+
+    //обновление оценки в журнале
     $('td').bind('dblclick', function () {
         if (!$(this).has('input').length) {
             const input = $('<input/>', {
                 'type': 'text',
                 'value': $(this).html(),
-                change: function () {
+                blur: function () {
                     const newValue = $(this).val();
                     const markID = $(this).attr('data-idsm');
                     $.ajax({
-                        type: "GET",
+                        type: "PUT",
                         data: {
                             'id': markID,
                             'value': newValue
@@ -65,6 +70,9 @@ $(document).ready(function () {
                         async: true,
                         success: function (result) {
                             alert('Оценка успешно обновлена')
+                        },
+                        error: function (error) {
+                            alert(error);
                         }
                     });
                     $(this).replaceWith(newValue);
