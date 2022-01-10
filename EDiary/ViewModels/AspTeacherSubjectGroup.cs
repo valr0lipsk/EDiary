@@ -10,13 +10,7 @@ namespace EDiary.ViewModels
     public class AspTeacherSubjectGroup
     {
         public IEnumerable<Teacher> Teachers { get; set; }
-        public IEnumerable<Subject> Subjects { get; set; }
-        public IEnumerable<IdentityUser> AspUsers { get; set; }
-        public IEnumerable<subjectTaught> subjectTaughts { get; set; }
-        public IEnumerable<collegeGroup> Groups { get; set; }
         public IEnumerable<SubjectGroup> subjectGroups { get; set; }
-        
-        public int tsubjectId { get; set; }
         public int teacherId { get; set; }
         public string teacherLastname { get; set; }
         public string teacherName { get; set; } 
@@ -24,10 +18,6 @@ namespace EDiary.ViewModels
         public string subjectName { get; set; }
         public string teacherLogin { get; set; }
         public string groupName { get; set; }
-        public string teacherPassword { get; set; }
-        public string teacherFullName { get; set; }
-        public string teacherEmail { get; set; }
-        public byte[] teacherPic { get; set; }
-        
+        public string teacherEmail { get; set; }        
     }
 }

@@ -4,7 +4,6 @@
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Предмет</th>
             <th scope="col">Преподаватели</th>
             <th scope="col">Группа</th>
@@ -14,7 +13,6 @@
         @foreach (var teacherGroupSubject in Model)
         {
             <tr>
-                <td>@teacherGroupSubject.tsubjectId</td>
                 <td>@teacherGroupSubject.subjectName</td>
                 <td>@teacherGroupSubject.teacherSurname @teacherGroupSubject.teacherName.Substring(0,1). @teacherGroupSubject.teacherLastname.Substring(0,1).</td>
                 <td>@teacherGroupSubject.groupName</td>

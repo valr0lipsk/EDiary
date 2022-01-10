@@ -41,6 +41,7 @@ namespace EDiary.Controllers
                                  join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
                                  join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
                                  where teacher.teacherUser == userManager.GetUserId(User)
+                                 orderby subject.subjectName
                                  select new SubjectGroup
                                  {
                                      groupName = gr.groupName,
