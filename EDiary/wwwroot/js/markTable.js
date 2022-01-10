@@ -26,7 +26,7 @@
         var offset = 0;
         $(".sticky-table").each(function () {
             offset = 0;
-            $(this).find("table tr.sticky-header").each(function () {
+            $(this).find("table thead tr.sticky-header").each(function () {
                 $(this).find("th").css('top', offset);
                 $(this).find("td").css('top', offset);
                 offset += $(this).outerHeight();
@@ -64,12 +64,15 @@
         }
 
         $(".sticky-table").scroll(function () {
-            $(this).find("table tr.sticky-header th").css('top', $(this).scrollTop());
-            $(this).find("table tr.sticky-header td").css('top', $(this).scrollTop());
             var maxScroll = $(this).find("table").prop("clientHeight") - $(this).prop("clientHeight");
             $(this).find("table tr.sticky-footer th").css('bottom', maxScroll - $(this).scrollTop());
             $(this).find("table tr.sticky-footer td").css('bottom', maxScroll - $(this).scrollTop());
         }).scroll();
+
+        $(window).scroll(function () {
+            $(this).find("table tr.sticky-header th").css('top', $(this).scrollTop());
+            $(this).find("table tr.sticky-header td").css('top', $(this).scrollTop());
+        }).scroll()
 
         $(".sticky-ltr-cells").scroll(function () {
             $(this).find("table th.sticky-cell").css('left', $(this).scrollLeft());
@@ -87,12 +90,15 @@
             $(".sticky-rtl-cells table td.sticky-cell-opposite").css('position', "relative");
 
             $(".sticky-table").scroll(function () {
-                $(this).find("table tr.sticky-header .sticky-cell").css('top', $(this).scrollTop());
-                $(this).find("table tr.sticky-header .sticky-cell-opposite").css('top', $(this).scrollTop());
                 var maxScroll = $(this).find("table").prop("clientHeight") - $(this).prop("clientHeight");
                 $(this).find("table tr.sticky-footer .sticky-cell").css('bottom', maxScroll - $(this).scrollTop());
                 $(this).find("table tr.sticky-footer .sticky-cell-opposite").css('bottom', maxScroll - $(this).scrollTop());
             }).scroll();
+
+            $(window).scroll(function () {
+                $(this).find("table tr.sticky-header .sticky-cell").css('top', $(this).scrollTop());
+                $(this).find("table tr.sticky-header .sticky-cell-opposite").css('top', $(this).scrollTop());
+            }).scroll()
         }
         $(".sticky-rtl-cells").scroll(function () {
             var maxScroll = $(this).find("table").prop("clientWidth") - $(this).prop("clientWidth");
@@ -127,27 +133,3 @@ $(document).ready(function () {
     $(document).trigger("stickyTable");
 });
 
-$(function () {
-    $('.editableTable').on('click', 'td', function () {
-
-        var OriginalContent = $(this).text();
-
-        $(this).addClass("cellEditing");
-        $(this).html("<input type='text' class='table-td' value='" + OriginalContent + "' />");
-        $(this).children().first().focus();
-
-        $(this).children().first().keypress(function (e) {
-            if (e.which == 13) {
-                var newContent = $(this).val();
-                $(this).parent().text(newContent);
-                $(this).parent().removeClass("cellEditing");
-            }
-        });
-
-        $(this).children().first().blur(function () {
-            $(this).parent().text(OriginalContent);
-            $(this).parent().removeClass("cellEditing");
-        });
-
-    });
-});

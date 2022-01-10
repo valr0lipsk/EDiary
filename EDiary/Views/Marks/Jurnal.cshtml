@@ -49,7 +49,7 @@
             <div class="row h-100 sticky-table sticky-ltr-cells m-1">
                 <table class="table _table table-hover table-bordered editableTable">
                     <thead>
-                        <tr>
+                        <tr class="sticky-header">
                             <th></th>
                             @foreach (var dateLesson in Model.Lessons)
                              {
@@ -76,11 +76,11 @@
                                 var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
                                 if (sm != null)
                                 {
-                                    <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId">@sm.mark.mark</td>
+                                    <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId" @*contenteditable="true"*@ class="jurnalCell">@sm.mark.mark</td>
                                 }
                                 else
                                 {
-                                    <td></td>
+                                    <td @*contenteditable="true"*@ class="jurnalCell"></td>
                                 }
                             }
                         </tr>

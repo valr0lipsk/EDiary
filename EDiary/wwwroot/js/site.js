@@ -1,19 +1,4 @@
 ﻿
-window.onscroll = function () { scrollFunction() };
-
-function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        document.getElementById("onTop").style.display = "block";
-    } else {
-        document.getElementById("onTop").style.display = "none";
-    }
-}
-
-function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
 
 $(document).ready(function () {
     //добавить студента
@@ -44,7 +29,7 @@ $(document).ready(function () {
 
     //получение айди предмета преподавателя в списке его предметов
     $('#list li').click(function () {
-        var subId = $(this).attr("data-id");
+        const subId = $(this).attr("data-id");
         $.ajax({
             type: "GET",
             //url: "/Marks/Jurnal?id=" + subId,
@@ -61,6 +46,36 @@ $(document).ready(function () {
     $('#openIconModal').click(function () {
         $('#iconModal').modal('show');
     });
+
+    $('td').bind('dblclick', function () {
+        if (!$(this).has('input').length) {
+            const input = $('<input/>', {
+                'type': 'text',
+                'value': $(this).html(),
+                change: function () {
+                    const newValue = $(this).val();
+                    const markID = $(this).attr('data-idsm');
+                    $.ajax({
+                        type: "GET",
+                        data: {
+                            'id': markID,
+                            'value': newValue
+                        }, 
+                        cache: false,
+                        async: true,
+                        success: function (result) {
+                            alert('Оценка успешно обновлена')
+                        }
+                    });
+                    $(this).replaceWith(newValue);
+                }
+            });
+            $(this).empty();
+            $(this).append(input);
+        }
+    });
+
 });
+
 
 
