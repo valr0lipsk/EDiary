@@ -88,9 +88,19 @@ namespace EDiary.Controllers
                                 studentId = setMark.studentId
                             }).ToList();
 
-            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks };
+            //типы занятий
+            var types = (from type in context.lessonType
+                         select new lessonType
+                         {
+                             lessonTypeId = type.lessonTypeId,
+                             typeName = type.typeName
+                         }).ToList();
+
+            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types };
             return View(jurnal);
         }
+
+        //обновление оценки 
         public IActionResult updateMark(int id, string value)
         {
             var markId = value;

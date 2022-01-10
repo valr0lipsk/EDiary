@@ -34,7 +34,7 @@ namespace EDiary.Controllers
         }
 
         //генерация логина
-        public static string generateLogin()
+        public string generateLogin()
         {
             string login = "";
             var r = new Random();
@@ -44,7 +44,7 @@ namespace EDiary.Controllers
                 if (char.IsDigit(c))
                     login += c;
             }
-            return login;
+            return login; 
         }
 
         //представление админа

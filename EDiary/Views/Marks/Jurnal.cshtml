@@ -106,12 +106,12 @@
             <form asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="datetime-local" required />
-                    <input type="text" required />
+                    <input type="text" required/>
                     <datalist>
-                        @*@foreach (var type in Model.types)
+                        @foreach (var type in Model.types)
                         {
-                            <option value="@types.typeName"></option>
-                        }*@
+                            <option value="@type.typeName"></option>
+                        }
                     </datalist>
                 </div>
                 <div class="modal-footer">
