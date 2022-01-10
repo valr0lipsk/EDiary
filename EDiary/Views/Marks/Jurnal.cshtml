@@ -98,14 +98,21 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Выбрать фотографию</h5>
+                <h5 class="modal-title">Добавить занятие</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
+            <form asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <input name="Picture" class="form-control-file" type="file" required accept="image/*" />
+                    <input type="datetime-local" required />
+                    <input type="text" required />
+                    <datalist>
+                        @*@foreach (var type in Model.types)
+                        {
+                            <option value="@types.typeName"></option>
+                        }*@
+                    </datalist>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>

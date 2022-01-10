@@ -62,6 +62,7 @@ $(document).ready(function () {
                     const markID = $(this).attr('data-idsm');
                     $.ajax({
                         type: "PUT",
+                        url: "/Marks/Jurnal/updateMark",
                         data: {
                             'id': markID,
                             'value': newValue
@@ -69,7 +70,7 @@ $(document).ready(function () {
                         cache: false,
                         async: true,
                         success: function (result) {
-                            alert('Оценка успешно обновлена')
+                            alert(result.message)
                         },
                         error: function (error) {
                             alert(error);

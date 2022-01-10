@@ -91,14 +91,22 @@ namespace EDiary.Controllers
             var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks };
             return View(jurnal);
         }
-        public void updateMark(int id, string value)
+        public IActionResult updateMark(int id, string value)
         {
             var markId = value;
             var setmark = id;
-            var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).First();
-            updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).First();
-            context.setMarks.Update(updatedMark);
-            context.SaveChanges();
+            var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
+            if (updatedMark != null )
+            {
+                updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+                context.setMarks.Update(updatedMark);
+                context.SaveChanges();
+                return Json(new { status = "success", message = "Оценка была обновлена" });
+            }
+            else
+            {
+                return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
+            }
         }
     }
 }
