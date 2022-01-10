@@ -53,16 +53,15 @@ $(document).ready(function () {
 
     //обновление оценки в журнале
     $('td').bind('dblclick', function () {
+        const markID = $(this).attr('data-idsm');
         if (!$(this).has('input').length) {
             const input = $('<input/>', {
                 'type': 'text',
                 'value': $(this).html(),
                 blur: function () {
                     const newValue = $(this).val();
-                    const markID = $(this).attr('data-idsm');
                     $.ajax({
-                        type: "PUT",
-                        url: "/Marks/Jurnal/updateMark",
+                        type: "GET",
                         data: {
                             'id': markID,
                             'value': newValue
