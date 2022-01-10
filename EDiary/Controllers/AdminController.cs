@@ -130,7 +130,7 @@ namespace EDiary.Controllers
                                           studentId = student.studentId,
                                           studentLogin = aspuser.UserName,
                                           studentSurname = student.studentSurname,
-                                          studentName = student.studentSurname,
+                                          studentName = student.studentName,
                                           studentLastname = student.studentLastname,
                                           groupName = gr.groupName,
                                           studentEmail= aspuser.Email
