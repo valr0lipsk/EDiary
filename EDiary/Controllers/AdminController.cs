@@ -124,6 +124,7 @@ namespace EDiary.Controllers
                                       join gr in context.groups on student.studentGroup equals gr.groupId
                                       join aspuser in context.Users on student.studentUser equals aspuser.Id
                                       where student.studentRole == "student"
+                                      orderby student.studentSurname
                                       select new AspStudentGroup
                                       {
                                           studentId = student.studentId,
@@ -143,6 +144,7 @@ namespace EDiary.Controllers
             var teachersTable = from teacher in context.teachers
                                 join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
                                 where teacher.teacherRole=="teacher"
+                                orderby teacher.teacherSurname
                                 select new AspTeacherSubjectGroup
                                 {
                                     teacherId = teacher.teacherId,
@@ -154,6 +156,7 @@ namespace EDiary.Controllers
                                     subjectName = string.Join(", ", (from sub in context.subjects
                                                                      join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                                      where subTaught.teacherId == teacher.teacherId
+                                                                     orderby teacher.teacherSurname
                                                                      select sub.subjectName.Trim()).ToArray())
                                 };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml",teachersTable);
@@ -172,11 +175,11 @@ namespace EDiary.Controllers
                                            teacherLastname = teacher.teacherLastname,
                                            teacherName = teacher.teacherName,
                                            teacherSurname = teacher.teacherSurname,
-                                           tsubjectId = subTaught.tsubjectId,
                                            groupName = gr.groupName,
                                            subjectName = string.Join(", ", (from sub in context.subjects
                                                                             join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                                             where subTaught.teacherId == teacher.teacherId
+                                                                            orderby sub.subjectName
                                                                             select sub.subjectName.Trim()).ToArray())
                                        });
 

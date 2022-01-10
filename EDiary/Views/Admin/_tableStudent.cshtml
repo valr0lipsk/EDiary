@@ -5,7 +5,6 @@
     @*Таблица студентов*@
     <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Логин</th>
             <th scope="col">Email</th>
             <th scope="col">Фамилия</th>
@@ -18,7 +17,6 @@
         @foreach (var userStudentGroup in Model)
             {
                <tr>
-                   <td>@userStudentGroup.studentId</td>
                    <td>@userStudentGroup.studentLogin</td>
                    <td>@userStudentGroup.studentEmail</td>
                    <td>@userStudentGroup.studentSurname</td>
