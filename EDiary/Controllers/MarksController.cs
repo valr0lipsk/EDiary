@@ -26,17 +26,24 @@ namespace EDiary.Controllers
             var markId = value;
             var setmark = id;
             var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
-            if (updatedMark != null)
+            if (updatedMark != null || value != null)
             {
                 updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
                 context.setMarks.Update(updatedMark);
                 context.SaveChanges();
                 return Json(new { status = "success", message = "Оценка обновлена" });
             }
+            else if (value == null)
+            {
+                context.setMarks.Remove(updatedMark);
+                context.SaveChanges();
+                return Json(new { status = "success", message = "Оценка удалена" });
+            }
             else
             {
                 return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
             }
+            
         }
 
         //добавление оценки
