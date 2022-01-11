@@ -74,7 +74,11 @@ $(document).ready(function () {
                             cache: false,
                             async: true,
                             success: function (result) {
+                                if (result.status === 'deleted') {
+                                    $(this).parent.attr('data-idsm') = null
+                                }
                                 alert(result.message)
+
                             },
                             error: function (error) {
                                 console.error(error);
