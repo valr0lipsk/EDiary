@@ -45,7 +45,6 @@ namespace EDiary.Models
                 Name = "student",
                 NormalizedName = "STUDENT"
             });
-
             //1-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {

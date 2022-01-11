@@ -26,7 +26,7 @@ namespace EDiary.Controllers
             var markId = value;
             var setmark = id;
             var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
-            if (updatedMark != null || value != null)
+            if (updatedMark != null && value != null)
             {
                 updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
                 context.setMarks.Update(updatedMark);
