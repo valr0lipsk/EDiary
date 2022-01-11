@@ -1,37 +1,38 @@
 ﻿
 $(document).ready(function () {
-    //добавить студента
+    //admin funcs
+    //add student
     $('#addSt').click(function () {
         $("#partialDiv").load('/Admin/AddStudent');
     });
 
-    //добавить преподавателя
+    //add teacher
     $('#addT').click(function () {
         $("#partialDiv").load('/Admin/AddTeacher');
     })
-    //добавить предмет
+    //add subj
     $('#addSb').click(function () {
         $("#partialDiv").load('/Admin/AddSubject');
     })
-    //все студенты
+    //show all students
     $('#allSt').click(function () {
         $("#partialDiv").load('/Admin/ShowStudents');
     })
-    //все преподаватели
+    //show all teachers
     $('#allT').click(function () {
         $("#partialDiv").load('/Admin/ShowTeachers');
     })
-    //все предметы
+    //show all subjs
     $('#allSb').click(function () {
         $("#partialDiv").load('/Admin/ShowSubjects');
     })
 
-    //получение айди предмета преподавателя в списке его предметов
+
+    //get subject id from acc to open jurnal page
     $('#list li').click(function () {
         const subId = $(this).attr("data-id");
         $.ajax({
             type: "GET",
-            //url: "/Marks/Jurnal?id=" + subId,
             data: { 'id': subId },
             cache: false,
             async: true,
@@ -41,20 +42,22 @@ $(document).ready(function () {
         });
     })
 
-    //модальное окно добавления фото
+    //open adding photo modal
     $('#openIconModal').click(function () {
         $('#iconModal').modal('show');
     });
 
-    //модальное окно добавления предмета
+
+    //jurnal funcs
+    //open adding lesson modal
     $('#addLessModal').click(function () {
         $('#lessModal').modal('show');
     });
 
-    //обновление оценки в журнале
+    //update, delete and add mark in jurnal
     $('td').bind('dblclick', function () {   
         if (!$(this).has('input').length) {
-            if ($(this).attr('data-idsm')) {
+            if ($(this).attr('data-idsm')) { //update or delete mark
                 const markID = $(this).attr('data-idsm');  
                 const input = $('<input/>', {
                     'type': 'text',
@@ -83,7 +86,7 @@ $(document).ready(function () {
                 $(this).empty();
                 $(this).append(input);
             }
-            else {
+            else { //add mark
                 lessId = $(this).attr('data-idLess');
                 studId = $(this).attr('data-idStud');
                 const input = $('<input/>', {
@@ -103,6 +106,7 @@ $(document).ready(function () {
                             async: true,
                             success: function (result) {
                                 alert(result.message)
+                                $(this).parent.attr('data-idsm') = result.markId
                             },
                             error: function (error) {
                                 console.error(error);
