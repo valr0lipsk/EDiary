@@ -63,7 +63,6 @@ namespace EDiary.Models
                 teacherRole = "teacher",
                 teacherUser = "1"
             });
-
             //2-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
