@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class AddLesson
+    public class AddLessonModel
     {
         public DateTime lessonDate { get; set; }
         public string lessonType { get; set; }
-        public int subid { get; set; }
+        public int id { get; set; }
     }
 }
