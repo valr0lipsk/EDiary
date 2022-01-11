@@ -31,13 +31,13 @@ namespace EDiary.Controllers
                 updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
                 context.setMarks.Update(updatedMark);
                 context.SaveChanges();
-                return Json(new { status = "success", message = "Оценка обновлена" });
+                return Json(new { status = "updated", message = "Оценка обновлена" });
             }
             else if (value == null)
             {
                 context.setMarks.Remove(updatedMark);
                 context.SaveChanges();
-                return Json(new { status = "success", message = "Оценка удалена" });
+                return Json(new { status = "deleted", message = "Оценка удалена" });
             }
             else
             {
@@ -55,7 +55,7 @@ namespace EDiary.Controllers
             context.setMarks.Add(setMark);
             context.SaveChanges();
             var markId = (from sM in context.setMarks orderby sM.setmarkId descending select sM.setmarkId).FirstOrDefault();
-            return Json(new { status = "success", message = "Оценка добавлена", markId = markId});
+            return Json(new { status = "added", message = "Оценка добавлена", markId = markId});
         }
 
         //журнал предмета и группы
