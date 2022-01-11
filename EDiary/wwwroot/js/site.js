@@ -54,6 +54,7 @@ $(document).ready(function () {
     //обновление оценки в журнале
     $('td').bind('dblclick', function () {
         const markID = $(this).attr('data-idsm');
+        alert(markID);
         if (!$(this).has('input').length) {
             const input = $('<input/>', {
                 'type': 'text',
@@ -61,7 +62,7 @@ $(document).ready(function () {
                 blur: function () {
                     const newValue = $(this).val();
                     $.ajax({
-                        type: "GET",
+                        type: "POST",
                         data: {
                             'id': markID,
                             'value': newValue
@@ -69,10 +70,15 @@ $(document).ready(function () {
                         cache: false,
                         async: true,
                         success: function (result) {
-                            alert(result.message)
+                            if (result.status === 'success') {
+                                alert('Good!')
+                            }
+                            else {
+                                alert('Bad :(')
+                            }
                         },
                         error: function (error) {
-                            alert(error);
+                            console.error(error);
                         }
                     });
                     $(this).replaceWith(newValue);
