@@ -55,7 +55,7 @@ namespace EDiary.Controllers
             context.setMarks.Add(setMark);
             context.SaveChanges();
             var markId = (from sM in context.setMarks orderby sM.setmarkId descending select sM.setmarkId).FirstOrDefault();
-            return Json(new { status = "success", message = "Оценка добавлена", result = markId});
+            return Json(new { status = "success", message = "Оценка добавлена", markId = markId});
         }
 
         //журнал предмета и группы
