@@ -103,6 +103,8 @@ namespace EDiary.Controllers
             return View(jurnal);
         }
 
+        [HttpPost]
+
         //обновление оценки 
         public IActionResult updateMark(int id, string value)
         {

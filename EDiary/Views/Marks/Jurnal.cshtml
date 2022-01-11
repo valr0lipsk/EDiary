@@ -2,7 +2,6 @@
 @model JurnalModel
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="~/js/markTable.js"></script>
-<form asp-controller="Marks" asp-action="Jurnal">
     <div class="container h-100">
         <div class="row h-100">
             <div class="col-12 jurnalF h-100 p-3">
@@ -49,6 +48,34 @@
             <div class="col-12 accountF h-100 pr-3 pl-3 pb-3">
                 <div class="row h-100 sticky-table sticky-ltr-cells m-1">
                     <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
+                    <div id="lessModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Добавить занятие</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <input type="datetime-local" required />
+                                        <input type="text" required />
+                                        <datalist>
+                                            @foreach (var type in Model.types)
+                                             {
+                                                <option value="@type.typeName"></option>
+                                             }
+                                        </datalist>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                        <input type="submit" class="btn btn-primary" value="Добавить" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <table class="table _table table-hover table-bordered editableTable">
                         <thead>
                             <tr class="sticky-header">
@@ -108,10 +135,10 @@
                     <input type="datetime-local" required />
                     <input type="text" required />
                     <datalist>
-                        @foreach (var type in Model.types)
+                        @*@foreach (var type in Model.types)
                         {
-                            <option value="@type.typeName"></option>
-                        }
+                            <option value="@types.typeName"></option>
+                        }*@
                     </datalist>
                 </div>
                 <div class="modal-footer">
