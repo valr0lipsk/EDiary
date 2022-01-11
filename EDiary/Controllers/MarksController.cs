@@ -69,7 +69,8 @@ namespace EDiary.Controllers
                                  where subTaught.tsubjectId == subid
                                  select new Subject
                                  {
-                                   subjectName = st.subjectName
+                                     subjectName = st.subjectName,
+                                     subjectId = subid
                                  }).ToList();
 
             //студенты
