@@ -57,15 +57,19 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
+                                <form method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
-                                        <input type="datetime-local" required />
-                                        <input type="text" required />
-                                        <datalist>
+                                        @foreach (var subject in Model.Subjects)
+                                        {
+                                            <input @*asp-for="subId"*@ type="text" readonly value="@subject.subjectId" />
+                                        }
+                                        <input @*asp-for="lessonDate"*@ type="datetime-local" required />
+                                        <input @*asp-for="lessonType"*@ type="text" list="lessTypes" required />
+                                        <datalist id="lessTypes">
                                             @foreach (var type in Model.types)
-                                             {
+                                            {
                                                 <option value="@type.typeName"></option>
-                                             }
+                                            }
                                         </datalist>
                                     </div>
                                     <div class="modal-footer">
@@ -120,32 +124,3 @@
             </div>
         </div>
     </div>
-</form>
-<div id="lessModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Добавить занятие</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="datetime-local" required />
-                    <input type="text" required />
-                    <datalist>
-                        @*@foreach (var type in Model.types)
-                        {
-                            <option value="@types.typeName"></option>
-                        }*@
-                    </datalist>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Добавить" />
-                </div>
-            </form>
-        </div>
-    </div>
-</div>

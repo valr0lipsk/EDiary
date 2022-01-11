@@ -17,7 +17,26 @@ namespace EDiary.Controllers
         public MarksController(EDContext context) => this.context = context;
 
         //представление журнала
-        public IActionResult Jurnal() => View();
+        //public IActionResult Jurnal() => View();
+        public IActionResult Jurnal(int id, string value)
+        {
+            var setMark = 1;
+            Jurnal(setMark);
+            var markId = value;
+            var setmark = id;
+            var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
+            if (updatedMark != null)
+            {
+                updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+                context.setMarks.Update(updatedMark);
+                context.SaveChanges();
+                return Json(new { status = "success", message = "Оценка обновлена" });
+            }
+            else
+            {
+                return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
+            }
+        }
 
         //журнал предмета и группы
         [HttpGet]
@@ -116,7 +135,7 @@ namespace EDiary.Controllers
                 updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
                 context.setMarks.Update(updatedMark);
                 context.SaveChanges();
-                return Json(new { status = "success", message = "Оценка была обновлена" });
+                return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
             }
             else
             {
