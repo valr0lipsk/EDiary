@@ -18,6 +18,8 @@ namespace EDiary.Controllers
 
         //представление журнала
         //public IActionResult Jurnal() => View();
+        
+        //обновление оценки
         [HttpPut]
         public IActionResult Jurnal(int id, string value)
         {
@@ -37,6 +39,7 @@ namespace EDiary.Controllers
             }
         }
 
+        //добавление оценки
         [HttpPost]
         public IActionResult Jurnal (int studId, int lessId, string value)
         {
@@ -44,7 +47,7 @@ namespace EDiary.Controllers
             setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
             context.setMarks.Add(setMark);
             context.SaveChanges();
-            return Json(new { status = "success", message = "Оценка добавлена" });
+            return Json(new { status = "success", message = "Оценка добавлена", });
         }
 
         //журнал предмета и группы
@@ -102,7 +105,8 @@ namespace EDiary.Controllers
                                 select new Lesson
                                 {
                                     lessonId = lesson.lessonId,
-                                    lessonDate = lesson.lessonDate
+                                    lessonDate = lesson.lessonDate,
+                                    lessonTypeId = lesson.lessonTypeId
                                 }).ToList();
 
             //выставленные отметки
