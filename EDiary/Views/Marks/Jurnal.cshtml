@@ -81,15 +81,13 @@
                         </div>
                     </div>
                     <table class="table _table table-hover table-bordered editableTable">
-                        <thead>
                             <tr class="sticky-header">
                                 <th></th>
                                 @foreach (var dateLesson in Model.Lessons)
                                 {
-                                    <th data-idLess="@dateLesson.lessonId" class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
+                                    <th class="vt-text">@dateLesson.lessonDate.ToString("d")</th>
                                 }
                             </tr>
-                        </thead>
                         <tbody>
                             @foreach (var student in Model.Students)
                             {
@@ -109,11 +107,11 @@
                                         var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
                                         if (sm != null)
                                         {
-                                            <td data-idsm="@sm.setmarkId" data-idmId="@sm.mark.markId">@sm.mark.mark</td>
+                                            <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
                                         }
                                         else
                                         {
-                                            <td></td>
+                                            <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
                                         }
                                     }
                                 </tr>

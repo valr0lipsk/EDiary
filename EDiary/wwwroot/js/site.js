@@ -52,40 +52,68 @@ $(document).ready(function () {
     });
 
     //обновление оценки в журнале
-    $('td').bind('dblclick', function () {
-        const markID = $(this).attr('data-idsm');     
+    $('td').bind('dblclick', function () {   
         if (!$(this).has('input').length) {
-            const input = $('<input/>', {
-                'type': 'text',
-                'value': $(this).html(),
-                blur: function () {
-                    const newValue = $(this).val();
-                    $.ajax({
-                        url: this.URL,
-                        type: "POST",
-                        data: {
-                            'id': markID,
-                            'value': newValue
-                        }, 
-                        cache: false,
-                        async: true,
-                        success: function (result) {
-                            if (result.status === 'success') {
+            if ($(this).attr('data-idsm')) {
+                const markID = $(this).attr('data-idsm');  
+                const input = $('<input/>', {
+                    'type': 'text',
+                    'value': $(this).html(),
+                    blur: function () {
+                        const newValue = $(this).val();
+                        $.ajax({
+                            url: this.URL,
+                            type: "POST",
+                            data: {
+                                'id': markID,
+                                'value': newValue
+                            },
+                            cache: false,
+                            async: true,
+                            success: function (result) {
                                 alert(result.message)
+                            },
+                            error: function (error) {
+                                console.error(error);
                             }
-                            else {
-                                alert('Bad :(')
+                        });
+                        $(this).replaceWith(newValue);
+                    }
+                });
+                $(this).empty();
+                $(this).append(input);
+            }
+            else {
+                lessId = $(this).attr('data-idLess');
+                studId = $(this).attr('data-idStud')
+                const input = $('<input/>', {
+                    'type': 'text',
+                    'value': $(this).html(),
+                    blur: function () {
+                        const newValue = $(this).val();
+                        $.ajax({
+                            url: this.URL,
+                            type: "POST",
+                            data: {
+                                'lessId': lessId,
+                                'studId': studId,
+                                'value': newValue
+                            },
+                            cache: false,
+                            async: true,
+                            success: function (result) {
+                                alert(result.message)
+                            },
+                            error: function (error) {
+                                console.error(error);
                             }
-                        },
-                        error: function (error) {
-                            console.error(error);
-                        }
-                    });
-                    $(this).replaceWith(newValue);
-                }
-            });
-            $(this).empty();
-            $(this).append(input);
+                        });
+                        $(this).replaceWith(newValue);
+                    }
+                });
+                $(this).empty();
+                $(this).append(input);
+            }
         }
     });
 
