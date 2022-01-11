@@ -118,7 +118,7 @@ namespace EDiary.Controllers
                              typeName = type.typeName
                          }).ToList();
 
-            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types };
+            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types};
             return View(jurnal);
         }
 
@@ -144,13 +144,20 @@ namespace EDiary.Controllers
         }
 
         //добавление занятия
-        public IActionResult AddLesson(DateTime lessonDate, string lessonType, int subid)
+        //public IActionResult lessonData(DateTime lessonDate, string lessonType, int subid)
+        //{
+        //    var lessType = (from lT in context.lessonType where lT.typeName == lessonType select lT.lessonTypeId).FirstOrDefault();
+        //    Lesson lesson = new Lesson { tsubjectId = subid, lessonDate = lessonDate, lessonTypeId = lessType  };
+        //    context.lessons.Add(lesson);
+        //    context.SaveChanges();
+        //    return RedirectToAction("Jurnal", "Marks", subid);
+        //}
+        public IActionResult AddLesson(AddLessonType addLesson)
         {
-            var lessType = (from lT in context.lessonType where lT.typeName == lessonType select lT.lessonTypeId).FirstOrDefault();
-            Lesson lesson = new Lesson { tsubjectId = subid, lessonDate = lessonDate, lessonTypeId = lessType  };
+            Lesson lesson = new Lesson { tsubjectId = addLesson.subid, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()};
             context.lessons.Add(lesson);
             context.SaveChanges();
-            return RedirectToAction("Jurnal", "Marks", subid);
+            return RedirectToAction("Jurnal", "Marks", addLesson.subid);
         }
     }
 }
