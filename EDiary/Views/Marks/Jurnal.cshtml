@@ -57,11 +57,11 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form asp-controller="MarksController" asp-action="AddLesson" method="post" enctype="multipart/form-data">
+                                <form asp-controller="Marks" asp-action="AddLesson" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
                                         @foreach (var subject in Model.Subjects)
                                         {
-                                            <input asp-for="addLesson.subid" type="text" readonly value="@subject.subjectId" />
+                                            <input asp-for="addLesson.id" type="text" readonly value="@subject.subjectId" />
                                         }
                                         <input asp-for="addLesson.lessonDate" type="datetime-local" required />
                                         <input asp-for="addLesson.lessonType" type="text" list="lessTypes" required />

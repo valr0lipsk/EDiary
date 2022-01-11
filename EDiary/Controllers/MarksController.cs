@@ -152,12 +152,12 @@ namespace EDiary.Controllers
         //    context.SaveChanges();
         //    return RedirectToAction("Jurnal", "Marks", subid);
         //}
-        public IActionResult AddLesson(AddLesson addLesson)
+        public IActionResult AddLesson(AddLessonModel addLesson)
         {
-            Lesson lesson = new Lesson { tsubjectId = addLesson.subid, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()};
+            Lesson lesson = new Lesson { tsubjectId = addLesson.id, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()};
             context.lessons.Add(lesson);
             context.SaveChanges();
-            return RedirectToAction("Jurnal", "Marks", addLesson.subid);
+            return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
         }
     }
 }
