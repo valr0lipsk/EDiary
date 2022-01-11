@@ -55,6 +55,9 @@ namespace EDiary.Controllers
 
             //студенты
             var studentsJurnal = (from student in context.students
+                                  join gr in context.groups on student.studentGroup equals gr.groupId
+                                  join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
+                                  where subTaught.tsubjectId == subid
                                   orderby student.studentSurname
                                   select new Student
                                   {
@@ -101,7 +104,7 @@ namespace EDiary.Controllers
         }
 
         //обновление оценки 
-        public IActionResult updateMark(int id, string value)
+        public JsonResult updateMark(int id, string value)
         {
             var markId = value;
             var setmark = id;

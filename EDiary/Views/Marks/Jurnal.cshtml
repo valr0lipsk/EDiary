@@ -106,7 +106,10 @@
             <form asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="datetime-local" required />
-                    <input type="text" required/>
+                    @foreach (var sub in Model.Subjects)
+                    {
+                    <input type="text" required value="@sub.subjectName"/>
+                    }
                     <datalist>
                         @foreach (var type in Model.types)
                         {
