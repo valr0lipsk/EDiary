@@ -101,6 +101,8 @@ namespace EDiary.Controllers
         }
 
         [HttpPost]
+
+        //обновление оценки 
         public IActionResult updateMark(int id, string value)
         {
             var markId = value;
