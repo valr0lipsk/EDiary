@@ -104,7 +104,7 @@ namespace EDiary.Controllers
         }
 
         //обновление оценки 
-        public JsonResult updateMark(int id, string value)
+        public IActionResult updateMark(int id, string value)
         {
             var markId = value;
             var setmark = id;
@@ -120,6 +120,16 @@ namespace EDiary.Controllers
             {
                 return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
             }
+        }
+
+        //добавление занятия
+        public IActionResult AddLesson(DateTime lessonDate, string lessonType, int subid)
+        {
+            var lessType = (from lT in context.lessonType where lT.typeName == lessonType select lT.lessonTypeId).FirstOrDefault();
+            Lesson lesson = new Lesson { tsubjectId = subid, lessonDate = lessonDate, lessonTypeId = lessType  };
+            context.lessons.Add(lesson);
+            context.SaveChanges();
+            return RedirectToAction("Jurnal", "Marks", subid);
         }
     }
 }
