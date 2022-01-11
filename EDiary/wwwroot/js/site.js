@@ -53,8 +53,7 @@ $(document).ready(function () {
 
     //обновление оценки в журнале
     $('td').bind('dblclick', function () {
-        const markID = $(this).attr('data-idsm');
-        alert(markID);        
+        const markID = $(this).attr('data-idsm');     
         if (!$(this).has('input').length) {
             const input = $('<input/>', {
                 'type': 'text',

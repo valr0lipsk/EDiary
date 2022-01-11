@@ -18,10 +18,9 @@ namespace EDiary.Controllers
 
         //представление журнала
         //public IActionResult Jurnal() => View();
+        [HttpPost]
         public IActionResult Jurnal(int id, string value)
         {
-            var setMark = 1;
-            Jurnal(setMark);
             var markId = value;
             var setmark = id;
             var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
@@ -122,7 +121,7 @@ namespace EDiary.Controllers
             return View(jurnal);
         }
 
-        [HttpPost]
+
 
         //обновление оценки 
         public IActionResult updateMark(int id, string value)
