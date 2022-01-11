@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace EDiary.Controllers
-{ 
+{
     [Authorize]
     public class MarksController : Controller
     {
@@ -18,7 +18,7 @@ namespace EDiary.Controllers
 
         //представление журнала
         //public IActionResult Jurnal() => View();
-        [HttpPost]
+        [HttpPut]
         public IActionResult Jurnal(int id, string value)
         {
             var markId = value;
@@ -35,6 +35,16 @@ namespace EDiary.Controllers
             {
                 return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
             }
+        }
+
+        [HttpPost]
+        public IActionResult Jurnal (int studId, int lessId, string value)
+        {
+            var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+            setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
+            context.setMarks.Add(setMark);
+            context.SaveChanges();
+            return Json(new { status = "success", message = "Оценка добавлена" });
         }
 
         //журнал предмета и группы
@@ -125,33 +135,33 @@ namespace EDiary.Controllers
         }
 
         //добавление оценки
-        public IActionResult addMark(int studId, int lessId, string value)
-        {
-            var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
-            setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
-            context.setMarks.Add(setMark);
-            context.SaveChanges();
-            return Json(new { status = "success", message = "Оценка обновлена" });
-        }
+        //public IActionResult addMark(int studId, int lessId, string value)
+        //{
+        //    var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+        //    setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
+        //    context.setMarks.Add(setMark);
+        //    context.SaveChanges();
+        //    return Json(new { status = "success", message = "Оценка обновлена" });
+        //}
 
-        //обновление оценки 
-        public IActionResult updateMark(int id, string value)
-        {
-            var markId = value;
-            var setmark = id;
-            var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
-            if (updatedMark != null )
-            {
-                updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
-                context.setMarks.Update(updatedMark);
-                context.SaveChanges();
-                return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
-            }
-            else
-            {
-                return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
-            }
-        }
+        ////обновление оценки 
+        //public IActionResult updateMark(int id, string value)
+        //{
+        //    var markId = value;
+        //    var setmark = id;
+        //    var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
+        //    if (updatedMark != null )
+        //    {
+        //        updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+        //        context.setMarks.Update(updatedMark);
+        //        context.SaveChanges();
+        //        return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
+        //    }
+        //    else
+        //    {
+        //        return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
+        //    }
+        //}
 
         //добавление занятия
         public IActionResult AddLesson(AddLessonModel addLesson)

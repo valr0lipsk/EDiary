@@ -63,7 +63,7 @@ $(document).ready(function () {
                         const newValue = $(this).val();
                         $.ajax({
                             url: this.URL,
-                            type: "POST",
+                            type: "PUT",
                             data: {
                                 'id': markID,
                                 'value': newValue
@@ -85,7 +85,7 @@ $(document).ready(function () {
             }
             else {
                 lessId = $(this).attr('data-idLess');
-                studId = $(this).attr('data-idStud')
+                studId = $(this).attr('data-idStud');
                 const input = $('<input/>', {
                     'type': 'text',
                     'value': $(this).html(),
