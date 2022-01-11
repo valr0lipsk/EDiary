@@ -88,6 +88,7 @@ namespace EDiary.Controllers
             //занятие
             var lessonJurnal = (from lesson in context.lessons
                                 where lesson.tsubjectId == subid
+                                orderby lesson.lessonDate
                                 select new Lesson
                                 {
                                     lessonId = lesson.lessonId,
@@ -101,6 +102,7 @@ namespace EDiary.Controllers
                             join mark in context.marks on setMark.markId equals mark.markId
                             join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
                             orderby student.studentSurname
+                            orderby lesson.lessonDate
                             where subTaught.tsubjectId == subid
                             select new setMark
                             {
@@ -122,7 +124,15 @@ namespace EDiary.Controllers
             return View(jurnal);
         }
 
-
+        //добавление оценки
+        public IActionResult addMark(int studId, int lessId, string value)
+        {
+            var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+            setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
+            context.setMarks.Add(setMark);
+            context.SaveChanges();
+            return Json(new { status = "success", message = "Оценка обновлена" });
+        }
 
         //обновление оценки 
         public IActionResult updateMark(int id, string value)
@@ -144,14 +154,6 @@ namespace EDiary.Controllers
         }
 
         //добавление занятия
-        //public IActionResult lessonData(DateTime lessonDate, string lessonType, int subid)
-        //{
-        //    var lessType = (from lT in context.lessonType where lT.typeName == lessonType select lT.lessonTypeId).FirstOrDefault();
-        //    Lesson lesson = new Lesson { tsubjectId = subid, lessonDate = lessonDate, lessonTypeId = lessType  };
-        //    context.lessons.Add(lesson);
-        //    context.SaveChanges();
-        //    return RedirectToAction("Jurnal", "Marks", subid);
-        //}
         public IActionResult AddLesson(AddLessonModel addLesson)
         {
             Lesson lesson = new Lesson { tsubjectId = addLesson.id, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()};
