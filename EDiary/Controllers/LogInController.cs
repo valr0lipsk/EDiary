@@ -39,7 +39,7 @@ namespace EDiary.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.Remember, false);
                     if (result.Succeeded)
                     {
-                        if (user.UserName=="admin")
+                        if (user.UserName == "admin")
                         {
                             return RedirectToAction("Admin", "Admin");
                         }
