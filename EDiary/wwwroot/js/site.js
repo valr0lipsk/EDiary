@@ -127,26 +127,24 @@ $(document).ready(function () {
         }
     });
 
-
+    //jurnal table style
     const table = $(".editableTable").find('th.vt-text');
     const OKRs = [], KRs = [], SRs = [], EKZs = [];
     for (let i = 0; i < table.length; i++) {
-        if ($(table[i]).hasClass('lessOKR')) {
+        if ($(table[i]).attr('data-lessType') == 2) {
             OKRs.push(i);
         }
-        else if ($(table[i]).hasClass('lessKR')) {
+        else if ($(table[i]).attr('data-lessType') == 3) {
             KRs.push(i);
         }
-        else if ($(table[i]).hasClass('lessSR')) {
+        else if ($(table[i]).attr('data-lessType') == 4) {
             SRs.push(i);
         }
-        else if ($(table[i]).hasClass('lessEKZ')) {
+        else if ($(table[i]).attr('data-lessType') == 5) {
             EKZs.push(i);
         }
     }
-    console.log(OKRs)
     const rows = $('.editableTable').find('tr:not(:first)');
-    console.log(rows[1].children[1]);
     for (let i = 0; i < rows.length; i++) {
         for (let j = 0; j < rows[i].children.length; j++) {
             if (OKRs.indexOf(j) != -1) {
