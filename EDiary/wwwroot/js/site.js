@@ -150,7 +150,16 @@ $(document).ready(function () {
     for (let i = 0; i < rows.length; i++) {
         for (let j = 0; j < rows[i].children.length; j++) {
             if (OKRs.indexOf(j) != -1) {
-                $(rows[i].children[j]).addClass('lessOKR')
+                $(rows[i].children[j+1]).addClass('lessOKR')
+            }
+            else if (KRs.indexOf(j) != -1) {
+                $(rows[i].children[j + 1]).addClass('lessKR')
+            }
+            else if (SRs.indexOf(j) != -1) {
+                $(rows[i].children[j + 1]).addClass('lessSR')
+            }
+            else if (EKZs.indexOf(j) != -1) {
+                $(rows[i].children[j + 1]).addClass('lessEKZ')
             }
         }
     }
