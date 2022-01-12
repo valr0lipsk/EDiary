@@ -61,7 +61,8 @@ $(document).ready(function () {
     $('td').bind('dblclick', function () {   
         if (!$(this).has('input').length) {
             if ($(this).attr('data-idsm')) { //update or delete mark
-                const markID = $(this).attr('data-idsm');  
+                const markID = $(this).attr('data-idsm'); 
+                const td = $(this);
                 const input = $('<input/>', {
                     'type': 'text',
                     'value': $(this).html(),
@@ -79,7 +80,7 @@ $(document).ready(function () {
                             success: function (result) {
                                 alert(result.message)
                                 if (result.status === 'deleted') {
-                                    $(this).parent.attr('data-idsm') = null
+                                    td[0].removeAttribute('data-idsm')
                                 }
                             },
                             error: function (error) {
@@ -102,7 +103,6 @@ $(document).ready(function () {
                     'value': $(this).html(),
                     blur: function () {
                         const newValue = $(this).val();
-                        const inpt = $(this);
                         $.ajax({
                             url: this.URL,
                             type: "POST",
