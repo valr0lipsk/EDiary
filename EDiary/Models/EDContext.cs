@@ -45,6 +45,7 @@ namespace EDiary.Models
                 Name = "student",
                 NormalizedName = "STUDENT"
             });
+
             //1-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -59,9 +60,9 @@ namespace EDiary.Models
                 teacherSurname = "Тынкович",
                 teacherName = "Валентина",
                 teacherLastname = "Владимировна",
-                teacherRole = "teacher",
                 teacherUser = "1"
             });
+
             //2-ый препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
@@ -76,7 +77,6 @@ namespace EDiary.Models
                 teacherSurname = "Лазицкас",
                 teacherName = "Екатерина",
                 teacherLastname = "Александровна",
-                teacherRole = "teacher",
                 teacherUser = "2"
             });
 
@@ -97,7 +97,6 @@ namespace EDiary.Models
                 studentName = "Александр",
                 studentLastname = "Андреевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser ="3"
             });
 
@@ -116,7 +115,6 @@ namespace EDiary.Models
                 studentName = "Валерия",
                 studentLastname = "Александровна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "9"
             });
 
@@ -149,7 +147,6 @@ namespace EDiary.Models
                 teacherSurname = "Терешко",
                 teacherName = "Ольга",
                 teacherLastname = "Николаевна",
-                teacherRole = "teacher",
                 teacherUser = "5"
             });
 
@@ -167,7 +164,6 @@ namespace EDiary.Models
                 teacherSurname = "Апанасевич",
                 teacherName = "Сергей",
                 teacherLastname = "Александрович",
-                teacherRole = "teacher",
                 teacherUser = "6"
             });
 
@@ -185,7 +181,6 @@ namespace EDiary.Models
                 teacherSurname = "Карпович",
                 teacherName = "Дарья",
                 teacherLastname = "Валерьевна",
-                teacherRole = "teacher",
                 teacherUser = "7"
             });
 
@@ -203,7 +198,6 @@ namespace EDiary.Models
                 teacherSurname = "Гордеюк",
                 teacherName = "Анастасия",
                 teacherLastname = "Владимировна",
-                teacherRole = "teacher",
                 teacherUser = "8"
             });
             //1-ая группа
@@ -240,7 +234,6 @@ namespace EDiary.Models
                 studentName = "Анна",
                 studentLastname = "Дмитриевна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "10"
             });
             //4-ый студент
@@ -258,7 +251,6 @@ namespace EDiary.Models
                 studentName = "Матвей",
                 studentLastname = "Андреевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "11"
             });
             //5-ый студент
@@ -276,7 +268,6 @@ namespace EDiary.Models
                 studentName = "Артем",
                 studentLastname = "Сергеевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "12"
             });
             //6-ый студент
@@ -294,7 +285,6 @@ namespace EDiary.Models
                 studentName = "Мария",
                 studentLastname = "Николаевна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "13"
             });
             //7-ой студент
@@ -312,7 +302,6 @@ namespace EDiary.Models
                 studentName = "Николай",
                 studentLastname = "Андреевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "14"
             });
             //8-ой студент
@@ -330,7 +319,6 @@ namespace EDiary.Models
                 studentName = "Владимир",
                 studentLastname = "Андреевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "15"
             });
             //9-ый студент
@@ -348,7 +336,6 @@ namespace EDiary.Models
                 studentName = "Дарья",
                 studentLastname = "Дмитриевна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "16"
             });
             //10-ый студент
@@ -366,7 +353,6 @@ namespace EDiary.Models
                 studentName = "Екатерина",
                 studentLastname = "Сергеевна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "17"
             });
             //11-ый студент
@@ -384,7 +370,6 @@ namespace EDiary.Models
                 studentName = "Александр",
                 studentLastname = "Сергеевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "18"
             });
             //12-ый студент
@@ -402,7 +387,6 @@ namespace EDiary.Models
                 studentName = "Иван",
                 studentLastname = "Павлович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "19"
             });
             //13-ый студент
@@ -420,7 +404,6 @@ namespace EDiary.Models
                 studentName = "Антон",
                 studentLastname = "Владимирович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "20"
             });
             //14-ый студент
@@ -438,7 +421,6 @@ namespace EDiary.Models
                 studentName = "Константин",
                 studentLastname = "Олегович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "21"
             });
             //15-ый студент
@@ -456,7 +438,6 @@ namespace EDiary.Models
                 studentName = "Никита",
                 studentLastname = "Сергеевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "22"
             });
             //16-ый студент
@@ -474,7 +455,6 @@ namespace EDiary.Models
                 studentName = "Никита",
                 studentLastname = "Леонидович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "23"
             });
             //17-ый студент
@@ -492,7 +472,6 @@ namespace EDiary.Models
                 studentName = "Ксения",
                 studentLastname = "Владимировна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "24"
             });
             //18-ый студент
@@ -510,7 +489,6 @@ namespace EDiary.Models
                 studentName = "Даниил",
                 studentLastname = "Сергеевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "25"
             });
             //19-ый студент
@@ -528,7 +506,6 @@ namespace EDiary.Models
                 studentName = "Сергей",
                 studentLastname = "Олегович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "26"
             });
             //20-ый студент
@@ -546,7 +523,6 @@ namespace EDiary.Models
                 studentName = "Иван",
                 studentLastname = "Святославович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "27"
             });
             //21-ый студент
@@ -564,7 +540,6 @@ namespace EDiary.Models
                 studentName = "Евгений",
                 studentLastname = "Игоревич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "28"
             });
             //22-ый студент
@@ -582,7 +557,6 @@ namespace EDiary.Models
                 studentName = "Егор",
                 studentLastname = "Александрович",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "29"
             });
             //23-ый студент
@@ -600,7 +574,6 @@ namespace EDiary.Models
                 studentName = "Анастасия",
                 studentLastname = "Вадимовна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "30"
             });
             //24-ый студент
@@ -618,7 +591,6 @@ namespace EDiary.Models
                 studentName = "Мария",
                 studentLastname = "Александровна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "31"
             });
             //25-ый студент
@@ -636,7 +608,6 @@ namespace EDiary.Models
                 studentName = "Никита",
                 studentLastname = "Аркадьевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "32"
             });
             //26-ой студент
@@ -654,7 +625,6 @@ namespace EDiary.Models
                 studentName = "Кирилл",
                 studentLastname = "Андреевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "33"
             });
             //27-ой студент
@@ -672,7 +642,6 @@ namespace EDiary.Models
                 studentName = "Максим",
                 studentLastname = "Дмитриевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "34"
             });
             //28-ой студент
@@ -690,7 +659,6 @@ namespace EDiary.Models
                 studentName = "Роман",
                 studentLastname = "",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "35"
             });
             //29-ый студент
@@ -708,7 +676,6 @@ namespace EDiary.Models
                 studentName = "Захар",
                 studentLastname = "Сергеевич",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "36"
             });
             //30-ый студент
@@ -726,7 +693,6 @@ namespace EDiary.Models
                 studentName = "Ксения",
                 studentLastname = "Вадимовна",
                 studentGroup = 2,
-                studentRole = "student",
                 studentUser = "37"
             });
         }

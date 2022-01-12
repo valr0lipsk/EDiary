@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using EDiary.Repositories;
 using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using IdentityUser = Microsoft.AspNetCore.Identity.IdentityUser;
 
 namespace EDiary.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         UserManager<IdentityUser> userManager;
@@ -66,7 +67,9 @@ namespace EDiary.Controllers
             IdentityUser identityStudentUser = new IdentityUser { Id = createStudent.studentLogin, UserName = "st" + createStudent.studentLogin, NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
             context.Users.Add(identityStudentUser);
             context.SaveChanges();
-            Student student = new Student { studentSurname = createStudent.studentSurname, studentName = createStudent.studentName, studentLastname = createStudent.studentLastname, studentRole = "student", studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = identityStudentUser.Id };
+            userManager.AddToRoleAsync(identityStudentUser, "student");
+            context.SaveChanges();
+            Student student = new Student { studentSurname = createStudent.studentSurname, studentName = createStudent.studentName, studentLastname = createStudent.studentLastname, studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = identityStudentUser.Id };
             context.students.Add(student);
             context.SaveChanges();
             return RedirectToAction("Admin", "Admin");
@@ -88,7 +91,9 @@ namespace EDiary.Controllers
             IdentityUser identityTeacherUser = new IdentityUser { Id = createTeacher.teacherLogin, UserName = "tr" + createTeacher.teacherLogin, NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
             context.Users.Add(identityTeacherUser);
             context.SaveChanges();
-            Teacher teacher = new Teacher { teacherSurname = createTeacher.teacherSurname, teacherName = createTeacher.teacherName, teacherLastname = createTeacher.teacherLastname, teacherRole = "teacher", teacherUser = identityTeacherUser.Id };
+            userManager.AddToRoleAsync(identityTeacherUser, "teacher");
+            context.SaveChanges();
+            Teacher teacher = new Teacher { teacherSurname = createTeacher.teacherSurname, teacherName = createTeacher.teacherName, teacherLastname = createTeacher.teacherLastname, teacherUser = identityTeacherUser.Id };
             context.teachers.Add(teacher);
             context.SaveChanges();
             var group = context.groups.Where(grId => grId.groupName ==  createTeacher.curatorGroup).First();
@@ -123,7 +128,6 @@ namespace EDiary.Controllers
             var aspUserStudentGroup = from student in context.students
                                       join gr in context.groups on student.studentGroup equals gr.groupId
                                       join aspuser in context.Users on student.studentUser equals aspuser.Id
-                                      where student.studentRole == "student"
                                       orderby student.studentSurname
                                       select new AspStudentGroup
                                       {
@@ -143,7 +147,6 @@ namespace EDiary.Controllers
         {
             var teachersTable = from teacher in context.teachers
                                 join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
-                                where teacher.teacherRole=="teacher"
                                 orderby teacher.teacherSurname
                                 select new AspTeacherSubjectGroup
                                 {

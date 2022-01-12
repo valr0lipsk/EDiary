@@ -18,7 +18,7 @@ namespace EDiary.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         public EDContext context;
-        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context) => (this.userManager, this.signInManager, this.context) = (userManager, signInManager,context);
+        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context) => (this.userManager, this.signInManager, this.context) = (userManager, signInManager, context);
 
         //представление авторизации
         [AllowAnonymous]
@@ -39,15 +39,15 @@ namespace EDiary.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.Remember, false);
                     if (result.Succeeded)
                     {
-                        if (user.UserName == "admin")
+                        if (await userManager.IsInRoleAsync(user, "admin"))
                         {
                             return RedirectToAction("Admin", "Admin");
                         }
-                        if (user.UserName.Contains("tr"))
+                        if (await userManager.IsInRoleAsync(user, "teacher"))
                         {
                             return RedirectToAction("Teacher", "Teacher");
                         }
-                        if (user.UserName.Contains("st"))
+                        if (await userManager.IsInRoleAsync(user, "student"))
                         {
                             return RedirectToAction("Student", "Student");
                         }
@@ -87,10 +87,10 @@ namespace EDiary.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(ResetPasswordModel codePas, string code)
+        public IActionResult ResetPassword(string code)
         {
-            codePas.userCode = code;
-            return View(codePas);
+ 
+            return View();
         }
 
         [HttpPost]

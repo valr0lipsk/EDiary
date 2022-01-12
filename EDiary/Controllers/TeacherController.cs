@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "teacher")]
     public class TeacherController : Controller
     {
         EDContext context;

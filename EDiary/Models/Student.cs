@@ -34,18 +34,11 @@ namespace EDiary.Models
         [Required]
         public int studentGroup { get; set; }
 
-        [Display(Name = "Роль")]
-        [Required]
-        public string studentRole { get; set; }
-
         [Required]
         public string studentUser { get; set; }
 
         [ForeignKey("studentGroup")]
         public collegeGroup group { get; set; }
-
-        [ForeignKey("studentRole")]
-        public IdentityRole role { get; set; }
 
         [ForeignKey("studentUser")]
         public IdentityUser user { get; set; }
