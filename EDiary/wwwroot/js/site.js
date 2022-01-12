@@ -74,11 +74,10 @@ $(document).ready(function () {
                             cache: false,
                             async: true,
                             success: function (result) {
+                                alert(result.message)
                                 if (result.status === 'deleted') {
                                     $(this).parent.attr('data-idsm') = null
                                 }
-                                alert(result.message)
-
                             },
                             error: function (error) {
                                 console.error(error);

@@ -288,9 +288,25 @@ tr, td{
     z-index: 15;
 }
 
-.table-td{
+td > input{
     height:100%;
     width: 100%;
     padding: 0;
     margin: 0;
+}
+
+.lessEKZ {
+    background-color: #ff000069 !important;
+}
+
+.lessOKR {
+    background-color: #ff00004a !important; 
+}
+
+.lessKR {
+    background-color: #ff5e0033 !important;
+}
+
+.lessSR {
+    background-color: #ffc80033 !important;
 }
