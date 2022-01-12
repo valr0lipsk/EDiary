@@ -51,8 +51,11 @@ namespace EDiary.Controllers
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
             var marks = (from mark in context.marks where mark.mark == value select mark.mark).FirstOrDefault();
+            var student = (from st in context.students where st.studentId == studId select st.studentId).FirstOrDefault();
+            var lesson = (from less in context.lessons where less.lessonId == lessId select less.lessonId).FirstOrDefault();
             if (marks != null)
             {
+                
                 var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault(); 
                 setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
                 context.setMarks.Add(setMark);
@@ -62,7 +65,7 @@ namespace EDiary.Controllers
             }        
             else
             {
-                return Json(new { status = "added", message = "Ошибка добавления. Такой оценки не существует" });
+                return Json(new { status = "error", message = "Ошибка добавления. Такой оценки не существует" });
             }
         }
 
