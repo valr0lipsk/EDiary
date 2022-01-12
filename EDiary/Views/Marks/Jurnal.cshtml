@@ -85,30 +85,7 @@
                             <th></th>
                             @foreach (var dateLesson in Model.Lessons)
                             {
-                                if (dateLesson.lessonTypeId == 1)
-                                {
-                                    <th class="vt-text" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
-
-                                if (dateLesson.lessonTypeId == 2)
-                                {
-                                    <th class="vt-text lessOKR" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
-
-                                if (dateLesson.lessonTypeId == 3)
-                                {
-                                    <th class="vt-text lessKR" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
-
-                                if (dateLesson.lessonTypeId == 4)
-                                {
-                                    <th class="vt-text lessSR" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
-
-                                if (dateLesson.lessonTypeId == 5)
-                                {
-                                    <th class="vt-text lessEKZ" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
+                                <th class="vt-text" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
                             }
                         </tr>
                         <tbody>
