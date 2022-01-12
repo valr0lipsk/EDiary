@@ -27,7 +27,8 @@ $(document).ready(function () {
         $("#partialDiv").load('/Admin/ShowSubjects');
     })
 
-
+    //-------------------------------------------
+    //common funcs
     //get subject id from acc to open jurnal page
     $('#list li').click(function () {
         const subId = $(this).attr("data-id");
@@ -48,6 +49,7 @@ $(document).ready(function () {
     });
 
 
+    //-----------------------------------------
     //jurnal funcs
     //open adding lesson modal
     $('#addLessModal').click(function () {
@@ -124,6 +126,23 @@ $(document).ready(function () {
         }
     });
 
+
+    const table = $(".editableTable").find('th.vt-text');
+    const OKRs = [], KRs = [], SRs = [], EKZs = [];
+    for (let i = 0; i < table.length; i++) {
+        if ($(table[i]).hasClass('lessOKR')) {
+            OKRs.push(i);
+        }
+        else if ($(table[i]).hasClass('lessKR')) {
+            KRs.push(i);
+        }
+        else if ($(table[i]).hasClass('lessSR')) {
+            SRs.push(i);
+        }
+        else if ($(table[i]).hasClass('lessEKZ')) {
+            EKZs.push(i);
+        }
+    }
 });
 
 
