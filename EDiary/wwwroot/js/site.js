@@ -127,20 +127,29 @@ $(document).ready(function () {
     });
 
 
-    const table = $(".editableTable").find('th.vt-text');
+    //const table = $(".editableTable").find('th.vt-text');
     const OKRs = [], KRs = [], SRs = [], EKZs = [];
-    for (let i = 0; i < table.length; i++) {
-        if ($(table[i]).hasClass('lessOKR')) {
+    for (let i = 0; i < $(".editableTable").find('th.vt-text'); i++) {
+        if ($($(".editableTable").find('th.vt-text')[i]).hasClass('lessOKR')) {
             OKRs.push(i);
         }
-        else if ($(table[i]).hasClass('lessKR')) {
+        else if ($($(".editableTable").find('th.vt-text')[i]).hasClass('lessKR')) {
             KRs.push(i);
         }
-        else if ($(table[i]).hasClass('lessSR')) {
+        else if ($($(".editableTable").find('th.vt-text')[i]).hasClass('lessSR')) {
             SRs.push(i);
         }
-        else if ($(table[i]).hasClass('lessEKZ')) {
+        else if ($($(".editableTable").find('th.vt-text')[i]).hasClass('lessEKZ')) {
             EKZs.push(i);
+        }
+    }
+    const rows = $('.editableTable').find('tr:not(:first)');
+    console.log(rows[1].children[1]);
+    for (let i = 0; i < rows.length; i++) {
+        for (let j = 0; j < rows[i].children.length; j++) {
+            if (OKRs.indexOf(j)) {
+                $(rows[i].children[j]).addClass('lessOKR')
+            }
         }
     }
 });
