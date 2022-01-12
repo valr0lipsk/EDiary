@@ -22,6 +22,6 @@ namespace EDiary.Models
         [Compare("newPassword", ErrorMessage = "Пароли не совпадают")]
         public string confirmPassword { get; set; }
 
-        public string userCode { get; set; }
+        public string Code { get; set; }
     }
 }
