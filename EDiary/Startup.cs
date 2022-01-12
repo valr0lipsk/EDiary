@@ -65,7 +65,7 @@ namespace EDiary
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Name = "ElectronicDiaryMRK";
                 options.LoginPath = "/LogIn/Login";
-                options.AccessDeniedPath = "/LogIn/AccessDenied";
+                options.AccessDeniedPath = "/LogIn/Login";
                 options.LogoutPath = "/LogIn/Logout";
             });
             //передача сервисов для контроллеров и представлений

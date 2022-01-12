@@ -48,14 +48,22 @@ namespace EDiary.Controllers
 
         //добавление оценки
         [HttpPost]
-        public IActionResult Jurnal (int studId, int lessId, string value)
+        public IActionResult Jurnal(int studId, int lessId, string value)
         {
-            var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
-            setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
-            context.setMarks.Add(setMark);
-            context.SaveChanges();
-            var markId = (from sM in context.setMarks orderby sM.setmarkId descending select sM.setmarkId).FirstOrDefault();
-            return Json(new { status = "added", message = "Оценка добавлена", markId = markId});
+            var marks = (from mark in context.marks where mark.mark == value select mark.mark).FirstOrDefault();
+            if (marks != null)
+            {
+                var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault(); 
+                setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
+                context.setMarks.Add(setMark);
+                context.SaveChanges();
+                var markId = (from sM in context.setMarks orderby sM.setmarkId descending select sM.setmarkId).FirstOrDefault();
+                return Json(new { status = "added", message = "Оценка добавлена", markId = markId });
+            }        
+            else
+            {
+                return Json(new { status = "added", message = "Ошибка добавления. Такой оценки не существует" });
+            }
         }
 
         //журнал предмета и группы
