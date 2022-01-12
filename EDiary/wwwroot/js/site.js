@@ -95,11 +95,14 @@ $(document).ready(function () {
             else { //add mark
                 lessId = $(this).attr('data-idLess');
                 studId = $(this).attr('data-idStud');
+                const td = $(this);
                 const input = $('<input/>', {
                     'type': 'text',
+                    'class': 'tdInput',
                     'value': $(this).html(),
                     blur: function () {
                         const newValue = $(this).val();
+                        const inpt = $(this);
                         $.ajax({
                             url: this.URL,
                             type: "POST",
@@ -112,7 +115,7 @@ $(document).ready(function () {
                             async: true,
                             success: function (result) {
                                 alert(result.message)
-                                $(this).parent.attr('data-idsm') = result.markId
+                                td[0].setAttribute('data-idsm', result.markId)
                             },
                             error: function (error) {
                                 console.error(error);
