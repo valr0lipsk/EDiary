@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.Controllers
 {
-    [Authorize(Roles = "teacher")]
+    [Authorize(Roles = "teacher, student")]
     public class MarksController : Controller
     {
         EDContext context;
