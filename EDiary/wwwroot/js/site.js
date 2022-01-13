@@ -59,7 +59,7 @@ $(document).ready(function () {
     });
 
     //open delete lesson modal
-    $('th').bind('dblclick', function () {
+    $('th.vt-text').bind('dblclick', function () {
         const id = $(this).attr('data-idLess');
         const data = $(this).text();
         $('#idLess').val(id);
