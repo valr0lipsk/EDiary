@@ -89,8 +89,7 @@ namespace EDiary.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code)
         {
- 
-            return View();
+            return code == null ? View("Error") : View();
         }
 
         [HttpPost]
@@ -107,7 +106,7 @@ namespace EDiary.Controllers
             {
                 return View("ResetPasswordInfo");
             }
-            var result = await userManager.ResetPasswordAsync(user, resetPassword.userCode, resetPassword.newPassword);
+            var result = await userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.newPassword);
             if (result.Succeeded)
             {
                 return View("ResetPasswordInfo");
