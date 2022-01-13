@@ -55,7 +55,7 @@
                                 {
                                     @foreach (var student in Model.students)
                                     {
-                                        <label class="mt-0" style="font-size: 115%">@student.studentSurname @student.studentName @student.studentLastname</label>
+                                        <label data-idStud="@student.studentId" class="mt-0 studLabel" style="font-size: 115%">@student.studentSurname @student.studentName @student.studentLastname</label>
                                     }
                                 }
                             </div>

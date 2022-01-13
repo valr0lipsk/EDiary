@@ -33,16 +33,29 @@ $(document).ready(function () {
     //get subject id from acc to open jurnal page
     $('#list li').click(function () {
         const subId = $(this).attr('data-id');
-        console.log(subId)
-        $.ajax({
-            type: 'GET',
-            data: { 'id': subId },
-            cache: false,
-            async: true,
-            success: function (result) {
-                window.location.href = '/Marks/Jurnal?id=' + subId;
-            }
-        });
+        const studId = $('.studLabel').attr('data-idStud');
+        if (!studId) {
+            $.ajax({
+                type: 'GET',
+                data: { 'id': subId },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    window.location.href = '/Marks/Jurnal?id=' + subId;
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: 'GET',
+                data: { 'id': subId },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    window.location.href = '/Marks/Jurnal?id=' + subId + '&studId=' + studId;
+                }
+            });
+        }
     })
 
     //open adding photo modal
