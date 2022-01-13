@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-lg-3 col-5 flex-column justify-content-around">
                             <div class="accountIcon">
-                                @foreach (var student in Model)
+                                @foreach (var student in Model.students)
                                 {
                                     @if (student.studentPic != null)
                                     {
@@ -53,9 +53,9 @@
                             <div class="row ml-1">
                                 @if (SignInManager.IsSignedIn(User))
                                 {
-                                    @foreach (var studentName in Model)
+                                    @foreach (var student in Model.students)
                                     {
-                                        <label class="mt-0" style="font-size: 115%">@studentName.studentSurname @studentName.studentName @studentName.studentLastname</label>
+                                        <label class="mt-0" style="font-size: 115%">@student.studentSurname @student.studentName @student.studentLastname</label>
                                     }
                                 }
                             </div>
@@ -70,12 +70,12 @@
                     <div class="row flex-column">
                         @*<a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>*@
                         <h4>Мои предметы:</h4>
-                        @*<ol class="list-group list-group-flush list-group-numbered">
-                @foreach (var subject in Model)
-                 {
-                    <li class="list-group-item" data-id="@subject.subjectId"><a href="">@subject.subjectName</a></li>
-                 }
-        </ol>*@
+                        <ol class="list-group list-group-flush list-group-numbered">
+                            @foreach (var subject in Model.subjects)
+                            {
+                                <li class="list-group-item" data-id="@subject.tsubjectId"><a href="">@subject.subjectName</a></li>
+                            }
+                        </ol>
                     </div>
                 </div>
             </div>
