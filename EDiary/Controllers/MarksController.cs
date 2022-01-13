@@ -153,7 +153,7 @@ namespace EDiary.Controllers
             return View(jurnal);
         }
 
-        //журнал предмета и группы (препод)
+        //журнал предмета и группы (ученик)
         [HttpGet]
         public IActionResult Jurnal(int id, int isStudent)
         {
