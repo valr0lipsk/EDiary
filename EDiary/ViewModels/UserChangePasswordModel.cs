@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class userChangePassword
+    public class UserChangePasswordModel
     {
         public string oldPassword { get; set; }
         public string newPassword { get; set; }

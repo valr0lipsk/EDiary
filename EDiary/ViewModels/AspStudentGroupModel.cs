@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class AspStudentGroup
+    public class AspStudentGroupModel
     {
+        public IEnumerable<Student> students { get; set; }
+        public IEnumerable<SubjectGroupModel> subjects { get; set; }
         public int studentId { get; set; }
         public string studentLastname { get; set; }
         public string studentName { get; set; }
@@ -16,5 +18,6 @@ namespace EDiary.ViewModels
         public string groupName { get; set; }
         public string studentLogin { get; set; }
         public string studentEmail { get; set; }
+        public string subjectName { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class SubjectGroup
+    public class SubjectGroupModel
     {
         public int tsubjectId { get; set; }
         public string groupName { get; set; }

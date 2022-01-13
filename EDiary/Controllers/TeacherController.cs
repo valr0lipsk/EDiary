@@ -42,14 +42,14 @@ namespace EDiary.Controllers
                                  join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
                                  where teacher.teacherUser == userManager.GetUserId(User)
                                  orderby subject.subjectName
-                                 select new SubjectGroup
+                                 select new SubjectGroupModel
                                  {
                                      groupName = gr.groupName,
                                      subjectName = subject.subjectName,
                                      tsubjectId = tsub.tsubjectId
                                  }).ToList();
 
-            AspTeacherSubjectGroup teacherSubjectGroup = new AspTeacherSubjectGroup { Teachers = teacherNamePic, subjectGroups = subjectGroups };
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subjectGroups };
             return View(teacherSubjectGroup);
         }
         
