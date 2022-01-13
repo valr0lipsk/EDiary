@@ -30,6 +30,7 @@ namespace EDiary.Controllers
                                    where student.studentUser == userManager.GetUserId(User)
                                    select new Student
                                    {
+                                       studentId = student.studentId,
                                        studentSurname = student.studentSurname,
                                        studentName = student.studentName,
                                        studentLastname = student.studentLastname,

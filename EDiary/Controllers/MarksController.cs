@@ -65,7 +65,7 @@ namespace EDiary.Controllers
             }
         }
 
-        //журнал предмета и группы
+        //журнал предмета и группы (препод)
         [HttpGet]
         public IActionResult Jurnal(int id)
         {
@@ -153,6 +153,92 @@ namespace EDiary.Controllers
             return View(jurnal);
         }
 
+        //журнал предмета и группы (препод)
+        [HttpGet]
+        public IActionResult Jurnal(int id, int isStudent)
+        {
+            var subid = id;
+            //преподаватель
+            var teacherJurnal = (from teacher in context.teachers
+                                 join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
+                                 where subTaught.tsubjectId == subid
+                                 select new Teacher
+                                 {
+                                     teacherSurname = teacher.teacherSurname,
+                                     teacherName = teacher.teacherName,
+                                     teacherLastname = teacher.teacherLastname
+                                 }).ToList();
+            //группы
+            var groupJurnal = (from subTaught in context.subjectTaughts
+                               join gr in context.groups on subTaught.groupId equals gr.groupId
+                               where subTaught.tsubjectId == subid
+                               select new collegeGroup
+                               {
+                                   groupName = gr.groupName,
+                               }).ToList();
+
+            //предмет
+            var subjectJurnal = (from subTaught in context.subjectTaughts
+                                 join st in context.subjects on subTaught.subjectId equals st.subjectId
+                                 where subTaught.tsubjectId == subid
+                                 select new Subject
+                                 {
+                                     subjectName = st.subjectName,
+                                     subjectId = subid
+                                 }).ToList();
+
+            //студенты
+            var studentsJurnal = (from student in context.students
+                                  join gr in context.groups on student.studentGroup equals gr.groupId
+                                  join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
+                                  where subTaught.tsubjectId == subid
+                                  orderby student.studentSurname
+                                  select new Student
+                                  {
+                                      studentId = student.studentId,
+                                      studentSurname = student.studentSurname,
+                                      studentName = student.studentName,
+                                      studentLastname = student.studentLastname
+                                  }).ToList();
+            //занятие
+            var lessonJurnal = (from lesson in context.lessons
+                                where lesson.tsubjectId == subid
+                                orderby lesson.lessonDate
+                                select new Lesson
+                                {
+                                    lessonId = lesson.lessonId,
+                                    lessonDate = lesson.lessonDate,
+                                    lessonTypeId = lesson.lessonTypeId
+                                }).ToList();
+
+            //выставленные отметки
+            var setMarks = (from setMark in context.setMarks
+                            join student in context.students on setMark.studentId equals student.studentId
+                            join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                            join mark in context.marks on setMark.markId equals mark.markId
+                            join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                            orderby student.studentSurname
+                            orderby lesson.lessonDate
+                            where subTaught.tsubjectId == subid
+                            select new setMark
+                            {
+                                mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                lessonId = setMark.lessonId,
+                                setmarkId = setMark.setmarkId,
+                                studentId = setMark.studentId
+                            }).ToList();
+
+            //типы занятий
+            var types = (from type in context.lessonType
+                         select new lessonType
+                         {
+                             lessonTypeId = type.lessonTypeId,
+                             typeName = type.typeName
+                         }).ToList();
+
+            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types };
+            return View(jurnal);
+        }
         //добавление занятия
         public IActionResult AddLesson(LessonModel addLesson)
         {
