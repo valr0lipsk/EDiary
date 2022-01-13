@@ -4,42 +4,42 @@ $(document).ready(function () {
     //admin funcs
     //add student
     $('#addSt').click(function () {
-        $("#partialDiv").load('/Admin/AddStudent');
+        $('#partialDiv').load('/Admin/AddStudent');
     });
 
     //add teacher
     $('#addT').click(function () {
-        $("#partialDiv").load('/Admin/AddTeacher');
+        $('#partialDiv').load('/Admin/AddTeacher');
     })
     //add subj
     $('#addSb').click(function () {
-        $("#partialDiv").load('/Admin/AddSubject');
+        $('#partialDiv').load('/Admin/AddSubject');
     })
     //show all students
     $('#allSt').click(function () {
-        $("#partialDiv").load('/Admin/ShowStudents');
+        $('#partialDiv').load('/Admin/ShowStudents');
     })
     //show all teachers
     $('#allT').click(function () {
-        $("#partialDiv").load('/Admin/ShowTeachers');
+        $('#partialDiv').load('/Admin/ShowTeachers');
     })
     //show all subjs
     $('#allSb').click(function () {
-        $("#partialDiv").load('/Admin/ShowSubjects');
+        $('#partialDiv').load('/Admin/ShowSubjects');
     })
 
     //-------------------------------------------
     //common funcs
     //get subject id from acc to open jurnal page
     $('#list li').click(function () {
-        const subId = $(this).attr("data-id");
+        const subId = $(this).attr('data-id');
         $.ajax({
-            type: "GET",
+            type: 'GET',
             data: { 'id': subId },
             cache: false,
             async: true,
             success: function (result) {
-                window.location.href = "/Marks/Jurnal?id=" + subId;
+                window.location.href = '/Marks/Jurnal?id=' + subId;
             }
         });
     })
@@ -56,6 +56,15 @@ $(document).ready(function () {
     $('#addLessModal').click(function () {
         $('#lessModal').modal('show');
     });
+
+    //open delete lesson modal
+    $('th').bind('dblclick', function () {
+        const id = $(this).attr('data-idLess');
+        const data = $(this).text();
+        $('#idLess').val(id);
+        $('#delLabel').text('Удалить занятие за ' + data + '?');
+        $('#delLessModal').modal('show');
+    })
 
     //update, delete and add mark in jurnal
     $('td').bind('dblclick', function () {   
@@ -131,7 +140,7 @@ $(document).ready(function () {
     });
 
     //jurnal table style
-    const table = $(".editableTable").find('th.vt-text');
+    const table = $('.editableTable').find('th.vt-text');
     const OKRs = [], KRs = [], SRs = [], EKZs = [];
     for (let i = 0; i < table.length; i++) {
         if ($(table[i]).attr('data-lessType') == 2) {

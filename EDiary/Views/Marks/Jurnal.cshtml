@@ -61,7 +61,7 @@
                                     <div class="modal-body">
                                         @foreach (var subject in Model.Subjects)
                                         {
-                                            <input asp-for="addLesson.id" type="text" readonly value="@subject.subjectId" />
+                                            <input asp-for="addLesson.id" type="hidden" readonly value="@subject.subjectId" />
                                         }
                                         <input asp-for="addLesson.lessonDate" type="datetime-local" required />
                                         <input asp-for="addLesson.lessonType" type="text" list="lessTypes" required />
@@ -85,7 +85,7 @@
                             <th></th>
                             @foreach (var dateLesson in Model.Lessons)
                             {
-                                <th class="vt-text" data-lessType="@dateLesson.lessonTypeId">@dateLesson.lessonDate.ToString("d")</th>
+                                <th class="vt-text" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
                             }
                         </tr>
                         <tbody>
@@ -118,6 +118,32 @@
                             }
                         </tbody>
                     </table>
+                    <div id="delLessModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Удалить занятие</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form asp-controller="Marks" asp-action="DeleteLesson" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        @foreach (var subject in Model.Subjects)
+                                        {
+                                            <input type="hidden" readonly value="@subject.subjectId" />
+                                        }
+                                        <input id="idLess" type="hidden" value="" />
+                                        <p id="delLabel">Удалить занятие </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                        <input type="submit" class="btn btn-primary" value="Удалить" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
