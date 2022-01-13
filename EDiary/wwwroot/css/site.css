@@ -312,6 +312,7 @@ td > input{
 
 .subj-button {
     color: #0366d6;
+    cursor: pointer;
 }
 
 .subj-button:hover {
