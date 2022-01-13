@@ -33,29 +33,16 @@ $(document).ready(function () {
     //get subject id from acc to open jurnal page
     $('#list li').click(function () {
         const subId = $(this).attr('data-id');
-        const studId = $('.studLabel').attr('data-idStud');
-        if (!studId) {
-            $.ajax({
-                type: 'GET',
-                data: { 'id': subId },
-                cache: false,
-                async: true,
-                success: function (result) {
-                    window.location.href = '/Marks/Jurnal?id=' + subId;
-                }
-            });
-        }
-        else {
-            $.ajax({
-                type: 'GET',
-                data: { 'id': subId },
-                cache: false,
-                async: true,
-                success: function (result) {
-                    window.location.href = '/Marks/Jurnal?id=' + subId + '&studId=' + studId;
-                }
-            });
-        }
+        console.log(subId)
+        $.ajax({
+            type: 'GET',
+            data: { 'id': subId },
+            cache: false,
+            async: true,
+            success: function (result) {
+                window.location.href = '/Marks/Jurnal?id=' + subId;
+            }
+        });
     })
 
     //open adding photo modal
@@ -72,7 +59,7 @@ $(document).ready(function () {
     });
 
     //open delete lesson modal
-    $('th.vt-text').bind('dblclick', function () {
+    $('th.delLes').bind('dblclick', function () {
         const id = $(this).attr('data-idLess');
         const data = $(this).text();
         $('#idLess').val(id);
@@ -81,7 +68,7 @@ $(document).ready(function () {
     })
 
     //update, delete and add mark in jurnal
-    $('td').bind('dblclick', function () {   
+    $('td.editable').bind('dblclick', function () {   
         if (!$(this).has('input').length) {
             if ($(this).attr('data-idsm')) { //update or delete mark
                 const markID = $(this).attr('data-idsm'); 
@@ -174,7 +161,7 @@ $(document).ready(function () {
     for (let i = 0; i < rows.length; i++) {
         for (let j = 0; j < rows[i].children.length; j++) {
             if (OKRs.indexOf(j) != -1) {
-                $(rows[i].children[j+1]).addClass('lessOKR')
+                $(rows[i].children[j + 1]).addClass('lessOKR')
             }
             else if (KRs.indexOf(j) != -1) {
                 $(rows[i].children[j + 1]).addClass('lessKR')
