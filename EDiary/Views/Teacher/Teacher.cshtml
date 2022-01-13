@@ -72,7 +72,7 @@
                         <ol id="list" class="list-group list-group-flush list-group-numbered">
                             @foreach (var subjectGroup in Model.subjectGroups)
                             {
-                                <li class="list-group-item" data-id="@subjectGroup.tsubjectId"><a href="" сlass="subject-but">@subjectGroup.subjectName (@subjectGroup.groupName)</a></li>
+                                <li class="list-group-item subj-button" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</li>
                             }
                         </ol>
                     </div>

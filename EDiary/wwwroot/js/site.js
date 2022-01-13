@@ -33,6 +33,7 @@ $(document).ready(function () {
     //get subject id from acc to open jurnal page
     $('#list li').click(function () {
         const subId = $(this).attr('data-id');
+        console.log(subId)
         $.ajax({
             type: 'GET',
             data: { 'id': subId },

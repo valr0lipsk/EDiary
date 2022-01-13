@@ -309,3 +309,11 @@ td > input{
 .lessSR {
     background-color: #ffc80033 !important;
 }
+
+.subj-button {
+    color: #0366d6;
+}
+
+.subj-button:hover {
+    text-decoration: underline;
+}
