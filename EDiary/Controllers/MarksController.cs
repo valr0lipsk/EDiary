@@ -153,42 +153,24 @@ namespace EDiary.Controllers
             return View(jurnal);
         }
 
-        //добавление оценки
-        //public IActionResult addMark(int studId, int lessId, string value)
-        //{
-        //    var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
-        //    setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
-        //    context.setMarks.Add(setMark);
-        //    context.SaveChanges();
-        //    return Json(new { status = "success", message = "Оценка обновлена" });
-        //}
-
-        ////обновление оценки 
-        //public IActionResult updateMark(int id, string value)
-        //{
-        //    var markId = value;
-        //    var setmark = id;
-        //    var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
-        //    if (updatedMark != null )
-        //    {
-        //        updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
-        //        context.setMarks.Update(updatedMark);
-        //        context.SaveChanges();
-        //        return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
-        //    }
-        //    else
-        //    {
-        //        return Json(new { status = "error", message = "Ошибка обновления. Попробуйте еще раз" });
-        //    }
-        //}
-
         //добавление занятия
-        public IActionResult AddLesson(AddLessonModel addLesson)
+        public IActionResult AddLesson(LessonModel addLesson)
         {
             Lesson lesson = new Lesson { tsubjectId = addLesson.id, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()};
             context.lessons.Add(lesson);
             context.SaveChanges();
             return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
+        }
+        
+        //удаление занятия
+        [HttpPost]
+        public IActionResult DeleteLesson(LessonModel deleteLesson)
+        {
+            var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.id).FirstOrDefault();
+            context.lessons.Remove(lesson);
+            context.SaveChanges();
+            return RedirectToAction("Jurnal");
+
         }
     }
 }
