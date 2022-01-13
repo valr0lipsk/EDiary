@@ -16,5 +16,6 @@ namespace EDiary.ViewModels
         public IEnumerable<setMark> setMarks { get; set; }
         public IEnumerable<lessonType> types { get; set; }
         public LessonModel addLesson { get; set; }
+        public LessonModel deleteLesson { get; set; }
     }
 }

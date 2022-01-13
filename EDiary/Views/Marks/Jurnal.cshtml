@@ -131,9 +131,9 @@
                                     <div class="modal-body">
                                         @foreach (var subject in Model.Subjects)
                                         {
-                                            <input type="hidden" readonly value="@subject.subjectId" />
+                                            <input asp-for="deleteLesson.id" type="hidden" readonly value="@subject.subjectId" />
                                         }
-                                        <input id="idLess" type="hidden" value="" />
+                                        <input asp-for="deleteLesson.lessonId" id="idLess" type="hidden" value="" />
                                         <p id="delLabel">Удалить занятие </p>
                                     </div>
                                     <div class="modal-footer">

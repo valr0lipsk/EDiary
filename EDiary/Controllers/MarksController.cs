@@ -166,11 +166,10 @@ namespace EDiary.Controllers
         [HttpPost]
         public IActionResult DeleteLesson(LessonModel deleteLesson)
         {
-            var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.id).FirstOrDefault();
+            var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.lessonId).FirstOrDefault();
             context.lessons.Remove(lesson);
             context.SaveChanges();
-            return RedirectToAction("Jurnal");
-
+            return RedirectToAction("Jurnal", "Marks", new { deleteLesson.id });
         }
     }
 }
