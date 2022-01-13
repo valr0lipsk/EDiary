@@ -155,7 +155,7 @@ namespace EDiary.Controllers
 
         //журнал предмета и группы (ученик)
         [HttpGet]
-        public IActionResult Jurnal(int id, int isStudent)
+        public IActionResult Jurnal(int id, int studentId)
         {
             var subid = id;
             //преподаватель

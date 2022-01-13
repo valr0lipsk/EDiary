@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EDiary.Controllers
@@ -97,23 +98,31 @@ namespace EDiary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPassword)
         {
-            if (!ModelState.IsValid)
+            string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])\S{1,8}$";
+            if (!Regex.IsMatch(resetPassword.newPassword, passwordPattern))
             {
                 return View(resetPassword);
             }
-            var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
-            if (user == null)
+            else
             {
-                return View("ResetPasswordInfo");
-            }
-            var result = await userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.newPassword);
-            if (result.Succeeded)
-            {
-                return View("ResetPasswordInfo");
-            }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
+                if (!ModelState.IsValid)
+                {
+                    return View(resetPassword);
+                }
+                var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
+                if (user == null)
+                {
+                    return View("ResetPasswordInfo");
+                }
+                var result = await userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.newPassword);
+                if (result.Succeeded)
+                {
+                    return View("ResetPasswordInfo");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
             return View(resetPassword);
         }   
@@ -125,28 +134,32 @@ namespace EDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(UserChangePasswordModel userPassword)
         {
+            string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])\S{1,8}$";
             if (ModelState.IsValid)
             {
                 IdentityUser user = await userManager.FindByIdAsync(userManager.GetUserId(User));
                 if (user != null)
                 {
-                    IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
-                    if (result.Succeeded)
+                    if (Regex.IsMatch(userPassword.newPassword, passwordPattern))
                     {
-                        if (user.UserName.Contains("st")) 
-                        { 
-                            return RedirectToAction("Student", "Student"); 
-                        }
-                        else if (user.UserName.Contains("tr"))
+                        IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
+                        if (result.Succeeded)
                         {
-                            return RedirectToAction("Teacher", "Teacher"); 
+                            if (user.UserName.Contains("st"))
+                            {
+                                return RedirectToAction("Student", "Student");
+                            }
+                            else if (user.UserName.Contains("tr"))
+                            {
+                                return RedirectToAction("Teacher", "Teacher");
+                            }
                         }
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
+                        else
                         {
-                            ModelState.AddModelError(string.Empty, error.Description);
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
                         }
                     }
                 }
