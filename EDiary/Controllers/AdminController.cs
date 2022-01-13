@@ -129,7 +129,7 @@ namespace EDiary.Controllers
                                       join gr in context.groups on student.studentGroup equals gr.groupId
                                       join aspuser in context.Users on student.studentUser equals aspuser.Id
                                       orderby student.studentSurname
-                                      select new AspStudentGroup
+                                      select new AspStudentGroupModel
                                       {
                                           studentId = student.studentId,
                                           studentLogin = aspuser.UserName,
@@ -148,7 +148,7 @@ namespace EDiary.Controllers
             var teachersTable = from teacher in context.teachers
                                 join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
                                 orderby teacher.teacherSurname
-                                select new AspTeacherSubjectGroup
+                                select new AspTeacherSubjectGroupModel
                                 {
                                     teacherId = teacher.teacherId,
                                     teacherLastname = teacher.teacherLastname,
@@ -176,7 +176,7 @@ namespace EDiary.Controllers
         {
             var teacherGroupSubject = (from teacher in context.teachers
                                        join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
-                                       select new AspTeacherSubjectGroup
+                                       select new AspTeacherSubjectGroupModel
                                        {
                                            
                                            teacherSurname = teacher.teacherSurname,

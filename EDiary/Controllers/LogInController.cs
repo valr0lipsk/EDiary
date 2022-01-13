@@ -123,7 +123,7 @@ namespace EDiary.Controllers
         public IActionResult ChangePassword() => View("ChangePassword");
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(userChangePassword userPassword)
+        public async Task<IActionResult> ChangePassword(UserChangePasswordModel userPassword)
         {
             if (ModelState.IsValid)
             {
