@@ -296,3 +296,27 @@ td > input{
 .currentStudent{
     border: 0.1rem solid black;
 }
+
+.circle1 {
+    width: 100px;
+    height: 100px;
+    opacity: 0.3;
+    background: #8466d26b;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    position: absolute;
+    top: -30px;
+}
+.circle2 {
+    width: 110px;
+    height: 110px;
+    opacity: 0.3;
+    background: #8466d26b;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    position: absolute;
+    top: -47px;
+    left: 16px;
+}
