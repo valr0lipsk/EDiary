@@ -98,31 +98,31 @@ namespace EDiary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPassword)
         {
-            string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])\S{1,8}$";
-            if (!Regex.IsMatch(resetPassword.newPassword, passwordPattern))
+            string passwordPattern = @"(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[a-zA-Z0-9])";
+            if (Regex.IsMatch(resetPassword.newPassword, passwordPattern) && resetPassword.newPassword.Length >= 8)
             {
-                return View(resetPassword);
+                if (ModelState.IsValid)
+                {
+                    var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(nameof(resetPassword.userEmail), "Пользователь не найден");
+                        return View(resetPassword);
+                    }
+                    var result = await userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.newPassword);
+                    if (result.Succeeded)
+                    {
+                        return View("ResetPasswordInfo");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
             else
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(resetPassword);
-                }
-                var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
-                if (user == null)
-                {
-                    return View("ResetPasswordInfo");
-                }
-                var result = await userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.newPassword);
-                if (result.Succeeded)
-                {
-                    return View("ResetPasswordInfo");
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                ModelState.AddModelError(nameof(resetPassword.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
             }
             return View(resetPassword);
         }   
@@ -134,13 +134,13 @@ namespace EDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(UserChangePasswordModel userPassword)
         {
-            string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])\S{1,8}$";
+            string passwordPattern = @"(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[a-zA-Z0-9])";
             if (ModelState.IsValid)
             {
                 IdentityUser user = await userManager.FindByIdAsync(userManager.GetUserId(User));
                 if (user != null)
                 {
-                    if (Regex.IsMatch(userPassword.newPassword, passwordPattern))
+                    if (Regex.IsMatch(userPassword.newPassword, passwordPattern) && userPassword.newPassword.Length >= 8)
                     {
                         IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
                         if (result.Succeeded)
@@ -161,6 +161,10 @@ namespace EDiary.Controllers
                                 ModelState.AddModelError(string.Empty, error.Description);
                             }
                         }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(userPassword.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
                     }
                 }
             }
