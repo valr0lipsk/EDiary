@@ -25,32 +25,66 @@ namespace EDiary.Controllers
         //представление ученика(имя)
         public IActionResult Student()
         {
-            var studentFullName = (from student in context.students
-                                   join aspusers in context.Users on student.studentUser equals aspusers.Id
-                                   where student.studentUser == userManager.GetUserId(User)
-                                   select new Student
-                                   {
-                                       studentId = student.studentId,
-                                       studentSurname = student.studentSurname,
-                                       studentName = student.studentName,
-                                       studentLastname = student.studentLastname,
-                                       studentPic = student.studentPic
-                                   }).ToList();
+            var stud = context.students.Where(st => st.studentUser == userManager.GetUserId(User)).First();
+            var students = context.students.OrderBy(st=>st.studentSurname).Take(15);
+            if (students.Contains(stud) == true)
+            {
+                var studentFullName = (from student in context.students
+                                       join aspusers in context.Users on student.studentUser equals aspusers.Id
+                                       where student.studentUser == userManager.GetUserId(User)
+                                       select new Student
+                                       {
+                                           studentId = student.studentId,
+                                           studentSurname = student.studentSurname,
+                                           studentName = student.studentName,
+                                           studentLastname = student.studentLastname,
+                                           studentPic = student.studentPic
+                                       }).ToList();
 
-            var studentSubject = (from student in context.students
-                                  join aspusers in context.Users on student.studentUser equals aspusers.Id
-                                  join gr in context.groups on student.studentGroup equals gr.groupId
-                                  join sT in context.subjectTaughts on gr.groupId equals sT.groupId
-                                  join sub in context.subjects on sT.subjectId equals sub.subjectId
-                                  where student.studentUser == userManager.GetUserId(User)
-                                  select new SubjectGroupModel
-                                  {
-                                      tsubjectId = sT.tsubjectId,
-                                      subjectName = sub.subjectName
-                                  }).ToList();
+                var studentSubject = (from student in context.students
+                                      join aspusers in context.Users on student.studentUser equals aspusers.Id
+                                      join gr in context.groups on student.studentGroup equals gr.groupId
+                                      join sT in context.subjectTaughts on gr.groupId equals sT.groupId
+                                      join sub in context.subjects on sT.subjectId equals sub.subjectId
+                                      orderby sub.subjectName
+                                      where student.studentUser == userManager.GetUserId(User) && sub.subjectName.Contains("1")
+                                      select new SubjectGroupModel
+                                      {
+                                          tsubjectId = sT.tsubjectId,
+                                          subjectName = sub.subjectName
+                                      }).ToList();
+                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject };
+                return View(studentSubjectGroup);
+            }
+            else
+            {
+                var studentFullName = (from student in context.students
+                                       join aspusers in context.Users on student.studentUser equals aspusers.Id
+                                       where student.studentUser == userManager.GetUserId(User)
+                                       select new Student
+                                       {
+                                           studentId = student.studentId,
+                                           studentSurname = student.studentSurname,
+                                           studentName = student.studentName,
+                                           studentLastname = student.studentLastname,
+                                           studentPic = student.studentPic
+                                       }).ToList();
 
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject };
-            return View(studentSubjectGroup);
+                var studentSubject = (from student in context.students
+                                      join aspusers in context.Users on student.studentUser equals aspusers.Id
+                                      join gr in context.groups on student.studentGroup equals gr.groupId
+                                      join sT in context.subjectTaughts on gr.groupId equals sT.groupId
+                                      join sub in context.subjects on sT.subjectId equals sub.subjectId
+                                      orderby sub.subjectName
+                                      where student.studentUser == userManager.GetUserId(User) && sub.subjectName.Contains("2")
+                                      select new SubjectGroupModel
+                                      {
+                                          tsubjectId = sT.tsubjectId,
+                                          subjectName = sub.subjectName
+                                      }).ToList();
+                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject };
+                return View(studentSubjectGroup);
+            }           
         }
 
         //добавление фотографии студента
