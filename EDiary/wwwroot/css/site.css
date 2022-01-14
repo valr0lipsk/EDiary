@@ -14,6 +14,52 @@ a {
     border-color: #1861ac;
 }
 
+.btn {
+    margin: 0 20px;
+    padding: 15px 34px;
+    overflow: hidden;
+    font-family: 'Montserrat Alternates', sans-serif;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 0;
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    outline: none;
+    cursor: pointer;
+    background: linear-gradient(90deg, #b40ec1, #7619fd);
+}
+
+.btn:hover{
+    color: white;
+}
+
+.btn:before, .btn:after {
+    color: white;
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    left: -110%;
+    top: 0;
+    opacity: 0.1;
+    background: black;
+    transform: skewX(25deg);
+    transition: .5s ease;
+}
+
+.btn:hover:before {
+    color: white;
+    left: -10%;
+    transition: .3s ease;
+}
+
+.btn:hover:after {
+    color: white;
+    left: -20%;
+}
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
@@ -77,7 +123,7 @@ body {
 }
 
 .autorizationF__form {
-    padding: 50px 30px;
+    padding: 50px 20px;
     -webkit-box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
     -moz-box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
     box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
