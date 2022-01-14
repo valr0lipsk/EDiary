@@ -318,3 +318,7 @@ td > input{
 .subj-button:hover {
     text-decoration: underline;
 }
+
+.currentStudent{
+    border: 0.1rem solid black;
+}

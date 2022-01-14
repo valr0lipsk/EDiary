@@ -104,48 +104,96 @@
                         <tbody>
                             @foreach (var student in Model.Students)
                             {
-                            <tr>
-                                @if (student.studentLastname != null)
+                                @if (student.studentId == ViewBag.studentId)
                                 {
-                                    <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
-                                }
-                                else
-                                {
-                                    <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
-                                }
-
-                                @if (User.IsInRole("teacher"))
-                                {
-                                    @foreach (var dateLesson in Model.Lessons)
-                                    {
-                                        var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                        if (sm != null)
+                                    <tr class="currentStudent">
+                                        @if (student.studentLastname != null)
                                         {
-                                            <td class="editable" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
                                         }
                                         else
                                         {
-                                            <td class="editable" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
                                         }
-                                    }
-                                }
-                                else
-                                {
-                                    @foreach (var dateLesson in Model.Lessons)
-                                    {
-                                        var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                        if (sm != null)
+
+                                        @if (User.IsInRole("teacher"))
                                         {
-                                            <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                            @foreach (var dateLesson in Model.Lessons)
+                                            {
+                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                if (sm != null)
+                                                {
+                                                    <td class="editable" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="editable" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                }
+                                            }
                                         }
                                         else
                                         {
-                                            <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                            @foreach (var dateLesson in Model.Lessons)
+                                            {
+                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                if (sm != null)
+                                                {
+                                                    <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                }
+                                                else
+                                                {
+                                                    <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                }
+                                            }
                                         }
-                                    }
-                                }
 
-                            </tr>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        @if (student.studentLastname != null)
+                                        {
+                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
+                                        }
+                                        else
+                                        {
+                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
+                                        }
+
+                                        @if (User.IsInRole("teacher"))
+                                        {
+                                            @foreach (var dateLesson in Model.Lessons)
+                                            {
+                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                if (sm != null)
+                                                {
+                                                    <td class="editable" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="editable" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @foreach (var dateLesson in Model.Lessons)
+                                            {
+                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                if (sm != null)
+                                                {
+                                                    <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                }
+                                                else
+                                                {
+                                                    <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                }
+                                            }
+                                        }
+
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

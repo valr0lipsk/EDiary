@@ -174,15 +174,6 @@ $(document).ready(function () {
             }
         }
     }
-
-    if ($('.studLabel')) {
-        const student = $('.studLabel').attr('data-idStud');
-    };
-    for (let i = 0; i < rows.length; i++) {
-        if ($(rows[i].children[1]).attr('data-idStud') === student) {
-            console.log(rows[i])
-        }
-    }
 });
 
 
