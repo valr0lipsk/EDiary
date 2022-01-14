@@ -33,6 +33,21 @@ html {
     }
 }
 
+body {
+    margin-bottom: 60px;
+    height: 100%;
+    background-color: #8466d26b;
+}
+
+.footer {
+    position: page;
+    bottom: 0;
+    background-color: aliceblue;
+    width: 100%;
+    white-space: nowrap;
+    margin-top: 0;
+    line-height: 60px;
+}
 
 .border-top {
     border-top: 1px solid #e5e5e5;
@@ -46,29 +61,7 @@ html {
     box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
-
-.footer {
-    position:page;
-    bottom: 0;
-    background-color: aliceblue;
-    width: 100%;
-    white-space: nowrap;
-    margin-top:0;
-    line-height: 60px;
-}
-
 .autorizationF {
-    /*    height: 525px;
-    background: #FFFFFF;
-    border: 1px solid #9FB6B7;
-    box-sizing: border-box;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 40px;
-    margin-top: 8.5%;*/
     min-width: 120vh;
     background: #FFFFFF;
     margin: 0 auto;
@@ -77,10 +70,17 @@ button.accept-policy {
     box-shadow: 1px 1px 18px 2px rgba(107, 0, 107, 0.2);
 }
 
-.welcome__img {
+.autorizationF__img {
     background: url("./source/background.png") center no-repeat;
     min-height: 87vh;
     background-size: cover;
+}
+
+.autorizationF__form {
+    padding: 50px 30px;
+    -webkit-box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
+    -moz-box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
+    box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
 }
 
 .brder {
@@ -99,7 +99,6 @@ button.accept-policy {
 .input:focus {
     border: 1px solid #12D2FC;
 }
-
 
 .button {
     background: linear-gradient(to right, #3c55a9, #815e9e);
@@ -122,26 +121,6 @@ h1 {
     font-weight: normal;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-shadow: 2px 2px 5px #cacaca;
-}
-
-.fbox {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-}
-
-.body_name {
-    background-image: none;
-}
-
-body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
-    height: 100%;
-    /*background-image: url(source/background-3.jpg)*/
-    background-color: #937aa76b;
 }
 
 ._table {
@@ -168,7 +147,6 @@ body {
     font-size: 230%;
 }
 
-
 .accountF {
     background: #FFFFFF;
     border-bottom: 2px groove #555;
@@ -176,10 +154,6 @@ body {
 
 .jurnalF {
     background: #FFFFFF;
-}
-
-.box_shadow {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .font_h1 {
@@ -228,7 +202,6 @@ tr, td{
     text-align: center;
     text-anchor:middle;
 }
-
 
 .sticky-table {
     max-width: 100%;
