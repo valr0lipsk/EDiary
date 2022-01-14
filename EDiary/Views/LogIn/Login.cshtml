@@ -5,16 +5,13 @@
 <div class="row h-100 justify-content-center align-items-center min-vh-100">
     <div class="autorizationF col-10 offset-1 flex-column justify-content-center align-self-center">
         <div class="row h-100">
-            <div class="welcome__img col-6">
+            <div class="autorizationF__img col-6">
             </div>
-            <div class="col-6">
+            <div class="autorizationF__form col-6 d-flex flex-column justify-content-center align-content-center align-items-center">
                 <div class="row mh-100 align-items-center justify-content-center">
                     <form asp-area="" asp-controller="LogIn" asp-action="Login" method="post" asp-route-returnUrl="@ViewBag.returnUrl" class="col-10 h-100 align-content-center align-items-center justify-content-start">
-                        <div class="row h-100 align-content-center w-100 justify-content-start">
+                        <div class="row h-100 w-100 m-0 align-content-center justify-content-start">
                             <h2 class="mb-md-5 mb-5 p-xl-3 p-lg-2 p-md-1">Вход</h2>
-                            <div id="alertDiv">
-
-                            </div>
                             <div class="col-12 mt-3 d-flex flex-column justify-content-center align-items-center">
                                 <div class="row w-100 justify-content-center align-items-center">
                                     <input asp-for="userName" class="form-control col-12 w-100 m-1 mb-4 brder" id="inputLogin" type="text" placeholder="Логин" required /><span asp-validation-for="userName"></span>
