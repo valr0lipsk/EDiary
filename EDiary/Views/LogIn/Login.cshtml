@@ -20,17 +20,20 @@
                                 <div class="row w-100 justify-content-center align-items-center">
                                     <input asp-for="userName" class="form-control col-12 w-100 m-1 mb-4 brder" id="inputLogin" type="text" placeholder="Логин" required /><span asp-validation-for="userName"></span>
                                     <input asp-for="Password" class="form-control col-12 w-100 m-1 mb-2 brder" id="inputPassword" type="password" placeholder="Пароль" required /><span asp-validation-for="Password"></span>
-                                    <div class="col flex-row col-md-5 col-7 m-0 ml-3 align-items-center">
-                                        <div class="row">
-                                            <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
-                                            <label style="font-size: 90%">
-                                                Запомнить меня
-                                            </label>
+                                    <div class="col-12 p-0">
+                                        <div class="row d-flex flex-row m-0 align-items-center align-content-center justify-content-between">
+                                            <div class="col-6">
+                                                <div class="row d-flex align-items-center">
+                                                    <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
+                                                    <label class="form__label">
+                                                        Запомнить меня
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <a asp-action="ForgotPassword" class="form__label">Забыли пароль?</a>
                                         </div>
                                     </div>
-                                    <a asp-action="ForgotPassword">Забыли пароль</a>
-                                    <button class="btn col-md-12 mt-1 col-5">Войти</button>
-                                    @*<input type="button" class="btn col-md-12 mt-1 col-5" id="btnLog" value="Войти" />*@
+                                    <button class="btn col-md-12 mt-4 col-5">Войти</button>
                                 </div>
                             </div>
                         </div>
