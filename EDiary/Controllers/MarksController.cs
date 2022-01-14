@@ -182,37 +182,37 @@ namespace EDiary.Controllers
         }
 
         //экспорт статистики 
-        //public IActionResult SaveStatistics()
-        //{
-        //    using (var workbook = new XLWorkbook())
-        //    {
-        //        var statistic;
-        //        var worksheet = workbook.Worksheets.Add("Статистика");
-        //        var currentRow = 1;
-        //        worksheet.Cell(currentRow, 1).Value = "ФИО";
-        //        worksheet.Cell(currentRow, 2).Value = "Средний балл";
-        //        worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
-        //        worksheet.Cell(currentRow, 4).Value = "Пропуски не по уваж.";
-        //        worksheet.Cell(currentRow, 5).Value = "";
-        //        worksheet.Cell(currentRow, 6).Value = "Username";
-        //        foreach (var user in statistic)
-        //        {
-        //            currentRow++;
-        //            worksheet.Cell(currentRow, 1).Value = user.Id;
-        //            worksheet.Cell(currentRow, 2).Value = user.Username;
-        //        }
+        public IActionResult SaveStatistics()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var statistic;
+                var worksheet = workbook.Worksheets.Add("Статистика");
+                var currentRow = 1;
+                worksheet.Cell(currentRow, 1).Value = "ФИО";
+                worksheet.Cell(currentRow, 2).Value = "Средний балл";
+                worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
+                worksheet.Cell(currentRow, 4).Value = "Пропуски не по уваж.";
+                worksheet.Cell(currentRow, 5).Value = "";
+                worksheet.Cell(currentRow, 6).Value = "Username";
+                foreach (var user in statistic)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = user.Id;
+                    worksheet.Cell(currentRow, 2).Value = user.Username;
+                }
 
-        //        using (var stream = new MemoryStream())
-        //        {
-        //            workbook.SaveAs(stream);
-        //            var content = stream.ToArray();
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
 
-        //            return File(
-        //                content,
-        //                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        //                "Statistics.xlsx");
-        //        }
-        //    }
-        //}
+                    return File(
+                        content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Statistics.xlsx");
+                }
+            }
+        }
     }
 }

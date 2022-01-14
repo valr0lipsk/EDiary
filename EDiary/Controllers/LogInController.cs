@@ -122,7 +122,7 @@ namespace EDiary.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(resetPassword.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
+                ModelState.AddModelError(nameof(ResetPasswordModel.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
             }
             return View(resetPassword);
         }   
@@ -164,7 +164,7 @@ namespace EDiary.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError(nameof(userPassword.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
+                        ModelState.AddModelError(nameof(UserChangePasswordModel.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
                     }
                 }
             }
