@@ -126,6 +126,8 @@ body {
     width: 70px;
     height: 70px;
     position: absolute;
+    z-index: 1;
+    margin: 5px;
 }
 
 .autorizationF__form {
@@ -174,10 +176,9 @@ body {
 }
 
 h1 {
-    font-size: 320%;
     font-weight: normal;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-shadow: 2px 2px 5px #cacaca;
+    color: white;
 }
 
 ._table {
