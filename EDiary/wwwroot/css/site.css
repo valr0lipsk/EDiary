@@ -122,6 +122,14 @@ body {
     background-size: cover;
 }
 
+.img__icon{
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    z-index: 1;
+    margin: 5px;
+}
+
 .autorizationF__form {
     padding: 50px 20px;
     -webkit-box-shadow: 7px 0px 5px -4px rgba(69, 70, 71, 0.53) inset;
@@ -168,10 +176,9 @@ body {
 }
 
 h1 {
-    font-size: 320%;
     font-weight: normal;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-shadow: 2px 2px 5px #cacaca;
+    color: white;
 }
 
 ._table {
