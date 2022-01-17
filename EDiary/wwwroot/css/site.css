@@ -166,12 +166,12 @@ body {
     }
 
     .form__title{
-        font-size: 230%;
+        font-size: 220%;
     }
 
     .circle1, .circle2{
-        width: 180px;
-        height: 180px;
+        width: 185px;
+        height: 185px;
     }
 }
 
