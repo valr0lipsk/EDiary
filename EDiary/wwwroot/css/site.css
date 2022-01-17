@@ -142,6 +142,7 @@ body {
 .img__title {
     font-family: 'Ubuntu', sans-serif;
     font-size: 250%;
+    text-align:center;
 }
 
 .img__title::after {
