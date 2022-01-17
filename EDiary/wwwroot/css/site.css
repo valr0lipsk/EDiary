@@ -286,14 +286,6 @@ h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.accountIcon {
-    border-radius: 70%;
-    height: 70pt;
-    width: 70pt;
-    background-color: darkgrey;
-    box-sizing: border-box;
-}
-
 .h100 {
     box-sizing: border-box;
     min-height: 76vh;
@@ -449,20 +441,20 @@ td > input{
     min-height: 85vh;
 }
 
-.account__sidebar {
-    background-color: aqua;
-}
-
-.sidebar__acc{
-    background-color:aquamarine;
+.sidebar__acc {
+    background-color: #f8f8f8;
 }
 
 .sidebar__notes{
     background-color: blueviolet;
 }
 
-.account__main{
-    background-color:darkgoldenrod;
+.sidebar__status {
+    background-color: white;
+}
+
+.account__main {
+    background-color: darkgoldenrod;
 }
 
 .main__side{
@@ -471,4 +463,15 @@ td > input{
 
 .main__subjects{
     background-color: forestgreen;
+}
+
+.acc__photo{
+    height: 150px;
+    width: 150px;
+    border-radius: 60%;
+}
+
+.acc__label > p {
+    font: normal 20px 'Ubuntu', sans-serif;
+    text-align: center;
 }
