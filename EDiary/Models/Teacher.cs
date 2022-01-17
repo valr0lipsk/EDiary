@@ -30,10 +30,16 @@ namespace EDiary.Models
         [Display(Name = "Аватарка")]
         public byte[] teacherPic { get; set; }
 
+        [Display(Name = "Эмодзи-статус")]
+        public int teacherStatus { get; set; }
+
         [Required]
         public string teacherUser { get; set; }
 
         [ForeignKey("teacherUser")]
         public IdentityUser user { get; set; }
+
+        [ForeignKey("teacherStatus")]
+        public EmojiStatus status { get; set; }
     }
 }

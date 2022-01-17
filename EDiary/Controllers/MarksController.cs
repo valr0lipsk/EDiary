@@ -186,39 +186,48 @@ namespace EDiary.Controllers
         {
             using (var workbook = new XLWorkbook())
             {
-                var statistic = new StatisticModel();
+                //var statistic = new StatisticModel();
+                var all = (from st in context.students
+                           join sM in context.setMarks on st.studentId equals sM.studentId
+                           join mark in context.marks on sM.markId equals mark.markId
+                           join gr in context.groups on st.studentGroup equals gr.groupId
+                           where mark.mark.Trim() == "н/б" && gr.groupName == "8к2492"
+                           select new
+                           {
+                               st, sM, mark
+                           } into stats
+                           group stats by stats.st.studentId into statistics
+                           select new StatisticModel
+                           {
+                               id=statistics.FirstOrDefault().st.studentId,
+                               fN = string.Join(" ", statistics.FirstOrDefault().st.studentSurname, statistics.FirstOrDefault().st.studentName.Substring(0, 1) + "."),
+                               nRP = statistics.FirstOrDefault().mark.mark.Count()
+                           }).ToList();
                 //ФИО
-                statistic.fullName = (from student in context.students
+                /*statistic.fullName = (from student in context.students
                                       join gr in context.groups on student.studentGroup equals gr.groupId
                                       orderby student.studentSurname
                                       where gr.groupName == "8к2492"
-                                      select string.Join(" ", student.studentSurname, student.studentName, student.studentLastname)).ToList();
+                                      select string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".")).ToList();*/
 
                 //пропуски без причины
-                statistic.noReasonPass = (from st in context.students
-                                          //group st by st.studentId into student
-                                          join sM in context.setMarks on st.studentId equals sM.studentId
+                /*statistic.noReasonPass = (from st in context.students
+                                          group st by st.studentId into student
+                                          join sM in context.setMarks on student.Key equals sM.studentId
                                           join mark in context.marks on sM.markId equals mark.markId
-                                          join less in context.lessons on sM.lessonId equals less.lessonId
-                                          join subT in context.subjectTaughts on less.tsubjectId equals subT.tsubjectId
-                                          join gr in context.groups on st.studentGroup equals gr.groupId
-                                          orderby st.studentSurname
-                                          where mark.mark.Trim() == "н/б" && subT.tsubjectId == 1 && gr.groupName == "8к2492"
-                                          group new { st, sM, mark, less, subT, gr }  by st.studentId into student
-                                          let mark = student.FirstOrDefault().mark.mark
-                                          select mark.Count()).ToList();
-
+                                          join gr in context.groups on student.FirstOrDefault().studentGroup equals gr.groupId
+                                          where mark.mark.Trim() == "н/б" && gr.groupName == "8к2492"
+                                          select mark.mark.Count()).ToList();*/
                 //пропуски по причине
-                statistic.reasonPass= (from st in context.students
-                                       group st by st.studentId into student
-                                       join sM in context.setMarks on student.FirstOrDefault().studentId equals sM.studentId
-                                       join mark in context.marks on sM.markId equals mark.markId
-                                       join less in context.lessons on sM.lessonId equals less.lessonId
-                                       join subT in context.subjectTaughts on less.tsubjectId equals subT.tsubjectId
-                                       join gr in context.groups on student.FirstOrDefault().studentGroup equals gr.groupId
-                                       orderby student.FirstOrDefault().studentSurname
-                                       where mark.mark.Trim() == "н" && subT.tsubjectId == 1 && gr.groupName == "8к2492"
-                                       select mark.mark.Count()).ToList();
+                /*statistic.reasonPass = (from st in context.students
+                                        group st by st.studentId into student
+                                        join sM in context.setMarks on student.FirstOrDefault().studentId equals sM.studentId
+                                        join mark in context.marks on sM.markId equals mark.markId
+                                        join gr in context.groups on student.FirstOrDefault().studentGroup equals gr.groupId
+                                        orderby student.FirstOrDefault().studentSurname
+                                        where mark.mark.Trim() == "н" && subT.tsubjectId == 1 && gr.groupName == "8к2492"
+                                        select mark.mark.Count()).ToList();*/
+
                 //средний балл
                 /*statistic.averageMark = (from st in context.students
                                          group st by st.studentId into student
@@ -228,20 +237,21 @@ namespace EDiary.Controllers
                                          orderby student.FirstOrDefault().studentSurname
                                          where mark.mark.Trim() != "н/б" && mark.mark.Trim() != "н"
                                          select int.Parse(mark.mark).Sum()/mark.mark.Count()).ToList();*/
-                var fullStats = statistic.fullName.Zip(statistic.noReasonPass).Zip(statistic.reasonPass);
+
+                //var fullStats = statistic.fullName.Zip(statistic.noReasonPass)/*.Zip(statistic.reasonPass)*/;
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
-                worksheet.Cell(currentRow, 2).Value = "Пропуски по уваж.";
-                worksheet.Cell(currentRow, 3).Value = "Пропуски не по уваж.";
+                worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
+                //worksheet.Cell(currentRow, 3).Value = "Пропуски не по уваж.";
                 //worksheet.Cell(currentRow, 4).Value = "Средний балл";
 
-                foreach (var user in fullStats)
+                foreach (var user in all)
                 {
                     currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = user.First.First;
-                    worksheet.Cell(currentRow, 2).Value = user.First.Second;
-                    worksheet.Cell(currentRow, 3).Value = user.Second;
+                    worksheet.Cell(currentRow, 1).Value = user.fN;
+                    worksheet.Cell(currentRow, 2).Value = user.nRP;
+                    //worksheet.Cell(currentRow, 3).Value = user.Second;
                 }
 
                 using (var stream = new MemoryStream())
