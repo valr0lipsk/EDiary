@@ -161,8 +161,12 @@ body {
 }
 
 @media(min-width: 1600px) {
-    .autorizationF_form{
+    .autorizationF__form{
         padding: 50px 15px;
+    }
+
+    .autorizationF__form > .row > form > .row {
+        justify-content: space-around;
     }
 
     .img__title {
