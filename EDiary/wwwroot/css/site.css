@@ -145,7 +145,7 @@ body {
 .img__title::after {
     display: block;
     width: 10%;
-    height: 5px;
+    height: 3px;
     background-color:white;
     content: '';
     position: absolute;
@@ -161,6 +161,12 @@ body {
 .form__label {
     font-size: 90%;
     margin: 0 0 0 4px;
+}
+
+.invalidAlert{
+    color: red;
+    text-decoration: underline;
+    font-size: 80%;
 }
 
 .brder {

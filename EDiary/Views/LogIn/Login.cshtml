@@ -22,14 +22,20 @@
                             </div>
                             <div class="col-12 mt-3 d-flex flex-column justify-content-center align-items-center">
                                 <div class="row w-100 justify-content-center align-items-center">
-                                    <input asp-for="userName" class="form-control col-12 w-100 m-1 mb-4 brder" id="inputLogin" type="text" placeholder="Логин" required /><span asp-validation-for="userName"></span>
-                                    <input asp-for="Password" class="form-control col-12 w-100 m-1 mb-2 brder" id="inputPassword" type="password" placeholder="Пароль" required /><span asp-validation-for="Password"></span>
+                                    <input asp-for="userName" class="form-control col-12 w-100 m-1 mb-4 brder" id="inputLogin" type="text" placeholder="Логин" required />
+                                    <input asp-for="Password" class="form-control col-12 w-100 m-1 mb-1 brder" id="inputPassword" type="password" placeholder="Пароль" required />
+                                    <div class=" col-12 d-flex justify-content-start">
+                                        <div class="row">
+                                            <span class="invalidAlert mb-1" asp-validation-for="userName"></span>
+                                            <span class="invalidAlert" asp-validation-for="Password"></span>
+                                        </div>
+                                    </div>
                                     <div class="col-12 p-0">
                                         <div class="row d-flex flex-row m-0 align-items-center align-content-center justify-content-between">
                                             <div class="col-6">
                                                 <div class="row d-flex align-items-center">
-                                                    <input asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
-                                                    <label class="form__label">
+                                                    <input id="rememberCheck" asp-for="Remember" type="checkbox" value="false"><span asp-validation-for="Remember"></span>
+                                                    <label for="rememberCheck" class="form__label">
                                                         Запомнить меня
                                                     </label>
                                                 </div>
