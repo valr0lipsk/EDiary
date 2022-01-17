@@ -4,7 +4,7 @@
 @model AspStudentGroupModel
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> userManager
-<div class="container h-100">
+@*<div class="container h-100">
     <div class="row h-100">
         <div class="col-12 accountF h-100 p-3">
             <div class="row h-100 align-content-center w-100 flex-row-reverse justify-content-center">
@@ -78,6 +78,32 @@
                         </ol>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="row min-vh-100">
+    <aside class="account__sidebar col-lg-4">
+        <div class="row h-100 d-flex flex-column">
+            <div class="sidebar__acc col-4 mw-100">
+
+            </div>
+            <div class="sidebar__status col-1 mw-100">
+
+            </div>
+            <div class="sidebar__notes col-7 mw-100">
+
+            </div>
+        </div>
+    </aside>
+    <div class="account__main col-lg-8">
+        <div class="row h-100 pl-lg-5 pr-lg-5 pt-lg-2 pb-lg-2">
+            <div class="main__side col-1 mr-lg-5">
+
+            </div>
+            <div class="main__subjects col-10 ml-lg-4">
+
             </div>
         </div>
     </div>
