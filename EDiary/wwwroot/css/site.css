@@ -170,11 +170,11 @@ body {
     }
 
     .circle1, .circle2{
-        width: 200px;
-        height: 200px;
+        width: 210px;
+        height: 210px;
     }
 
-    ..invalidAlert{
+    .invalidAlert{
         font-size: 100%;
     }
 }
