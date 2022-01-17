@@ -4,7 +4,7 @@
 @model AspStudentGroupModel
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> userManager
-<div class="container h-100">
+@*<div class="container h-100">
     <div class="row h-100">
         <div class="col-12 accountF h-100 p-3">
             <div class="row h-100 align-content-center w-100 flex-row-reverse justify-content-center">
@@ -81,17 +81,17 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
-@*<div class="row min-vh-100">
+<div class="row min-vh-100">
     <aside class="account__sidebar col-lg-3">
         <div class="row h-100 d-flex flex-column">
-            <div class="sidebar__acc col-4 mw-100 p-2">
+            <div class="sidebar__acc col-4 mw-100 p-2 justify-content-between">
                 <div class="row">
-                    <div class="acc__icons col-12">
+                    <div class="acc__icons col-12 mb-2">
                         <img src="~/css/source/dots.png" />
                     </div>
-                    <div class="acc__photoplace col-12 d-flex justify-content-center">
+                    <div class="acc__photoplace col-12 d-flex justify-content-center mb-1">
                         @foreach (var student in Model.students)
                         {
                             @if (student.studentPic != null)
@@ -125,19 +125,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="acc__label col-12 mt-2 d-flex justify-content-center align-content-center align-items-center">
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            @foreach (var student in Model.students)
+                    <div class="acc__label col-12 mt-2 d-flex flex-column align-items-center align-content-center justify-content-center">
+                        <div class="row">
+                            @if (SignInManager.IsSignedIn(User))
                             {
-                                <p data-idStud="@student.studentId">@student.studentSurname @student.studentName @student.studentLastname<sup>&#x1F913;</sup></p>
+                                @foreach (var student in Model.students)
+                                {
+                                    <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName @*@student.studentLastname*@<sup>&#x1F913;</sup></p>
+                                }
                             }
-                        }
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="sidebar__status border col-1 mw-100">
-
+                <div class="row d-flex flex-column pr-2 pl-2 pt-2">
+                    <p class="status__text mb-2">Дата и время: &nbsp;<time id="statusDate"></time></p>
+                    <p class="status__text m-0">Текущий средний балл: <span>8.6</span></p> 
+                </div>
             </div>
             <div class="sidebar__notes col-7 mw-100">
 
@@ -154,4 +159,4 @@
             </div>
         </div>
     </div>
-</div>*@
+</div>

@@ -280,12 +280,6 @@ h1 {
     background: #FFFFFF;
 }
 
-.font_h1 {
-    font-size: 300%;
-    font-weight: normal;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 .h100 {
     box-sizing: border-box;
     min-height: 76vh;
@@ -441,16 +435,22 @@ td > input{
     min-height: 85vh;
 }
 
-.sidebar__acc {
+.sidebar__acc, .sidebar__notes {
     background-color: #f8f8f8;
-}
-
-.sidebar__notes{
-    background-color: blueviolet;
 }
 
 .sidebar__status {
     background-color: white;
+}
+
+.status__text {
+    font: normal 14px 'Ubuntu', sans-serif;
+}
+
+.status__text > span{
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .account__main {
@@ -471,7 +471,7 @@ td > input{
     border-radius: 60%;
 }
 
-.acc__label > p {
-    font: normal 20px 'Ubuntu', sans-serif;
+.acc__label > .row > p {
+    font: normal 19px 'Ubuntu', sans-serif;
     text-align: center;
 }
