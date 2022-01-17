@@ -114,6 +114,7 @@ body {
     -webkit-box-shadow: 1px 1px 18px 2px rgba(107, 0, 107, 0.2);
     -moz-box-shadow: 1px 1px 18px 2px rgba(107, 0, 107, 0.2);
     box-shadow: 1px 1px 18px 2px rgba(107, 0, 107, 0.2);
+    border-radius: 5px;
 }
 
 .autorizationF > * {
@@ -129,6 +130,8 @@ body {
     background: url("./source/background.png") center no-repeat;
     min-height: 87vh;
     background-size: cover;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
 .img__icon{
@@ -283,14 +286,6 @@ h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.accountIcon {
-    border-radius: 70%;
-    height: 70pt;
-    width: 70pt;
-    background-color: darkgrey;
-    box-sizing: border-box;
-}
-
 .h100 {
     box-sizing: border-box;
     min-height: 76vh;
@@ -440,4 +435,43 @@ td > input{
     position: absolute;
     top: -47px;
     left: 16px;
+}
+
+.account__form{
+    min-height: 85vh;
+}
+
+.sidebar__acc {
+    background-color: #f8f8f8;
+}
+
+.sidebar__notes{
+    background-color: blueviolet;
+}
+
+.sidebar__status {
+    background-color: white;
+}
+
+.account__main {
+    background-color: darkgoldenrod;
+}
+
+.main__side{
+    background-color:cornflowerblue;
+}
+
+.main__subjects{
+    background-color: forestgreen;
+}
+
+.acc__photo{
+    height: 150px;
+    width: 150px;
+    border-radius: 60%;
+}
+
+.acc__label > p {
+    font: normal 20px 'Ubuntu', sans-serif;
+    text-align: center;
 }
