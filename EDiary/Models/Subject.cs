@@ -15,5 +15,8 @@ namespace EDiary.Models
         [StringLength(40)]
         [Required]
         public string subjectName { get; set; }
+
+        [Display(Name = "Фотография предмета")]
+        public byte[] subjectPicture { get; set; }
     }
 }

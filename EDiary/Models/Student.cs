@@ -34,6 +34,9 @@ namespace EDiary.Models
         [Required]
         public int studentGroup { get; set; }
 
+        [Display(Name = "Эмодзи-статус")]
+        public int studentStatus { get; set; }
+
         [Required]
         public string studentUser { get; set; }
 
@@ -42,5 +45,8 @@ namespace EDiary.Models
 
         [ForeignKey("studentUser")]
         public IdentityUser user { get; set; }
+
+        [ForeignKey("studentStatus")]
+        public EmojiStatus status { get; set; }
     }
 }

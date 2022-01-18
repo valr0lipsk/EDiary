@@ -11,7 +11,6 @@ namespace EDiary.Models
 {
     public class EDContext: IdentityDbContext<IdentityUser>
     {
-        public DbSet<Admin> admins { get; set; }
         public DbSet<collegeGroup> groups { get; set; }
         public DbSet<Lesson> lessons { get; set; }
         public DbSet<Mark> marks { get; set; }
@@ -21,6 +20,8 @@ namespace EDiary.Models
         public DbSet<Teacher> teachers { get; set; }
         public DbSet<Student> students { get; set; }
         public DbSet<lessonType> lessonType { get; set; }
+        public DbSet<EmojiStatus> emojiStatuses { get; set; }
+        public DbSet<Labs> labs { get; set; }
         public EDContext(DbContextOptions<EDContext> options):base(options) {}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +45,12 @@ namespace EDiary.Models
                 Id = "student",
                 Name = "student",
                 NormalizedName = "STUDENT"
+            });
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "headman",
+                Name = "headman",
+                NormalizedName = "HEADMAN"
             });
 
             //1-ый препод
@@ -126,13 +133,7 @@ namespace EDiary.Models
                 NormalizedUserName = "ADMIN",
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "UDrIJ5cR")
             });
-            modelBuilder.Entity<Admin>().HasData(new Admin
-            {
-                adminId = 1,
-                adminRole = "admin",
-                adminUser = "4"
-            });
-
+           
             //3-ий препод
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
