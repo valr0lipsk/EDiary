@@ -395,8 +395,11 @@ td > input{
 }
 
 .subj-button {
-    color: #0366d6;
+    background-color: #d5cbf0;
+    color: black;
     cursor: pointer;
+    border-radius: 25px !important;
+    border: none !important;
 }
 
 .subj-button:hover {
@@ -435,8 +438,9 @@ td > input{
     min-height: 85vh;
 }
 
-.sidebar__acc, .sidebar__notes {
-    background-color: #f8f8f8;
+.sidebar__acc, .sidebar__notes, .account__group, .main__subjects, .subjects__side {
+    /*    background-color: #f8f8f8;*/
+    background-color: white;
 }
 
 .sidebar__notes::-webkit-scrollbar {
@@ -449,15 +453,15 @@ td > input{
 }
 
 .notes__note {
-    background-color: #8466d26b;
+    background-color: #d4ddfa;
     border-radius: 25px;
-    -webkit-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
 }
 
 .notes__title {
-    font: normal 30px 'Ubuntu', sans-serif;
+    font: normal 24px 'Ubuntu', sans-serif;
     color: black;
 }
 
@@ -485,18 +489,59 @@ td > input{
 }
 
 .account__main {
-    background-color: darkgoldenrod;
+    background-color: #f8f8f8;
+    -webkit-box-shadow: 5px 0px 8px -5px rgba(34, 60, 80, 0.12) inset;
+    -moz-box-shadow: 5px 0px 8px -5px rgba(34, 60, 80, 0.12) inset;
+    box-shadow: 5px 0px 8px -5px rgba(34, 60, 80, 0.12) inset;
 }
 
-.main__side{
-    background-color:cornflowerblue;
+.main__subjects {
+    border-radius: 25px;
+    -webkit-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
+    box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
 }
 
-.main__subjects{
-    background-color: forestgreen;
+.subjects__side {
+    border-bottom-left-radius: 25px;
+    border-top-left-radius: 25px;
 }
 
-.acc__photo{
+.block__tile {
+    font: normal 30px 'Ubuntu', sans-serif;
+}
+
+.item__circle {
+    width: 70px;
+    height: 70px;
+    background-color: #dfd8f1;
+}
+
+.item__circle > img {
+    height: 50px;
+    width: 50px;
+}
+
+.item__title {
+    font: normal 16px 'Ubuntu', sans-serif;
+    text-transform: uppercase;
+}
+
+.subject__find {
+    height: 60px;
+    font: normal 13px 'Ubuntu', sans-serif;
+}
+
+.subject__find:hover{
+    background-color: #8466d26b;
+    cursor: pointer;
+}
+
+.subject__find:first-of-type{
+    border-top-left-radius: 25px;
+}
+
+.acc__photo {
     height: 150px;
     width: 150px;
     border-radius: 60%;

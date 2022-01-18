@@ -49,7 +49,7 @@ $(document).ready(function () {
     //-------------------------------------------
     //common funcs
     //get subject id from acc to open jurnal page
-    $('#list li').click(function () {
+    $('.item__title').click(function () {
         const subId = $(this).attr('data-id');
         console.log(subId)
         $.ajax({
