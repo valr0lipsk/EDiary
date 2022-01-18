@@ -439,6 +439,38 @@ td > input{
     background-color: #f8f8f8;
 }
 
+.sidebar__notes::-webkit-scrollbar {
+    width: 7px;
+    background-color: #f9f9fd;
+}
+
+.sidebar__notes::-webkit-scrollbar-thumb {
+    background-color: #00000029;
+}
+
+.notes__note {
+    background-color: #8466d26b;
+    border-radius: 25px;
+    -webkit-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.2);
+}
+
+.notes__title {
+    font: normal 30px 'Ubuntu', sans-serif;
+    color: black;
+}
+
+.note__title {
+    font: normal 18px 'Ubuntu', sans-serif;
+    color: black;
+}
+
+.note__text {
+    font: lighter 14px/25px 'Ubuntu', sans-serif;
+    color: black;
+}
+
 .sidebar__status {
     background-color: white;
 }
@@ -450,7 +482,6 @@ td > input{
 .status__text > span{
     font-size: 15px;
     font-weight: bold;
-    text-decoration: underline;
 }
 
 .account__main {
