@@ -21,16 +21,9 @@ namespace EDiary.Models
         [Required]
         public int countLabs { get; set; }
 
-        [Display(Name = "Учеников в подгруппе")]
-        [Required]
-        public int studentsCount { get; set; }
-
         [Required]
         public int subjectId { get; set; }
-        
-        [Required]
-        public int teacherId { get; set; }
-        
+                
         [Required]
         public int groupId { get; set; }
 
@@ -40,7 +33,5 @@ namespace EDiary.Models
         [ForeignKey("groupId")]
         public collegeGroup group { get; set; }
 
-        [ForeignKey("teacherId")]
-        public Teacher teacher { get; set; }
     }
 }
