@@ -4,14 +4,16 @@ using EDiary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EDiary.Migrations
 {
     [DbContext(typeof(EDContext))]
-    partial class EDContextModelSnapshot : ModelSnapshot
+    [Migration("20220118072129_removeAdmin")]
+    partial class removeAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,44 +40,6 @@ namespace EDiary.Migrations
                     b.HasKey("statusId");
 
                     b.ToTable("emojiStatuses");
-                });
-
-            modelBuilder.Entity("EDiary.Models.Labs", b =>
-                {
-                    b.Property<int>("labId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("countLabs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("groupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("labName")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<int>("studentsCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("subjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("teacherId")
-                        .HasColumnType("int");
-
-                    b.HasKey("labId");
-
-                    b.HasIndex("groupId");
-
-                    b.HasIndex("subjectId");
-
-                    b.HasIndex("teacherId");
-
-                    b.ToTable("labs");
                 });
 
             modelBuilder.Entity("EDiary.Models.Lesson", b =>
@@ -726,28 +690,28 @@ namespace EDiary.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "7adc4b4a-6283-4fe0-b52c-b14c1607dd22",
+                            ConcurrencyStamp = "dc24268a-627a-4174-9fe4-4d431732bbeb",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "teacher",
-                            ConcurrencyStamp = "64a7e35c-dddf-498d-b042-541e09da9b15",
+                            ConcurrencyStamp = "3a62f436-ae83-48c6-a561-9aab6efe2a87",
                             Name = "teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
                             Id = "student",
-                            ConcurrencyStamp = "78e1d2c9-344d-4c16-89fc-f6ab32dee22e",
+                            ConcurrencyStamp = "b127466e-e520-4f20-92dc-12cf719b3f8d",
                             Name = "student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
                             Id = "headman",
-                            ConcurrencyStamp = "0ded8fd6-b6c2-4708-81a0-55f2c7e16b52",
+                            ConcurrencyStamp = "8cd531a8-4dbb-492f-a07a-9c33171f6065",
                             Name = "headman",
                             NormalizedName = "HEADMAN"
                         });
@@ -846,13 +810,13 @@ namespace EDiary.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "df712a45-2fd5-442e-b515-0d9fa61253b9",
+                            ConcurrencyStamp = "467742f4-eaf8-4a63-83df-2d4585f643bd",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000001",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPLnvWoso6Iz3mmImjZ3IHvu3Jcfnup67QaQl4LESYR4armBFWqNWzdEKAspPN5VXQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGPrBD0H6ZvMfLfRYSAKaDnNkiLHeEFeotnQPYdeg8r2lNtmmpU9Gi1S156iV91LNA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "be0784f6-1079-49ae-9a03-fa8d4c7816b8",
+                            SecurityStamp = "146f327a-de0d-4ace-baaf-633f6c82ec1c",
                             TwoFactorEnabled = false,
                             UserName = "tr000001"
                         },
@@ -860,13 +824,13 @@ namespace EDiary.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f4a67ce4-9492-45ef-b8d8-bf0e2fdb0ac7",
+                            ConcurrencyStamp = "7366406e-423a-437c-ac92-7046d30ba490",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000002",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBipJHvkgeHZt2/p50sDjOM/WAeujQEWXLJ/BEwAuNV4sbf2Y12ymPHmaP3cOApUeA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFS+e2MpJqVTyhH2YZeGXL/d1tGUPIW2vM3m0JQ9IF7eWfc5DTh2+sDs4z0xr5V2Xw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8e8b4d66-c31b-4d20-81ee-058fa37c0f5f",
+                            SecurityStamp = "b01ca4c0-52a3-41e4-9cb6-8e4280b50cf2",
                             TwoFactorEnabled = false,
                             UserName = "tr000002"
                         },
@@ -874,14 +838,14 @@ namespace EDiary.Migrations
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "66498cc9-6c4b-45a8-934b-89b00a9558cc",
+                            ConcurrencyStamp = "1889d36f-bca4-4d4d-a329-2e3f4c2a2d4f",
                             Email = "kuper2468@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000001",
-                            PasswordHash = "AQAAAAEAACcQAAAAECYyqJ7Vylct4KkNpsc6ekSFhT5RoKwocuDF59y7LggPgKgeMkkcU1nsJMEQmzLl2g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK2Q4SMllnJDr9BUSta2vplMZSB/HGmD77OjNsjqBlH905+jR3gQFMCQCRo8GfuTJQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "28f581ae-d6ef-474b-bf21-1fc6db671bb2",
+                            SecurityStamp = "c71a86ec-5673-438c-ac0c-8db470816409",
                             TwoFactorEnabled = false,
                             UserName = "st000001"
                         },
@@ -889,13 +853,13 @@ namespace EDiary.Migrations
                         {
                             Id = "9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b88e4f79-ff2a-45d6-af8f-f5de7908cb30",
+                            ConcurrencyStamp = "5c27f075-a788-48cf-af71-0cbf37b7e508",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000002",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHqHq1/6q+3DYGV/eLVZtyDnjI9UCCcOiQ0xPWNHEF44DMdeoUr+GYPNem74G7AaGA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOHwtiabCcLc8eaRG/X3HQoGtPkHFeKa34DcHXuA780MCRO3YotT7TDY3qtIBx6UDA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3331918a-3d48-4b33-a6a7-39ff83efdcb7",
+                            SecurityStamp = "2360c58c-aab6-48f1-93a6-9c73afc26004",
                             TwoFactorEnabled = false,
                             UserName = "st000002"
                         },
@@ -903,13 +867,13 @@ namespace EDiary.Migrations
                         {
                             Id = "4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b5be1759-f98d-4c7f-827d-94553c9d7d8d",
+                            ConcurrencyStamp = "915f30c0-4ec1-4e74-a283-6ad797f84643",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEO/KS+BW+/O3n/PZ4Qc6PZymYuG4uVr6M3oomXdgSC/Ir1tKQzDuIfC4EXnxIaeQGQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP8Bkxtk27GoCCP/oaz5o/BELCab3iNpZem2eARcE49irN8/DdHb9aNFn/I6lwqwUw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f91316f8-21cd-44d0-8a58-167e5dcdb299",
+                            SecurityStamp = "00c16e7b-c06d-4b64-83df-e3daef0b7c09",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -917,13 +881,13 @@ namespace EDiary.Migrations
                         {
                             Id = "5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cf5d166e-9062-473e-a42c-151c8d9acb36",
+                            ConcurrencyStamp = "4147f637-5024-4965-b5e4-4a5a4e5785f7",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000003",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDSLlqW7aYgl53GFhiFk60CcQN94O+XheyW9On27py1yfaZCKjqDg2kX0z8m9Mwziw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM222CP9ccsB8omTzIWiTKsFSmfLoZuEMafOUrFb7FZ/lQClN4Hc/8E6CXeNeWw+Tg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f867fff4-9f4f-4ba7-8da2-ca3c2ba85295",
+                            SecurityStamp = "5a86da4f-8b4b-4d1f-a528-1649037bdcde",
                             TwoFactorEnabled = false,
                             UserName = "tr000003"
                         },
@@ -931,13 +895,13 @@ namespace EDiary.Migrations
                         {
                             Id = "6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7b5a4fef-a76f-4440-954a-d9b5eb6f5a64",
+                            ConcurrencyStamp = "ba51c4ca-ca97-4f08-a7ce-6fc382e31fe6",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000004",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIRw1xo+EwpUxk8aK1457XyKINRxRAXMFGC4JRJ8EbwujKLc4kCeOe5c/y7CQlO9og==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAuAdqFfu31Tu0eyP+VkQrY+9AVnIfofYdR4sWymTKSKERAy5BXzVqBWzTblICFeFw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9e85df78-4711-4466-af62-5a68f2ba66c4",
+                            SecurityStamp = "0ae82b97-a375-4e56-8801-766d10c50828",
                             TwoFactorEnabled = false,
                             UserName = "tr000004"
                         },
@@ -945,13 +909,13 @@ namespace EDiary.Migrations
                         {
                             Id = "7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f86b7050-ce21-482c-b9bd-d517dcebc141",
+                            ConcurrencyStamp = "df486a2a-2330-4496-b670-39d5885b25df",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000005",
-                            PasswordHash = "AQAAAAEAACcQAAAAELSQ0vbWs+7tBDBeBQ8tatleG4HH1XoDerjOdX4bJdl1kndne35pnXq0JSgEMr5HGA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEO3vBTYKNWpwcteAtzZxG/31bCYfCDrPMSID61ADoEFniwmqy0o/N3lIgg+PE7NEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a0d93a6f-e618-4e27-af40-a13557df93ff",
+                            SecurityStamp = "52b2bee8-37b5-4228-8dd6-776181cc7689",
                             TwoFactorEnabled = false,
                             UserName = "tr000005"
                         },
@@ -959,13 +923,13 @@ namespace EDiary.Migrations
                         {
                             Id = "8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0e49e694-c8c1-4d2b-a8e0-73f628781bc8",
+                            ConcurrencyStamp = "d51066c8-b1b3-4d5e-a709-64b3299d7ec6",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TR000006",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGrsq4HkzbTfz5sB/OqAuMsN1esYaQrSRTyLfa4UA/QA5cbCyk9r3LvSZo5aJCeCeg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAHhBF2zsjaBKrU/Ra7KDVMBfUujGigCl/+F0DkS1IUW+2pOY/Z8mV4iJFznW1JGlg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c747aa00-6b80-4125-aa1a-a7f6bd6a8f23",
+                            SecurityStamp = "b1595c44-7037-4495-a15d-e0b539692233",
                             TwoFactorEnabled = false,
                             UserName = "tr000006"
                         },
@@ -973,13 +937,13 @@ namespace EDiary.Migrations
                         {
                             Id = "10",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d326a278-ce64-4935-be5a-e6f7472ba1be",
+                            ConcurrencyStamp = "d49df96e-af5e-46f9-b3ce-e9100a04999d",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000003",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN6w4hjpCPR64XBtRjj3i9oet/iQ8IaVwwC+zIrv+YvVo9TRUfnwebBubB19uGqSWw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBjB6jJEFC5yHwrOxXps2khnXNJnrAXknn5SoTprZmFbuhp3Ybe9Za2GmoIOEaQU1Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "18426a45-02e3-4e4a-a948-98608f6c3236",
+                            SecurityStamp = "bb78a0ae-62da-4287-a62b-6ea0e25ea458",
                             TwoFactorEnabled = false,
                             UserName = "st000003"
                         },
@@ -987,13 +951,13 @@ namespace EDiary.Migrations
                         {
                             Id = "11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6b136189-3e05-451c-bdc4-2b60d24fe9a2",
+                            ConcurrencyStamp = "a56dc14b-23df-409b-95e7-84088aa0c18a",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000004",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJcfPpvuxymizTazmCm/bWNNmdkhQwucnSUtegprQNnTRmECLB1sDHom13gY2fhRIA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFBviHFuKw2zoZjIGEGiqkIjQ7LpUc3hewEUtA6GR6d990NgmC39MQ9nPt48KuEdpw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3390be29-b417-4b9a-8c37-7c067d5052ac",
+                            SecurityStamp = "f98ae045-9162-460b-bafd-2292b3b4464c",
                             TwoFactorEnabled = false,
                             UserName = "st000004"
                         },
@@ -1001,13 +965,13 @@ namespace EDiary.Migrations
                         {
                             Id = "12",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d589d63-5ea1-4881-9da6-83744d4b55b7",
+                            ConcurrencyStamp = "921fa8f9-f184-4976-ba8a-b1ef169f57d5",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000005",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOOlVqR/J1AZPQ0wWgoEaSDmce+hopplazwouHphk0Yg/erBh4V53el8V6NlnI41UA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENn2a4SAMxTDS5Ru1CkzohA2/7y7GyZR7JpBG9rdaOX/n/DDQlNG6GXuq9253bDNVw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "73607b3e-fd38-49c3-933e-dd93e8ee2729",
+                            SecurityStamp = "c491d5fa-5326-4ef1-8e5a-db03ee10af37",
                             TwoFactorEnabled = false,
                             UserName = "st000005"
                         },
@@ -1015,13 +979,13 @@ namespace EDiary.Migrations
                         {
                             Id = "13",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "282d4e9d-a77f-4ad0-b08a-13a736048026",
+                            ConcurrencyStamp = "53bbda11-de9d-44cd-8663-29ddd224f0f8",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000006",
-                            PasswordHash = "AQAAAAEAACcQAAAAECVt/Hizhsuieb0emW0TyhCxMwi9JVq6IjZR5IYG5yslUSgIxcQjHDTYkAbBy9OvVQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJi6fbRs+K6rGPl93oIWrSh8kD3VcG/XCpiAqNwJC0CKc/mOP7JiPB3a4LnsNh/Y3Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ca31e3de-5a3a-4799-96a3-d2a6cb1c1aa0",
+                            SecurityStamp = "295c32ee-c551-40d9-a96b-fae651edb8d0",
                             TwoFactorEnabled = false,
                             UserName = "st000006"
                         },
@@ -1029,13 +993,13 @@ namespace EDiary.Migrations
                         {
                             Id = "14",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "208ffc87-7770-49bd-a4eb-d370cc42e645",
+                            ConcurrencyStamp = "5f552830-ae66-41d6-aacf-08da54bb5690",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000007",
-                            PasswordHash = "AQAAAAEAACcQAAAAECOU0o0QhN7cVXltWBTHdhHC5PjU0AJf7u4BPeeVJDQPGev1AL+8aqFWYIEv45v1rg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJfox93ac6TobCHcCI82jOlkjNE+A+z5QrvyWOJJuK5xvHIHdUaa4shY5mm0hGvQzA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "447e0a1d-2a57-4b03-b54a-85f67c925f13",
+                            SecurityStamp = "4c3e7fa7-30e2-419b-a58e-5a00db2717f5",
                             TwoFactorEnabled = false,
                             UserName = "st000007"
                         },
@@ -1043,13 +1007,13 @@ namespace EDiary.Migrations
                         {
                             Id = "15",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6e0a652c-e502-43c0-9f8b-9749c9d86078",
+                            ConcurrencyStamp = "ac49be7e-6639-468b-a0b3-f00710066397",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000008",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPLVyZrl4/DasigQcEZW23Q+86NO8jeBy+fFAD99Vz1QCGFrNw3RiGPUxhoYFYpKQA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGNFTc609m9pONSRjJz40FX1FhfbLNaTPYRLVtDn0vueaz1WnF7RabBk/cv+zafKkQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e14f5429-0d3d-4f55-9951-8391b6f67266",
+                            SecurityStamp = "7d47b8cc-38c5-4546-adcd-ea473c2fac4b",
                             TwoFactorEnabled = false,
                             UserName = "st000008"
                         },
@@ -1057,13 +1021,13 @@ namespace EDiary.Migrations
                         {
                             Id = "16",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "daf79e37-3008-4d94-8780-bd68aa1baf7d",
+                            ConcurrencyStamp = "f40ea69b-0bf8-4c40-9e30-3e224052fd35",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000009",
-                            PasswordHash = "AQAAAAEAACcQAAAAEALBO2ksAPJAUWEHb3ISf4AtLpizUGcU3aSTnd77O6Iy8YSD+ag+V7wqgptEZFp14g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMAZjXn1SQ7BwJF8hiw4LeyNoHY45PGBpHkl/svieQEu6yt+9IRWn8ySWFCd5mCDNQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "90548fba-578e-4abb-a30e-de278493a85a",
+                            SecurityStamp = "34c84afb-ea03-47f3-8a6a-b0f8f0ee7283",
                             TwoFactorEnabled = false,
                             UserName = "st000009"
                         },
@@ -1071,13 +1035,13 @@ namespace EDiary.Migrations
                         {
                             Id = "17",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "49b3d864-a5f6-447c-9f65-5a32b732269e",
+                            ConcurrencyStamp = "eb73e2bb-f5bb-41e9-be10-fe184e435b78",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000010",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAd4vRF+k8ROAzF1Vn8zDa/bVcM5VHe1+h6Kfj9DOK8KnXP3/bd3ZaCbLiMLPQxHww==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECcon0+4x4TxSnnOsG7mnV8A3ocZxcdun2Dwn2cyhnHIQ5z8qqvOV4bNFAyztnqPVQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "40208e2d-6bc6-4a0d-9a41-0e8bd473646a",
+                            SecurityStamp = "14d2e371-2dd7-4f61-a08a-17093d90fab6",
                             TwoFactorEnabled = false,
                             UserName = "st000010"
                         },
@@ -1085,13 +1049,13 @@ namespace EDiary.Migrations
                         {
                             Id = "18",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4e897558-5c6f-48c4-a56c-9374f0683ef9",
+                            ConcurrencyStamp = "94f0b837-c6c1-4b9b-9fde-b1caa5fadd10",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000011",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPoxb8HcVKjVUuAIt7UnW7p70p6g1+M8neI6J0ST168gr0+F6qM8QfDIQJdxG7m1HA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJwANywrfKWRqNoRMnPoDdFAsQ8EOyMw9g9XARpgutkQH2HHtWy4EtOliJh+PeJX2g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b9c7c3c0-1d0e-4504-904c-5ebeddc871a0",
+                            SecurityStamp = "99900d38-3852-4898-88b5-dff5881588c8",
                             TwoFactorEnabled = false,
                             UserName = "st000011"
                         },
@@ -1099,13 +1063,13 @@ namespace EDiary.Migrations
                         {
                             Id = "19",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7d5ced33-3d6f-4fd9-ae62-b75ea543b6c9",
+                            ConcurrencyStamp = "e29f03ba-b13a-43cb-8ed4-9c572845ef31",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000012",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEl/oTTUvFfH4yRzSYCHnrHGSnnxqH5TVo/kk+5tpnKi7JVNxOfCWCun0PewGm8/3g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM6OycJ6oQ17NwLQDkksGbs35mqugGAn0iTBIAah01uN/tPTaAdFxX4uQK3uOcwV9g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3d8f8688-e551-42aa-b164-cf2d83ec8b8a",
+                            SecurityStamp = "17315b5d-c1b8-4450-ac09-fc547887cbe7",
                             TwoFactorEnabled = false,
                             UserName = "st000012"
                         },
@@ -1113,13 +1077,13 @@ namespace EDiary.Migrations
                         {
                             Id = "20",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cf0dfb37-b89e-4768-bfb4-84b5bd9eef5b",
+                            ConcurrencyStamp = "58de0420-c49a-4b43-a785-1af979523545",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000013",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMI7hBj9RDsldH6LwOn0NF1fuo2x0cZXiZ28VuJgFHMsxSLygrFVup4eX3xBL9QA9g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEC7/9M7PgCgV4Y5Cw93glEuskoMOgvaj/vEE46/psGo9HUDy2j5/tshz6MOGTO2Z5w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7b7ceae7-ad19-40f6-8d79-cbe374a79124",
+                            SecurityStamp = "7f81efae-ca00-4b6c-9ec6-2669498bc7c6",
                             TwoFactorEnabled = false,
                             UserName = "st000013"
                         },
@@ -1127,13 +1091,13 @@ namespace EDiary.Migrations
                         {
                             Id = "21",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8906dc52-8353-4e32-94ba-a09af1c84f11",
+                            ConcurrencyStamp = "15ea3a68-aa84-4cd2-898e-6af84a0af07b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000014",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG5ZFWFXzSDKzgBP7TQR/MRkpSShhtH+ByF+yLj73NoVrgSJYrC6ayJeXgtBi8mYLw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECepAwW0drAwKAN08GswYhOukHsIJY7qUMpdcga1/I2doVTjKD+yoq/HI48NGIzLdw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5a489692-e638-4832-8c07-46ccd96f3d38",
+                            SecurityStamp = "f801f91e-0531-455e-8e64-5f6b401decdd",
                             TwoFactorEnabled = false,
                             UserName = "st000014"
                         },
@@ -1141,13 +1105,13 @@ namespace EDiary.Migrations
                         {
                             Id = "22",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ced1e848-5df7-4b3c-819b-ec68455ca6ee",
+                            ConcurrencyStamp = "6288aa92-7741-4132-9deb-fc9c3cd3c8a0",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000015",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAeNZU0VT5ehmojwHeCVy8XzSg27giB9af0hWubvX6Ww/SdiTnOFfVtb/kOF7c39Rg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB86xlQ2VyGznpeGTDOmzkSwhDn7fZJHo6u4lDFCU5Qa0pWmaIeDzCPfVQB1egt8KQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "79b08e98-bbcb-4a55-9cb5-1c5caa7be235",
+                            SecurityStamp = "0b893c47-227c-4236-94d1-30c1b4cc6510",
                             TwoFactorEnabled = false,
                             UserName = "st000015"
                         },
@@ -1155,13 +1119,13 @@ namespace EDiary.Migrations
                         {
                             Id = "23",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "66e7d96e-e9ca-468f-9982-08b77b8cc51f",
+                            ConcurrencyStamp = "309dfdfa-4914-476f-926c-e8529c038e80",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000016",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKILEkhOeS3M5sY5iS/6U3Suy/0T5eBW+iaO9zs6Z0ii2BhNMC9lFBpnmeoua8sY/w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECFMWgEvETsqRaDuS+yXa678PA7XrhfG/05fWRI0dXGzvTRvlbWqerxYOwNiIDxhvw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e49da14-d96c-4fb3-8cd2-608e754da375",
+                            SecurityStamp = "7eaf0c63-8434-42b7-a35b-96e48826d486",
                             TwoFactorEnabled = false,
                             UserName = "st000016"
                         },
@@ -1169,13 +1133,13 @@ namespace EDiary.Migrations
                         {
                             Id = "24",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fe930179-bf3d-433f-a7d9-417aad02547d",
+                            ConcurrencyStamp = "73a9b9f7-89fd-48a3-a08d-30cf1c71ebc8",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000017",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPIkc67RxkzkPWarasZWweMnEk9NDX9yj9t9tI0H669c7yGBEZvLE0/HuYxB2+YVTQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEtiN/SpAEiRo8JfYo2Fgi6YBcGaZiGdlAnYUQVTi1JX8z7R6xe6dk85Qs0TqnPs6g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9e072ef6-2b4a-41cc-99f1-abbe58ab20d3",
+                            SecurityStamp = "dd6942fc-3560-427c-abbc-fe1cb1728778",
                             TwoFactorEnabled = false,
                             UserName = "st000017"
                         },
@@ -1183,13 +1147,13 @@ namespace EDiary.Migrations
                         {
                             Id = "25",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "75457b03-11cd-44cd-8a51-9c6a08cf0860",
+                            ConcurrencyStamp = "2133acb1-14d7-430a-9d03-30675d779056",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000018",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMPxa3+ZcoKVXCP4FedH71GX4m8weq7OuOzA6ameyhVijbKpwCAHfxBiyeamm9fQAg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECCXEOz5qBYFVVTEqTuDLax/i6EaQgOAfsVmXZ9gzvZi+IO9l50gcae+HofT2epLuA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "26b6d6be-deae-49dd-a90b-511c2c39062c",
+                            SecurityStamp = "75d7c086-4f0a-41c9-9f69-e2b5fee65b53",
                             TwoFactorEnabled = false,
                             UserName = "st000018"
                         },
@@ -1197,13 +1161,13 @@ namespace EDiary.Migrations
                         {
                             Id = "26",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "195fb3fb-7bd7-4c3f-a268-f1686497fc17",
+                            ConcurrencyStamp = "ec36fbf3-dccc-4882-ae5a-3df2d533e151",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000019",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB3217jwbsiLEL7SsMyLtCv9Dul3x/DdpOyixBQVb2rLEW47ihfl6nUW9cLON2xvLw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIIeWo9Eix334PYK8/0pcpahZhXLMZC/16QDGEhNXX32BZRHjppt1YOVTbGk6kKXgQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b400f8c5-925c-4ee5-ad57-899940da4efd",
+                            SecurityStamp = "1bff38d7-6c3b-4cde-8389-0a4af31dc6a6",
                             TwoFactorEnabled = false,
                             UserName = "st000019"
                         },
@@ -1211,13 +1175,13 @@ namespace EDiary.Migrations
                         {
                             Id = "27",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cd4a7d3e-a5b5-45d1-82b6-0a7ddb7d882b",
+                            ConcurrencyStamp = "f9cba8fc-a723-4c78-a5ee-3ad93fd4cd99",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000020",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG5ISKxWwMnpmwhdbY44D2eHo2K+t3g6qmsU7f35F0chUobjaeyLq3AguqzPul1dnQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOZrz9sm2vn+FtsOcF9Mc+f991v3BdYrONQs7EklqLxbvMOfNGpc5xsj+IBoGNByNA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "435b3f84-ed3e-4451-b2c3-fd0c450e1a94",
+                            SecurityStamp = "e22542d1-6e78-44c0-83d8-76546d28edb6",
                             TwoFactorEnabled = false,
                             UserName = "st000020"
                         },
@@ -1225,13 +1189,13 @@ namespace EDiary.Migrations
                         {
                             Id = "28",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7e94f197-470f-4527-9817-9fd8b69492e1",
+                            ConcurrencyStamp = "02b8a4ab-2109-409a-afcb-fdd2a7789a1f",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000021",
-                            PasswordHash = "AQAAAAEAACcQAAAAED4asMmXP0Zwl0d87ZTMCtzUUqyerQ+pcebHnv/OpEev5cVbXjYea2XIUB0l3v3D4Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJdfy6Iafc7mf/UtCmpkJuAPwlt5ek5jtv64VNAN5c0OljGFzACpV9Ix/mgP05ggSA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3d59e128-a733-4fa6-a5ab-73050c1f6854",
+                            SecurityStamp = "08c15f59-19e4-460e-a83b-bb47024db26c",
                             TwoFactorEnabled = false,
                             UserName = "st000021"
                         },
@@ -1239,13 +1203,13 @@ namespace EDiary.Migrations
                         {
                             Id = "29",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f144eaab-d3d6-4f77-9f66-0dad5c919819",
+                            ConcurrencyStamp = "8c389e39-aabd-4cc5-b1dd-b3a7b68fd7d6",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000022",
-                            PasswordHash = "AQAAAAEAACcQAAAAENKQq6FA/OxY7te1SnKKZoM1eDEqRBc9JKf50xWIazdQmWuu9mopr0h/gKtmuxLbJA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF3OymexBDEuBqJLHaBbsqt2A9l6ij/Fb8QgzZllgfvBGqUc5cFpadeyCnb9GFm7sg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6ae9d8be-c401-4a06-8973-cc6ba168bd8d",
+                            SecurityStamp = "3e2c34c9-93e6-439e-8641-3b6de1ac8ac4",
                             TwoFactorEnabled = false,
                             UserName = "st000022"
                         },
@@ -1253,13 +1217,13 @@ namespace EDiary.Migrations
                         {
                             Id = "30",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bf9d8e5e-d438-4f8c-b91b-56e8c58afbff",
+                            ConcurrencyStamp = "7161173a-fa4b-4dac-9da3-c33838b46895",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000023",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEy8MgOMVzyuQib08+JbCwJkoESGrKUoJmypsDSPG6RdhDWd6IgPKFPP1leLil81yw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELRFZ0ZIv8wFuG37rSGtmQGckqPr7TJTpBRMqiAKGz1S1Zf9IgZyskZpTA8ETT0ALQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d664c7e9-86b3-41ae-9c0e-a921f8637afa",
+                            SecurityStamp = "cbb9927f-5ea6-454d-9f7d-2a0cf255af1c",
                             TwoFactorEnabled = false,
                             UserName = "st000023"
                         },
@@ -1267,13 +1231,13 @@ namespace EDiary.Migrations
                         {
                             Id = "31",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8b78aee5-32bd-438d-9182-8dbca3d3506d",
+                            ConcurrencyStamp = "eebde0ba-aa68-488c-a375-8875676c66a3",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000024",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOojqKnPpbP/zfCnY7McvN4CDksIvGilsysz3cIwC52u5Cfv38ozJl/9bD7afeKoVA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKgec1RbsxDDVP5sOwDghDjolFbYLVMaFhxKIwSDbJva3DjSm9m9S2THrYwPBA5a0g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2fadc3e6-7820-4881-9ae3-856d6199b48e",
+                            SecurityStamp = "ef7f76c9-813d-4b96-a495-969079577727",
                             TwoFactorEnabled = false,
                             UserName = "st000024"
                         },
@@ -1281,13 +1245,13 @@ namespace EDiary.Migrations
                         {
                             Id = "32",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d8faef87-d85b-44a3-b4fb-d9e216376f27",
+                            ConcurrencyStamp = "bca0882f-fa47-4329-9e50-0aba8920e731",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000025",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP6KUwpyZxMx/Dt1DdwiEDY1WfgIfzPyr9yDjpRtwp2dYedPsRYrDcP8OIVleWEu0g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEDjvxj0MU8FBxKARJtxaiVm9Fv+lxfhwW2QLZVXBpgM7lixWXiDQl+zbw32WlSnqg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ecb88549-c45d-4b2b-a564-1c4a5b705a6e",
+                            SecurityStamp = "9701200c-f176-41bc-8a0f-4105f847bfad",
                             TwoFactorEnabled = false,
                             UserName = "st000025"
                         },
@@ -1295,13 +1259,13 @@ namespace EDiary.Migrations
                         {
                             Id = "33",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6fc2a4d8-54c4-42dd-84c0-66d9b72eceba",
+                            ConcurrencyStamp = "83783be9-df5b-448e-b580-3ad1308975ed",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000026",
-                            PasswordHash = "AQAAAAEAACcQAAAAEE1WspBoc3VVrkfkSga9w3dYIlWoI3+oEk7I8rxpKWH5H8ID1ZWa7FTt33KOGLrVGw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDhTjNCGQm7wp4ImUP4nRVgvfFq1Re4MI2/FyUYQDS2QCiUCNfmOlpnc9L1O63UWpg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "beb0f1c6-1729-4116-a10f-ae2794ca19b9",
+                            SecurityStamp = "663f8a95-0835-4b7a-8abc-cf2fef455dff",
                             TwoFactorEnabled = false,
                             UserName = "st000026"
                         },
@@ -1309,13 +1273,13 @@ namespace EDiary.Migrations
                         {
                             Id = "34",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3a790784-8d3f-4c19-8695-0bf6fc80213f",
+                            ConcurrencyStamp = "0ff91e95-471b-4832-807a-1d28f7a9477c",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000027",
-                            PasswordHash = "AQAAAAEAACcQAAAAELRcIgMHN3JIT2Wm63QxWEDzbILWGe0qM706f0hwNgSMi4tK5bl2lE2YQCISuYr94g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKmhNBNenBejUVLMbqkb2ckAEWNxUEPEY/vLrdjfbyEEcg2FfQ7+0zkAzfM06smTjQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6a7ffc63-7041-4668-9406-6312ce677f8d",
+                            SecurityStamp = "3dccde10-7409-44a7-a77d-f88bd06020e0",
                             TwoFactorEnabled = false,
                             UserName = "st000027"
                         },
@@ -1323,13 +1287,13 @@ namespace EDiary.Migrations
                         {
                             Id = "35",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "76dd7d15-7418-4087-b0f7-569c5b3fa29c",
+                            ConcurrencyStamp = "590cfdc7-5a57-4266-b337-af0f44cc26c1",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000028",
-                            PasswordHash = "AQAAAAEAACcQAAAAENNR5UfwD2pilayTuRmAUe2jYwmwqe/D2qWqKQ42vSdltu7dEQglRGMKUP6pt9jbYQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAGE3xCW5j6PbbGFbiDmkjzpFM73DtNgAIZsM3R3EZbEJUbQoKjN53Sto3Q8aZe+Yw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4a3fe050-203d-48b0-a559-39ca15047b5c",
+                            SecurityStamp = "040355fa-630f-4104-ad52-54562fb4070a",
                             TwoFactorEnabled = false,
                             UserName = "st000028"
                         },
@@ -1337,13 +1301,13 @@ namespace EDiary.Migrations
                         {
                             Id = "36",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9d0531ff-ffaa-4c61-8e46-169adfbd82d6",
+                            ConcurrencyStamp = "1a1f6683-977c-4cc5-9472-e61b95043f16",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000029",
-                            PasswordHash = "AQAAAAEAACcQAAAAELgrFAPqk1fNb3UbxqkyIBrX6KYM046CHO5cTVVdOg256OTVZkPy7qilxyLub2JiRg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN1wTbM2hWDHitke33qSTcfohWr8J7ZM29RL7K21cyztXIBXol6ApjCrxhSZhp20Eg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1052af17-b375-4337-9af3-883139b28a1f",
+                            SecurityStamp = "4116139a-6cca-4cc5-ba37-61051e5b0a41",
                             TwoFactorEnabled = false,
                             UserName = "st000029"
                         },
@@ -1351,13 +1315,13 @@ namespace EDiary.Migrations
                         {
                             Id = "37",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "377b6add-830c-4e35-87f2-4f51b17c1578",
+                            ConcurrencyStamp = "a1174317-f6bf-453e-970c-7b1bcfc7aa17",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ST000030",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPWY/BZblD/yEhs+gJ8jVfYrvLqDkDUP0jYTlXGal2dLrUoiKzq/tyOm1Q3kwKsL3A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOpAmXZ/r05UjLKki2hgFepzDPkIUgv44koh5PdHEx3AIN9ANdnaiXQqvK2rOCf3yw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "016c9b42-5e8f-4e0b-a79c-a48a6d5ff991",
+                            SecurityStamp = "af768f35-b200-4b89-8074-43e89c94adc3",
                             TwoFactorEnabled = false,
                             UserName = "st000030"
                         });
@@ -1441,33 +1405,6 @@ namespace EDiary.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("EDiary.Models.Labs", b =>
-                {
-                    b.HasOne("EDiary.Models.collegeGroup", "group")
-                        .WithMany()
-                        .HasForeignKey("groupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EDiary.Models.Subject", "subject")
-                        .WithMany()
-                        .HasForeignKey("subjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EDiary.Models.Teacher", "teacher")
-                        .WithMany()
-                        .HasForeignKey("teacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("group");
-
-                    b.Navigation("subject");
-
-                    b.Navigation("teacher");
                 });
 
             modelBuilder.Entity("EDiary.Models.Lesson", b =>
