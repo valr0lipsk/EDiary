@@ -3,27 +3,356 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EDiary.Migrations
 {
-    public partial class addLessonLabs : Migration
+    public partial class addLabaLessons : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "labaLessons",
+                columns: table => new
+                {
+                    labaLessonId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    lessonId = table.Column<int>(type: "int", nullable: false),
+                    labId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_labaLessons", x => x.labaLessonId);
+                    table.ForeignKey(
+                        name: "FK_labaLessons_labs_labId",
+                        column: x => x.labId,
+                        principalTable: "labs",
+                        principalColumn: "labId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_labaLessons_lessons_lessonId",
+                        column: x => x.lessonId,
+                        principalTable: "lessons",
+                        principalColumn: "lessonId",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "admin",
+                column: "ConcurrencyStamp",
+                value: "93c1e50f-dde7-4b88-88da-a47304cf24c7");
+
+            migrationBuilder.UpdateData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "headman",
+                column: "ConcurrencyStamp",
+                value: "ad1939c9-4ee5-4ddd-9d26-652d68b9856f");
+
+            migrationBuilder.UpdateData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "student",
+                column: "ConcurrencyStamp",
+                value: "d3c9ef5a-34b3-4a05-8d14-5b56a0bc86fd");
+
+            migrationBuilder.UpdateData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "teacher",
+                column: "ConcurrencyStamp",
+                value: "cfb2de11-b7d8-4385-8b73-c2ca02b3939e");
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "1",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "ee14e867-983b-419e-8dd7-5a7941f4c5eb", "AQAAAAEAACcQAAAAEBotrkK/NjD4NMx426YKrAKkYMlw6XoeMefxU8F9w2d+FtQ63/BYr0Lz3wW2Uj0dVA==", "c5930c59-ad8c-4e1d-b01b-a5a48745d9a2" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "10",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "3b16c847-02b2-4ce6-b062-5cebb665a67e", "AQAAAAEAACcQAAAAEHJaujxQ5mrqiTWBdS8Mix9HFfI5PWx9Ya2GM2lTXRq+stcCb5b7K7P35a/NPMIPNw==", "c9ce6dd9-79de-49cd-988c-919379a3e84c" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "11",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "b8698b06-327a-4f3c-8386-be159036aa3a", "AQAAAAEAACcQAAAAEHntcOYhJ+PUYBxuXZ3OCf9URqIIx5EOW0O47zBYmIoBgydy0s5paorj4gRBMJaPjw==", "ab5c8314-16ee-4303-a34f-e8677b0edacd" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "12",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "d3c55ffb-3d52-4495-ab59-4c38967e5f7f", "AQAAAAEAACcQAAAAEM9t5UgvVHa7n4EQuiFkB5oNi/kUUsROErX5tK/ZY//aizpEJGqo4lHbGIbSr1J8Vw==", "8da1593e-f431-423f-9ec7-4cfa0148930f" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "13",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "5ec8b96a-3232-4e86-9361-3de96d01c404", "AQAAAAEAACcQAAAAELEbgPwCNNMAN8DhbpP17jpk2nsCfofkiG2Mdkw18Q3+J06bbufltS/mEyUvB1h1JA==", "2c88bea6-5014-4f20-bf0b-3d4b9d72017f" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "14",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "be040f6d-8cb1-4979-8125-5592c9a5cba1", "AQAAAAEAACcQAAAAEM7Qj7/38XzgfupuVstxoFiz01upaJ3jpX8Z+skzx50NLT+a7ALLnBzWjLRkpliugg==", "19dc97f9-6496-436d-a59c-755f472f7d6d" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "15",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "58c695f4-313a-43d7-ae6f-f8c5c804bf2a", "AQAAAAEAACcQAAAAEEHoxQU5ijUJqFXV4HrqwtU64i7SVB8SlOLkxBlFjZrDpx90oAb93A4lJN8dmbI5Jw==", "a4cec7af-77fc-49fe-a69a-4674ae64acb1" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "16",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "e450b9fd-770d-4ae2-8fee-2891d6d8b700", "AQAAAAEAACcQAAAAEDv8FfCtGTsr9e5GTb3Ox5xZoFpHLrXpvFEqn1m1lbiuvFsoMTQXltlfToCjoAy2IA==", "4de97fe8-f762-4d61-a75e-fe9c443171fa" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "17",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "f05bacaf-d69b-4910-afda-ffc28a20db55", "AQAAAAEAACcQAAAAEL1KGSmjQyXU/K5tejFb+YjzjmNE/qEFdNEV2AmySWbxZYuEPYYyl48wW3auXMR1sA==", "c322a80f-c120-4b68-8b5b-7aa512bce45e" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "18",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "97191813-03d8-4182-b332-5cdb43cc7798", "AQAAAAEAACcQAAAAECpAVO8cVgx6JY3RYTw7Z39xp3sn2skk+9DCIF/k3IYa+Qczc03dm7T3Z7ktNAf+AA==", "f69962a2-ed8a-4228-8494-157f9ea0f616" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "19",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "dc483d82-d597-4ff8-b399-6e680da15c0f", "AQAAAAEAACcQAAAAEJvQ3alolQYmdMa9z5YDzAZ4z0H+UQGtcgPlQwTFUlPkRzTg+HMCE8OQpNM6ynnOHA==", "e5c6d5c6-a8e3-4daa-9b66-405931caf35c" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "2",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "1a8cd34b-e1b6-48bd-a3c9-d470c6f17503", "AQAAAAEAACcQAAAAEPfKnYhOgKCNf3oo3Mzin6On7DDnLpZEMa6+kX57VDmJi5GM2NWriT3IZCiwsMfytQ==", "d31c33c9-2079-4067-ab95-b71a8d5fe765" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "20",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "8f6161dc-86ca-4815-8a6d-e653d6bfe1db", "AQAAAAEAACcQAAAAEAsm7y4/cgsbrKZO6OMzj/zXBy3y8lDaXWSOvNSxdA/ETufC8RyoU2t8dr7Gf6a4Fw==", "e1ed26df-f51b-4a55-81c2-0c88134b0dfa" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "21",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "7e117d60-c044-4894-8062-0fcb2590f98e", "AQAAAAEAACcQAAAAEDkFppTx7CIPW9pprmqGPQRXselC0Hp/9PeeJgoNEUIDghUupIURqTYl+CynQHq5Xw==", "71365174-a2bc-43a7-bd25-576f9db4beba" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "22",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "a1cd9d64-06e4-4b5d-94f7-09abc86d7b28", "AQAAAAEAACcQAAAAEGvZfpycMJdpSOkKw4uAdc1wo+9k+Gs2NVd8PzxYntVKGMSD0s+Txb5rVCcbBBv05A==", "153931c5-3c24-4757-97f6-51be96c32664" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "23",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "28032d7b-5d72-42a3-aad6-70022195477f", "AQAAAAEAACcQAAAAEFhG1JNfFo7BXdkIftpGZZozdM2lRipjEVIH0gVnqsns6gmF1OoENkLiecKHZ/8jMQ==", "ff5b7ecd-3f14-4a0f-9903-460007f7a591" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "24",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "03758b6f-7a2c-4026-b0db-f15c8be9ab4f", "AQAAAAEAACcQAAAAENI95PFpX1lPInnhd2vz+SsUADsjl+VO++Q/33oNm8aX3n6TMIVuRZ0JjcC2QuA/wA==", "2169609e-f4d7-4388-ae88-5962a6e6c115" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "25",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "5aeab7d2-6528-4182-91b6-dc3d5b838eda", "AQAAAAEAACcQAAAAEAsCyiikROwSFtKSPUhGfXfeyIi39LDesxEdhJdYfp7w6ZsgfT+ExpUgERRwhuozDQ==", "12feb7e0-3aec-49e4-ac2d-b7b2e0b724b7" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "26",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "72fdf86e-a54f-4513-a491-de3b9205a628", "AQAAAAEAACcQAAAAEKfO1CjxOaVJiA3o4x41xP17dowMKAE86F6Tud11Wc94Z+rSTPoO80cial4bxPITVQ==", "b3a66837-adbb-4456-9eae-5a8ec47eff73" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "27",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "2520ff33-75b9-4fb0-ad08-306db4db8a44", "AQAAAAEAACcQAAAAEDj+EDbVhI/otDM0SI4S1q78SrnMLwi5ACPvZfHv/te1axwI/rFJ6c9M3kZn2+yFmg==", "b6401108-4e75-4c0e-986a-42adadfd79bf" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "28",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "a0eed05d-dadf-437e-aedb-3b52fb397ebb", "AQAAAAEAACcQAAAAEG/Pm6K2kHDy3spCsHqq9xUSdMN9rFJpsTAgOBBDEN9yng6p72BtyuBuyGiSe6W13g==", "31905e5f-26de-4048-a6c6-dc48a6c8f246" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "29",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "cd48434d-ae6f-4f9b-9381-3859a62478b7", "AQAAAAEAACcQAAAAEMu63u/BtEYdZGw2qfIG9dKTnQ0vHVDDs5iffWuaiR94ca3Jrp6JZaq3lgLgt0e3PQ==", "70b40946-8abe-4180-bee2-928997ed6bc5" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "3",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "dc013291-9070-4522-80e0-eb33d2520b36", "AQAAAAEAACcQAAAAEKouvEAZMwd5kro/l1CSnbYipOn+Vh0hVIYxpKydfaMJSvcBE7LCaYa4pHSvZicl/Q==", "74558db7-1bed-4273-9999-f0a9f179147c" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "30",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "96c1a1c7-75b5-4e81-89a9-b12c60a03ecd", "AQAAAAEAACcQAAAAENGbFG4OhB3NXpkZRl37jtDA0O4i4P6iSwFMfYr1TJRe2vZmpfTcYGxxdUxCJWvtAw==", "59246432-2881-488c-b780-37dd04280d68" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "31",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "ece32ed2-1c41-415f-8264-c6bab66aa3bc", "AQAAAAEAACcQAAAAEOWzUgNVxXCq94XLzPvFOs2/QZV3Bp4mbtfK7coNhRf6VPdEn1j6txNdRBJlo+QJeg==", "e4c94823-13b3-4337-8975-bda1c1cfb6f4" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "32",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "3452403e-d780-482d-a581-044e821fe234", "AQAAAAEAACcQAAAAEO0L8l4IQew2wPJ7eCW800+tb2kEC+sJi0htiHXYHPFu8Y7w5bl6V1BaNJmmycX0OQ==", "a1c7794e-5da0-4386-8ded-728ec9e500b7" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "33",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "0fc6df54-b0cc-4fdc-8143-d5e394bd1016", "AQAAAAEAACcQAAAAELaEia4e0NcLkrVz/ue7EwBORyqIJ875dsSO3IB2vdNeaHCFvYbY3B3Xhn9DmcT1LQ==", "925c2c70-89cb-45c8-82a8-86d82886c791" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "34",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "7bfc2a4f-c649-4b2d-89bc-f7537a1747b4", "AQAAAAEAACcQAAAAEF9oyBZ5OAcTpo+Toq2hBhMIxiKM/ibiYmeBiUOjVHudHuFy0GENnZ2zb7jvBg82VQ==", "f354e442-3d41-4f0c-bcbf-d988786858c2" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "35",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "062d0799-4b9f-4c63-9a2d-29ccba765c9b", "AQAAAAEAACcQAAAAEBNLk1BPtzjaIIg9r3sLoQVi7MOQ67fUMXRr5/+Bbl6uXuGzUyo45K0dH9TIyzPhyA==", "c618692e-f5f6-4149-a57c-0fb838d041d9" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "36",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "ac7db78a-f332-4a32-b89b-041b7cb8c4a8", "AQAAAAEAACcQAAAAEHUwUmUuoglli0tIF62wXNpt62CGcaQo+u9pMg7PXI4FMXxfW47HpXrYbRHu45p7cQ==", "e328d097-8093-4fb0-8822-1b76edd3833a" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "37",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "5dc88dbd-1e77-48ec-9440-cdcd689e98cf", "AQAAAAEAACcQAAAAEN3tdIsodbbKVp6QmK54nov6eixiPlvN+yfwLBzdgc87uUxuqFTvwU2+Q3Fiv7VIJQ==", "24c2716d-f75e-4591-88a1-2709892ef105" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "4",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "faa8335c-e849-4709-8bd3-063b5b7012ca", "AQAAAAEAACcQAAAAEGAIZWcezXNfHTG7yTr5aD84tTcVmlICh5BMYQxxWnUmbixhKo4NLTKWQc9h5m/cEA==", "60973ddf-ea3f-4931-8864-68b0c3afa950" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "5",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "400af7fc-b2fe-4e44-915d-40254d824f60", "AQAAAAEAACcQAAAAEIoHDeNUjcbJY+6Ya3edU26C2jYG1ziqjKpHsLiNGlnkKS2+M8zG9TcMC3zQlsjAPw==", "f08af644-0fc8-44fb-b6b4-63c9bf15fed0" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "6",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "f5cfdf41-f6f2-49a0-852a-b35c2eb5da67", "AQAAAAEAACcQAAAAEJCzoKeSboS7W3BxfeZf8Tyoj7CkIC0KFFOU9CKEvE80W7r9MJ4PDYhFqAg250+c6A==", "bfccb71b-30fd-4dba-acd1-bce0497a7541" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "7",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "9e59f553-e91d-429d-8eb8-cb1c1f9dbea1", "AQAAAAEAACcQAAAAEHMav3c7iNxK47Yd0C9/xW+Jah4UqFkNIMseDafEZWsB5Z3UnGJTOKXaj7sAddZ7AQ==", "6296bed1-aaaf-4493-96f8-8eaf28b85075" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "8",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "97425315-cc52-4ded-a60d-3b181312c527", "AQAAAAEAACcQAAAAEEo/AP9guHfXUM470SWjPjzebasM3KPAp3c1w7T4tTUg9sltaZHLv3dXR6bJvmWLgA==", "2bab2c04-a365-41d4-951d-cc8985b859cf" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "9",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "ad2da286-f43f-4fed-b466-d2a6a6228c3e", "AQAAAAEAACcQAAAAEOQPzz5PMmVJPVx/+dcyp+v7E/h7b4yfhwgXSjHmtKH/PPWHxoLKwYIhoWKFIAIRuw==", "fefcb4ff-158f-4f3a-aa11-ccbc5ff59844" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_labaLessons_labId",
+                table: "labaLessons",
+                column: "labId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_labaLessons_lessonId",
+                table: "labaLessons",
+                column: "lessonId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "labaLessons");
+
             migrationBuilder.CreateTable(
                 name: "lessonLabs",
                 columns: table => new
                 {
                     lessonLabaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    labsDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    subgroupLabId = table.Column<int>(type: "int", nullable: false)
+                    labId = table.Column<int>(type: "int", nullable: false),
+                    labsDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_lessonLabs", x => x.lessonLabaId);
                     table.ForeignKey(
-                        name: "FK_lessonLabs_labsSubgroups_subgroupLabId",
-                        column: x => x.subgroupLabId,
-                        principalTable: "labsSubgroups",
-                        principalColumn: "labSubgroupId",
+                        name: "FK_lessonLabs_labs_labId",
+                        column: x => x.labId,
+                        principalTable: "labs",
+                        principalColumn: "labId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -32,585 +361,292 @@ namespace EDiary.Migrations
                 keyColumn: "Id",
                 keyValue: "admin",
                 column: "ConcurrencyStamp",
-                value: "43ec252e-719a-4519-89b2-7f8dd720bb0f");
+                value: "84104525-a4c0-429f-b036-f9a3e4b4e78b");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "headman",
                 column: "ConcurrencyStamp",
-                value: "1a4baea4-52ba-4142-81e9-5767f74b43e7");
+                value: "a4b539f5-399e-4d55-9bfd-76769721d2ce");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "student",
                 column: "ConcurrencyStamp",
-                value: "8e0d5b88-4604-4cd7-9ad4-4b937c04a527");
+                value: "f3d6be97-d1d7-43bf-8668-d244274477df");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "teacher",
                 column: "ConcurrencyStamp",
-                value: "6ac35026-1dac-4464-8553-beb218730a47");
+                value: "6e4ae1d7-a066-40fd-9044-3e43d9d9e193");
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "1",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "6edaa3e6-1787-4018-a0c7-580865308592", "AQAAAAEAACcQAAAAEIUHafngnoCRvKwq6ajYR20wpI2R0LqL6kggFVlfDJp9P2wWDdBCxHj+6QqaNYF5ow==", "039f84dc-f66a-48b9-ae84-e16e62795e0b" });
+                values: new object[] { "4ad015a8-068b-438d-a024-77d79d33e9f7", "AQAAAAEAACcQAAAAEMbAlsJKPwOon7nZof++robQh8R4HK3LTYEMvdsABfWWyNBYvCSKds/zVBqHWEmvlw==", "9fc0d4aa-4531-4d18-bbb0-eea633e857a2" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "10",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "49000e03-2adf-438c-829d-f90cee9e50e5", "AQAAAAEAACcQAAAAEC6cubXS0PCZC5GKNneLITfVnaPyhCCho6FV+HQQ5zRbkfq4F4THa5LytvaVN62HFg==", "21162e12-1992-40e5-b961-af148cafa0cb" });
+                values: new object[] { "1e155878-bbfb-4e56-8584-251bc41fa9f0", "AQAAAAEAACcQAAAAEH/3qjgiYPQrLjrMhjau84gkv1cO/LnJoDcT/Z3lPp0a+nV95lw6gTTxEbWQ6/HjnA==", "199bc94c-5006-44c3-8e0e-7e1213d9ef8b" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "11",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "bd306846-a5ff-49c3-921c-5f8a73532eae", "AQAAAAEAACcQAAAAEFpNROI1zN7Mf5UcNzl1tZex3FRDvA4aEnZzUaroEbB54T/SZu9kISHHq4GSmZeUhA==", "2b50f12b-a86a-4c5e-b22b-878d7b2cadcf" });
+                values: new object[] { "efeeadab-6f08-4d01-a15f-863f38d03e95", "AQAAAAEAACcQAAAAEItYXq7nFxSN8gd6P0EGJejPUz6TRAhFDTbLjZ9ZyIDzTI6vtuFMRuPqJ3KvbJpd7w==", "e0776a44-9e41-4038-92c8-41638570a249" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "12",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "87b04d1a-6639-479f-aa5b-1d60d117abe8", "AQAAAAEAACcQAAAAEBXmZjHncXLSViW7keKSYL06U+Zy9qHzRDt3yUL3Id4VPhdfnUzCvwe3ABnIyoD3iw==", "ce425399-762b-480a-952b-5657b6f2d46b" });
+                values: new object[] { "1cb93429-c463-4ad1-a821-f9ec88700dc4", "AQAAAAEAACcQAAAAEGwKrFFtPg/dLrSLsw6g9I3i37SEDYBLrUafdwHwuJVM8XDY0DT3B00hV4UKdh7NVQ==", "6baf70a9-77f9-47c8-8956-f5989f53bdf7" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "13",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "7c706c45-8454-4abe-90dd-9dc427181bd4", "AQAAAAEAACcQAAAAEOHVeZsBqPX8dlUnxLZ5a1iKUGwmrxqC+xMK/8fRsK2zeacILoS7IFauwPOFUL4IYw==", "076832e0-3b19-47c2-8dfc-41394d9e2d2f" });
+                values: new object[] { "3a13381e-e090-4839-b9ff-68bb5cabe922", "AQAAAAEAACcQAAAAELAVXLWgB2zdQ8U32HL4VmS7dlGBS+lD0kQFNEAne8fn/E3stBj8DvY3wkIyyXZuJw==", "5af98b1f-37fe-4f46-8687-db557c9df92d" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "14",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "f0395985-57c3-426f-90f0-64eee5ef3de4", "AQAAAAEAACcQAAAAEIqW7qmoe8bEr7MQkQGkSzz2XRrFvL+P8o9znS28fVa/7VGkAi3b1WlT6B/Az8JwGw==", "690bfd57-4946-474c-af9e-a9c23d33bc04" });
+                values: new object[] { "727acec4-8243-4a64-b4ae-f8e78d0d1270", "AQAAAAEAACcQAAAAEFpTJ27GW81Me9RWbnMjE6LI/LEFtAhEkRvm+6VX2b24phzZvrmh9kNH2ErghrOABw==", "b40f0954-f2e3-4fbb-80a8-b233933dc9d7" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "15",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "d08fb488-106f-4272-8951-7ff8277046b9", "AQAAAAEAACcQAAAAENTHCNSCuXj4zQk7FNLvfj4euFTTiDDtF2xJkXER2rX+a7j7i5kyraEXl3yOZWvS1w==", "26b614c6-51c7-4034-abb6-fc8a3ab58232" });
+                values: new object[] { "2bd04413-b038-40f7-873c-dff3c84d0305", "AQAAAAEAACcQAAAAEBG1EKqY3XoMtj1W76rDbseNqgQ7tFgYATh91P3S6CAVPWyZOwdNVjYjoiVGQc4SNw==", "5b6d78f9-e4d9-4725-b72f-e599b63238a9" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "16",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "27513e86-77d0-4ae5-b6a4-7674d59c9d3d", "AQAAAAEAACcQAAAAEDGIwCLIp5FJOvZStAD+uePj37rIuikJ/MSFLtuEZax0VKNq65JapbHa2Ykue1p7/g==", "9d249fc7-fbbc-4b7c-917f-e1498b3cba11" });
+                values: new object[] { "ed308e38-ba79-42cc-99d6-c01fa9c67599", "AQAAAAEAACcQAAAAEHVHkQmprTgpPiSVw/ArfDIS2Io2I8DxIbasDezMbvwRCiXMoVVH8pNfzHvw99/jRA==", "aa4f5100-0129-45ce-a706-892a2b2a6b47" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "17",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "d0b01138-9d9a-477b-99c0-9c5d9dc76d14", "AQAAAAEAACcQAAAAEDeZhM89Bxalhw1ceexkA1P81o/SwDk4pYKf82LO6dsCAbDzo1W1ydQHO9UqSE/EhA==", "6aa31e49-44ae-41ed-bf4e-a88fd69f5b8b" });
+                values: new object[] { "fd08f843-812a-4bbf-9b52-362ecb91a20a", "AQAAAAEAACcQAAAAENchyIey2jChAsxpzj3+IiKkAGZvleyzpKN2cBCfZjpKHuSWfiieFznwKnkUrGn/nQ==", "11fef003-e03a-4c91-89f6-2f5f7598b7f0" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "18",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "2f82517b-c73d-4f63-83da-cbae2952b5d5", "AQAAAAEAACcQAAAAEE7z4Euc5WBiNJjSWY6FR9+gyEZ6df8l/8F+wtxJ4mIRBUzVhLnAu9zAbTLibGAlzQ==", "52389418-5867-469b-bf9a-b8f27b534ce5" });
+                values: new object[] { "191da90d-da92-4ad9-a55c-cc2d1a4dd49c", "AQAAAAEAACcQAAAAECOOcFISkQJ6H5JXNt0mWSaLWxKAQ3FobGP3vJvTNpqg1R5cIo1vGy6yIIKgZkDBfg==", "e4580371-fe11-40d4-aefb-76b297e96b6e" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "19",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "ddc607b0-d480-4aa7-9f69-c73f40095a27", "AQAAAAEAACcQAAAAELB0T8BLlmNRaZCgr1zxPvnN6klAbz+q1KogLVbKvTQDGxrCFuXwNidG0HqUS4QKnQ==", "642201e8-4f3b-49b3-b9c7-63d7d91e8f46" });
+                values: new object[] { "c65c788d-ca94-4a42-b06f-3587002451c1", "AQAAAAEAACcQAAAAEFoeHMojs82Jr+Zaab7W76nWX8ZZuWvs/ZPps8v2gmybBAe5QuIit7bgnJ2O1XuUcQ==", "ef941017-4c5a-4e33-b4b2-b5daae602778" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "2",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "3be7f118-fbb8-439b-9fe1-8de618ac6d07", "AQAAAAEAACcQAAAAEOCIK9J3yjqWOcfzJVp0LKQcjrotZNGXTXtvafYz7Ne2xa0IAjzAyLiLT5kwApIUVg==", "10338193-237e-4363-91b2-4f47f4c2c010" });
+                values: new object[] { "9f1f683f-5991-48fe-80ae-d3368165ae6e", "AQAAAAEAACcQAAAAEIw3obVtbT4Nwtw5ndW2PtdO5nmvRzWbr+yBwP/NOs77IE8hSWv4kUy6y9cIYUDbqQ==", "0777b168-c802-4f5f-aaa4-1e9a019d616b" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "20",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "ec8c21e1-a192-4b44-bc6a-d86f0c86cef6", "AQAAAAEAACcQAAAAELN8+vjLAP3efNOO3i2fCnWNsVUAxL+vtqLTPyIy8uU88h4RcZNDsuhPqKMw7Hg6bA==", "37729554-0ef5-4f19-acb2-f8286d3b601f" });
+                values: new object[] { "c061f755-e2a7-415b-a62e-b97ba772a35e", "AQAAAAEAACcQAAAAEMfyOE91UuuNX6NfjC/yqraXQmjrqsDPSFcQnMmbkZA6DyguuruLN4AIps3zeXs0HQ==", "f014fb06-0923-49b8-9b7a-2deb228c75f9" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "21",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "e72e08fe-af72-4531-9f64-30b2b48d04dd", "AQAAAAEAACcQAAAAEMJR/hotkRtRwf5S3hLQgIHfxa9GeoHccv2msGewg0UcFU8fQHoQsLCpAmLT7vVLOQ==", "5236d53e-44dc-49dd-9bdb-088549ec488a" });
+                values: new object[] { "9fdc7d62-ff13-4c13-93e3-c8139c078ac6", "AQAAAAEAACcQAAAAEPSMoCGBfV/DRIfamsRjhRc3i31VIjmcgW4VbT+eKx31Gc1UBaJ1tJlNJ4tvMXlFAg==", "4af21c95-97cf-4df5-9e4b-95eafa84eab3" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "22",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "fe9a729a-a969-4001-be82-1c20c9893a50", "AQAAAAEAACcQAAAAEKOf022AjT1A5kvGkvdF1hZQ7T8zjAZmT85QOw3ysuZ5hnKRkh49TjmdEtSd8WM/dg==", "11a63288-cf81-4e61-a69e-4a83c33efbf6" });
+                values: new object[] { "40776f47-c381-4df9-91f4-b6fa8aa70426", "AQAAAAEAACcQAAAAEED1vZxwzK5N6y8M3nL/zG+kKKgmAFSQB1VXeHXly6/8RKCsiC1BrTYTumSCDNupnA==", "57701222-df28-4493-add3-c4af7b7a3041" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "23",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "1b62d25a-4fb5-42ab-aa11-7dc90fb6d7b8", "AQAAAAEAACcQAAAAEHqBIVGx/DzSGrBZVGW5Y2MdguZ+sVKoOTa+wZYUlNDmG6vLabfdnJb97IweyNJ3xg==", "08e0ea9b-a89c-4fad-8050-329a9d8dd806" });
+                values: new object[] { "971e53cf-ea18-461f-95c5-e8003d007605", "AQAAAAEAACcQAAAAEFv3E1lxEmwvX1KUEm6GmdoH1COTK3RWEqH7h4hoY4eCGZDp2MaZEQSj78/NqzGadQ==", "70e5f909-e498-40f5-acf6-b434bdd23d16" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "24",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "b0fbf611-7e40-4530-8a0e-652c0e9cb04f", "AQAAAAEAACcQAAAAEKx5Q8+AnNN4VW2nwz2ll0vVC0L1ocWlAychP0VDfIWz9CaqMzbOKwBAiEN/HbzoMA==", "ca4b534a-f07e-4d71-b7f0-d6afdbbf917d" });
+                values: new object[] { "e46d157a-3681-49da-8652-5f78cf3c532a", "AQAAAAEAACcQAAAAEMzTzN3xRvYwbn0kxEGL4NVIJkuckzZA+Ph1t4kyAQWQUUWn+MbanqGje2q4OnjRKg==", "5975b320-613c-48de-b34b-639669e4a607" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "25",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "2f0c447a-99cb-49a7-be31-08a90b1ec003", "AQAAAAEAACcQAAAAEBSneGMttngTdQ12WwMcJQ0F5EkSXtQRu5O+Qzmu17f4gZFsvzOXxBRn6MqW2Ilpew==", "ff4c6668-e435-4661-8294-4b66e34c31dd" });
+                values: new object[] { "a459d0b2-e011-42e7-9ed8-cb41b847b802", "AQAAAAEAACcQAAAAENPrH4vkFgr4I37036Fn8THsKhIVh9VFmhtLCU5Zt97CTT99gC/R3WPjaZN9lJE92A==", "1df16e86-7e20-48ad-8ab3-a46c8268ecec" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "26",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "5375226f-5fa5-4782-810a-151ce86fca6f", "AQAAAAEAACcQAAAAEBD6PtqIg5OsK74rHP92Civ4owzbfBalFwKywcg08Nev5gYG+4bBykLvHXNciNzMog==", "1daec10c-82c0-4ad2-b984-9739db05fd1c" });
+                values: new object[] { "cb91160d-0e84-4ae2-bf6b-a83cd95b048e", "AQAAAAEAACcQAAAAEANgobXMHf/wEkFHhjZmU+O92pTLUSwRCpp8EvlcMhVpjIet0MGnXmBNGpBnQv5CcQ==", "9db5da6f-e7e9-4031-a5ca-24f1d0a562cb" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "27",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "4c3c0859-5714-4630-926a-5870f6bdecf7", "AQAAAAEAACcQAAAAEPxzoBi046eJ5xENMCX7xO0qddwNPP5wMs+KJT7MPhBf+QwcH/BswAzEwPv7UGfGUQ==", "68299783-9158-422b-99c5-4f3295d4868b" });
+                values: new object[] { "d90d76db-2871-409c-8106-35faf75abd2a", "AQAAAAEAACcQAAAAEIdQnuNKNOWGYfYf7bS4CZSlhRfUaN5qh5VjpGRyXdqk/AhhXNSkEo+TiQZFLqTXJw==", "3b5847c1-693d-4577-b760-6521614e7167" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "28",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "0f628bae-31b1-489f-a3cd-dbe5f392955c", "AQAAAAEAACcQAAAAENdKR89W53AFlY7fTbzDFgfc8l8chLsrn0huR/uwUTr5NzOfPBqUYUp7m1EDgIJ/ug==", "7c98aff5-548a-4651-9481-f2dd5b628cce" });
+                values: new object[] { "520c451f-3fbd-4a04-8ec7-d7ae1ec73416", "AQAAAAEAACcQAAAAEMTCMRVQIwpZ3wpOBLd30IVmX+HB/8pG/x8riWMwwKTBN9jaYq+YHALDFPh94Oxmig==", "707a4490-63c0-4b80-8c74-4bad4d2e7f30" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "29",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "d3c8b633-e4eb-4358-826f-2da9c6fa7897", "AQAAAAEAACcQAAAAEO7yJjzP1yNCJlYaB6KXjipKhneqeragKfg5agpM+SA0o1s5iQM2auPxF1PM3y0DVw==", "14622696-348b-470d-b3df-a90fab462dd1" });
+                values: new object[] { "4600d1c5-9027-4f08-a1e4-59a9ba7dcdd4", "AQAAAAEAACcQAAAAEIDByxMAMqAVgRUHkTuNYRwEz8QH8YGiD9rlgzLpdJtSaAW2F/zoAL8Lmmwdbe7b3g==", "5618bbf9-4973-4322-91c0-cf2f30483cad" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "3",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "37498521-5740-4b88-8c9d-6a3c9adcf557", "AQAAAAEAACcQAAAAEG1Tg+YNpB5sfvo9BErKGhskrKwdVEX5g6MZDjAdjaN1JhmiH9axznExR/6lE1QmNw==", "1d4b1b01-943b-4fff-a71a-915029bf49bd" });
+                values: new object[] { "9c873fff-23df-4f7c-8323-f266fa6feb8e", "AQAAAAEAACcQAAAAEOFMKwnLdNpnqthj1Xk7aL36WpLYFB33lUOLD6j/3S5ZhTLQMp7MO+7X8nGvxH6b2A==", "799dbe41-328a-4f52-8a1e-869565779b17" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "30",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "66fc20f0-a3ca-40e0-9333-5233b8d1d631", "AQAAAAEAACcQAAAAEDuGhar09KZTExA67JtNGCq+2A0ZccDmTj1zSmL2RrKQs3VwpqQmR2BxVL/9GzN4eg==", "789cb30d-989f-41a3-94b1-d033103ee12b" });
+                values: new object[] { "5232d5af-8098-428d-b751-896be5e65760", "AQAAAAEAACcQAAAAEDTQvMbqrqjFqkFFU79d6GhrtzVKxJN7xYfkxlp3QFnpVo8mmWcDFOpBw2dMoKRBWQ==", "3b6a38fb-3f9b-4bf2-970b-d2fdb755eda8" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "31",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "0fdf2050-4ae0-4259-9261-63975c0abb8b", "AQAAAAEAACcQAAAAELx/w7SKXvTV7XgX7/c26eZFoPMcyKmYxeqO5o2tcHexc7yFvVSgaDquAYCNmru5HA==", "fa4399a4-d34c-4a36-9d4f-068d708c0149" });
+                values: new object[] { "40e26bda-4bea-409d-a336-e41b30b54900", "AQAAAAEAACcQAAAAEKSZmC+fwQ0HOylwnnywpZbjLJe26332qPv0blt7iKEdhUxNhBo5Y3V3C/tHlXzGkA==", "d2a46738-8f6d-467d-b5e5-2b771f1081d4" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "32",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "db3cbe50-94c7-415d-afc5-af98d5918bf4", "AQAAAAEAACcQAAAAEJV7Su4jNABFiNz4JOMjbu5E5qApAnR/otNXQx/mvbGitX76Z6Ip7BKRKOCHBzqs9A==", "08ce72d6-88ed-4d17-91d8-ae9b5820b135" });
+                values: new object[] { "48c3c810-7af2-4406-8b57-5aa5d196d016", "AQAAAAEAACcQAAAAEC2/9ZcgtPXjsnDX8ED+0bfsxT6e3+n5yC/FfV1BoaxyPsnNpcqQ99D1q6oP0vAZLg==", "66bcbe8e-f530-4107-9c18-41c578ef29ca" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "33",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "ff4ae7b8-8f2b-4a43-b6ff-730dbb7be6ca", "AQAAAAEAACcQAAAAEOjuqcwkBPxp+wMjoAUq6Wm1mdJ96I2NmLCI3JqAEdxroYyyvuEV37wPRmjNotG01Q==", "2e5d12b5-ee83-4cb9-9d6f-e6f3c3ad90c0" });
+                values: new object[] { "48fa7ab5-f0c2-4620-9849-874cb2d2db1f", "AQAAAAEAACcQAAAAEPxLSG3kU6pCuN/e04PJwtVQLqA0zpGtku5+Y/sGEuZL5JNBM7hZ+dmnfpESJu6wfA==", "3b9af0b9-eea8-4e1e-8737-83e3a1900e0c" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "34",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "7f5fe9a8-fc35-4c8a-a825-feacdf3e5e53", "AQAAAAEAACcQAAAAELEOfej9mbOccuBd2bt/fblXBPtdkcipTsTgPEnk/cEL1u2+8ws5/YvxV4oxETI5aQ==", "e8637f50-0d5a-4186-b212-6a2c5feaeb56" });
+                values: new object[] { "8b41eedc-5c28-422e-a10b-71be65e70d0d", "AQAAAAEAACcQAAAAELe0S2bCIGnZlFkaqBczGCS+RD1/AO4TGQaqMkY5P7G2IYhfABtCQFj28/oe1X211A==", "2d9be3c6-95da-403f-bb6a-4306dc6dc315" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "35",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "97a2c661-ddfc-49aa-8b3a-5adcc6c68c3c", "AQAAAAEAACcQAAAAENo4p9clmnFMz1UNnFWrHpREe9x2zeo24Z40QYEfYgBuTNb6Mdq2ibvn+e0c+i/mCA==", "42465e5e-8eb5-4aca-a950-b29cb5257450" });
+                values: new object[] { "71788b00-2877-4c7f-80aa-d5577900ba05", "AQAAAAEAACcQAAAAENpP1GQGhNWv4v/oJ0R621w4RCF9ImuIvOYK3Al7Zell5DM9C3EqLomdYJVSZqJezA==", "bd894542-4ec7-4234-80b2-f5f855b5f678" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "36",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "2c372f8a-ddaa-45e6-bff6-b89bbdc66090", "AQAAAAEAACcQAAAAEJgLv5P8ZI2WD/LVk7bD7PoTb2KMka1mEczcJPEatDLC5TwB++2BFEIONenYniDOmQ==", "f15ecfde-3b9d-4d67-904d-9acc24e10a2d" });
+                values: new object[] { "8557782c-a8a8-426c-a110-447d3209a4c8", "AQAAAAEAACcQAAAAEFSytUoAKVQkqtEAyIvzO9XsI1zDQQ/B0cVdhtXfYI1V4kRXYUOfeEBDhC8mMSx+3A==", "307fe9d5-2bd8-4ca1-9f77-503cc10cadf5" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "37",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "73d3c896-c811-4deb-8f7b-39dc4cd2daba", "AQAAAAEAACcQAAAAEIz+enaVEUorP+hKnztizSyp+DiWitHWfBb1oSdaZgJyg96pmr2yZAE/i+AF4Yw9bQ==", "fc036d6c-330b-4971-a756-264f1395ec3d" });
+                values: new object[] { "f9b79eac-ddc1-4601-9244-d690aa87a876", "AQAAAAEAACcQAAAAEJyKZnQFihipcgZo7cG6dizD0CoPHtFw6oSzjG+yYl4iENzcDwIG4pMsPl6pClQZ8g==", "907f84b2-86c8-429d-9f92-ef64c9a376af" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "4",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "aa2defd5-7733-4ebf-a887-2c75b46c29b1", "AQAAAAEAACcQAAAAEEk3B88+ZODBMEYPLy/bUrxWXBC/ZSPLnuAeS4/sRge1fDWCKG0cpbnFx7RUrUpzeA==", "2dd4bd6a-95d9-4c77-84f2-453a43e608c2" });
+                values: new object[] { "61ff9f20-92d5-4e08-aaa7-7fefc71b5a82", "AQAAAAEAACcQAAAAECm6zHKpkjl57v/Zp9oSwJGjF0GDwAgzbp348hvIla/lzNzn1XM93kWSSRrU5xxNwA==", "d579c684-65f5-4a88-ba51-d60e976f3fe7" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "5",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "1d63a6b4-0ed7-4e8a-b92e-a2e9780edb91", "AQAAAAEAACcQAAAAEMdAZNDj7EecPWMdGaLr614nKoNsr87/BTBHLu1ASpmIm0ZG2OchkpkA0UkiT7899w==", "811af58e-d042-44f4-bc09-026b397a88e8" });
+                values: new object[] { "9ea4fc51-7476-4d3b-b519-bdd71012177e", "AQAAAAEAACcQAAAAEMsrteS+UDhFGnWOQe2B1sXmejl7U+P+4gyURksj2BOG0sLtyooaR8XubXZdtLPjXQ==", "be9d3ae5-2f93-47a0-90da-30b984d4f986" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "6",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "9dec05b1-13fc-440d-a4b2-31e7e3fabc21", "AQAAAAEAACcQAAAAEHbDYSlhRZRPeInFhcvs51bYEzW+kKtyU6A2Z9EL6SlvvBv03+j+PshWCV6X1BJCyg==", "1aecfb53-2b7a-47f2-9bbd-91b58f68dbbe" });
+                values: new object[] { "6cfeee95-cd29-43bc-b294-ec8da07ea91e", "AQAAAAEAACcQAAAAEFkaP3DppzG0/AWvjnd+UOYzWRi9HIO10paBri0wy/fA2iQgcOTDXvncDr6UK3Q2sA==", "f911135f-a8e7-43f9-9ad3-b9ec22a125d1" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "7",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "cb5c77d7-0497-4ef9-8e88-ae2c216dd698", "AQAAAAEAACcQAAAAEIIAPxglFw6hwPfLik5NW8l/Oz6caiobjOl8tzC6h2UOPy81zH8byUtlYq752RCgHg==", "19537d4e-187b-4061-bb0a-4f7f14cb9c5f" });
+                values: new object[] { "94c09a3d-943e-44cb-b8e7-8b697b90d972", "AQAAAAEAACcQAAAAEG3quVXYDn6XbO2heGoDqapSZ4IA9gnwhPqkGvG5nb2fy8N1T19HWN+vovL1I/XVcA==", "b4537851-a26f-4b7d-9a73-ff44a197147a" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "8",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "5d0a5280-856d-429f-8c93-258b96f4dfa2", "AQAAAAEAACcQAAAAEPrkU++nMe9RB3g+8jF0PuJAohDnlf19WWX9q27kc2TNxdKZJsZyjaFdnwzhv+K5pg==", "68a6fac1-be4e-47fe-bd32-8f140c68e2f8" });
+                values: new object[] { "b4125a28-a7e6-4462-b4d8-f7e54a313e29", "AQAAAAEAACcQAAAAEHsr8cLk7sdWHsKWaOW/so6QJLXn2r/CORf1ZSsjwt477GS/kNyjT+VaLFG5QHgUUQ==", "c8aa0f76-c15e-4639-9b5b-ec82566802f2" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "9",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c3506d33-f4c3-4038-b9d2-170087aa9856", "AQAAAAEAACcQAAAAECsQ9pCu6X9l0GkcKnHsjbQ1DGHutlaE/OlNdnE/xMQz0D4hFOpPHsI6MgugNZBg0g==", "eb4f4a21-4e1b-4eb6-9b4d-e3202c8f2f0a" });
+                values: new object[] { "215b75bb-e31b-4deb-9877-822dc0c6c543", "AQAAAAEAACcQAAAAEKEtcfOZ0U24eJm+kozoiBn10CKxQhA/wj74H2IGP/oivFM++MuJz97AwwlUeT0EHw==", "0228ffcc-03fd-4a39-abfb-9c9ae96b2f83" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_lessonLabs_subgroupLabId",
+                name: "IX_lessonLabs_labId",
                 table: "lessonLabs",
-                column: "subgroupLabId");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "lessonLabs");
-
-            migrationBuilder.UpdateData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "admin",
-                column: "ConcurrencyStamp",
-                value: "83f632a2-d822-44c5-ba78-c168bf75cf04");
-
-            migrationBuilder.UpdateData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "headman",
-                column: "ConcurrencyStamp",
-                value: "94440ee2-f402-4672-bb13-b096546a9623");
-
-            migrationBuilder.UpdateData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "student",
-                column: "ConcurrencyStamp",
-                value: "bba67196-1a77-4ec4-8c1b-13b837807d89");
-
-            migrationBuilder.UpdateData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "teacher",
-                column: "ConcurrencyStamp",
-                value: "bb18c331-23c4-42cf-ba26-a1b1a5bb7113");
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "1",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "80ae9ff5-4a59-487e-963c-2ec1a58591d3", "AQAAAAEAACcQAAAAEKEyTMBuNc71lHB2aMlnQrT6u5wE/vjwFlKyuF4ENOq9gjdw9o4SH3H1B8iOy58EZg==", "386a2dd7-5381-4395-b179-9a62727f7478" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "10",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "97dc0b82-906a-43ad-a40d-cd2ea1210861", "AQAAAAEAACcQAAAAEH0sGtpP1u64+ghPfcbUYi5XsWzYyUzqaxD5sTwDDcChFtiUNVtUFlsrpKquUOZZZw==", "beb8dbff-9846-480f-8acb-8a644271d01c" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "11",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "eb85411a-2807-4492-a409-462f49e0d65a", "AQAAAAEAACcQAAAAEJSR1JToMe2RjBmY2rwPTmL0ucMKh/efDoB3IGCD9th9mtt03DATbGwUHEkcGCcBVg==", "8b36c888-dc51-44ce-96db-3b58c1b8c778" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "12",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "37027afc-dd6d-4fe3-b0b5-77c73dd93196", "AQAAAAEAACcQAAAAEHMNybBCxcHXmhRuLJcOEj2eS5F+FXCst/1ZyZjQ6Dt2uP+H3J8HvYAlAHYJwLfbzg==", "5b1c6bd4-6ab8-4fb8-9559-61766b8d40c6" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "13",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c32ef6c6-177a-4ffd-bc4a-5f6acf87b6d5", "AQAAAAEAACcQAAAAEFT33xzJVj7cvIeGdtFA6bAi8tXFv+ZaOkvIZuq3kgPycwLDJHFcbjFtpEBsVftvQw==", "09229d6a-1427-4f6b-92ca-c32324338add" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "14",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "1a5d817f-5ede-4a5a-9651-b9c47198fb91", "AQAAAAEAACcQAAAAEK+WHnq9RDYefBf07X4CDoMRHLjRx9ZjtiQRji/+X/C3lbPvkzHHzMwYP4S15VzQmA==", "090b7077-2d98-4abc-b4be-d5bc111b6492" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "15",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "55001a23-aa9f-4e11-a221-6e34cf2f00fd", "AQAAAAEAACcQAAAAEAeRym1tJzFVBm8UF3JqjlatC8Z+BaLFPY+u+8cL9hZGyY9BcWtR1CHV+nNLlfTeoQ==", "757066c1-621d-48eb-a646-6e0b05ad1a99" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "16",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c4e76be4-14c4-43c7-8e77-e45fbfc272b2", "AQAAAAEAACcQAAAAEL5aWp2LFOPpq1ygd1GtH6w6F3+28OJFVEx/AZ3L2lCwFA+/7v2Y5Q01u8FldcTWfg==", "f7fe31e5-182a-409c-8317-8394c7620375" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "17",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "6babdb0b-e575-4a4f-a7f0-b98f57cb560c", "AQAAAAEAACcQAAAAEBOlogzghqQ5+vQlXR8d7J0tWXQKJNllMQ852Zt59nsILN4VvNizc2gYKGWJ59d4rw==", "04fa3124-30fa-4b34-9915-7c5dfd68b234" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "18",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "e8ea12bb-9492-444e-a4dd-e9f08c44767b", "AQAAAAEAACcQAAAAELQ0InpxndBsipVxYg00ttqGHWsAMN2RiysxfC7+UM0WFT//1sBs0WCwGsOiEdOl+Q==", "fc0a9f85-5b9a-4a24-a694-e9d3868ab824" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "19",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "f1bea0d2-3e25-423c-9729-e35fb825d4d2", "AQAAAAEAACcQAAAAEGiiOY63JNOqY2ElzSJSS+gNFypfpKU7sg6oNav8OyTxPuWQL372k3bC93BRI6Et1w==", "d3f7c9a5-f25d-4252-87bb-4cf57d91a4d4" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "2",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "ef7bfc66-04cb-40c7-bcc4-df306d01fc2f", "AQAAAAEAACcQAAAAEPKoFBzieroF3FA7RJfY9UtVSdU0Us2/eqCfjBoSNdahrFj3kvcI+9nAQ4JV1N11nQ==", "57d31585-1ddb-46b9-a78c-07c8f8b5920c" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "20",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "4ebd16d0-25ef-45a6-8c6f-51568b228a73", "AQAAAAEAACcQAAAAEIRBd4Al0Qp69yiMrNY1xsnI11L8cVTDRKm+dJ/RAMQmgAHqqBlGkpaUwyTCPUjPqw==", "29ae99b7-5a8b-46f8-bb06-e28ae919bb54" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "21",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c202c989-fe5d-49c0-89c1-7382b82fcbc5", "AQAAAAEAACcQAAAAEGQXZV5jj3UUsvn8IvkmB9ggKSKOxrc6ea3WEdI2ZeDT/r1JbMOEaUL7JfLgLEcLyg==", "1fc59582-8eb7-40b8-bc88-3fe9a7b1da10" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "22",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "43107145-3140-435d-85a0-0b63c912b3e0", "AQAAAAEAACcQAAAAEAmU6VGckqaXoE9Y0TSld4Q0AwNsU3fwaQaZViij8cgKTMtOjmO6cBmTP50bPJC1Rg==", "c32cc95e-0f19-49aa-a2d5-62a1f294a76b" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "23",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "a19b1631-e50f-4a7d-ad82-173dbba6dfb5", "AQAAAAEAACcQAAAAEOkIkj4pLxH3stG4IarCBYz7gDVCVGp6/Oh5omn79+WlVrqPCiVGOLkaVsPLtWjTBw==", "7c2f95c5-84c7-4001-a804-1488c057e76f" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "24",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "2a704f30-8417-4fff-8d5e-ded29535939f", "AQAAAAEAACcQAAAAELR0b271TInBq62WsTy4naez+WZvzS/hBAg1h4rmGRRT2qT8wkUa2fcBoQJq3anqUw==", "a0b478f5-dbcb-4d1c-98e2-273b44465920" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "25",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "ad192de5-14f9-4858-b2f0-aea1a78e41bb", "AQAAAAEAACcQAAAAEMYPmP2fh/LuglJmPcJwtELS3UXbq+O9SqbyNJ1kyVPnOvxCz74zyMfFETUa3Mstbg==", "688b9fdd-849b-43cf-9921-af85be4f408d" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "26",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "0356f754-eec8-4e5a-b38c-f163cba398ef", "AQAAAAEAACcQAAAAEMtjXwwHa8hf7OaCfGhRH4fn4QNLG6liuhUxrNe72GCIA/Y8wDGN8YkwBbGtFpdb7g==", "591bbdc1-fc00-4f3e-97a2-832f4e611020" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "27",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "9f1c99e8-c086-49d1-9820-8c7c81508db7", "AQAAAAEAACcQAAAAEGwu+w4O4vf2beK1t7P2xnuS4A1K/ZpT3gHgorxOZ0CMhEvOGtUYcmTIPH6LErWK6A==", "7b8c9f3d-084d-4340-921b-a36f0a026316" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "28",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "52b661e9-a2bc-477e-9c9a-99f8c83a207e", "AQAAAAEAACcQAAAAEPDBB0n9PGFwwg4EDhwQWjyLmCR1V3yLRGnTZ3kL3j/caPzFLc2K0nptp6gPM0Su8w==", "be78c97c-23f1-4942-a281-66792d03ca1b" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "29",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "65c254a4-5964-4589-b99e-e855f5b3fcaf", "AQAAAAEAACcQAAAAED8yQztvKRFBYl2GfJknjJDgdaitF/oWiRL3KDQcr/LfDoKPz5uE0HgcmY6c3kDUrA==", "e8d43879-7293-44d5-8323-edb1aaf1d850" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "3",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "f29d9121-53f8-4616-8c2d-0b359d69a49d", "AQAAAAEAACcQAAAAEPTeUA9mOO2dEBWw/6U+C1B0umfr4C/pfmXbQtcGNDQXlciN/BSKyiD1v1Hv18yk1Q==", "24385c66-78c8-4bcb-bcf7-7cdbcaf0beb0" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "30",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "608a28c2-b503-4838-9371-c755cbaee17a", "AQAAAAEAACcQAAAAEGfoHUgPW50sNAKkCpItw1ex2544rXIrIjkfHU1nePlfseViOrI0YOZb0G99bdT2TA==", "d042f8ab-8ba3-4bca-886e-9808f91681d3" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "31",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "29e2822f-c8c2-4aa0-ad5c-1abbbe839ccf", "AQAAAAEAACcQAAAAEFzx1l9Tdykrw/FvWtmQLxPG0Fir6i8DieXm0Z6MgPpPsLB9iUuRM5T/g7S5u7Ktnw==", "5061617d-4cca-467c-b606-05baaa257f53" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "32",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "d427acaa-9cf6-4351-ac50-8fdfd21b9b33", "AQAAAAEAACcQAAAAELRlOMG5xq/RJzJ5ynrURQ9ud4gL8eFoCtK/b8uHdX9ncryH0o2c97kVZ/hR211Qaw==", "e11b6771-ef9f-46cf-ab8a-dc1999ccb8f6" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "33",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "48cab279-8988-49e9-b80b-c36fe7b286b6", "AQAAAAEAACcQAAAAEMl6rq/k6jn5ixy0YjQDCwV+KNU55SU4Rp4UdLIzraVbtb9VTpeQv4tURAVCUeU8gQ==", "22113941-0e59-4e83-b0ae-7af8d0a57930" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "34",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "54b84307-1c6f-4bd9-b315-a38f288acf4c", "AQAAAAEAACcQAAAAEGEJU8OdsLgo3x/LLBCnEY64kXhE+iQjd1a8sXn1eYh3STuub2McUZdlUrBsa+FJlg==", "5818a6ab-db5a-4eb7-ae46-ba3749755f83" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "35",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "bd7bbad9-dfbd-4cc4-9095-4eac2eeec2ca", "AQAAAAEAACcQAAAAEAKhOXYmVHZxqogms7tbPU805SQor5+R8Vu+kTW6BEf0Aa3OGdK5APdKx7VFMiGDWQ==", "cb0bfb58-ce74-46e7-b3f1-b9eff23171f9" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "36",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "862bb8fb-faf6-48d9-b569-ec5cff424eec", "AQAAAAEAACcQAAAAEPsaHBcf5rZYsgu3TZSSn4p2SmeN+lUNn4tlHW1aNKZQ1iYZGNnGizN+f9soA8GyKw==", "ff33c8e9-8e1b-4d48-a66b-b75ea9200e7b" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "37",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "9d2b2466-3a0d-427f-8259-23f36604204b", "AQAAAAEAACcQAAAAEOm2Ud1rHk17fmyFhs+bNBa6yds01qGlVzRXJeTTGfDnPD+iGoTt+PNUokRP2kbwbA==", "87f0a944-b02b-4b5a-a8df-c1b924e24a80" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "4",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "87ff49e5-7cc2-47c6-b68b-bb632c671e3c", "AQAAAAEAACcQAAAAEFdGAYj8EjZwW/Kljwgi1OfDitrkE1v77zOCboLSsaPkbTouZxeZHSMxjXK7RubwcQ==", "7c73b56b-e93b-43ac-93a6-ce32f1c258b4" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "5",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "187e48ac-da98-4963-b094-7da19533c0fd", "AQAAAAEAACcQAAAAENqyBi1hOhQJ57+64l5Xh+w96RpxGwcGerFDTEg7+CFgGPGVbHZcE2hFrHKS9hSTpg==", "eff6fb0f-0489-4e83-a45f-82f444ff79e9" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "6",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "178e60bc-1fbe-4b55-9451-643022693f9e", "AQAAAAEAACcQAAAAEEXEmNo6deSMmNN418aVTzNs2mkvfrAvKvDfFKPjOtaw3QC6dux4Eq2SRk5buxH0/g==", "c03d7706-fa3d-45b8-a53a-02f92cc6de48" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "7",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c84e3efc-35c0-4f6b-a693-96420773c891", "AQAAAAEAACcQAAAAEKcJ1ldE0UTIKH4dGdhtKTzMFfSbIf3SSS7iXf3suYDJpxkmSzmsRa5ULRouYqCkwA==", "df9ce113-8031-4514-86d8-f6f1b21274df" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "8",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "1b1110a6-bbb8-4ed8-9d5c-3482356572cd", "AQAAAAEAACcQAAAAEBhGwBaa67LMRcNhjlnXyEIjsDqrdpmnnbrXBdN0jATqDscJ0Ka1wHoIA5zSVGugFw==", "22e2db5e-e581-4a0f-8777-c808fc575f67" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "9",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "56b59d5d-b3bb-48f0-87a4-eb04c20154c5", "AQAAAAEAACcQAAAAELqKYxszg6krZgHpXhO+NjnQESRMYwMHXqpLGTlujyAqHPpmaI6mqARoVLcgmYctPw==", "98bce002-dd39-462a-a88a-a52a30b0689a" });
+                column: "labId");
         }
     }
 }

@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace EDiary.Models
 {
-    public class lessonLabs
+    public class labaLessons
     {
         [Key]
-        public int lessonLabaId { get; set; }
+        public int labaLessonId { get; set; }
 
-        [Display(Name = "Дата лабораторной работы")]
-        [DataType(DataType.Date)]
         [Required]
-        public DateTime labsDate { get; set; }
+        public int lessonId { get; set; }
 
         [Required]
         public int labId { get; set; }
 
         [ForeignKey("labId")]
         public Labs labs { get; set; }
+
+        [ForeignKey("lessonId")]
+        public Lesson lesson { get; set; }
 
     }
 }

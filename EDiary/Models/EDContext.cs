@@ -23,7 +23,7 @@ namespace EDiary.Models
         public DbSet<EmojiStatus> emojiStatuses { get; set; }
         public DbSet<Labs> labs { get; set; }
         public DbSet<Subgroup> subgroups { get; set; }
-        public DbSet<lessonLabs> lessonLabs { get; set; }
+        public DbSet<labaLessons> labaLessons { get; set; }
         public EDContext(DbContextOptions<EDContext> options):base(options) {}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
