@@ -53,8 +53,7 @@ namespace EDiary.Controllers
 
             var studentLabs = (from student in context.students
                                join subgroup in context.subgroups on student.studentSubgroup equals subgroup.subgroupId
-                               join sgLabs in context.labsSubgroups on subgroup.subgroupId equals sgLabs.subgroupId
-                               join labs in context.labs on sgLabs.labId equals labs.labId
+                               join labs in context.labs on subgroup.subgroupId equals labs.subgroupId
                                orderby labs.labName
                                where student.studentUser == userManager.GetUserId(User)
                                select new LabModel
@@ -64,8 +63,8 @@ namespace EDiary.Controllers
                                    subgroup = subgroup.subgroupName
                                }).ToList();
 
-                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject, labs = studentLabs };
-                return View(studentSubjectGroup);
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject, labs = studentLabs };
+            return View(studentSubjectGroup);
         }
 
         //добавление фотографии студента

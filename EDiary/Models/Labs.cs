@@ -23,15 +23,27 @@ namespace EDiary.Models
 
         [Required]
         public int subjectId { get; set; }
-                
+
+        [Required]
+        public int subgroupId { get; set; }
+
         [Required]
         public int groupId { get; set; }
+
+        [Required]
+        public int teacherId { get; set; }
+
+        [ForeignKey("teacherId")]
+        public Teacher teacher { get; set; }
 
         [ForeignKey("subjectId")]
         public Subject subject { get; set; }
 
         [ForeignKey("groupId")]
         public collegeGroup group { get; set; }
+
+        [ForeignKey("subgroupId")]
+        public Subgroup subgroup { get; set; }
 
     }
 }

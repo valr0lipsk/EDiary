@@ -18,10 +18,10 @@ namespace EDiary.Models
         public DateTime labsDate { get; set; }
 
         [Required]
-        public int subgroupLabId { get; set; }
+        public int labId { get; set; }
 
-        [ForeignKey("subgroupLabId")]
-        public labsSubgroups labsSubgroups { get; set; }
+        [ForeignKey("labId")]
+        public Labs labs { get; set; }
 
     }
 }
