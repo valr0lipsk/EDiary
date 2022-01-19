@@ -3,81 +3,169 @@
 @model AspTeacherSubjectGroupModel
 @inject SignInManager<IdentityUser> signInManager
 @inject UserManager<IdentityUser> userManager
-<div class="container h-100">
-    <div class="row h-100">
-        <div class="col-12 accountF h-100 p-3">
-            <div class="row h-100 align-content-center w-100 flex-row-reverse justify-content-center">
-                <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
-                    <div class="row">
-                        <div class="col-lg-3 col-5 flex-column justify-content-around">
-                            <div class="accountIcon">
-                                @foreach (var teacher in Model.Teachers)
-                                {
-                                    @if (teacher.teacherPic != null)
-                                    {
-                                        <img class="accountIcon" id="openIconModal"  src="data:image/*;base64,@(Convert.ToBase64String(teacher.teacherPic))" />
-                                    }
-                                    @if (teacher.teacherPic == null)
-                                    {
-                                        <img class="accountIcon" id="openIconModal" src="~/css/source/user-image.png"/>
-                                    }
-                                }
+<div class="row min-vh-100">
+    <aside class="account__sidebar col-lg-3">
+        <div class="row h-100 d-flex flex-column">
+            <div class="sidebar__acc col-3 mw-100 p-2 justify-content-between">
+                <div class="row">
+                    <div class="acc__icons col-12 mb-2">
+                        <img src="~/css/source/dots.png" data-toggle="dropdown" id="icons__kebab" />
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                            <a class="dropdown-item openIconModal" href="#">Сменить фото</a>
+                            <a class="dropdown-item" asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
+                            <a class="dropdown-item" href="#">Сменить почту</a>
+                        </div>
+                        <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
+                    </div>
+                    <div class="acc__photoplace col-12 d-flex justify-content-center mb-1">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.teacherPic != null)
+                            {
+                                <img class="acc__photo openIconModal" src="data:image/*;base64,@(Convert.ToBase64String(teacher.teacherPic))" />
+                            }
+                            else if (teacher.teacherPic == null)
+                            {
+                                <img class="acc__photo" id="openIconModal" src="~/css/source/user-image.png" />
+                            }
+                        }
+                    </div>
+                    <div id="iconModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Выбрать фотографию</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form asp-action="AddPicture" asp-controller="Student" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <input name="Picture" class="form-control-file" type="file" required accept="image/*" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                        <input type="submit" class="btn btn-primary" value="Добавить" />
+                                    </div>
+                                </form>
                             </div>
-                            <div id="iconModal" class="modal" tabindex="-1" role="dialog">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Выбрать фотографию</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                        </div>
+                    </div>
+                    <div class="acc__label col-12 mt-2 d-flex flex-column align-items-center align-content-center justify-content-center">
+                        <div class="row">
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                foreach (var teacherName in Model.Teachers)
+                                {
+                            <p class="m-0" data-idStud="@teacherName.teacherId">@teacherName.teacherSurname @teacherName.teacherName<sup>&#x1F913;</sup></p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar__status border col-1 mw-100 d-flex align-items-center">
+                <div class="row d-flex flex-column pr-2 pl-2">
+                    <p class="status__text mb-2">Дата и время:&nbsp;<time id="statusDate"></time></p>
+                    <p class="status__text m-0">Курируемая группа: <span>8к2492</span></p>
+                </div>
+            </div>
+            <div class="sidebar__notes col-7 mw-100 overflow-auto">
+                <div class="row d-flex justify-content-center">
+                    <h2 class="notes__title mt-2 mb-4">Текущие задачи</h2>
+                    <div class="notes__block col-11">
+                        <div class="row">
+                            <div class="notes__note col-12 mb-4">
+                                <div class="row p-3">
+                                    <div class="col-2 pt-1 pb-1 pl-1 pr-2">
+                                        <div class="row">
+                                            <img src="~/css/source/todoIcon.png" class="col-12" />
                                         </div>
-                                        <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
-                                            <div class="modal-body">
-                                                <input name="Picture" class="form-control-file" type="file" required accept="image/*"/>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                                <input type="submit" class="btn btn-primary" value="Добавить" />
-                                            </div>
-                                        </form>
+                                    </div>
+                                    <div class="note__texts col-10">
+                                        <div class="row">
+                                            <p class="note__title m-0">Базы данных и системы управления базами данных</p>
+                                            <p class="note__text m-0">Проведено: <span>10</span> из <span>35</span> лаб. работ</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-4 ml-lg-0 ml-3 justify-content-between">
-                            <div class="row ml-1">
-                                <small class="text-secondary mb-0" style="text-decoration: underline">Ф.И.О. пользователя:</small>
+                            <div class="notes__note col-12 mb-4">
+                                <div class="row p-3">
+                                    <div class="col-2 pt-1 pb-1 pl-1 pr-2">
+                                        <div class="row">
+                                            <img src="~/css/source/todoIcon.png" class="col-12" />
+                                        </div>
+                                    </div>
+                                    <div class="note__texts col-10">
+                                        <div class="row">
+                                            <p class="note__title m-0">Базы данных и системы управления базами данных</p>
+                                            <p class="note__text m-0">Проведено: <span>10</span> из <span>35</span> лаб. работ</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row ml-1">
-                                @if (signInManager.IsSignedIn(User))
-                                {
-                                    @foreach (var teacherName in Model.Teachers)
-                                     {
-                                        <label class="mt-0" style="font-size: 115%">@teacherName.teacherSurname @teacherName.teacherName @teacherName.teacherLastname</label>
-                                     }
-                                }
+                            <div class="notes__note col-12 mb-4">
+                                <div class="row p-3">
+                                    <div class="col-2 pt-1 pb-1 pl-1 pr-2">
+                                        <div class="row">
+                                            <img src="~/css/source/todoIcon.png" class="col-12" />
+                                        </div>
+                                    </div>
+                                    <div class="note__texts col-10">
+                                        <div class="row">
+                                            <p class="note__title m-0">Базы данных и системы управления базами данных</p>
+                                            <p class="note__text m-0">Проведено: <span>10</span> из <span>35</span> лаб. работ</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 accountF h-100 p-3 h100-2">
-            <div class="row h-100 align-content-center w-100 flex-column-reverse justify-content-center">
-                <div class="col-lg-8 col-md-8 col-12 w-100 offset-1">
-                    <div class="row flex-column">
-                        <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
-                        <h4>Мои предметы:</h4>
-                        <ol id="list" class="list-group list-group-flush list-group-numbered">
+    </aside>
+    <div class="account__main col-lg-6">
+        <div class="row h-100 p-3">
+            <div class="main__subjects col-12">
+                <div class="row h-100">
+                    <div class="subjects__side col-1 border-right">
+                        <div class="row">
+                            <a class="subject__find col-12 border-bottom p-1 text-center d-flex justify-content-center align-items-center">Все</a>
+                            <a class="subject__find col-12 border-bottom p-1 text-center d-flex justify-content-center align-items-center">Лекции</a>
+                            <a class="subject__find col-12 border-bottom p-1 text-center d-flex justify-content-center align-items-center">Лаб. работы</a>
+                        </div>
+                    </div>
+                    <div class="subjects__block col-11">
+                        <div class="row d-flex flex-column p-3">
+                            <h2 class="block__tile text-center mb-4">Мои предметы:</h2>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Введите название или номер группы" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button">Поиск</button>
+                                </div>
+                            </div>
                             @foreach (var subjectGroup in Model.subjectGroups)
                             {
-                                <li class="list-group-item subj-button" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</li>
+                                <div class="block__item col-12 mb-4">
+                                    <div class="row p-2">
+                                        <div class="item__circle rounded-circle mr-3 d-flex align-content-center align-items-center justify-content-center">
+                                            <img src="~/css/source/subIcon2.png" />
+                                        </div>
+                                        <a class="item__title col-9 d-flex p-0 m-0 align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                                    </div>
+                                </div>
                             }
-                        </ol>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <aside class="account__group col-lg-3">
+        <div class="row h-100 d-flex flex-column">
+
+        </div>
+    </aside>
 </div>

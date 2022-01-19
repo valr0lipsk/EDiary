@@ -64,7 +64,7 @@ $(document).ready(function () {
     })
 
     //open adding photo modal
-    $('#openIconModal').click(function () {
+    $('.openIconModal').click(function () {
         $('#iconModal').modal('show');
     });
 
@@ -72,6 +72,9 @@ $(document).ready(function () {
         $('#statusDate').text(date_time());
     })
 
+    $('#icons__kebab').click(function () {
+        $('.dropdown-menu').dropdown()
+    })
 
     //-----------------------------------------
     //jurnal funcs
