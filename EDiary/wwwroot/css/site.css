@@ -14,7 +14,7 @@ a {
     border-color: #1861ac;
 }
 
-.btn {
+.login__btn {
     margin: 0 20px;
     padding: 15px 34px;
     overflow: hidden;
@@ -30,11 +30,11 @@ a {
     background: linear-gradient(90deg, #b40ec1, #7619fd);
 }
 
-.btn:hover{
+.login__btn:hover{
     color: white;
 }
 
-.btn:before, .btn:after {
+.login__btn:before, .login__btn:after {
     color: white;
     content: "";
     position: absolute;
@@ -49,13 +49,13 @@ a {
     transition: .5s ease;
 }
 
-.btn:hover:before {
+.login__btn:hover:before {
     color: white;
     left: -10%;
     transition: .3s ease;
 }
 
-.btn:hover:after {
+.login__btn:hover:after {
     color: white;
     left: -20%;
 }
