@@ -7,7 +7,7 @@
 <div class="row min-vh-100">
     <aside class="account__sidebar col-lg-3">
         <div class="row h-100 d-flex flex-column">
-            <div class="sidebar__acc col-4 mw-100 p-2 justify-content-between">
+            <div class="sidebar__acc col-3 mw-100 p-2 justify-content-between">
                 <div class="row">
                     <div class="acc__icons col-12 mb-2">
                         <img src="~/css/source/dots.png" />
@@ -21,7 +21,7 @@
                             }
                             @if (student.studentPic == null)
                             {
-                                <img class="accountIcon" id="openIconModal" src="~/css/source/user-image.png" />
+                                <img class="acc__photo" id="openIconModal" src="~/css/source/user-image.png" />
                             }
                         }
                     </div>
@@ -59,8 +59,8 @@
                     </div>
                 </div>
             </div>
-            <div class="sidebar__status border col-1 mw-100">
-                <div class="row d-flex flex-column pr-2 pl-2 pt-2">
+            <div class="sidebar__status border col-1 mw-100 d-flex align-items-center">
+                <div class="row d-flex flex-column pr-2 pl-2">
                     <p class="status__text mb-2">Дата и время:&nbsp;<time id="statusDate"></time></p>
                     <p class="status__text m-0">Текущий средний балл: <span>8.6</span></p> 
                 </div>
@@ -134,10 +134,10 @@
                     </div>
                     <div class="subjects__block col-11">
                         <div class="row d-flex flex-column p-3">
-                            <h2 class="block__tile text-center mb-3">Мои предметы:</h2>
+                            <h2 class="block__tile text-center mb-5">Мои предметы:</h2>
                             @foreach (var subject in Model.subjects)
                             {
-                                <div class="subj-button col-12 mb-3">
+                                <div class="block__item col-12 mb-4">
                                     <div class="row p-2">
                                         <div class="item__circle rounded-circle mr-3 d-flex align-content-center align-items-center justify-content-center">
                                             <img src="~/css/source/subIcon2.png" />

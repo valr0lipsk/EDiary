@@ -394,7 +394,7 @@ td > input{
     background-color: #ffc80033 !important;
 }
 
-.subj-button {
+.block__item {
     background-color: #d5cbf0;
     color: black;
     cursor: pointer;
@@ -402,7 +402,7 @@ td > input{
     border: none !important;
 }
 
-.subj-button:hover {
+.block__item:hover {
     text-decoration: underline;
 }
 
@@ -548,6 +548,6 @@ td > input{
 }
 
 .acc__label > .row > p {
-    font: normal 19px 'Ubuntu', sans-serif;
+    font: normal 22px 'Ubuntu', sans-serif;
     text-align: center;
 }
