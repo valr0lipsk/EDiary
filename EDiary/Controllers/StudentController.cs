@@ -71,7 +71,7 @@ namespace EDiary.Controllers
         [HttpPost]
         public IActionResult AddPicture(AvatarModel studentPicture)
         {
-            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).First();
+            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
             byte[] pic = null;
             using (var binaryReader = new BinaryReader(studentPicture.Picture.OpenReadStream()))
             {

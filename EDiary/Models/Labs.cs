@@ -22,7 +22,7 @@ namespace EDiary.Models
         public int countLabs { get; set; }
 
         [Required]
-        public int subjectId { get; set; }
+        public int tsubjectId { get; set; }
 
         [Required]
         public int subgroupId { get; set; }
@@ -36,8 +36,8 @@ namespace EDiary.Models
         [ForeignKey("teacherId")]
         public Teacher teacher { get; set; }
 
-        [ForeignKey("subjectId")]
-        public Subject subject { get; set; }
+        [ForeignKey("tsubjectId")]
+        public subjectTaught tsubject { get; set; }
 
         [ForeignKey("groupId")]
         public collegeGroup group { get; set; }

@@ -97,8 +97,11 @@ namespace EDiary
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", "{controller=LogIn}/{action=Login}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "changePassword",
+                    pattern:"changePassword",
+                    defaults: new { controller = "LogIn", action = "ChangePassword" });
             });
-
         }
     }
 }
