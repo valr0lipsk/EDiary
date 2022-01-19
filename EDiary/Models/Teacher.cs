@@ -31,7 +31,7 @@ namespace EDiary.Models
         public byte[] teacherPic { get; set; }
 
         [Display(Name = "Эмодзи-статус")]
-        public int teacherStatus { get; set; }
+        public int? teacherStatus { get; set; }
 
         [Required]
         public string teacherUser { get; set; }

@@ -39,7 +39,7 @@ namespace EDiary.Models
         public int studentSubgroup { get; set; }
 
         [Display(Name = "Эмодзи-статус")]
-        public int studentStatus { get; set; }
+        public int? studentStatus { get; set; }
 
         [Required]
         public string studentUser { get; set; }
