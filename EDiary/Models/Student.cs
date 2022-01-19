@@ -34,6 +34,10 @@ namespace EDiary.Models
         [Required]
         public int studentGroup { get; set; }
 
+        [Display(Name = "Подгруппа")]
+        [Required]
+        public int studentSubgroup { get; set; }
+
         [Display(Name = "Эмодзи-статус")]
         public int studentStatus { get; set; }
 
@@ -42,6 +46,9 @@ namespace EDiary.Models
 
         [ForeignKey("studentGroup")]
         public collegeGroup group { get; set; }
+
+        [ForeignKey("studentSubgroup")]
+        public Subgroup subgroup { get; set; }
 
         [ForeignKey("studentUser")]
         public IdentityUser user { get; set; }
