@@ -12,7 +12,7 @@
                         <img src="~/css/source/dots.png" data-toggle="dropdown" id="icons__kebab" />
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                             <a class="dropdown-item openIconModal" href="#">Сменить фото</a>
-                            <a class="dropdown-item" asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
+                            <a class="dropdown-item" asp-route="changePassword">Сменить пароль</a>
                             <a class="dropdown-item" href="#">Сменить почту</a>
                         </div>
                         <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
@@ -39,7 +39,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form asp-action="AddPicture" asp-controller="Student" method="post" enctype="multipart/form-data">
+                                <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
                                         <input name="Picture" class="form-control-file" type="file" required accept="image/*" />
                                     </div>

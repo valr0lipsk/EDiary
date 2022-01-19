@@ -13,7 +13,7 @@ namespace EDiary.Models
         public int lessonTypeId { get; set; }
 
         [Display(Name = "Название типа")]
-        [StringLength(6)]
+        [StringLength(20)]
         [Required]
         public string typeName { get; set; }
     }
