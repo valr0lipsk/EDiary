@@ -68,13 +68,21 @@ $(document).ready(function () {
         $('#iconModal').modal('show');
     });
 
+    //setting current date and time
     setInterval(() => {
         $('#statusDate').text(date_time());
     })
 
+    //open kebab-menu in acc
     $('#icons__kebab').click(function () {
         $('.dropdown-menu').dropdown()
     })
+
+    if ($('#valForNew').text() != '') {
+        $('#passwordHelpBlock').addClass('d-none')
+    }
+
+
 
     //-----------------------------------------
     //jurnal funcs
@@ -169,16 +177,16 @@ $(document).ready(function () {
     const table = $('.editableTable').find('th.vt-text');
     const OKRs = [], KRs = [], SRs = [], EKZs = [];
     for (let i = 0; i < table.length; i++) {
-        if ($(table[i]).attr('data-lessType') == 2) {
+        if ($(table[i]).attr('data-lessType') === 2) {
             OKRs.push(i);
         }
-        else if ($(table[i]).attr('data-lessType') == 3) {
+        else if ($(table[i]).attr('data-lessType') === 3) {
             KRs.push(i);
         }
-        else if ($(table[i]).attr('data-lessType') == 4) {
+        else if ($(table[i]).attr('data-lessType') === 4) {
             SRs.push(i);
         }
-        else if ($(table[i]).attr('data-lessType') == 5) {
+        else if ($(table[i]).attr('data-lessType') === 5) {
             EKZs.push(i);
         }
     }
