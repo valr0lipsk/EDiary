@@ -324,14 +324,14 @@ namespace EDiary.Controllers
                                         select mark.mark.Count()).ToList();*/
 
                 //средний балл
-                /*statistic.averageMark = (from st in context.students
-                                         group st by st.studentId into student
-                                         join sM in context.setMarks on student.FirstOrDefault().studentId equals sM.studentId
-                                         join mark in context.marks on sM.markId equals mark.markId
-                                         join st in context.students on sM.studentId equals st.studentId
-                                         orderby student.FirstOrDefault().studentSurname
-                                         where mark.mark.Trim() != "н/б" && mark.mark.Trim() != "н"
-                                         select int.Parse(mark.mark).Sum()/mark.mark.Count()).ToList();*/
+                //statistic.averageMark = (from st in context.students
+                //                         group st by st.studentId into student
+                //                         join sM in context.setMarks on student.FirstOrDefault().studentId equals sM.studentId
+                //                         join mark in context.marks on sM.markId equals mark.markId
+                //                         join st in context.students on sM.studentId equals st.studentId
+                //                         orderby student.FirstOrDefault().studentSurname
+                //                         where mark.mark.Trim() != "н/б" && mark.mark.Trim() != "н"
+                //                         select Convert.ToInt32(mark.mark)).ToList().Average()
 
                 //var fullStats = statistic.fullName.Zip(statistic.noReasonPass)/*.Zip(statistic.reasonPass)*/;
                 var worksheet = workbook.Worksheets.Add("Статистика");
