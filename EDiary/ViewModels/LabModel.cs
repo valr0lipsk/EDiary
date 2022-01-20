@@ -7,8 +7,8 @@ namespace EDiary.ViewModels
 {
     public class LabModel
     {
-        public int lessonLabaId { get; set; }
+        public int labaId { get; set; }
         public string labaName { get; set; }
-        public string subgroup { get; set; }
+        public int tsubjectId { get; set; }
     }
 }

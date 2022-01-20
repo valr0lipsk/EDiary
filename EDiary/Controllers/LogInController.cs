@@ -74,9 +74,8 @@ namespace EDiary.Controllers
                 var user = await userManager.FindByEmailAsync(forgotPassword.userEmail.Trim());
                 if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
                 {
-                    return View("Login");
+                    ModelState.AddModelError(nameof(ForgotPasswordModel.userEmail), "Не удалось найти пользователя с указанным адресом эл. почты");
                 }
-
                 var сode = await userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = сode }, protocol: HttpContext.Request.Scheme);
                 EmailService emailService = new EmailService();
@@ -106,7 +105,7 @@ namespace EDiary.Controllers
                     var user = await userManager.FindByEmailAsync(resetPassword.userEmail.Trim());
                     if (user == null)
                     {
-                        ModelState.AddModelError(nameof(resetPassword.userEmail), "Пользователь не найден");
+                        ModelState.AddModelError(nameof(ResetPasswordModel.userEmail), "Не удалось найти пользователя с указанным адресом эл. почты");
                         return View(resetPassword);
                     }
                     var result = await userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.newPassword);
