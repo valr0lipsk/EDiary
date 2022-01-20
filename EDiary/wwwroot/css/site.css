@@ -10,7 +10,7 @@ a {
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: #6f42c1;
     border-color: #1861ac;
 }
 
@@ -435,7 +435,8 @@ td > input{
 }
 
 .account__form{
-    min-height: 85vh;
+    min-height: 81vh;
+    background-color: white;
 }
 
 .sidebar__acc, .sidebar__notes, .account__group, .main__subjects, .subjects__side {
@@ -551,3 +552,8 @@ td > input{
     font: normal 22px 'Ubuntu', sans-serif;
     text-align: center;
 }
+
+.changePass__block > * {
+    font-family: 'Ubuntu', sans-serif;
+}
+
