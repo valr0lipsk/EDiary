@@ -292,13 +292,7 @@ namespace EDiary.Controllers
                            {
                                st = st, sM = sM, mark = mark, gr = gr,
                                name= string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
-                               noRP = (from m in context.marks
-                                       join sm in context.setMarks on m.markId equals sm.markId
-                                       join St in context.students on sm.studentId equals st.studentId
-                                       where m.mark == "н/б" select mark.mark).Count()
-
             }).AsEnumerable().GroupBy(stats => stats.st.studentId);
-
                 //ФИО
                 //statistic.fullName = (from student in context.students
                 //                      join gr in context.groups on student.studentGroup equals gr.groupId
@@ -330,7 +324,7 @@ namespace EDiary.Controllers
                 //                         where mark.mark.Trim() != "н/б" && mark.mark.Trim() != "н"
                 //                         select Convert.ToInt32(mark.mark)).ToList().Average()
 
-                var fullStats = statistic.fullName/*.Zip(statistic.reasonPass)*/;
+                //var fullStats = statistic.fullName/*.Zip(statistic.reasonPass)*/;
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
@@ -342,7 +336,7 @@ namespace EDiary.Controllers
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = stats.FirstOrDefault().name;
-                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault().noRP;
+                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault();
                     //worksheet.Cell(currentRow, 3).Value = user.Second;
                 }
 

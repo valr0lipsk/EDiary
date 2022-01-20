@@ -18,11 +18,5 @@ namespace EDiary.ViewModels
         public int rP { get; set; }
         public int id { get; set; }
 
-        public string st { get; set; }
-        public string b { get; set; }
-        public int mark { get; set; }
-        public string gr { get; set; }
-
-
     }
 }

@@ -114,6 +114,8 @@ namespace EDiary.Models
                 Id = "9",
                 UserName = "st000002",
                 NormalizedUserName = "ST000002",
+                Email = "valery.lipskaya03@gmail.com",
+                EmailConfirmed = true,
                 PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "4iNvZYI9")
             });
             modelBuilder.Entity<Student>().HasData(new Student
