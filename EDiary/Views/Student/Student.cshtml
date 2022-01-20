@@ -10,13 +10,14 @@
             <div class="sidebar__acc col-3 mw-100 p-2 justify-content-between">
                 <div class="row">
                     <div class="acc__icons col-12 mb-2">
-                        <img src="~/css/source/dots.png" data-toggle="dropdown" id="icons__kebab"/>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-                            <a class="dropdown-item openIconModal" href="#">Сменить фото</a>
-                            <a class="dropdown-item" asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
-                            <a class="dropdown-item" href="#">Сменить почту</a>
+                        <div class="icons__dropdown">
+                            <img id="icons__dots" src="/css/source/dots.png">
+                            <div id="dropdown" class="dropdown__content">
+                                <a href="#" class="openIconModal">Сменить фото</a>
+                                <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
+                                <a href="#">Сменить почту</a>
+                            </div>
                         </div>
-                        <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
                     </div>
                     <div class="acc__photoplace col-12 d-flex justify-content-center mb-1">
                         @foreach (var student in Model.students)

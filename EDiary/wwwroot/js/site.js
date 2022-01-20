@@ -74,10 +74,24 @@ $(document).ready(function () {
     })
 
     //open kebab-menu in acc
-    $('#icons__kebab').click(function () {
-        $('.dropdown-menu').dropdown()
+    $('#icons__kebab').click(() => {
+        $('#dropdown').toggleClass('show');
     })
 
+    $(window).click(() => {
+        if (!event.target.matches('#icons__kebab')) {
+
+            const dropdowns = $(document).find('dropdown-content');
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    })
+
+    //hide info messagge in pass changing
     if ($('#valForNew').text() != '') {
         $('#passwordHelpBlock').addClass('d-none')
     }
