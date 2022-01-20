@@ -74,12 +74,12 @@ $(document).ready(function () {
     })
 
     //open kebab-menu in acc
-    $('#icons__kebab').click(() => {
+    $('#icons__dots').click(() => {
         $('#dropdown').toggleClass('show');
     })
 
     $(window).click(() => {
-        if (!event.target.matches('#icons__kebab')) {
+        if (!event.target.matches('#icons__dots')) {
 
             const dropdowns = $(document).find('dropdown-content');
             for (let i = 0; i < dropdowns.length; i++) {
