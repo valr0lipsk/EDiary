@@ -122,7 +122,7 @@ namespace EDiary.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(ResetPasswordModel.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
+                ModelState.AddModelError(nameof(ResetPasswordModel.newPassword), "Пароль должен состоять из латинских символов (верхнего и нижнего регистров), цифр и быть не менее 8 символов");
             }
             return View(resetPassword);
         }   
@@ -140,31 +140,35 @@ namespace EDiary.Controllers
                 IdentityUser user = await userManager.FindByIdAsync(userManager.GetUserId(User));
                 if (user != null)
                 {
-                    if (Regex.IsMatch(userPassword.newPassword, passwordPattern) && userPassword.newPassword.Length >= 8)
+                    if (userPassword.oldPassword == userPassword.newPassword)
                     {
-                        IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
-                        if (result.Succeeded)
+                        ModelState.AddModelError(nameof(UserChangePasswordModel.newPassword), "Новый пароль должен отличаться от старого");
+                    }
+                    else
+                    {
+                        if (Regex.IsMatch(userPassword.newPassword, passwordPattern) && userPassword.newPassword.Length >= 8)
                         {
-                            if (user.UserName.Contains("st"))
+                            IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
+                            if (result.Succeeded)
                             {
-                                return RedirectToAction("Student", "Student");
+                                if (await userManager.IsInRoleAsync(user, "student"))
+                                {
+                                    return RedirectToAction("Student", "Student");
+                                }
+                                else if (await userManager.IsInRoleAsync(user, "teacher"))
+                                {
+                                    return RedirectToAction("Teacher", "Teacher");
+                                }
                             }
-                            else if (user.UserName.Contains("tr"))
+                            else
                             {
-                                return RedirectToAction("Teacher", "Teacher");
+                                ModelState.AddModelError(nameof(UserChangePasswordModel.oldPassword), "Неправильно введен старый пароль");
                             }
                         }
                         else
                         {
-                            foreach (var error in result.Errors)
-                            {
-                                ModelState.AddModelError(string.Empty, error.Description);
-                            }
+                            ModelState.AddModelError(nameof(UserChangePasswordModel.newPassword), "Пароль должен состоять из латинских символов (верхнего и нижнего регистров), цифр и быть не менее 8 символов");
                         }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(nameof(UserChangePasswordModel.newPassword), "Пароль должен содержать строчные, прописные буквы, цифры и длиной не менее 8 символов");
                     }
                 }
             }

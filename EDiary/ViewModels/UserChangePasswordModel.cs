@@ -8,8 +8,9 @@ namespace EDiary.ViewModels
 {
     public class UserChangePasswordModel
     {
-        [StringLength(100, ErrorMessage = "Пароль должен сожержать не менее 8 символов", MinimumLength = 8)]
         public string oldPassword { get; set; }
+
+        [StringLength(100, MinimumLength = 8)]
         public string newPassword { get; set; }
     }
 }

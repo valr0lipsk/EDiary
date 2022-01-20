@@ -25,6 +25,12 @@ namespace EDiary.Controllers
         //представление ученика(имя)
         public IActionResult Student()
         {
+            //ViewBag.averageMark = from st in context.students
+            //                      join sm in context.setMarks on st.studentId equals sm.studentId
+            //                      join mark in context.marks on sm.markId equals mark.markId
+            //                      where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && st.studentUser.
+            //                      s
+
             //ФИО учника
             var studentFullName = (from student in context.students
                                    join aspusers in context.Users on student.studentUser equals aspusers.Id

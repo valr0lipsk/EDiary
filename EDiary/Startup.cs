@@ -70,7 +70,7 @@ namespace EDiary
             });
             //передача сервисов для контроллеров и представлений
             services.AddControllersWithViews();
-            //настройка политики авторизации для админов
+            //подключение авторизации
             services.AddAuthorization();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
