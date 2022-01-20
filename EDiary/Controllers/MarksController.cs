@@ -4,6 +4,8 @@ using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -157,7 +159,21 @@ namespace EDiary.Controllers
                              typeName = type.typeName
                          }).ToList();
 
-            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types };
+            var teacherSubject = (from tsub in context.subjectTaughts
+                                  join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                                  join gr in context.groups on tsub.groupId equals gr.groupId
+                                  join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
+                                  join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                                  where teacher.teacherUser == userManager.GetUserId(User)
+                                  orderby subject.subjectName
+                                  select new SubjectGroupModel
+                                  {
+                                      groupName = gr.groupName,
+                                      subjectName = subject.subjectName,
+                                      tsubjectId = tsub.tsubjectId
+                                  }).ToList();
+
+            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = teacherSubject };
             return View(jurnal);
         }
 
@@ -290,9 +306,10 @@ namespace EDiary.Controllers
                            orderby st.studentSurname
                            select new
                            {
-                               st = st, sM = sM, mark = mark, gr = gr,
-                               name= string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
-            }).AsEnumerable().GroupBy(stats => stats.st.studentId);
+                               st, sM, mark, gr,
+                               name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
+                           }).AsEnumerable().GroupBy(stats => stats.st.studentId);
+          
                 //ФИО
                 //statistic.fullName = (from student in context.students
                 //                      join gr in context.groups on student.studentGroup equals gr.groupId
@@ -336,7 +353,7 @@ namespace EDiary.Controllers
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = stats.FirstOrDefault().name;
-                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault();
+                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault().mark;
                     //worksheet.Cell(currentRow, 3).Value = user.Second;
                 }
 
