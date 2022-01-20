@@ -2,7 +2,7 @@
 @model JurnalModel 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="~/js/markTable.js"></script>
-    <div class="container h-100">
+    @*<div class="container h-100">
         <div class="row h-100">
             <div class="col-12 jurnalF h-100 p-3">
                 <div class="row h-100">
@@ -229,13 +229,29 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 
-@*<div class="row min-vh-100">
-    <div class="account__sidebar col-lg-3">
-
+<div class="row min-vh-100">
+    <div class="jurnal__subjects col-lg-3">
+        <div class="row h-100 d-flex flex-column p-3 align-items-center">
+            <h2 class="notes__title mb-4">Мои предметы</h2>
+            <dl class="list-group list-group-flush">
+                @foreach (var sub in Model.teacherSubjects)
+                {
+                    <dd class="list-group-item list-group-item-action cursor">@sub.subjectName (@sub.groupName)</dd>
+                }
+            </dl>
+        </div>
     </div>
-    <div class="account__main col-lg-6">
-
+    <div class="jurnal__main main col-lg-9">
+        <div class="row h-100 p-3 d-flex flex-column align-items-center">
+            <h3 class="p-0">
+                Журнал предмета:
+                @foreach (var subject in Model.Subjects)
+                {
+                    @subject.subjectName
+                }
+            </h3>
+        </div>
     </div>
-</div>*@
+</div>
