@@ -71,7 +71,7 @@ namespace EDiary.Controllers
         [HttpGet]
         public IActionResult Jurnal(int id)
         {
-            if(User.IsInRole("student"))
+            if (User.IsInRole("student"))
             {
                 var studentId = (from st in context.students join us in context.Users on st.studentUser equals us.Id where us.Id == userManager.GetUserId(User) select st.studentId).FirstOrDefault();
                 ViewBag.studentId = studentId;
@@ -80,7 +80,7 @@ namespace EDiary.Controllers
             var subid = id;
 
             //преподаватель
-            var teacherJurnal = (from teacher in context.teachers 
+            var teacherJurnal = (from teacher in context.teachers
                                  join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
                                  where subTaught.tsubjectId == subid
                                  select new Teacher
@@ -143,7 +143,7 @@ namespace EDiary.Controllers
                             where subTaught.tsubjectId == subid
                             select new setMark
                             {
-                                mark = new Mark() { mark = mark.mark, markId = mark.markId},
+                                mark = new Mark() { mark = mark.mark, markId = mark.markId },
                                 lessonId = setMark.lessonId,
                                 setmarkId = setMark.setmarkId,
                                 studentId = setMark.studentId
@@ -157,13 +157,13 @@ namespace EDiary.Controllers
                              typeName = type.typeName
                          }).ToList();
 
-            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types};
+            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types };
             return View(jurnal);
         }
 
         //представление журнала (лабы)
         //[HttpGet]
-        //public IActionResult Jurnal(int subgroupId, int labaId)
+        //public IActionResult Jurnal(int Id, int labaId)
         //{
         //    if (User.IsInRole("student"))
         //    {
@@ -171,7 +171,7 @@ namespace EDiary.Controllers
         //        ViewBag.studentId = studentId;
         //    }
 
-        //    var subgr = subgroupId;
+        //    var subId = Id;
         //    var laba = labaId;
 
         //    //преподаватель
@@ -185,9 +185,9 @@ namespace EDiary.Controllers
         //                             teacherLastname = teacher.teacherLastname
         //                         }).ToList();
         //    //группы
-        //    var groupJurnal = (from subTaught in context.subjectTaughts
-        //                       join gr in context.groups on subTaught.groupId equals gr.groupId
-        //                       where subTaught.tsubjectId == subid
+        //    var groupJurnal = (from lab in context.labs
+        //                       join gr in context.groups on lab.groupId equals gr.groupId
+        //                       where lab.labId == laba 
         //                       select new collegeGroup
         //                       {
         //                           groupName = gr.groupName,
@@ -195,19 +195,20 @@ namespace EDiary.Controllers
 
         //    //предмет
         //    var subjectJurnal = (from subTaught in context.subjectTaughts
-        //                         join st in context.subjects on subTaught.subjectId equals st.subjectId
-        //                         where subTaught.tsubjectId == subid
-        //                         select new Subject
-        //                         {
-        //                             subjectName = st.subjectName,
-        //                             subjectId = subid
+        //                         join lab in context.labs on subTaught.tsubjectId equals lab.tsubjectId
+        //                         where lab.labId == laba
+        //                         select new Labs
+        //                         {  
+        //                             labName = lab.labName,
         //                         }).ToList();
 
         //    //студенты
         //    var studentsJurnal = (from student in context.students
         //                          join gr in context.groups on student.studentGroup equals gr.groupId
         //                          join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-        //                          where subTaught.tsubjectId == subid
+        //                          join lab in context.labs on subTaught.tsubjectId equals lab.tsubjectId
+        //                          join subgr in context.subgroups on student.studentSubgroup equals subgr.subgroupId
+        //                          where lab.labId == laba
         //                          orderby student.studentSurname
         //                          select new Student
         //                          {
@@ -218,7 +219,7 @@ namespace EDiary.Controllers
         //                          }).ToList();
         //    //занятие
         //    var lessonJurnal = (from lesson in context.lessons
-        //                        where lesson.tsubjectId == subid
+        //                        where lesson.tsubjectId == subId && lesson.lessonTypeId == 6
         //                        orderby lesson.lessonDate
         //                        select new Lesson
         //                        {
@@ -233,9 +234,10 @@ namespace EDiary.Controllers
         //                    join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
         //                    join mark in context.marks on setMark.markId equals mark.markId
         //                    join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+        //                    join lab in context.labs on subTaught.tsubjectId equals lab.tsubjectId
         //                    orderby student.studentSurname
         //                    orderby lesson.lessonDate
-        //                    where subTaught.tsubjectId == subid
+        //                    where lab.labId == laba
         //                    select new setMark
         //                    {
         //                        mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -252,7 +254,7 @@ namespace EDiary.Controllers
         //                     typeName = type.typeName
         //                 }).ToList();
 
-        //    var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types };
+        //    var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, labs = subjectJurnal, setMarks = setMarks, types = types };
         //    return View(jurnal);
         //}
 
@@ -280,40 +282,34 @@ namespace EDiary.Controllers
         {
             using (var workbook = new XLWorkbook())
             {
-                //var statistic = new StatisticModel();
-                //var tets = context.students.ToList().GroupJoin(context.setMarks.ToList(), st => st.studentId, sM => sM.studentId, (st, sM) => new { sMid = sM.});
-
+                var statistic = new StatisticModel();
                 var all = (from st in context.students
                            join sM in context.setMarks on st.studentId equals sM.studentId
                            join mark in context.marks on sM.markId equals mark.markId
                            join gr in context.groups on st.studentGroup equals gr.groupId
-                           where mark.mark.Trim() == "н/б" && gr.groupName == "8к2492"
+                           orderby st.studentSurname
                            select new
                            {
-                               st, sM, mark
-                           } into stats
-                           group stats by stats.st.studentId into statistics
-                           select new StatisticModel
-                           {
-                               id = statistics.FirstOrDefault() == null? 0: statistics.FirstOrDefault().st.studentId,
-                               fN = "",//string.Join(" ", statistics.FirstOrDefault().st.studentSurname, statistics.FirstOrDefault().st.studentName.Substring(0, 1) + "."),
-                               nRP = 1//statistics.FirstOrDefault().mark.mark.Count()
-                           }).ToList();
+                               st = st, sM = sM, mark = mark, gr = gr,
+                               name= string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
+                               noRP = (from m in context.marks
+                                       join sm in context.setMarks on m.markId equals sm.markId
+                                       join St in context.students on sm.studentId equals st.studentId
+                                       where m.mark == "н/б" select mark.mark).Count()
+
+            }).AsEnumerable().GroupBy(stats => stats.st.studentId);
+
                 //ФИО
-                /*statistic.fullName = (from student in context.students
-                                      join gr in context.groups on student.studentGroup equals gr.groupId
-                                      orderby student.studentSurname
-                                      where gr.groupName == "8к2492"
-                                      select string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".")).ToList();*/
+                //statistic.fullName = (from student in context.students
+                //                      join gr in context.groups on student.studentGroup equals gr.groupId
+                //                      orderby student.studentSurname
+                //                      where gr.groupName == "8к2492"
+                //                      select string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".")).ToList();
 
                 //пропуски без причины
-                /*statistic.noReasonPass = (from st in context.students
-                                          group st by st.studentId into student
-                                          join sM in context.setMarks on student.Key equals sM.studentId
-                                          join mark in context.marks on sM.markId equals mark.markId
-                                          join gr in context.groups on student.FirstOrDefault().studentGroup equals gr.groupId
-                                          where mark.mark.Trim() == "н/б" && gr.groupName == "8к2492"
-                                          select mark.mark.Count()).ToList();*/
+                 //= (from nrp in all
+                 //           where nrp.FirstOrDefault().mark.mark == "н/б" && nrp.FirstOrDefault().gr.groupName == "8к2492"
+                 //           select nrp.FirstOrDefault().mark.mark.Count());
                 //пропуски по причине
                 /*statistic.reasonPass = (from st in context.students
                                         group st by st.studentId into student
@@ -334,7 +330,7 @@ namespace EDiary.Controllers
                 //                         where mark.mark.Trim() != "н/б" && mark.mark.Trim() != "н"
                 //                         select Convert.ToInt32(mark.mark)).ToList().Average()
 
-                //var fullStats = statistic.fullName.Zip(statistic.noReasonPass)/*.Zip(statistic.reasonPass)*/;
+                var fullStats = statistic.fullName/*.Zip(statistic.reasonPass)*/;
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
@@ -342,11 +338,11 @@ namespace EDiary.Controllers
                 //worksheet.Cell(currentRow, 3).Value = "Пропуски не по уваж.";
                 //worksheet.Cell(currentRow, 4).Value = "Средний балл";
 
-                foreach (var user in all)
+                foreach (var stats in all)
                 {
                     currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = user.fN;
-                    worksheet.Cell(currentRow, 2).Value = user.nRP;
+                    worksheet.Cell(currentRow, 1).Value = stats.FirstOrDefault().name;
+                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault().noRP;
                     //worksheet.Cell(currentRow, 3).Value = user.Second;
                 }
 

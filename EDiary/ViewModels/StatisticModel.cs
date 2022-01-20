@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EDiary.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,11 @@ namespace EDiary.ViewModels
         public List<int> reasonPass { get; set; }
         public int rP { get; set; }
         public int id { get; set; }
+
+        public string st { get; set; }
+        public string b { get; set; }
+        public int mark { get; set; }
+        public string gr { get; set; }
 
 
     }

@@ -60,13 +60,14 @@ namespace EDiary.Controllers
             var studentLabs = (from student in context.students
                                join subgroup in context.subgroups on student.studentSubgroup equals subgroup.subgroupId
                                join labs in context.labs on subgroup.subgroupId equals labs.subgroupId
+                               join subTaught in context.subjectTaughts on labs.tsubjectId equals subTaught.tsubjectId
                                orderby labs.labName
                                where student.studentUser == userManager.GetUserId(User)
                                select new LabModel
                                {
+                                   labaId = labs.labId,
+                                   tsubjectId = subTaught.tsubjectId,
                                    labaName = labs.labName,
-                                   //lessonLabaId
-                                   subgroup = subgroup.subgroupName
                                }).ToList();
 
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject, labs = studentLabs };
