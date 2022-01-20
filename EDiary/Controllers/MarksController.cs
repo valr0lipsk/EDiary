@@ -4,7 +4,6 @@ using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -282,6 +281,8 @@ namespace EDiary.Controllers
             using (var workbook = new XLWorkbook())
             {
                 //var statistic = new StatisticModel();
+                //var tets = context.students.ToList().GroupJoin(context.setMarks.ToList(), st => st.studentId, sM => sM.studentId, (st, sM) => new { sMid = sM.});
+
                 var all = (from st in context.students
                            join sM in context.setMarks on st.studentId equals sM.studentId
                            join mark in context.marks on sM.markId equals mark.markId
@@ -294,9 +295,9 @@ namespace EDiary.Controllers
                            group stats by stats.st.studentId into statistics
                            select new StatisticModel
                            {
-                               id=statistics.FirstOrDefault().st.studentId,
-                               fN = string.Join(" ", statistics.FirstOrDefault().st.studentSurname, statistics.FirstOrDefault().st.studentName.Substring(0, 1) + "."),
-                               nRP = statistics.FirstOrDefault().mark.mark.Count()
+                               id = statistics.FirstOrDefault() == null? 0: statistics.FirstOrDefault().st.studentId,
+                               fN = "",//string.Join(" ", statistics.FirstOrDefault().st.studentSurname, statistics.FirstOrDefault().st.studentName.Substring(0, 1) + "."),
+                               nRP = 1//statistics.FirstOrDefault().mark.mark.Count()
                            }).ToList();
                 //ФИО
                 /*statistic.fullName = (from student in context.students
