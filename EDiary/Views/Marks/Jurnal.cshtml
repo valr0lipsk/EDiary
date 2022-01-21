@@ -235,23 +235,254 @@
     <div class="jurnal__subjects col-lg-3">
         <div class="row h-100 d-flex flex-column p-3 align-items-center">
             <h2 class="notes__title mb-4">Мои предметы</h2>
-            <dl class="list-group list-group-flush">
+            <dl class="list-group list-group-flush w-100 text-center">
                 @foreach (var sub in Model.teacherSubjects)
                 {
-                    <dd class="list-group-item list-group-item-action cursor">@sub.subjectName (@sub.groupName)</dd>
+                    <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
                 }
             </dl>
         </div>
     </div>
     <div class="jurnal__main main col-lg-9">
         <div class="row h-100 p-3 d-flex flex-column align-items-center">
-            <h3 class="p-0">
-                Журнал предмета:
-                @foreach (var subject in Model.Subjects)
-                {
-                    @subject.subjectName
-                }
-            </h3>
+            <div class="jurnal__block col-11">
+                <div class="row d-flex flex-column p-3">
+                    <h3 class="p-0 text-center">
+                        Журнал предмета:
+                        @foreach (var subject in Model.Subjects)
+                        {
+                            @subject.subjectName
+                        }
+                    </h3>
+                    <div class="col-12 jurnal__text mt-4">
+                        <div class="row d-flex flex-column pl-5">
+                            @foreach (var group in Model.Groups)
+                            {
+                                <p class="text__group">Номер группы: @group.groupName</p>
+                            }
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                <p class="text__teacher">Преподаватель: @teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-12 jurnal__buttons mt-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label for="mounthSelection">Выберите месяц</label>
+                                        <select class="custom-select" id="mounthSelection">
+                                            <option>Январь</option>
+                                            <option>Февраль</option>
+                                            <option>Март</option>
+                                            <option>Апрель</option>
+                                            <option>Май</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 jurnal__main">
+                        @if (User.IsInRole("teacher"))
+                        {
+                            <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
+                            <div id="lessModal" class="modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Добавить занятие</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form asp-controller="Marks" asp-action="AddLesson" method="post" enctype="multipart/form-data">
+                                            <div class="modal-body">
+                                                @foreach (var subject in Model.Subjects)
+                                                {
+                                                    <input asp-for="addLesson.id" type="hidden" readonly value="@subject.subjectId" />
+                                                }
+                                                <input asp-for="addLesson.lessonDate" type="datetime-local" required />
+                                                <input asp-for="addLesson.lessonType" type="text" list="lessTypes" required />
+                                                <datalist id="lessTypes">
+                                                    @foreach (var type in Model.types)
+                                                    {
+                                                        <option value="@type.typeName"></option>
+                                                    }
+                                                </datalist>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                                <input type="submit" class="btn btn-primary" value="Добавить" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="table" class="table-editable">
+                                    <span class="table-add float-right mb-3 mr-2">
+                                        <a href="#!" class="text-success"><i class="fas fa-plus fa-2x" aria-hidden="true"></i></a>
+                                    </span>
+                                    <table class="table table-bordered table-responsive-md table-hover text-center">
+                                        <tr class="sticky-header">
+                                            <th></th>
+                                            @if (User.IsInRole("teacher"))
+                                            {
+                                                @foreach (var dateLesson in Model.Lessons)
+                                                {
+                                                    <th class="vt-text delLes" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @foreach (var dateLesson in Model.Lessons)
+                                                {
+                                                    <th class="vt-text" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
+                                                }
+                                            }
+                                        </tr>
+                                        <tbody>
+                                            @foreach (var student in Model.Students)
+                                            {
+                                                @if (student.studentId == ViewBag.studentId)
+                                                {
+                                                    <tr class="currentStudent">
+                                                        @if (student.studentLastname != null)
+                                                        {
+                                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
+                                                        }
+                                                        else
+                                                        {
+                                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
+                                                        }
+
+                                                        @if (User.IsInRole("teacher"))
+                                                        {
+                                                            @foreach (var dateLesson in Model.Lessons)
+                                                            {
+                                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                                if (sm != null)
+                                                                {
+                                                                    <td class="pt-3-half" contenteditable="true" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="pt-3-half" contenteditable="true" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var dateLesson in Model.Lessons)
+                                                            {
+                                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                                if (sm != null)
+                                                                {
+                                                                    <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                                }
+                                                            }
+                                                        }
+
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        @if (student.studentLastname != null)
+                                                        {
+                                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
+                                                        }
+                                                        else
+                                                        {
+                                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
+                                                        }
+
+                                                        @if (User.IsInRole("teacher"))
+                                                        {
+                                                            @foreach (var dateLesson in Model.Lessons)
+                                                            {
+                                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                                if (sm != null)
+                                                                {
+                                                                    <td class="pt-3-half" contenteditable="true" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="pt-3-half" contenteditable="true" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var dateLesson in Model.Lessons)
+                                                            {
+                                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
+                                                                if (sm != null)
+                                                                {
+                                                                    <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
+                                                                }
+                                                            }
+                                                        }
+
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div id="delLessModal" class="modal" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Удалить занятие</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form asp-controller="Marks" asp-action="DeleteLesson" method="post" enctype="multipart/form-data">
+                                                    <div class="modal-body">
+                                                        @foreach (var subject in Model.Subjects)
+                                                        {
+                                                            <input asp-for="deleteLesson.id" type="hidden" readonly value="@subject.subjectId" />
+                                                        }
+                                                        <input asp-for="deleteLesson.lessonId" id="idLess" type="hidden" value="" />
+                                                        <p id="delLabel">Удалить занятие </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                                        <input type="submit" class="btn btn-primary" value="Удалить" />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
