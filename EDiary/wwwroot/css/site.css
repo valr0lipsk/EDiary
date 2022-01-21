@@ -10,8 +10,18 @@ a {
 
 .btn-primary {
     color: #fff;
+    background-color: #7748ca;
+    border-color: #7748ca;
+}
+
+.btn-primary:hover{
     background-color: #6f42c1;
-    border-color: #1861ac;
+    border-color: #6f42c1;
+}
+
+.btn-primary:active{
+    background-color: #6f42c1;
+    border-color: #6f42c1;
 }
 
 .login__btn {
@@ -248,7 +258,7 @@ h1 {
 }
 
 ._table {
-    display: block;
+/*    display: block;*/
     overflow: auto;
     max-width: 100%;
     max-height: 100%;
@@ -525,7 +535,7 @@ td > input{
 
 .item__title {
     font: normal 16px 'Ubuntu', sans-serif;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
 }
 
 .subject__find {
@@ -534,9 +544,11 @@ td > input{
 }
 
 .subject__find:hover{
-    background-color: #8466d26b;
+    background-color: #7748ca;
+    color: white !important;
     cursor: pointer;
 }
+
 
 .subject__find:first-of-type{
     border-top-left-radius: 25px;
@@ -610,4 +622,16 @@ td > input{
 
 .pt-3-half {
     padding-top: 1.4rem;
+}
+
+.editableTable{
+    overflow-x: scroll;
+}
+
+.jurnal__main {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.jurnal__block h3{
+    font-size: 32px;
 }
