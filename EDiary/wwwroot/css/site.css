@@ -592,8 +592,22 @@ td > input{
     border: 0;
 }
 
-.dropdown__content a:hover {color: #16181b;
+.dropdown__content a:hover {
+    color: #16181b;
     text-decoration: none;
-    background-color: #f8f9fa;}
+    background-color: #f8f9fa;
 
-.show {display:block;}
+}
+
+.show {
+    display:block;
+}
+
+.jurnal__block{
+    background-color: white;
+    border-radius: 25px;
+}
+
+.pt-3-half {
+    padding-top: 1.4rem;
+}
