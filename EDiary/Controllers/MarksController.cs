@@ -298,29 +298,88 @@ namespace EDiary.Controllers
         {
             using (var workbook = new XLWorkbook())
             {
-                var statistic = new StatisticModel();
+                //var statistic = new StatisticModel();
+                //выбор только цифр в словарь
+                var marks = (from mark in context.marks
+                             where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв"
+                             select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+
+                //выбор таблиц и группировка по айди
                 var all = (from st in context.students
                            join sM in context.setMarks on st.studentId equals sM.studentId
                            join mark in context.marks on sM.markId equals mark.markId
                            join gr in context.groups on st.studentGroup equals gr.groupId
+                           where gr.groupName == "8к2492"
                            orderby st.studentSurname
                            select new
                            {
                                st, sM, mark, gr,
                                name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
+                               marks = (from stud in context.students
+                                        join setm in context.setMarks on stud.studentId equals setm.studentId
+                                        join m in context.marks on setm.markId equals m.markId
+                                        join grou in context.groups on stud.studentGroup equals grou.groupId
+                                        where grou.groupName == "8к2492" && m.mark == marks.FirstOrDefault().Value
+                                        select m.mark.Count()).AsEnumerable().GroupBy(stats => st.studentId, stats=>st.studentSurname)
                            }).AsEnumerable().GroupBy(stats => stats.st.studentId);
-          
+
+                /*че-то новое*/
+                var allwork = (from st in context.students
+                           join sM in context.setMarks on st.studentId equals sM.studentId
+                           join mark in context.marks on sM.markId equals mark.markId
+                           join gr in context.groups on st.studentGroup equals gr.groupId
+                           where gr.groupName == "8к2492"
+                           orderby st.studentSurname
+                           select new
+                           {
+                               st,
+                               sM,
+                               mark,
+                               gr,
+                               name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
+                               marks = (from stud in context.students
+                                        join setm in context.setMarks on stud.studentId equals setm.studentId
+                                        join m in context.marks on setm.markId equals m.markId
+                                        join grou in context.groups on stud.studentGroup equals grou.groupId
+                                        where grou.groupName == "8к2492" && m.mark == marks.FirstOrDefault().Value
+                                        select m.mark.Count()).AsEnumerable().GroupBy(stats => st.studentId)
+                           }).AsEnumerable().GroupBy(stats => stats.st.studentId);
+
+                //попытка
+                /*var aln = (from st in context.students
+                           join sM in context.setMarks on st.studentId equals sM.studentId
+                           join mark in context.marks on sM.markId equals mark.markId
+                           join gr in context.groups on st.studentGroup equals gr.groupId
+                           where gr.groupName == "8к2492"
+                           orderby st.studentSurname
+                           select new
+                           {
+                               st,
+                               sM,
+                               mark,
+                               gr,
+                               name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
+                               marks = string.Join(", ",mark.mark)
+                           }).GroupBy(stats => stats.st).Select(stats=>new { stats.Key, cnt=stats.FirstOrDefault().mark.mark.Count()});*/
+
+                //среднее
+                /*var average = (from st in context.students
+                               join sM in context.setMarks on st.studentId equals sM.studentId
+                               where sM.mark.mark != "н/б" && sM.mark.mark != "н/а" && sM.mark.mark != "зач" && sM.mark.mark != "незач" && sM.mark.mark != "н"
+                               select Convert.ToInt32(sM.mark.mark)).AsEnumerable();*/
+
                 //ФИО
-                //statistic.fullName = (from student in context.students
-                //                      join gr in context.groups on student.studentGroup equals gr.groupId
-                //                      orderby student.studentSurname
-                //                      where gr.groupName == "8к2492"
-                //                      select string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".")).ToList();
+                /*statistic.fullName = (from student in context.students
+                                      join gr in context.groups on student.studentGroup equals gr.groupId
+                                      orderby student.studentSurname
+                                      where gr.groupName == "8к2492"
+                                      select string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".")).ToList();*/
 
                 //пропуски без причины
-                 //= (from nrp in all
-                 //           where nrp.FirstOrDefault().mark.mark == "н/б" && nrp.FirstOrDefault().gr.groupName == "8к2492"
-                 //           select nrp.FirstOrDefault().mark.mark.Count());
+                /*= (from nrp in all
+                           where nrp.FirstOrDefault().mark.mark == "н/б" && nrp.FirstOrDefault().gr.groupName == "8к2492"
+                           select nrp.FirstOrDefault().mark.mark.Count());*/
+
                 //пропуски по причине
                 /*statistic.reasonPass = (from st in context.students
                                         group st by st.studentId into student
@@ -330,18 +389,19 @@ namespace EDiary.Controllers
                                         orderby student.FirstOrDefault().studentSurname
                                         where mark.mark.Trim() == "н" && subT.tsubjectId == 1 && gr.groupName == "8к2492"
                                         select mark.mark.Count()).ToList();*/
-
+                //фио
+                /*var name = (from al in all
+                            select string.Join(" ", al.FirstOrDefault().st.studentSurname, al.FirstOrDefault().st.studentName.Substring(0, 1) + ".")).ToList();*/
                 //средний балл
-                //statistic.averageMark = (from st in context.students
-                //                         group st by st.studentId into student
-                //                         join sM in context.setMarks on student.FirstOrDefault().studentId equals sM.studentId
-                //                         join mark in context.marks on sM.markId equals mark.markId
-                //                         join st in context.students on sM.studentId equals st.studentId
-                //                         orderby student.FirstOrDefault().studentSurname
-                //                         where mark.mark.Trim() != "н/б" && mark.mark.Trim() != "н"
-                //                         select Convert.ToInt32(mark.mark)).ToList().Average()
+                /*var averageMark = (from al in all
+                                   join mr in marks on al.FirstOrDefault().mark.markId equals mr.Key
+                                   join st in context.students on al.FirstOrDefault().st.studentId equals st.studentId
+                                   join sM in context.setMarks on st.studentId equals sM.studentId
+                                   join mark in context.marks on al.FirstOrDefault().mark.markId equals mark.markId
+                                   join gr in context.groups on al.FirstOrDefault().gr.groupId equals gr.groupId
+                                   where al.FirstOrDefault().gr.groupName == "8к2492" && al.FirstOrDefault().sM.studentId == al.FirstOrDefault().st.studentId
+                                   select Convert.ToInt32(al.FirstOrDefault().mark.mark.Trim())).ToList();*/
 
-                //var fullStats = statistic.fullName/*.Zip(statistic.reasonPass)*/;
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
@@ -353,7 +413,7 @@ namespace EDiary.Controllers
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = stats.FirstOrDefault().name;
-                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault().mark;
+                    worksheet.Cell(currentRow, 2).Value = stats.FirstOrDefault().marks;
                     //worksheet.Cell(currentRow, 3).Value = user.Second;
                 }
 
