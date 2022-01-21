@@ -242,6 +242,10 @@ $(document).ready(function () {
         }
     })
 
+    $('#periodBtn').click(function () {
+        $('#periodModal').modal('show');
+    })
+
     //jurnal table style
     const table = $('.table').find('th.vt-text');
     const OKRs = [], KRs = [], SRs = [], EKZs = [];
