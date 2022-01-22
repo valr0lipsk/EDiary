@@ -1,12 +1,15 @@
 ﻿using ClosedXML.Excel;
 using EDiary.Models;
+using EDiary.Service;
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -295,7 +298,7 @@ namespace EDiary.Controllers
         }
 
         //экспорт статистики 
-        public IActionResult SaveStatistics()
+        public async Task<IActionResult> SaveStatistics()
         {
             using (var workbook = new XLWorkbook())
             {
@@ -434,22 +437,38 @@ namespace EDiary.Controllers
                 //                   join gr in context.groups on al.FirstOrDefault().gr.groupId equals gr.groupId
                 //                   where al.FirstOrDefault().gr.groupName == "8к2492" && al.FirstOrDefault().sM.studentId == al.FirstOrDefault().st.studentId
                 //                   select Convert.ToInt32(al.FirstOrDefault().mark.mark.Trim())).ToList();*/
-                var statistic = context.Database.ExecuteSqlRaw("FullStatistics");
+               
+               
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
                 worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
                 worksheet.Cell(currentRow, 3).Value = "Пропуски не по уваж.";
                 worksheet.Cell(currentRow, 4).Value = "Средний балл";
-
-                foreach (var stats in statistic)
+                using (SqlConnection connection = new SqlConnection(Config.ConnectionString))
                 {
-                    currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = stats.name;
-                    worksheet.Cell(currentRow, 2).Value = stats.noReason;
-                    worksheet.Cell(currentRow, 3).Value = stats.reason;
-                    worksheet.Cell(currentRow, 4).Value = stats.average;
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand("FullStatistic", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (await reader.ReadAsync())
+                            {   
+                                currentRow++;
+                                worksheet.Cell(currentRow, 1).Value = reader.GetString(0);
+                                worksheet.Cell(currentRow, 2).Value = reader.GetInt32(1);
+                                worksheet.Cell(currentRow, 3).Value = reader.GetInt32(2);
+                                worksheet.Cell(currentRow, 4).Value = reader.GetDouble(3);
+                            }
+                        }
+                    }
                 }
+                //foreach (var stats in statistic)
+                //{
+                   
+                //}
 
                 using (var stream = new MemoryStream())
                 {
