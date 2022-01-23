@@ -255,7 +255,7 @@
                         }
                     </h3>
                     <div class="col-12 jurnal__text mt-4">
-                        <div class="row d-flex flex-column pl-4">
+                        <div class="row d-flex flex-column pl-3">
                             @foreach (var group in Model.Groups)
                             {
                                 <p class="text__group">Номер группы: @group.groupName</p>
@@ -264,6 +264,34 @@
                             {
                                 <p class="text__teacher">Преподаватель: @teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</p>
                             }
+                        </div>
+                    </div>
+                    <div id="periodModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Показать за промежуток</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        @foreach (var subject in Model.Subjects)
+                                        {
+                                            <input asp-for="addLesson.id" type="hidden" readonly value="@subject.subjectId" />
+                                        }
+                                        <label for="firstDate">С:</label>
+                                        <input type="datetime-local" id="firstDate" required />
+                                        <label for="secondDate">По:</label>
+                                        <input type="datetime-local" id="secondDate" required />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                        <input type="submit" class="btn btn-primary" value="Добавить" />
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 jurnal__buttons mt-4">
@@ -291,30 +319,33 @@
 
                             <div class="col">
                                 <div class="row pt-1">
-                                    <input type="button" value="Показать за промежуток" class="btn btn-primary" />
+                                    <input id="periodBtn" type="button" value="Показать за промежуток" class="btn btn-primary" />
                                 </div>
                             </div>
 
-                            <div class="col">
-                                <div class="row pt-1">
-                                    <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
+                            @if (User.IsInRole("teacher"))
+                            {
+                                <div class="col">
+                                    <div class="row pt-1">
+                                        <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col">
-                                <div class="row pt-1 d-flex justify-content-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Статистика
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Пропуски за месяц</a>
-                                            <a class="dropdown-item" href="#">Балл за месяц</a>
-                                            <a class="dropdown-item" href="#">Семестровая</a>
+                                <div class="col">
+                                    <div class="row pt-1 d-flex justify-content-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Статистика
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Пропуски за месяц</a>
+                                                <a class="dropdown-item" href="#">Балл за месяц</a>
+                                                <a class="dropdown-item" href="#">Семестровая</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                     </div>
 
