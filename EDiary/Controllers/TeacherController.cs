@@ -24,6 +24,9 @@ namespace EDiary.Controllers
         //представление препода(фамилия, предметы и группы)
         public IActionResult Teacher()
         {
+            ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
+                                                   .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                                   .Select(gr => gr.gr.groupName).FirstOrDefault();
             var teacherNamePic = (from teacher in context.teachers
                                   join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
                                   where teacher.teacherUser == userManager.GetUserId(User)
