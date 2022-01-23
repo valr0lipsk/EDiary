@@ -25,11 +25,11 @@ namespace EDiary.Controllers
         //представление ученика(имя)
         public IActionResult Student()
         {
-            ViewBag.averageMark = (from st in context.students
-                                   join sm in context.setMarks on st.studentId equals sm.studentId
-                                   join mark in context.marks on sm.markId equals mark.markId
-                                   where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && st.studentUser == userManager.GetUserId(User)
-                                   select Convert.ToInt32(mark.mark)).Average();
+            ViewBag.averageMark = Math.Round((from st in context.students
+                                              join sm in context.setMarks on st.studentId equals sm.studentId
+                                              join mark in context.marks on sm.markId equals mark.markId
+                                              where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && st.studentUser == userManager.GetUserId(User)
+                                              select Convert.ToInt32(mark.mark)).Average(), 2);
 
             //ФИО учника
             var studentFullName = (from student in context.students
@@ -44,13 +44,12 @@ namespace EDiary.Controllers
                                        studentPic = student.studentPic
                                    }).ToList();
 
-            var studentSubject = (from student in context.students
-                                  join aspusers in context.Users on student.studentUser equals aspusers.Id
-                                  join gr in context.groups on student.studentGroup equals gr.groupId
-                                  join sT in context.subjectTaughts on gr.groupId equals sT.groupId
-                                  join sub in context.subjects on sT.subjectId equals sub.subjectId
-                                  orderby sub.subjectName
-                                  where student.studentUser == userManager.GetUserId(User)
+            var studentSubject = (from sub in context.subjects
+                                  join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
+                                  join gr in context.groups on sT.groupId equals gr.groupId
+                                  join st in context.students on gr.groupId equals st.studentGroup
+                                  join aspusers in context.Users on st.studentUser equals aspusers.Id
+                                  where st.studentUser == userManager.GetUserId(User)
                                   select new SubjectGroupModel
                                   {
                                       tsubjectId = sT.tsubjectId,
@@ -58,19 +57,20 @@ namespace EDiary.Controllers
                                   }).ToList();
 
             var studentLabs = (from student in context.students
-                               join subgroup in context.subgroups on student.studentSubgroup equals subgroup.subgroupId
-                               join labs in context.labs on subgroup.subgroupId equals labs.subgroupId
-                               join subTaught in context.subjectTaughts on labs.tsubjectId equals subTaught.tsubjectId
-                               orderby labs.labName
+                               join aspusers in context.Users on student.studentUser equals aspusers.Id
+                               join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
+                               join labs in context.labs on subGr.subgroupId equals labs.subgroupId
+                               join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
+                               join sub in context.subjects on sT.subjectId equals sub.subjectId
                                where student.studentUser == userManager.GetUserId(User)
-                               select new LabModel
+                               select new SubjectGroupModel
                                {
+                                   subjectName = labs.labName,
                                    labaId = labs.labId,
-                                   tsubjectId = subTaught.tsubjectId,
-                                   labaName = labs.labName,
+                                   tsubjectId = sT.tsubjectId,
                                }).ToList();
-
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = studentSubject, labs = studentLabs };
+            var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = subLabs};
             return View(studentSubjectGroup);
         }
 

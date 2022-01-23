@@ -176,17 +176,14 @@ namespace EDiary.Controllers
         {
             var teacherGroupSubject = (from teacher in context.teachers
                                        join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
+                                       from sub in context.subjects
+                                       join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                                       where subTaught.teacherId == teacher.teacherId
+                                       orderby sub.subjectName
                                        select new AspTeacherSubjectGroupModel
                                        {
-                                           
-                                           teacherSurname = teacher.teacherSurname,
-                                           teacherName = teacher.teacherName,
-                                           teacherLastname = teacher.teacherLastname,
-                                           subjectName = string.Join(", ", (from sub in context.subjects
-                                                                            join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                                                            where subTaught.teacherId == teacher.teacherId
-                                                                            orderby sub.subjectName
-                                                                            select sub.subjectName.Trim()).ToArray()),
+                                           teacherFullname = string.Join(", ", string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim()+".", teacher.teacherLastname.Substring(0, 1).Trim()+".")),
+                                           subjectName = sub.subjectName,
                                            groupName = (from sub in context.subjects
                                                         join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                         join gr in context.groups on subTaught.groupId equals gr.groupId

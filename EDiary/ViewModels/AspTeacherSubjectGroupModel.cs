@@ -13,6 +13,7 @@ namespace EDiary.ViewModels
         public IEnumerable<SubjectGroupModel> subjectGroups { get; set; }
         public int teacherId { get; set; }
         public string teacherLastname { get; set; }
+        public string teacherFullname { get; set; }
         public string teacherName { get; set; } 
         public string teacherSurname { get; set; }
         public string subjectName { get; set; }

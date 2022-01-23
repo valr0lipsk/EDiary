@@ -52,7 +52,22 @@ namespace EDiary.Controllers
                                      tsubjectId = tsub.tsubjectId
                                  }).ToList();
 
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subjectGroups };
+            var labs = (from tsub in context.subjectTaughts
+                        join gr in context.groups on tsub.groupId equals gr.groupId
+                        join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
+                        join teacher in context.teachers on lab.teacherId equals teacher.teacherId
+                        join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                        where teacher.teacherUser == userManager.GetUserId(User)
+                        orderby lab.labName
+                        select new SubjectGroupModel
+                        {
+                            subjectName = lab.labName,
+                            labaId = lab.labId,
+                            tsubjectId = tsub.tsubjectId,
+                            groupName = gr.groupName
+                        }).ToList();
+            var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs };
             return View(teacherSubjectGroup);
         }
         
