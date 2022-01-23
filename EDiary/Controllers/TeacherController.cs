@@ -24,9 +24,11 @@ namespace EDiary.Controllers
         //представление препода(фамилия, предметы и группы)
         public IActionResult Teacher()
         {
+            //кураторская группа
             ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
                                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
                                                    .Select(gr => gr.gr.groupName).FirstOrDefault();
+            //инфо о преподе
             var teacherNamePic = (from teacher in context.teachers
                                   join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
                                   where teacher.teacherUser == userManager.GetUserId(User)
@@ -37,7 +39,7 @@ namespace EDiary.Controllers
                                       teacherLastname = teacher.teacherLastname,
                                       teacherPic = teacher.teacherPic
                                   }).ToList();
-
+            //предметы
             var subjectGroups = (from tsub in context.subjectTaughts
                                  join subject in context.subjects on tsub.subjectId equals subject.subjectId
                                  join gr in context.groups on tsub.groupId equals gr.groupId
@@ -51,7 +53,7 @@ namespace EDiary.Controllers
                                      subjectName = subject.subjectName,
                                      tsubjectId = tsub.tsubjectId
                                  }).ToList();
-
+            //лабы
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
@@ -66,6 +68,7 @@ namespace EDiary.Controllers
                             tsubjectId = tsub.tsubjectId,
                             groupName = gr.groupName
                         }).ToList();
+
             var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
             AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs };
             return View(teacherSubjectGroup);

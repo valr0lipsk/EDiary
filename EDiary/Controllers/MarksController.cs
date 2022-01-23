@@ -74,7 +74,7 @@ namespace EDiary.Controllers
 
         //журнал предмета и группы
         [HttpGet]
-        public IActionResult Jurnal(int id)
+        public IActionResult Jurnal(int id, int labaId)
         {
             if (User.IsInRole("student"))
             {
@@ -83,104 +83,209 @@ namespace EDiary.Controllers
             }
 
             var subid = id;
+            var labaid = labaId;
 
-            //преподаватель
-            var teacherJurnal = (from teacher in context.teachers
-                                 join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
-                                 where subTaught.tsubjectId == subid
-                                 select new Teacher
-                                 {
-                                     teacherSurname = teacher.teacherSurname,
-                                     teacherName = teacher.teacherName,
-                                     teacherLastname = teacher.teacherLastname
-                                 }).ToList();
-            //группы
-            var groupJurnal = (from subTaught in context.subjectTaughts
-                               join gr in context.groups on subTaught.groupId equals gr.groupId
-                               where subTaught.tsubjectId == subid
-                               select new collegeGroup
-                               {
-                                   groupName = gr.groupName,
-                               }).ToList();
+            //если не лаба
+            if (labaId != 0)
+            {
+                var teacherJurnal = (from teacher in context.teachers
+                                     join lab in context.labs on teacher.teacherId equals lab.teacherId
+                                     where lab.labId == labaid && lab.tsubjectId == subid
+                                     select new Teacher
+                                     {
+                                         teacherSurname = teacher.teacherSurname,
+                                         teacherName = teacher.teacherName,
+                                         teacherLastname = teacher.teacherLastname
+                                     }).ToList();
+                //группы
+                var groupJurnal = (from lab in context.labs
+                                   join gr in context.groups on lab.groupId equals gr.groupId
+                                   join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
+                                   where lab.tsubjectId == subid && lab.labId == labaid
+                                   select new collegeGroup
+                                   {
+                                       groupName = string.Join(" ", gr.groupName, subGr.subgroupName)
+                                   }).ToList();
 
-            //предмет
-            var subjectJurnal = (from subTaught in context.subjectTaughts
-                                 join st in context.subjects on subTaught.subjectId equals st.subjectId
-                                 where subTaught.tsubjectId == subid
-                                 select new Subject
-                                 {
-                                     subjectName = st.subjectName,
-                                     subjectId = subid
-                                 }).ToList();
+                //предмет
+                var subjectJurnal = (from lab in context.labs
+                                     join gr in context.groups on lab.groupId equals gr.groupId
+                                     join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
+                                     where lab.tsubjectId == subid && lab.labId == labaid
+                                     select new Subject
+                                     {
+                                         subjectName = lab.labName,
+                                         subjectId = subid
+                                     }).ToList();
 
-            //студенты
-            var studentsJurnal = (from student in context.students
-                                  join gr in context.groups on student.studentGroup equals gr.groupId
-                                  join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                  where subTaught.tsubjectId == subid
-                                  orderby student.studentSurname
-                                  select new Student
-                                  {
-                                      studentId = student.studentId,
-                                      studentSurname = student.studentSurname,
-                                      studentName = student.studentName,
-                                      studentLastname = student.studentLastname
-                                  }).ToList();
-            //занятие
-            var lessonJurnal = (from lesson in context.lessons
-                                where lesson.tsubjectId == subid
+                //студенты
+                var studentsJurnal = (from student in context.students
+                                      join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
+                                      join laba in context.labs on subGr.subgroupId equals laba.subgroupId
+                                      where laba.tsubjectId == subid && laba.labId == labaid
+                                      orderby student.studentSurname
+                                      select new Student
+                                      {
+                                          studentId = student.studentId,
+                                          studentSurname = student.studentSurname,
+                                          studentName = student.studentName,
+                                          studentLastname = student.studentLastname
+                                      }).ToList();
+                //занятие
+                var lessonJurnal = (from lesson in context.lessons
+                                    join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
+                                    join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
+                                    where sT.tsubjectId == subid && lesson.lessonTypeId == 6 && laba.labId == labaid
+                                    orderby lesson.lessonDate
+                                    select new Lesson
+                                    {
+                                        lessonId = lesson.lessonId,
+                                        lessonDate = lesson.lessonDate,
+                                        lessonTypeId = lesson.lessonTypeId
+                                    }).ToList();
+
+                //выставленные отметки
+                var setMarks = (from setMark in context.setMarks
+                                join student in context.students on setMark.studentId equals student.studentId
+                                join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                join mark in context.marks on setMark.markId equals mark.markId
+                                join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
+                                orderby student.studentSurname
                                 orderby lesson.lessonDate
-                                select new Lesson
+                                where subTaught.tsubjectId == subid && lesson.lessonTypeId == 6 && laba.labId == labaid
+                                select new setMark
                                 {
-                                    lessonId = lesson.lessonId,
-                                    lessonDate = lesson.lessonDate,
-                                    lessonTypeId = lesson.lessonTypeId
+                                    mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                    lessonId = setMark.lessonId,
+                                    setmarkId = setMark.setmarkId,
+                                    studentId = setMark.studentId
                                 }).ToList();
 
-            //выставленные отметки
-            var setMarks = (from setMark in context.setMarks
-                            join student in context.students on setMark.studentId equals student.studentId
-                            join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
-                            join mark in context.marks on setMark.markId equals mark.markId
-                            join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
-                            orderby student.studentSurname
-                            orderby lesson.lessonDate
-                            where subTaught.tsubjectId == subid
-                            select new setMark
-                            {
-                                mark = new Mark() { mark = mark.mark, markId = mark.markId },
-                                lessonId = setMark.lessonId,
-                                setmarkId = setMark.setmarkId,
-                                studentId = setMark.studentId
-                            }).ToList();
+                //типы занятий
+                var types = (from type in context.lessonType
+                             select new lessonType
+                             {
+                                 lessonTypeId = type.lessonTypeId,
+                                 typeName = type.typeName
+                             }).ToList();
 
-            //типы занятий
-            var types = (from type in context.lessonType
-                         select new lessonType
-                         {
-                             lessonTypeId = type.lessonTypeId,
-                             typeName = type.typeName
-                         }).ToList();
+                var teacherSubject = (from tsub in context.subjectTaughts
+                                      join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                                      join gr in context.groups on tsub.groupId equals gr.groupId
+                                      join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
+                                      join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                                      where teacher.teacherUser == userManager.GetUserId(User)
+                                      orderby subject.subjectName
+                                      select new SubjectGroupModel
+                                      {
+                                          groupName = gr.groupName,
+                                          subjectName = subject.subjectName,
+                                          tsubjectId = tsub.tsubjectId
+                                      }).ToList();
 
-            var teacherSubject = (from tsub in context.subjectTaughts
-                                  join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                                  join gr in context.groups on tsub.groupId equals gr.groupId
-                                  join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                                  join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                  where teacher.teacherUser == userManager.GetUserId(User)
-                                  orderby subject.subjectName
-                                  select new SubjectGroupModel
-                                  {
-                                      groupName = gr.groupName,
-                                      subjectName = subject.subjectName,
-                                      tsubjectId = tsub.tsubjectId
-                                  }).ToList();
+                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = teacherSubject };
+                return View(jurnal);
+            }
+            //то предмет
+            else
+            {
+                //преподаватель
+                var teacherJurnal = (from teacher in context.teachers
+                                     join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
+                                     where subTaught.tsubjectId == subid
+                                     select new Teacher
+                                     {
+                                         teacherSurname = teacher.teacherSurname,
+                                         teacherName = teacher.teacherName,
+                                         teacherLastname = teacher.teacherLastname
+                                     }).ToList();
+                //группы
+                var groupJurnal = (from subTaught in context.subjectTaughts
+                                   join gr in context.groups on subTaught.groupId equals gr.groupId
+                                   where subTaught.tsubjectId == subid
+                                   select new collegeGroup
+                                   {
+                                       groupName = gr.groupName,
+                                   }).ToList();
 
-            var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = teacherSubject };
-            return View(jurnal);
+                //предмет
+                var subjectJurnal = (from subTaught in context.subjectTaughts
+                                     join st in context.subjects on subTaught.subjectId equals st.subjectId
+                                     where subTaught.tsubjectId == subid
+                                     select new Subject
+                                     {
+                                         subjectName = st.subjectName,
+                                         subjectId = subid
+                                     }).ToList();
+
+                //студенты
+                var studentsJurnal = (from student in context.students
+                                      join gr in context.groups on student.studentGroup equals gr.groupId
+                                      join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
+                                      where subTaught.tsubjectId == subid
+                                      orderby student.studentSurname
+                                      select new Student
+                                      {
+                                          studentId = student.studentId,
+                                          studentSurname = student.studentSurname,
+                                          studentName = student.studentName,
+                                          studentLastname = student.studentLastname
+                                      }).ToList();
+                //занятие
+                var lessonJurnal = (from lesson in context.lessons
+                                    where lesson.tsubjectId == subid
+                                    orderby lesson.lessonDate
+                                    select new Lesson
+                                    {
+                                        lessonId = lesson.lessonId,
+                                        lessonDate = lesson.lessonDate,
+                                        lessonTypeId = lesson.lessonTypeId
+                                    }).ToList();
+
+                //выставленные отметки
+                var setMarks = (from setMark in context.setMarks
+                                join student in context.students on setMark.studentId equals student.studentId
+                                join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                join mark in context.marks on setMark.markId equals mark.markId
+                                join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                orderby student.studentSurname
+                                orderby lesson.lessonDate
+                                where subTaught.tsubjectId == subid
+                                select new setMark
+                                {
+                                    mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                    lessonId = setMark.lessonId,
+                                    setmarkId = setMark.setmarkId,
+                                    studentId = setMark.studentId
+                                }).ToList();
+
+                //типы занятий
+                var types = (from type in context.lessonType
+                             select new lessonType
+                             {
+                                 lessonTypeId = type.lessonTypeId,
+                                 typeName = type.typeName
+                             }).ToList();
+
+                var teacherSubject = (from tsub in context.subjectTaughts
+                                      join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                                      join gr in context.groups on tsub.groupId equals gr.groupId
+                                      join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
+                                      join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                                      where teacher.teacherUser == userManager.GetUserId(User)
+                                      orderby subject.subjectName
+                                      select new SubjectGroupModel
+                                      {
+                                          groupName = gr.groupName,
+                                          subjectName = subject.subjectName,
+                                          tsubjectId = tsub.tsubjectId
+                                      }).ToList();
+
+                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = teacherSubject };
+                return View(jurnal);
+            }
         }
-
-      
 
         //добавление занятия
         public IActionResult AddLesson(LessonModel addLesson)

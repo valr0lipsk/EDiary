@@ -25,6 +25,7 @@ namespace EDiary.Controllers
         //представление ученика(имя)
         public IActionResult Student()
         {
+            //средний балл
             ViewBag.averageMark = Math.Round((from st in context.students
                                               join sm in context.setMarks on st.studentId equals sm.studentId
                                               join mark in context.marks on sm.markId equals mark.markId
@@ -43,7 +44,7 @@ namespace EDiary.Controllers
                                        studentLastname = student.studentLastname,
                                        studentPic = student.studentPic
                                    }).ToList();
-
+            //предметы
             var studentSubject = (from sub in context.subjects
                                   join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
                                   join gr in context.groups on sT.groupId equals gr.groupId
@@ -55,7 +56,7 @@ namespace EDiary.Controllers
                                       tsubjectId = sT.tsubjectId,
                                       subjectName = sub.subjectName
                                   }).ToList();
-
+            //лабы
             var studentLabs = (from student in context.students
                                join aspusers in context.Users on student.studentUser equals aspusers.Id
                                join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
