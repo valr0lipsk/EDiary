@@ -396,23 +396,25 @@
                             <div class="card-body">
                                 <div id="table" class="table-editable sticky-table sticky-ltr-cells">
                                     <table class="table _table table-bordered table-responsive-md table-hover text-center m-0 editableTable overflow-auto">
-                                        <tr class="sticky-header">
-                                            <th></th>
-                                            @if (User.IsInRole("teacher"))
-                                            {
-                                                @foreach (var dateLesson in Model.Lessons)
+                                        <thead class="sticky-header"> 
+                                            <tr class="sticky-header">
+                                                <th></th>
+                                                @if (User.IsInRole("teacher"))
                                                 {
-                                                    <th class="vt-text delLes" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
+                                                    @foreach (var dateLesson in Model.Lessons)
+                                                    {
+                                                        <th class="vt-text delLes" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
+                                                    }
                                                 }
-                                            }
-                                            else
-                                            {
-                                                @foreach (var dateLesson in Model.Lessons)
+                                                else
                                                 {
-                                                    <th class="vt-text" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
+                                                    @foreach (var dateLesson in Model.Lessons)
+                                                    {
+                                                        <th class="vt-text" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
+                                                    }
                                                 }
-                                            }
-                                        </tr>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             @foreach (var student in Model.Students)
                                             {

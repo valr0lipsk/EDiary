@@ -307,7 +307,7 @@ $(document).ready(function () {
     jurnalStyle();
 
     $('.jurnal__link').click(function () {
-        const subId = $(this).attr('data-id');
+        const subId = $(this).attr('data-subid');
         const labId = $(this).attr('data-labaid');
         if (labId) { //if subj is lab 
             $.ajax({
