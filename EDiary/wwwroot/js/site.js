@@ -52,11 +52,10 @@ $(document).ready(function () {
     $('.item__title').click(function () {
         const subId = $(this).attr('data-id');
         const labId = $(this).attr('data-labaid');
-        if (labId) {
+        if (labId) { //if subj is lab 
             $.ajax({
                 type: 'GET',
                 data: {
-/*                    'id': subId,*/
                     'labId': labId,
                 },
                 cache: false,
@@ -66,7 +65,7 @@ $(document).ready(function () {
                 }
             });
         }
-        else {
+        else { //if not
             $.ajax({
                 type: 'GET',
                 data: { 'id': subId },
@@ -230,7 +229,7 @@ $(document).ready(function () {
                 }
             })
         }
-        else {
+        else if ($(this).text()){
             lessId = $(this).attr('data-idLess');
             studId = $(this).attr('data-idStud');
             const td = $(this);
@@ -266,21 +265,26 @@ $(document).ready(function () {
     //jurnal table style
     function jurnalStyle() {
         const table = $('.table').find('th.vt-text');
+        console.log(table);
         const OKRs = [], KRs = [], SRs = [], EKZs = [];
         for (let i = 0; i < table.length; i++) {
-            if ($(table[i]).attr('data-lessType') === 2) {
+            if ($(table[i]).attr('data-lessType') === '2') {
                 OKRs.push(i);
             }
-            else if ($(table[i]).attr('data-lessType') === 3) {
+            else if ($(table[i]).attr('data-lessType') === '3') {
                 KRs.push(i);
             }
-            else if ($(table[i]).attr('data-lessType') === 4) {
+            else if ($(table[i]).attr('data-lessType') === '4') {
                 SRs.push(i);
             }
-            else if ($(table[i]).attr('data-lessType') === 5) {
+            else if ($(table[i]).attr('data-lessType') === '5') {
                 EKZs.push(i);
             }
         }
+        console.log(OKRs)
+        console.log(KRs)
+        console.log(SRs)
+        console.log(EKZs)
         const rows = $('.table').find('tr:not(:first)');
         for (let i = 0; i < rows.length; i++) {
             for (let j = 0; j < rows[i].children.length; j++) {
@@ -303,16 +307,32 @@ $(document).ready(function () {
     jurnalStyle();
 
     $('.jurnal__link').click(function () {
-        const subId = $(this).attr('data-subId');
-        $.ajax({
-            type: 'GET',
-            data: { 'id': subId },
-            cache: false,
-            async: true,
-            success: function (result) {
-                window.location.href = '/Marks/Jurnal?id=' + subId;
-            }
-        });
+        const subId = $(this).attr('data-id');
+        const labId = $(this).attr('data-labaid');
+        if (labId) { //if subj is lab 
+            $.ajax({
+                type: 'GET',
+                data: {
+                    'labId': labId,
+                },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    window.location.href = '/Marks/Jurnal?labId=' + labId;
+                }
+            });
+        }
+        else { //if not
+            $.ajax({
+                type: 'GET',
+                data: { 'id': subId },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    window.location.href = '/Marks/Jurnal?id=' + subId;
+                }
+            });
+        }
     })
 });
 
