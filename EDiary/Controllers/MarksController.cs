@@ -75,12 +75,7 @@ namespace EDiary.Controllers
         //журнал предмета и группы
         [HttpGet]
         public IActionResult Jurnal(int id, int labId)
-        {
-            if (User.IsInRole("student"))
-            {
-                var studentId = (from st in context.students join us in context.Users on st.studentUser equals us.Id where us.Id == userManager.GetUserId(User) select st.studentId).FirstOrDefault();
-                ViewBag.studentId = studentId;
-            }
+        {   
             var subid = id;
             var labid = labId;
 
@@ -114,6 +109,37 @@ namespace EDiary.Controllers
                             groupName = gr.groupName
                         }).ToList();
 
+            if (User.IsInRole("student"))
+            {
+                var studentId = (from st in context.students join us in context.Users on st.studentUser equals us.Id where us.Id == userManager.GetUserId(User) select st.studentId).FirstOrDefault();
+                ViewBag.studentId = studentId;
+                //предметы ученика
+                subjects = (from sub in context.subjects
+                                      join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
+                                      join gr in context.groups on sT.groupId equals gr.groupId
+                                      join st in context.students on gr.groupId equals st.studentGroup
+                                      join aspusers in context.Users on st.studentUser equals aspusers.Id
+                                      where st.studentUser == userManager.GetUserId(User)
+                                      select new SubjectGroupModel
+                                      {
+                                          tsubjectId = sT.tsubjectId,
+                                          subjectName = sub.subjectName
+                                      }).ToList();
+                //лабы ученика
+                labs = (from student in context.students
+                                   join aspusers in context.Users on student.studentUser equals aspusers.Id
+                                   join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
+                                   join lab in context.labs on subGr.subgroupId equals lab.subgroupId
+                                   join sT in context.subjectTaughts on lab.tsubjectId equals sT.tsubjectId
+                                   join sub in context.subjects on sT.subjectId equals sub.subjectId
+                                   where student.studentUser == userManager.GetUserId(User)
+                                   select new SubjectGroupModel
+                                   {
+                                       subjectName = lab.labName,
+                                       labaId = lab.labId,
+                                       tsubjectId = sT.tsubjectId,
+                                   }).ToList();
+            }
             var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
 
             //если лаба
@@ -143,10 +169,10 @@ namespace EDiary.Controllers
                                      join gr in context.groups on lab.groupId equals gr.groupId
                                      join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
                                      where  lab.labId == labid
-                                     select new Subject
+                                     select new SubjectGroupModel
                                      {
                                          subjectName = lab.labName,
-                                         subjectId = subid
+                                         labaId = labId
                                      }).ToList();
 
                 //студенты
@@ -202,7 +228,7 @@ namespace EDiary.Controllers
                                  typeName = type.typeName
                              }).ToList();
 
-                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = subLabs };
+                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, userSubjects = subLabs };
                 return View(jurnal);
             }
             //то предмет
@@ -231,10 +257,10 @@ namespace EDiary.Controllers
                 var subjectJurnal = (from subTaught in context.subjectTaughts
                                      join st in context.subjects on subTaught.subjectId equals st.subjectId
                                      where subTaught.tsubjectId == subid
-                                     select new Subject
+                                     select new SubjectGroupModel
                                      {
                                          subjectName = st.subjectName,
-                                         subjectId = subid
+                                         tsubjectId = subid
                                      }).ToList();
 
                 //студенты
@@ -286,7 +312,7 @@ namespace EDiary.Controllers
                                  typeName = type.typeName
                              }).ToList();
 
-                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = subLabs };
+                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types,userSubjects = subLabs };
                 return View(jurnal);
             }
         }
@@ -294,10 +320,21 @@ namespace EDiary.Controllers
         //добавление занятия
         public IActionResult AddLesson(LessonModel addLesson)
         {
-            Lesson lesson = new Lesson { tsubjectId = addLesson.id, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()};
-            context.lessons.Add(lesson);
-            context.SaveChanges();
-            return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
+            if (addLesson.labId == 0)
+            {
+                Lesson lesson = new Lesson { tsubjectId = addLesson.id, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault() };
+                context.lessons.Add(lesson);
+                context.SaveChanges();
+                return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
+            }
+            else
+            {
+                var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab }).Where(l => l.lab.labId == addLesson.labId).Select(sT => sT.st.tsubjectId).FirstOrDefault();
+                Lesson lesson = new Lesson { tsubjectId = tsub, lessonDate = addLesson.lessonDate, lessonTypeId = 6 };
+                context.lessons.Add(lesson);
+                context.SaveChanges();
+                return RedirectToAction("Jurnal", "Marks", new { addLesson.labId });
+            }
         }
         
         //удаление занятия
@@ -307,7 +344,11 @@ namespace EDiary.Controllers
             var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.lessonId).FirstOrDefault();
             context.lessons.Remove(lesson);
             context.SaveChanges();
-            return RedirectToAction("Jurnal", "Marks", new { deleteLesson.id });
+            if (deleteLesson.labId == 0)
+            {
+                return RedirectToAction("Jurnal", "Marks", new { deleteLesson.id });
+            }
+            else return RedirectToAction("Jurnal", "Marks", new { deleteLesson.labId });
         }
 
         //экспорт статистики 
