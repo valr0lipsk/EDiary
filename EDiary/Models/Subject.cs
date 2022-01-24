@@ -12,7 +12,7 @@ namespace EDiary.Models
         public int subjectId { get; set; }
 
         [Display(Name = "Название предмета")]
-        [StringLength(40)]
+        [StringLength(150)]
         [Required]
         public string subjectName { get; set; }
 

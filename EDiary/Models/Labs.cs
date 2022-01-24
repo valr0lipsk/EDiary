@@ -13,7 +13,7 @@ namespace EDiary.Models
         public int labId { get; set; }
 
         [Display(Name = "Лабораторная работа")]
-        [StringLength(40)]
+        [StringLength(150)]
         [Required]
         public string labName { get; set; }
 
