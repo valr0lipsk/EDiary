@@ -1,8 +1,7 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
 @model IEnumerable<AspStudentGroupModel>
-<table class="table table-hover table-bordered">
-    @*Таблица студентов*@
+@*<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <th scope="col">Логин</th>
@@ -26,4 +25,32 @@
                </tr>
             }
     </tbody>
-</table>
+</table>*@
+
+<div>
+    <table class="table table-bordered table-responsive">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Email</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Отчество</th>
+                <th scope="col">Группа</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var userStudentGroup in Model)
+            {
+               <tr>
+                   <td>@userStudentGroup.studentLogin</td>
+                   <td>@userStudentGroup.studentEmail</td>
+                   <td>@userStudentGroup.studentSurname</td>
+                   <td>@userStudentGroup.studentName</td>
+                   <td>@userStudentGroup.studentLastname</td>
+                   <td>@userStudentGroup.groupName</td>
+               </tr>
+            }
+    </tbody>
+    </table>
+</div> 
