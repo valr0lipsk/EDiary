@@ -74,7 +74,7 @@ namespace EDiary.Controllers
 
         //журнал предмета и группы
         [HttpGet]
-        public IActionResult Jurnal(int id, int labaId)
+        public IActionResult Jurnal(int id, int labId)
         {
             if (User.IsInRole("student"))
             {
@@ -83,14 +83,14 @@ namespace EDiary.Controllers
             }
 
             var subid = id;
-            var labaid = labaId;
+            var labid = labId;
 
             //если лаба
-            if (labaId != null)
+            if (labId != 0)
             {
                 var teacherJurnal = (from teacher in context.teachers
                                      join lab in context.labs on teacher.teacherId equals lab.teacherId
-                                     where lab.labId == labaid && lab.tsubjectId == subid
+                                     where lab.labId == labid
                                      select new Teacher
                                      {
                                          teacherSurname = teacher.teacherSurname,
@@ -101,7 +101,7 @@ namespace EDiary.Controllers
                 var groupJurnal = (from lab in context.labs
                                    join gr in context.groups on lab.groupId equals gr.groupId
                                    join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
-                                   where lab.tsubjectId == subid && lab.labId == labaid
+                                   where  lab.labId == labid
                                    select new collegeGroup
                                    {
                                        groupName = string.Join(" ", gr.groupName, subGr.subgroupName)
@@ -111,7 +111,7 @@ namespace EDiary.Controllers
                 var subjectJurnal = (from lab in context.labs
                                      join gr in context.groups on lab.groupId equals gr.groupId
                                      join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
-                                     where lab.tsubjectId == subid && lab.labId == labaid
+                                     where  lab.labId == labid
                                      select new Subject
                                      {
                                          subjectName = lab.labName,
@@ -122,7 +122,8 @@ namespace EDiary.Controllers
                 var studentsJurnal = (from student in context.students
                                       join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
-                                      where laba.tsubjectId == subid && laba.labId == labaid
+                                      join gr in context.groups on laba.groupId equals gr.groupId
+                                      where laba.labId == labid
                                       orderby student.studentSurname
                                       select new Student
                                       {
@@ -135,7 +136,7 @@ namespace EDiary.Controllers
                 var lessonJurnal = (from lesson in context.lessons
                                     join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                     join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                    where sT.tsubjectId == subid && lesson.lessonTypeId == 6 && laba.labId == labaid
+                                    where lesson.lessonTypeId == 6 && laba.labId == labid
                                     orderby lesson.lessonDate
                                     select new Lesson
                                     {
@@ -153,7 +154,7 @@ namespace EDiary.Controllers
                                 join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
                                 orderby student.studentSurname
                                 orderby lesson.lessonDate
-                                where subTaught.tsubjectId == subid && lesson.lessonTypeId == 6 && laba.labId == labaid
+                                where lesson.lessonTypeId == 6 && laba.labId == labid
                                 select new setMark
                                 {
                                     mark = new Mark() { mark = mark.mark, markId = mark.markId },

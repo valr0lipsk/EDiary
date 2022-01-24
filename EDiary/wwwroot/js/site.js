@@ -57,12 +57,12 @@ $(document).ready(function () {
                 type: 'GET',
                 data: {
 /*                    'id': subId,*/
-                    'labaId': labId,
+                    'labId': labId,
                 },
                 cache: false,
                 async: true,
                 success: function (result) {
-                    window.location.href = '/Marks/Jurnal?labaId=' + labId;
+                    window.location.href = '/Marks/Jurnal?labId=' + labId;
                 }
             });
         }
