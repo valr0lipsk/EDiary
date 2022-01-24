@@ -699,6 +699,22 @@ namespace EDiary.Models
                 studentGroup = 2,
                 studentUser = "37"
             });
+            //7-ой препод
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = "38",
+                UserName = "tr000007",
+                NormalizedUserName = "TR000007",
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "7jOD2Cof")
+            });
+            modelBuilder.Entity<Teacher>().HasData(new Teacher
+            {
+                teacherId = 7,
+                teacherSurname = "Виничук",
+                teacherName = "Ольга",
+                teacherLastname = "Николаевна",
+                teacherUser = "38"
+            });
         }
     }
 

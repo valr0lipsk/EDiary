@@ -85,8 +85,8 @@ namespace EDiary.Controllers
             var subid = id;
             var labaid = labaId;
 
-            //если не лаба
-            if (labaId != 0)
+            //если лаба
+            if (labaId != null)
             {
                 var teacherJurnal = (from teacher in context.teachers
                                      join lab in context.labs on teacher.teacherId equals lab.teacherId
