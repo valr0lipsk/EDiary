@@ -51,15 +51,32 @@ $(document).ready(function () {
     //get subject id from acc to open jurnal page
     $('.item__title').click(function () {
         const subId = $(this).attr('data-id');
-        $.ajax({
-            type: 'GET',
-            data: { 'id': subId },
-            cache: false,
-            async: true,
-            success: function (result) {
-                window.location.href = '/Marks/Jurnal?id=' + subId;
-            }
-        });
+        const labId = $(this).attr('data-labaid');
+        if (labId) {
+            $.ajax({
+                type: 'GET',
+                data: {
+/*                    'id': subId,*/
+                    'labaId': labId,
+                },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    window.location.href = '/Marks/Jurnal?labaId=' + labId;
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: 'GET',
+                data: { 'id': subId },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    window.location.href = '/Marks/Jurnal?id=' + subId;
+                }
+            });
+        }
     })
 
     //open adding photo modal
@@ -247,39 +264,43 @@ $(document).ready(function () {
     })
 
     //jurnal table style
-    const table = $('.table').find('th.vt-text');
-    const OKRs = [], KRs = [], SRs = [], EKZs = [];
-    for (let i = 0; i < table.length; i++) {
-        if ($(table[i]).attr('data-lessType') === 2) {
-            OKRs.push(i);
+    function jurnalStyle() {
+        const table = $('.table').find('th.vt-text');
+        const OKRs = [], KRs = [], SRs = [], EKZs = [];
+        for (let i = 0; i < table.length; i++) {
+            if ($(table[i]).attr('data-lessType') === 2) {
+                OKRs.push(i);
+            }
+            else if ($(table[i]).attr('data-lessType') === 3) {
+                KRs.push(i);
+            }
+            else if ($(table[i]).attr('data-lessType') === 4) {
+                SRs.push(i);
+            }
+            else if ($(table[i]).attr('data-lessType') === 5) {
+                EKZs.push(i);
+            }
         }
-        else if ($(table[i]).attr('data-lessType') === 3) {
-            KRs.push(i);
-        }
-        else if ($(table[i]).attr('data-lessType') === 4) {
-            SRs.push(i);
-        }
-        else if ($(table[i]).attr('data-lessType') === 5) {
-            EKZs.push(i);
+        const rows = $('.table').find('tr:not(:first)');
+        for (let i = 0; i < rows.length; i++) {
+            for (let j = 0; j < rows[i].children.length; j++) {
+                if (OKRs.indexOf(j) != -1) {
+                    $(rows[i].children[j + 1]).addClass('lessOKR')
+                }
+                else if (KRs.indexOf(j) != -1) {
+                    $(rows[i].children[j + 1]).addClass('lessKR')
+                }
+                else if (SRs.indexOf(j) != -1) {
+                    $(rows[i].children[j + 1]).addClass('lessSR')
+                }
+                else if (EKZs.indexOf(j) != -1) {
+                    $(rows[i].children[j + 1]).addClass('lessEKZ')
+                }
+            }
         }
     }
-    const rows = $('.table').find('tr:not(:first)');
-    for (let i = 0; i < rows.length; i++) {
-        for (let j = 0; j < rows[i].children.length; j++) {
-            if (OKRs.indexOf(j) != -1) {
-                $(rows[i].children[j + 1]).addClass('lessOKR')
-            }
-            else if (KRs.indexOf(j) != -1) {
-                $(rows[i].children[j + 1]).addClass('lessKR')
-            }
-            else if (SRs.indexOf(j) != -1) {
-                $(rows[i].children[j + 1]).addClass('lessSR')
-            }
-            else if (EKZs.indexOf(j) != -1) {
-                $(rows[i].children[j + 1]).addClass('lessEKZ')
-            }
-        }
-    }
+
+    jurnalStyle();
 
     $('.jurnal__link').click(function () {
         const subId = $(this).attr('data-subId');
