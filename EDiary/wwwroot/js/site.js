@@ -216,7 +216,6 @@ $(document).ready(function () {
                 cache: false,
                 async: true,
                 success: function (result) {
-                    //alert(result.message)
                     if (result.status === 'deleted') {
                         td[0].removeAttribute('data-idsm')
                     }

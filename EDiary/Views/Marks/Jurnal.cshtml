@@ -236,23 +236,40 @@
         <div class="row h-100 d-flex flex-column p-3 align-items-center">
             <h2 class="notes__title mb-4">Мои предметы</h2>
             <dl class="list-group list-group-flush w-100 text-center">
-                @foreach (var sub in Model.userSubjects)
+                @if (User.IsInRole("teacher"))
                 {
-                    @if (sub.labaId == 0)
+                    @foreach (var sub in Model.userSubjects)
                     {
-                        <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
+                        @if (sub.labaId == 0)
+                        {
+                            <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
+                        }
+                        else
+                        {
+                            <dd class="list-group-item list-group-item-action cursor jurnal__link" data-labaid="@sub.labaId">@sub.subjectName (@sub.groupName)</dd>
+                        }
                     }
-                    else
-                    {
-                        <dd class="list-group-item list-group-item-action cursor jurnal__link" data-labaid="@sub.labaId">@sub.subjectName (@sub.groupName)</dd>
-                    }
+                }
+                else
+                {
+                    @foreach (var sub in Model.userSubjects)
+                        {
+                            @if (sub.labaId == 0)
+                            {
+                                <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName</dd>
+                            }
+                            else
+                            {
+                                <dd class="list-group-item list-group-item-action cursor jurnal__link" data-labaid="@sub.labaId">@sub.subjectName</dd>
+                            }
+                        }
                 }
             </dl>
         </div>
     </div>
     <div class="jurnal__main main col-lg-9">
         <div class="row h-100 p-3 d-flex flex-column align-items-center">
-            <div class="jurnal__block col-11">
+            <div class="jurnal__block col-12">
                 <div class="row d-flex flex-column p-3 pt-4">
                     <h3 class="p-0 text-center">
                         Журнал предмета:<br />
@@ -310,35 +327,64 @@
                     </div>
                     <div class="col-12 jurnal__buttons mt-4">
                         <div class="row pl-3 pr-3 align-items-center">
-                            <div class="col">
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="m-0" for="mounthSelection">Показать за:</label>
-                                        <select class="custom-select" id="mounthSelection">
-                                            <option>Январь</option>
-                                            <option>Февраль</option>
-                                            <option>Март</option>
-                                            <option>Апрель</option>
-                                            <option>Май</option>
-                                            <option>Июнь</option>
-                                            <option>Июль</option>
-                                            <option>Сентябрь</option>
-                                            <option>Октябрь</option>
-                                            <option>Ноябрь</option>
-                                            <option>Декабрь</option>
-                                        </select>
+                            @if (User.IsInRole("student"))
+                            {
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="m-0" for="mounthSelection">Показать за:</label>
+                                            <select class="custom-select" id="mounthSelection">
+                                                <option>Январь</option>
+                                                <option>Февраль</option>
+                                                <option>Март</option>
+                                                <option>Апрель</option>
+                                                <option>Май</option>
+                                                <option>Июнь</option>
+                                                <option>Июль</option>
+                                                <option>Сентябрь</option>
+                                                <option>Октябрь</option>
+                                                <option>Ноябрь</option>
+                                                <option>Декабрь</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col">
-                                <div class="row pt-1">
-                                    <input id="periodBtn" type="button" value="Показать за промежуток" class="btn btn-primary" />
+                                <div class="col-3">
+                                    <div class="row pt-1">
+                                        <input id="periodBtn" type="button" value="Показать за промежуток" class="btn btn-primary" />
+                                    </div>
                                 </div>
-                            </div>
+                            }
 
                             @if (User.IsInRole("teacher"))
                             {
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="m-0" for="mounthSelection">Показать за:</label>
+                                            <select class="custom-select" id="mounthSelection">
+                                                <option>Январь</option>
+                                                <option>Февраль</option>
+                                                <option>Март</option>
+                                                <option>Апрель</option>
+                                                <option>Май</option>
+                                                <option>Июнь</option>
+                                                <option>Июль</option>
+                                                <option>Сентябрь</option>
+                                                <option>Октябрь</option>
+                                                <option>Ноябрь</option>
+                                                <option>Декабрь</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="row pt-1">
+                                        <input id="periodBtn" type="button" value="Показать за промежуток" class="btn btn-primary" />
+                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="row pt-1">
                                         <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
@@ -409,7 +455,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div id="table" class="table-editable sticky-table sticky-ltr-cells">
-                                    <table class="table _table table-bordered table-responsive-md table-hover text-center m-0 editableTable overflow-auto">
+                                    <table class="table table-sm _table table-bordered table-responsive table-hover text-center m-0 editableTable overflow-auto">
                                         <thead class="sticky-header"> 
                                             <tr class="sticky-header">
                                                 <th></th>
