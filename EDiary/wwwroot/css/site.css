@@ -360,6 +360,7 @@ tr, td{
 }
 .sticky-table table tr.sticky-header th, .sticky-table table tr.sticky-header td {
     top: 0;
+    vertical-align: middle;
 }
 
 .sticky-table table td.sticky-cell, .sticky-table table th.sticky-cell{
@@ -466,9 +467,9 @@ td > input{
 .notes__note {
     background-color: #d4ddfa;
     border-radius: 25px;
-    -webkit-box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
+/*    -webkit-box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);*/
 }
 
 .notes__title {
@@ -495,8 +496,8 @@ td > input{
 }
 
 .status__text > span{
-    font-size: 15px;
-    font-weight: bold;
+/*    font-size: 15px;
+    font-weight: bold;*/
 }
 
 .main{
@@ -634,4 +635,12 @@ td > input{
 
 .jurnal__block h3{
     font-size: 32px;
+}
+
+.nav-item .navbar-brand > img {
+    width: 30pt;
+}
+
+.navbar-brand > img {
+    width: 40pt;
 }

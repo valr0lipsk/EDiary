@@ -14,17 +14,35 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
             <div class="container-fluid">
-                <a class="navbar-brand"><img style="height: 40pt" src="~/css/source/mainIcon.png" /></a>
+                <a class="navbar-brand"><img src="~/css/source/mainIcon.png" /></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        @if (User.IsInRole("teacher"))
+                        {
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="navbar-brand" href="/Teacher/Teacher"><img src="~/css/source/accountIcon.png" /></a>
+                            </li>
+                        }
+                        else if (User.IsInRole("student"))
+                        {
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="navbar-brand" href="/Student/Student"><img src="~/css/source/accountIcon.png" /></a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="navbar-brand" href="/Admin/Admin"><img src="~/css/source/accountIcon.png" /></a>
+                            </li>
+                        }
+                        <li class="nav-item d-flex align-items-center">
                             <a class="nav-link text-dark" href="https://www.mrk-bsuir.by/ru">На сайт колледжа</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-flex align-items-center">
                             <a class="nav-link text-dark" href="https://moodle.mrk-bsuir.by/">moodle</a>
                         </li>
                     </ul>

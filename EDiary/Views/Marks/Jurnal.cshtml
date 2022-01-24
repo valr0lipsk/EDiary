@@ -312,10 +312,19 @@
                                                 <input asp-for="addLesson.labId" type="hidden" readonly value="@subject.labaId" />
                                             }
                                         }
-                                        <label for="firstDate">С:</label>
-                                        <input type="datetime-local" id="firstDate" required />
-                                        <label for="secondDate">По:</label>
-                                        <input type="datetime-local" id="secondDate" required />
+                                        <div class="col-12">
+                                            <div class="row mb-2">
+                                                <label class="pr-3" for="firstDate">С:</label>
+                                                <input type="datetime-local" id="firstDate" required />
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <label class="pr-1" for="secondDate">По:</label>
+                                                <input type="datetime-local" id="secondDate" required />
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
