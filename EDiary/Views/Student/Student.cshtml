@@ -149,7 +149,14 @@
                                         <div class="item__circle rounded-circle mr-3 d-flex align-content-center align-items-center justify-content-center">
                                             <img src="~/css/source/subIcon2.png" />
                                         </div>
-                                        <a class="item__title col-9 d-flex p-0 m-0 align-items-center" data-id="@subject.tsubjectId">@subject.subjectName</a>
+                                        @if (subject.labaId == 0)
+                                        {
+                                            <a class="item__title col-9 d-flex p-0 m-0 align-items-center" data-id="@subject.tsubjectId">@subject.subjectName</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="item__title col-9 d-flex p-0 m-0 align-items-center" data-labaid="@subject.labaId">@subject.subjectName</a>
+                                        }
                                     </div>
                                 </div>
                             }
