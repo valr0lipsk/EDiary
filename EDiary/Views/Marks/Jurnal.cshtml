@@ -236,7 +236,7 @@
         <div class="row h-100 d-flex flex-column p-3 align-items-center">
             <h2 class="notes__title mb-4">Мои предметы</h2>
             <dl class="list-group list-group-flush w-100 text-center">
-                @foreach (var sub in Model.teacherSubjects)
+                @foreach (var sub in Model.userSubjects)
                 {
                     @if (sub.labaId == 0)
                     {
@@ -286,7 +286,14 @@
                                     <div class="modal-body">
                                         @foreach (var subject in Model.Subjects)
                                         {
-                                            <input asp-for="addLesson.id" type="hidden" readonly value="@subject.subjectId" />
+                                            @if (subject.labaId == 0)
+                                            {
+                                                <input asp-for="addLesson.id" type="hidden" readonly value="@subject.tsubjectId" />
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="addLesson.labId" type="hidden" readonly value="@subject.labaId" />
+                                            }
                                         }
                                         <label for="firstDate">С:</label>
                                         <input type="datetime-local" id="firstDate" required />
@@ -372,10 +379,17 @@
                                             <div class="modal-body">
                                                 @foreach (var subject in Model.Subjects)
                                                 {
-                                                    <input asp-for="addLesson.id" type="hidden" readonly value="@subject.subjectId" />
+                                                    @if (subject.labaId == 0)
+                                                    {
+                                                        <input asp-for="addLesson.id" type="hidden" readonly value="@subject.tsubjectId" />
+                                                        <input asp-for="addLesson.lessonType" type="text" list="lessTypes" required />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input asp-for="addLesson.labId" type="hidden" readonly value="@subject.labaId" />
+                                                    }
                                                 }
                                                 <input asp-for="addLesson.lessonDate" type="datetime-local" required />
-                                                <input asp-for="addLesson.lessonType" type="text" list="lessTypes" required />
                                                 <datalist id="lessTypes">
                                                     @foreach (var type in Model.types)
                                                     {
@@ -522,7 +536,14 @@
                                                     <div class="modal-body">
                                                         @foreach (var subject in Model.Subjects)
                                                         {
-                                                            <input asp-for="deleteLesson.id" type="hidden" readonly value="@subject.subjectId" />
+                                                            @if (subject.labaId == 0)
+                                                            {
+                                                                <input asp-for="deleteLesson.id" type="hidden" readonly value="@subject.tsubjectId" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input asp-for="deleteLesson.labId" type="hidden" readonly value="@subject.labaId" />
+                                                            }
                                                         }
                                                         <input asp-for="deleteLesson.lessonId" id="idLess" type="hidden" value="" />
                                                         <p id="delLabel">Удалить занятие </p>
