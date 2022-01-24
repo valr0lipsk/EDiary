@@ -81,9 +81,40 @@ namespace EDiary.Controllers
                 var studentId = (from st in context.students join us in context.Users on st.studentUser equals us.Id where us.Id == userManager.GetUserId(User) select st.studentId).FirstOrDefault();
                 ViewBag.studentId = studentId;
             }
-
             var subid = id;
             var labid = labId;
+
+            //предметы препода
+            var subjects = (from tsub in context.subjectTaughts
+                            join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                            join gr in context.groups on tsub.groupId equals gr.groupId
+                            join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
+                            join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                            where teacher.teacherUser == userManager.GetUserId(User)
+                            orderby subject.subjectName
+                            select new SubjectGroupModel
+                            {
+                                groupName = gr.groupName,
+                                subjectName = subject.subjectName,
+                                tsubjectId = tsub.tsubjectId
+                            }).ToList();
+            //лабы
+            var labs = (from tsub in context.subjectTaughts
+                        join gr in context.groups on tsub.groupId equals gr.groupId
+                        join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
+                        join teacher in context.teachers on lab.teacherId equals teacher.teacherId
+                        join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                        where teacher.teacherUser == userManager.GetUserId(User)
+                        orderby lab.labName
+                        select new SubjectGroupModel
+                        {
+                            subjectName = lab.labName,
+                            labaId = lab.labId,
+                            tsubjectId = tsub.tsubjectId,
+                            groupName = gr.groupName
+                        }).ToList();
+
+            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
 
             //если лаба
             if (labId != 0)
@@ -171,21 +202,7 @@ namespace EDiary.Controllers
                                  typeName = type.typeName
                              }).ToList();
 
-                var teacherSubject = (from tsub in context.subjectTaughts
-                                      join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                                      join gr in context.groups on tsub.groupId equals gr.groupId
-                                      join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                                      join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                      where teacher.teacherUser == userManager.GetUserId(User)
-                                      orderby subject.subjectName
-                                      select new SubjectGroupModel
-                                      {
-                                          groupName = gr.groupName,
-                                          subjectName = subject.subjectName,
-                                          tsubjectId = tsub.tsubjectId
-                                      }).ToList();
-
-                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = teacherSubject };
+                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = subLabs };
                 return View(jurnal);
             }
             //то предмет
@@ -269,21 +286,7 @@ namespace EDiary.Controllers
                                  typeName = type.typeName
                              }).ToList();
 
-                var teacherSubject = (from tsub in context.subjectTaughts
-                                      join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                                      join gr in context.groups on tsub.groupId equals gr.groupId
-                                      join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                                      join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                      where teacher.teacherUser == userManager.GetUserId(User)
-                                      orderby subject.subjectName
-                                      select new SubjectGroupModel
-                                      {
-                                          groupName = gr.groupName,
-                                          subjectName = subject.subjectName,
-                                          tsubjectId = tsub.tsubjectId
-                                      }).ToList();
-
-                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = teacherSubject };
+                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, teacherSubjects = subLabs };
                 return View(jurnal);
             }
         }

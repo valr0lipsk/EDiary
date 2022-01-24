@@ -11,5 +11,6 @@ namespace EDiary.ViewModels
         public DateTime lessonDate { get; set; }
         public string lessonType { get; set; }
         public int id { get; set; }
+        public int labId { get; set; }
     }
 }

@@ -238,7 +238,14 @@
             <dl class="list-group list-group-flush w-100 text-center">
                 @foreach (var sub in Model.teacherSubjects)
                 {
-                    <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
+                    @if (sub.labaId == 0)
+                    {
+                        <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
+                    }
+                    else
+                    {
+                        <dd class="list-group-item list-group-item-action cursor jurnal__link" data-labaid="@sub.labaId">@sub.subjectName (@sub.groupName)</dd>
+                    }
                 }
             </dl>
         </div>
