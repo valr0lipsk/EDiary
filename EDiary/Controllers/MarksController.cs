@@ -237,7 +237,7 @@ namespace EDiary.Controllers
                 //преподаватель
                 var teacherJurnal = (from teacher in context.teachers
                                      join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
-                                     where subTaught.tsubjectId == subid
+                                     where subTaught.tsubjectId == subid 
                                      select new Teacher
                                      {
                                          teacherSurname = teacher.teacherSurname,
@@ -278,8 +278,8 @@ namespace EDiary.Controllers
                                       }).ToList();
                 //занятие
                 var lessonJurnal = (from lesson in context.lessons
-                                    where lesson.tsubjectId == subid
-                                    orderby lesson.lessonDate
+                                    where lesson.tsubjectId == subid && lesson.lessonTypeId != 6
+                                    orderby lesson.lessonDate 
                                     select new Lesson
                                     {
                                         lessonId = lesson.lessonId,
@@ -295,7 +295,7 @@ namespace EDiary.Controllers
                                 join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
                                 orderby student.studentSurname
                                 orderby lesson.lessonDate
-                                where subTaught.tsubjectId == subid
+                                where subTaught.tsubjectId == subid && lesson.lessonTypeId != 6
                                 select new setMark
                                 {
                                     mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -310,7 +310,7 @@ namespace EDiary.Controllers
                              {
                                  lessonTypeId = type.lessonTypeId,
                                  typeName = type.typeName
-                             }).ToList();
+                             }).Take(5).ToList();
 
                 var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types,userSubjects = subLabs };
                 return View(jurnal);
@@ -329,7 +329,9 @@ namespace EDiary.Controllers
             }
             else
             {
-                var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab }).Where(l => l.lab.labId == addLesson.labId).Select(sT => sT.st.tsubjectId).FirstOrDefault();
+                var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab })
+                                                 .Where(l => l.lab.labId == addLesson.labId)
+                                                 .Select(sT => sT.st.tsubjectId).FirstOrDefault();
                 Lesson lesson = new Lesson { tsubjectId = tsub, lessonDate = addLesson.lessonDate, lessonTypeId = 6 };
                 context.lessons.Add(lesson);
                 context.SaveChanges();
