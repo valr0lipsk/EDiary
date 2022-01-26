@@ -299,29 +299,29 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form method="post" enctype="multipart/form-data">
+                                <form method="post" enctype="multipart/form-data" asp-action="ShowDates" asp-controller="Marks">
                                     <div class="modal-body">
                                         @foreach (var subject in Model.Subjects)
                                         {
                                             @if (subject.labaId == 0)
                                             {
-                                                <input asp-for="addLesson.id" type="hidden" readonly value="@subject.tsubjectId" />
+                                                <input asp-for="lessDates.id" type="hidden" readonly value="@subject.tsubjectId" />
                                             }
                                             else
                                             {
-                                                <input asp-for="addLesson.labId" type="hidden" readonly value="@subject.labaId" />
+                                                <input asp-for="lessDates.labId" type="hidden" readonly value="@subject.labaId" />
                                             }
                                         }
                                         <div class="col-12">
                                             <div class="row mb-2">
                                                 <label class="pr-3" for="firstDate">С:</label>
-                                                <input type="datetime-local" id="firstDate" required />
+                                                <input asp-for="lessDates.lessonDateStart" type="datetime-local" id="firstDate" required />
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="row">
                                                 <label class="pr-1" for="secondDate">По:</label>
-                                                <input type="datetime-local" id="secondDate" required />
+                                                <input asp-for="lessDates.lessonDateEnd" type="datetime-local" id="secondDate" required />
                                             </div>
                                         </div>
 

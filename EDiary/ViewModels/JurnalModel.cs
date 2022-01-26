@@ -19,5 +19,6 @@ namespace EDiary.ViewModels
         public IEnumerable<SubjectGroupModel> userSubjects { get; set; }
         public LessonModel addLesson { get; set; }
         public LessonModel deleteLesson { get; set; }
+        public LessonModel lessDates { get; set; }
     }
 }

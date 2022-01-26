@@ -71,8 +71,9 @@ namespace EDiary.Controllers
                                    labaId = labs.labId,
                                    tsubjectId = sT.tsubjectId,
                                }).ToList();
+            var groups = context.groups.ToList();
             var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = subLabs};
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = subLabs, groups = groups };
             return View(studentSubjectGroup);
         }
 
