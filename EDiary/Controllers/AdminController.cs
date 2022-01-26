@@ -137,7 +137,8 @@ namespace EDiary.Controllers
                                           studentName = student.studentName,
                                           studentLastname = student.studentLastname,
                                           groupName = gr.groupName,
-                                          studentEmail= aspuser.Email
+                                          studentEmail= aspuser.Email,
+                                          groups = context.groups.ToList()
                                       };
             return PartialView("~/Views/Admin/_tableStudent.cshtml", aspUserStudentGroup);
         }
@@ -145,29 +146,32 @@ namespace EDiary.Controllers
         //таблица преподов
         public IActionResult ShowTeachers()
         {
-            var teachersTable = from teacher in context.teachers
-                                join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
-                                orderby teacher.teacherSurname
-                                select new AspTeacherSubjectGroupModel
-                                {
-                                    teacherId = teacher.teacherId,
-                                    teacherLastname = teacher.teacherLastname,
-                                    teacherName = teacher.teacherName,
-                                    teacherSurname = teacher.teacherSurname,
-                                    teacherLogin = aspuser.UserName,
-                                    teacherEmail=aspuser.Email,
-                                    subjectName = string.Join(", ", (from sub in context.subjects
-                                                                     join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                                                     where subTaught.teacherId == teacher.teacherId
-                                                                     orderby teacher.teacherSurname
-                                                                     select sub.subjectName.Trim()).ToArray()),
-                                    groupName = (from sub in context.subjects
-                                                 join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                                 join gr in context.groups on subTaught.groupId equals gr.groupId
-                                                 where subTaught.teacherId == teacher.teacherId
-                                                 orderby teacher.teacherSurname
-                                                 select gr.groupName).FirstOrDefault()
-                                };
+            var teachersTable = (from teacher in context.teachers
+                                 join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
+                                 orderby teacher.teacherSurname
+                                 select new AspTeacherSubjectGroupModel
+                                 {
+                                     teacherId = teacher.teacherId,
+                                     teacherLastname = teacher.teacherLastname,
+                                     teacherName = teacher.teacherName,
+                                     teacherSurname = teacher.teacherSurname,
+                                     teacherLogin = aspuser.UserName,
+                                     teacherEmail = aspuser.Email,
+                                     subjectName = string.Join(", ", (from sub in context.subjects
+                                                                      join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                                                                      where subTaught.teacherId == teacher.teacherId
+                                                                      orderby teacher.teacherSurname
+                                                                      select sub.subjectName.Trim()).ToArray()),
+                                     groupName = (from sub in context.subjects
+                                                  join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                                                  join gr in context.groups on subTaught.groupId equals gr.groupId
+                                                  where subTaught.teacherId == teacher.teacherId
+                                                  orderby teacher.teacherSurname
+                                                  select gr.groupName).FirstOrDefault(),
+                                     groups = context.groups.ToList()
+
+                                 }).ToList();
+            
             return PartialView("~/Views/Admin/_tableTeacher.cshtml",teachersTable);
         }
 
@@ -182,14 +186,14 @@ namespace EDiary.Controllers
                                        orderby sub.subjectName
                                        select new AspTeacherSubjectGroupModel
                                        {
-                                           teacherFullname = string.Join(", ", string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim()+".", teacher.teacherLastname.Substring(0, 1).Trim()+".")),
+                                           teacherFullname = string.Join(", ", string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + ".")),
                                            subjectName = sub.subjectName,
                                            groupName = (from sub in context.subjects
                                                         join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                                                         join gr in context.groups on subTaught.groupId equals gr.groupId
                                                         where subTaught.teacherId == teacher.teacherId
                                                         orderby sub.subjectName
-                                                        select gr.groupName).FirstOrDefault()
+                                                        select gr.groupName).FirstOrDefault(),
                                        }).ToList();
 
             return PartialView("~/Views/Admin/_tableSubject.cshtml", teacherGroupSubject);
