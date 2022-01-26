@@ -46,6 +46,7 @@ $(document).ready(function () {
         $('#partialDiv').load('/Admin/ShowSubjects');
     })
 
+
     //-------------------------------------------
     //common funcs
     //get subject id from acc to open jurnal page
@@ -129,78 +130,7 @@ $(document).ready(function () {
         $('#delLessModal').modal('show');
     })
 
-    //update, delete and add mark in jurnal
-    //$('td.pt-3-half').bind('click', function () {   
-    //    if (!$(this).has('input').length) {
-    //        if ($(this).attr('data-idsm')) { //update or delete mark
-    //            const markID = $(this).attr('data-idsm'); 
-    //            const td = $(this);
-    //            const input = $('<input/>', {
-    //                'type': 'text',
-    //                'value': $(this).html(),
-    //                blur: function () {
-    //                    const newValue = $(this).val();
-    //                    $.ajax({
-    //                        url: this.URL,
-    //                        type: "PUT",
-    //                        data: {
-    //                            'id': markID,
-    //                            'value': newValue
-    //                        },
-    //                        cache: false,
-    //                        async: true,
-    //                        success: function (result) {
-    //                            alert(result.message)
-    //                            if (result.status === 'deleted') {
-    //                                td[0].removeAttribute('data-idsm')
-    //                            }
-    //                        },
-    //                        error: function (error) {
-    //                            console.error(error);
-    //                        }
-    //                    });
-    //                    $(this).replaceWith(newValue);
-    //                }
-    //            });
-    //            $(this).empty();
-    //            $(this).append(input);
-    //        }
-    //        else { //add mark
-    //            lessId = $(this).attr('data-idLess');
-    //            studId = $(this).attr('data-idStud');
-    //            const td = $(this);
-    //            const input = $('<input/>', {
-    //                'type': 'text',
-    //                'class': 'tdInput',
-    //                'value': $(this).html(),
-    //                blur: function () {
-    //                    const newValue = $(this).val();
-    //                    $.ajax({
-    //                        url: this.URL,
-    //                        type: "POST",
-    //                        data: {
-    //                            'lessId': lessId,
-    //                            'studId': studId,
-    //                            'value': newValue
-    //                        },
-    //                        cache: false,
-    //                        async: true,
-    //                        success: function (result) {
-    //                            alert(result.message)
-    //                            td[0].setAttribute('data-idsm', result.markId)
-    //                        },
-    //                        error: function (error) {
-    //                            console.error(error);
-    //                        }
-    //                    });
-    //                    $(this).replaceWith(newValue);
-    //                }
-    //            });
-    //            $(this).empty();
-    //            $(this).append(input);
-    //        }
-    //    }
-    //});
+    //update, remove or add mark in jurnal
     $('td.pt-3-half').bind('blur', function () {
         if ($(this).attr('data-idsm')) {
             const markID = $(this).attr('data-idsm');
@@ -264,7 +194,6 @@ $(document).ready(function () {
     //jurnal table style
     function jurnalStyle() {
         const table = $('.table').find('th.vt-text');
-        console.log(table);
         const OKRs = [], KRs = [], SRs = [], EKZs = [];
         for (let i = 0; i < table.length; i++) {
             if ($(table[i]).attr('data-lessType') === '2') {
@@ -280,10 +209,6 @@ $(document).ready(function () {
                 EKZs.push(i);
             }
         }
-        console.log(OKRs)
-        console.log(KRs)
-        console.log(SRs)
-        console.log(EKZs)
         const rows = $('.table').find('tr:not(:first)');
         for (let i = 0; i < rows.length; i++) {
             for (let j = 0; j < rows[i].children.length; j++) {
