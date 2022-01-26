@@ -1,6 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
-@model IEnumerable<AspTeacherSubjectGroupModel>
+@model TableTeacherModel
 <table class="table table-hover table-bordered">
     @*Таблица преподов*@
     <thead>
@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var teacherUserSubject in Model)
+        @foreach (var teacherUserSubject in Model.teachers)
         {
         <tr>
             <td>@teacherUserSubject.teacherLogin</td>

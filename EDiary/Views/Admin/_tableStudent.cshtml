@@ -1,6 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
-@model IEnumerable<AspStudentGroupModel>
+@model TableStudentModel
 
 <div>
     <div class="col-12">
@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var userStudentGroup in Model)
+        @foreach (var userStudentGroup in Model.students)
             {
                <tr>
                    <td>@userStudentGroup.studentLogin</td>
