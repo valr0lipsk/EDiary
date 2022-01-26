@@ -125,7 +125,7 @@ namespace EDiary.Controllers
         //таблица студентов
         public IActionResult ShowStudents()
         {
-            var aspUserStudentGroup = from student in context.students
+            var students = from student in context.students
                                       join gr in context.groups on student.studentGroup equals gr.groupId
                                       join aspuser in context.Users on student.studentUser equals aspuser.Id
                                       orderby student.studentSurname
@@ -140,13 +140,14 @@ namespace EDiary.Controllers
                                           studentEmail= aspuser.Email,
                                           groups = context.groups.ToList()
                                       };
-            return PartialView("~/Views/Admin/_tableStudent.cshtml", aspUserStudentGroup);
+            var tableStudents = new TableStudentModel { students = students, groups = context.groups.ToList() };
+            return PartialView("~/Views/Admin/_tableStudent.cshtml", tableStudents);
         }
         
         //таблица преподов
         public IActionResult ShowTeachers()
         {
-            var teachersTable = (from teacher in context.teachers
+            var teachers = (from teacher in context.teachers
                                  join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
                                  orderby teacher.teacherSurname
                                  select new AspTeacherSubjectGroupModel
@@ -171,8 +172,8 @@ namespace EDiary.Controllers
                                      groups = context.groups.ToList()
 
                                  }).ToList();
-            
-            return PartialView("~/Views/Admin/_tableTeacher.cshtml",teachersTable);
+            var tableTeachers = new TableTeacherModel { teachers = teachers, groups = context.groups.ToList() };
+            return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
         }
 
         //таблица предметов
