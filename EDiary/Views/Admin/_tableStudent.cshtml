@@ -1,31 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
 @model IEnumerable<AspStudentGroupModel>
-@*<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th scope="col">Логин</th>
-            <th scope="col">Email</th>
-            <th scope="col">Фамилия</th>
-            <th scope="col">Имя</th>
-            <th scope="col">Отчество</th>
-            <th scope="col">Группа</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var userStudentGroup in Model)
-            {
-               <tr>
-                   <td>@userStudentGroup.studentLogin</td>
-                   <td>@userStudentGroup.studentEmail</td>
-                   <td>@userStudentGroup.studentSurname</td>
-                   <td>@userStudentGroup.studentName</td>
-                   <td>@userStudentGroup.studentLastname</td>
-                   <td>@userStudentGroup.groupName</td>
-               </tr>
-            }
-    </tbody>
-</table>*@
 
 <div>
     <table class="table table-bordered overflow-auto">
@@ -37,6 +12,7 @@
                 <th scope="col">Имя</th>
                 <th scope="col">Отчество</th>
                 <th scope="col">Группа</th>
+                <th scope="col">Действия</th>
             </tr>
         </thead>
         <tbody>
@@ -49,10 +25,40 @@
                    <td>@userStudentGroup.studentName</td>
                    <td>@userStudentGroup.studentLastname</td>
                    <td>@userStudentGroup.groupName</td>
+                   <td>
+                       <a clas="btnUpdate"><img src="/css/source/iconUpdate.png"/></a>
+                       <a class="btnRemove"><img src="~/css/source/iconDelete.png"/></a>
+                   </td>
                </tr>
             }
     </tbody>
     </table>
 </div> 
+<div id="сonfirmModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Удалить запись</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input id="userlogin" type="hidden" value=""/>
+                            <p id="confirmText">Вы действительно хотите удалить запись</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <input type="submit" class="btn btn-primary" value="Удалить" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script src="~/js/partialScript.js"></script>

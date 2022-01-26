@@ -644,3 +644,8 @@ td > input{
 .navbar-brand > img {
     width: 40pt;
 }
+
+a > img{
+    cursor: pointer;
+    width: 20px;
+}

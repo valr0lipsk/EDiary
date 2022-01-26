@@ -31,9 +31,17 @@
         });
     }
     const f_sl = 1;
+
+
     $(".table thead tr th").click(function () {
         f_sl *= -1;
         const n = $(this).prevAll().length;
         sortTable(f_sl, n);
     });
+
+    $('.btnRemove').click(function () {
+        $('#userlogin').val($(this).parent().parent().children()[0].textContent)
+        $('#confirmText').text('Вы действительно хотите удалить запись "'+ $(this).parent().parent().children()[2].textContent + ' ' + $(this).parent().parent().children()[3].textContent + ' ' + $(this).parent().parent().children()[4].textContent + '"?');
+        $('#сonfirmModal').modal('show');
+    })
 })
