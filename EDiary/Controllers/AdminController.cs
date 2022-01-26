@@ -83,7 +83,7 @@ namespace EDiary.Controllers
             var groups = context.groups.ToList();
             ViewBag.teacherLogin = teacherLogin;
             ViewBag.teacherPass = teacherPass;
-            curGroup = new AddTeacherModel { groups = groups };
+            curGroup.groups = groups;
             return PartialView("~/Views/Admin/_addTeacher.cshtml", curGroup);
         }
         public IActionResult CreateTeacher(AddTeacherModel createTeacher)

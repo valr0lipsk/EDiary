@@ -62,6 +62,7 @@ namespace EDiary.Controllers
                                join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
                                join labs in context.labs on subGr.subgroupId equals labs.subgroupId
                                join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
+                               join gr in context.groups on sT.groupId equals gr.groupId
                                join sub in context.subjects on sT.subjectId equals sub.subjectId
                                where student.studentUser == userManager.GetUserId(User)
                                select new SubjectGroupModel

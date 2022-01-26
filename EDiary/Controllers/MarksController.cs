@@ -156,9 +156,10 @@ namespace EDiary.Controllers
                                      }).ToList();
                 //группы
                 var groupJurnal = (from lab in context.labs
-                                   join gr in context.groups on lab.groupId equals gr.groupId
+                                   join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
+                                   join gr in context.groups on subTaught.groupId equals gr.groupId
                                    join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
-                                   where  lab.labId == labid
+                                   where lab.labId == labid
                                    select new collegeGroup
                                    {
                                        groupName = string.Join(" ", gr.groupName, subGr.subgroupName)
@@ -166,7 +167,8 @@ namespace EDiary.Controllers
 
                 //предмет
                 var subjectJurnal = (from lab in context.labs
-                                     join gr in context.groups on lab.groupId equals gr.groupId
+                                     join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
+                                     join gr in context.groups on subTaught.groupId equals gr.groupId
                                      join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
                                      where  lab.labId == labid
                                      select new SubjectGroupModel
@@ -179,7 +181,8 @@ namespace EDiary.Controllers
                 var studentsJurnal = (from student in context.students
                                       join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
-                                      join gr in context.groups on laba.groupId equals gr.groupId
+                                      join subTaught in context.subjectTaughts on laba.tsubjectId equals subTaught.tsubjectId
+                                      join gr in context.groups on subTaught.groupId equals gr.groupId
                                       where laba.labId == labid
                                       orderby student.studentSurname
                                       select new Student
@@ -397,7 +400,8 @@ namespace EDiary.Controllers
                                      }).ToList();
                 //группы
                 var groupJurnal = (from lab in context.labs
-                                   join gr in context.groups on lab.groupId equals gr.groupId
+                                   join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
+                                   join gr in context.groups on subTaught.groupId equals gr.groupId
                                    join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
                                    where lab.labId == lessDates.labId
                                    select new collegeGroup
@@ -407,7 +411,8 @@ namespace EDiary.Controllers
 
                 //предмет
                 var subjectJurnal = (from lab in context.labs
-                                     join gr in context.groups on lab.groupId equals gr.groupId
+                                     join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
+                                     join gr in context.groups on subTaught.groupId equals gr.groupId
                                      join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
                                      where lab.labId == lessDates.labId
                                      select new SubjectGroupModel
@@ -420,7 +425,8 @@ namespace EDiary.Controllers
                 var studentsJurnal = (from student in context.students
                                       join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
-                                      join gr in context.groups on laba.groupId equals gr.groupId
+                                      join subTaught in context.subjectTaughts on laba.tsubjectId equals subTaught.tsubjectId
+                                      join gr in context.groups on subTaught.groupId equals gr.groupId
                                       where laba.labId == lessDates.labId
                                       orderby student.studentSurname
                                       select new Student
@@ -583,7 +589,6 @@ namespace EDiary.Controllers
         }
 
         //удаление занятия
-        [HttpPost]
         public IActionResult DeleteLesson(LessonModel deleteLesson)
         {
             var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.lessonId).FirstOrDefault();
