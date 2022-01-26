@@ -3,14 +3,19 @@
 @model IEnumerable<AspStudentGroupModel>
 
 <div>
+    <div class="col-12">
+        <div class="row mb-4">
+            <input id="findInput" type="text" class="form-control" placeholder="Поиск по учащимся" />
+        </div>
+    </div>
     <table class="table table-bordered overflow-auto">
         <thead class="thead-light">
             <tr>
                 <th scope="col">Логин</th>
-                <th scope="col">Email</th>
                 <th scope="col">Фамилия</th>
                 <th scope="col">Имя</th>
                 <th scope="col">Отчество</th>
+                <th scope="col">Email</th>
                 <th scope="col">Группа</th>
                 <th scope="col">Действия</th>
             </tr>
@@ -20,13 +25,13 @@
             {
                <tr>
                    <td>@userStudentGroup.studentLogin</td>
-                   <td>@userStudentGroup.studentEmail</td>
                    <td>@userStudentGroup.studentSurname</td>
                    <td>@userStudentGroup.studentName</td>
                    <td>@userStudentGroup.studentLastname</td>
+                   <td>@userStudentGroup.studentEmail</td>
                    <td>@userStudentGroup.groupName</td>
                    <td>
-                       <a clas="btnUpdate"><img src="/css/source/iconUpdate.png"/></a>
+                       <a class="btnUpdate"><img src="/css/source/iconUpdate.png"/></a>
                        <a class="btnRemove"><img src="~/css/source/iconDelete.png"/></a>
                    </td>
                </tr>
@@ -55,6 +60,66 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                     <input type="submit" class="btn btn-primary" value="Удалить" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="updateModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Обновить запись</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="userLogin" type="text" disabled value=""/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="userSurname" type="text" required value=""/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="userName" type="text" required value=""/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="userLastname" type="text" required value=""/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="userEmail" type="text" required value=""/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="userGroup" type="text" required list="groupsSt"/>
+                            <datalist id="groupsSt">
+@*                                @foreach (var group in Model.groups)
+                                {
+                                    <option value="@group.groupName"></option>
+                                }*@
+                                <option value="8к2491"></option>
+                                <option value="8к2492"></option>
+                                <option value="8к2493"></option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <input type="submit" class="btn btn-primary" value="Обновить" />
                 </div>
             </form>
         </div>
