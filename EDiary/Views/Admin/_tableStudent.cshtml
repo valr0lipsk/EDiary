@@ -31,7 +31,7 @@
                    <td>@userStudentGroup.studentEmail</td>
                    <td>@userStudentGroup.groupName</td>
                    <td>
-                       <a class="btnUpdate"><img src="/css/source/iconUpdate.png"/></a>
+                       <a class="btnUpdate" data-object="user"><img src="/css/source/iconUpdate.png"/></a>
                        <a class="btnRemove"><img src="~/css/source/iconDelete.png"/></a>
                    </td>
                </tr>
@@ -106,13 +106,10 @@
                         <div class="row mb-2">
                             <input class="form-control" id="userGroup" type="text" required list="groupsSt"/>
                             <datalist id="groupsSt">
-@*                                @foreach (var group in Model.groups)
+                                @foreach (var group in Model.groups)
                                 {
                                     <option value="@group.groupName"></option>
-                                }*@
-                                <option value="8к2491"></option>
-                                <option value="8к2492"></option>
-                                <option value="8к2493"></option>
+                                }
                             </datalist>
                         </div>
                     </div>
