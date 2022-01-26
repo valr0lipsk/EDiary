@@ -13,7 +13,7 @@ namespace EDiary.Models
         public int labId { get; set; }
 
         [Display(Name = "Лабораторная работа")]
-        [StringLength(40)]
+        [StringLength(150)]
         [Required]
         public string labName { get; set; }
 
@@ -28,9 +28,6 @@ namespace EDiary.Models
         public int subgroupId { get; set; }
 
         [Required]
-        public int groupId { get; set; }
-
-        [Required]
         public int teacherId { get; set; }
 
         [ForeignKey("teacherId")]
@@ -38,9 +35,6 @@ namespace EDiary.Models
 
         [ForeignKey("tsubjectId")]
         public subjectTaught tsubject { get; set; }
-
-        [ForeignKey("groupId")]
-        public collegeGroup group { get; set; }
 
         [ForeignKey("subgroupId")]
         public Subgroup subgroup { get; set; }
