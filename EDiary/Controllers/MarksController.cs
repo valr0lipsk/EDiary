@@ -28,6 +28,7 @@ namespace EDiary.Controllers
 
         //обновление оценки
         [HttpPut]
+        [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int id, string value)
         {
             var markId = value;
@@ -56,6 +57,7 @@ namespace EDiary.Controllers
 
         //добавление оценки
         [HttpPost]
+        [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
             var marks = (from mark in context.marks where mark.mark == value select mark.mark).FirstOrDefault();
@@ -588,7 +590,7 @@ namespace EDiary.Controllers
                                           studentId = student.studentId,
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentName,
-                                          studentLastname = student.studentLastname
+                                          studentLastname = student.studentLastname,
                                       }).ToList();
                 //промежуток
                 if (string.IsNullOrEmpty(lessDates.lessonDate.ToString()))
@@ -721,11 +723,14 @@ namespace EDiary.Controllers
         {
             using (var workbook = new XLWorkbook())
             {
+                var digitals= (from mark in context.marks where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв"
+                             select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                var stNB = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н/б").GroupBy(sm => sm.sM.studentId).Select(m=>m.Count()).AsEnumerable() ;
+                var stN = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н").GroupBy(sm => sm.sM.studentId).Select(m => m.Count()).AsEnumerable();
+                //var stM = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark.Trim() == digitals.FirstOrDefault().Value).GroupBy(sm => sm.sM.studentId).Average(m=>m.Select(m=>Convert.ToInt32(m.m.mark)).Average()).AsEnumerable();
+
                 //var statistic = new StatisticModel();
                 //выбор только цифр в словарь
-                var marks = context.marks.Where(m=>m.mark.Contains("%[0-9]%")).Select(m=>m.mark);
-                //             where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв"
-                //             select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
                 //выбор таблиц и группировка по айди
                 ///*var all = (from st in context.students
@@ -856,8 +861,8 @@ namespace EDiary.Controllers
                 //                   join gr in context.groups on al.FirstOrDefault().gr.groupId equals gr.groupId
                 //                   where al.FirstOrDefault().gr.groupName == "8к2492" && al.FirstOrDefault().sM.studentId == al.FirstOrDefault().st.studentId
                 //                   select Convert.ToInt32(al.FirstOrDefault().mark.mark.Trim())).ToList();*/
-               
-               
+
+
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
