@@ -37,7 +37,7 @@
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="stGroup" class="form-label mt-2 mb-0">Группа</label>
+                <label for="stGroup" class="form-label mb-0">Группа</label>
                 <input asp-for="studentGroup" type="text" class="form-control" id="stGroup" list="Groups" value="">
                 <datalist id="Groups">
                     @foreach (var group in Model.groups)
@@ -45,6 +45,15 @@
                         <option value="@group.groupName"></option>
                     }
                 </datalist>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-6 col-sm-7">
+            <div class="row mb-3">
+                <label for="stSubgroup" class="col-form-label mb-0">Подгруппа</label>
+                <select class="form-control" id="stSubgroup">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
             </div>
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6">
