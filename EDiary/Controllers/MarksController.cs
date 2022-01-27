@@ -727,7 +727,7 @@ namespace EDiary.Controllers
                              select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
                 var stNB = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н/б").GroupBy(sm => sm.sM.studentId).Select(m=>m.Count()).AsEnumerable() ;
                 var stN = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н").GroupBy(sm => sm.sM.studentId).Select(m => m.Count()).AsEnumerable();
-                var stM = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark.Trim() == digitals.FirstOrDefault().Value).GroupBy(sm => sm.sM.studentId).Select(m=>Convert.ToInt32(m.FirstOrDefault().m.mark)).AsEnumerable();
+                var stM = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => digitals.Values.Contains(m.m.mark)).GroupBy(sm => sm.sM.studentId).Select(m=>Convert.ToInt32(m.FirstOrDefault().m.mark)).AsEnumerable();
                 
 
                 //var statistic = new StatisticModel();
