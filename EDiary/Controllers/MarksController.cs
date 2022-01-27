@@ -719,15 +719,15 @@ namespace EDiary.Controllers
 
 
         //экспорт статистики 
-        public IActionResult SaveStatistics()
+        public async Task<IActionResult> SaveStatisticsAsync()
         {
             using (var workbook = new XLWorkbook())
             {
-                var digitals= (from mark in context.marks where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв"
-                             select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
-                var stNB = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н/б").GroupBy(sm => sm.sM.studentId).Select(m=>m.Count()).AsEnumerable() ;
-                var stN = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н").GroupBy(sm => sm.sM.studentId).Select(m => m.Count()).AsEnumerable();
-                var stM = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => digitals.Values.Contains(m.m.mark)).GroupBy(sm => sm.sM.studentId).Select(m=>Convert.ToInt32(m.FirstOrDefault().m.mark)).AsEnumerable();
+                //var digitals= (from mark in context.marks where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв"
+                //             select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                //var stNB = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н/б").GroupBy(sm => sm.sM.studentId).Select(m=>m.Count()).AsEnumerable() ;
+                //var stN = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н").GroupBy(sm => sm.sM.studentId).Select(m => m.Count()).AsEnumerable();
+                //var stM = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => digitals.Values.Contains(m.m.mark)).GroupBy(sm => sm.sM.studentId).Select(m=>Convert.ToInt32(m.FirstOrDefault().m.mark)).AsEnumerable();
                 
 
                 //var statistic = new StatisticModel();
@@ -870,29 +870,29 @@ namespace EDiary.Controllers
                 worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
                 worksheet.Cell(currentRow, 3).Value = "Пропуски не по уваж.";
                 worksheet.Cell(currentRow, 4).Value = "Средний балл";
-                //using (SqlConnection connection = new SqlConnection(Config.ConnectionString))
-                //{
-                //    await connection.OpenAsync();
-                //    SqlCommand command = new SqlCommand("FullStatistic", connection);
-                //    command.CommandType = CommandType.StoredProcedure;
-                //    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                //    {
-                //        if (reader.HasRows)
-                //        {
-                //            while (await reader.ReadAsync())
-                //            {   
-                //                currentRow++;
-                //                worksheet.Cell(currentRow, 1).Value = reader.GetString(0);
-                //                worksheet.Cell(currentRow, 2).Value = reader.GetInt32(1);
-                //                worksheet.Cell(currentRow, 3).Value = reader.GetInt32(2);
-                //                worksheet.Cell(currentRow, 4).Value = reader.GetDouble(3);
-                //            }
-                //        }
-                //    }
-                //}
+                using (SqlConnection connection = new SqlConnection(Config.ConnectionString))
+                {
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand("FullStatistic", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                currentRow++;
+                                worksheet.Cell(currentRow, 1).Value = reader.GetString(0);
+                                worksheet.Cell(currentRow, 2).Value = reader.GetInt32(1);
+                                worksheet.Cell(currentRow, 3).Value = reader.GetInt32(2);
+                                worksheet.Cell(currentRow, 4).Value = reader.GetDouble(3);
+                            }
+                        }
+                    }
+                }
                 //foreach (var stats in statistic)
                 //{
-                   
+
                 //}
 
                 using (var stream = new MemoryStream())
