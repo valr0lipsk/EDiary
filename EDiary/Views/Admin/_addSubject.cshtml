@@ -1,31 +1,41 @@
 ﻿@using EDiary.ViewModels
 @model AddSubjectModel
-<form class="row g-3 needs-validation" novalidate>
-    <div class="col-md-5">
-        <label for="validationCustom02" class="form-label mb-0">Название предмета</label>
-        <input asp-for="subjectName" type="text" class="form-control" id="validationCustom02" required>
-    </div>
-    <div class="col-md-5">
-        <label for="validationCustom02" class="form-label mb-0">Преподаватель</label>
-        <input asp-for="teacher" type="text" class="form-control" id="validationCustom02" list="teachers" required value="">
-        <datalist id="teachers">
-                @foreach (var teacher in Model.Teachers)
-                 {
-                    <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
-                 }
-        </datalist>
-    </div>
-    <div class="col-md-3 mb-3">
-        <label for="validationCustom02" class="form-label mb-0">Группа</label>
-        <input asp-for="groupName" type="text" class="form-control" id="validationCustom02" list="groups" required value="">
-        <datalist id="groups">
-                @foreach (var group in Model.Groups)
-                 {
-                    <option>@group.groupName</option>
-                 }
-        </datalist>
-    </div>
-    <div class="col-12">
-        <button asp-action="CreateSubject" class="btn btn-primary" type="submit">Сохранить предмет</button>
-    </div>
-</form>
+<div class="col-12">
+    <form class="row d-flex flex-column">
+        <div class="col-5">
+            <div class="row mb-3">
+                <label for="sName" class="form-label mb-0">Название предмета</label>
+                <input asp-for="subjectName" type="text" class="form-control" id="sName" required>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="row mb-3">
+                <label for="sTeacher" class="form-label mb-0">Преподаватель</label>
+                <input asp-for="teacher" type="text" class="form-control" id="sTeacher" list="teachers" required value="">
+                <datalist id="teachers">
+                    @foreach (var teacher in Model.Teachers)
+                    {
+                        <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
+                    }
+                </datalist>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="row mb-3">
+                <label for="validationCustom02" class="form-label mb-0">Группа</label>
+                <input asp-for="groupName" type="text" class="form-control" id="validationCustom02" list="groups" required value="">
+                <datalist id="groups">
+                    @foreach (var group in Model.Groups)
+                    {
+                        <option>@group.groupName</option>
+                    }
+                </datalist>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <button asp-action="CreateSubject" class="btn btn-primary" type="submit">Сохранить предмет</button>
+            </div>
+        </div>
+    </form>
+</div>
