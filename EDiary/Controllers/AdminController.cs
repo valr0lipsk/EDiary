@@ -96,9 +96,12 @@ namespace EDiary.Controllers
             Teacher teacher = new Teacher { teacherSurname = createTeacher.teacherSurname, teacherName = createTeacher.teacherName, teacherLastname = createTeacher.teacherLastname, teacherUser = identityTeacherUser.Id };
             context.teachers.Add(teacher);
             context.SaveChanges();
-            var group = context.groups.Where(grId => grId.groupName ==  createTeacher.curatorGroup).First();
-            group.curatorId = teacher.teacherId;
-            context.groups.Update(group);
+            if (createTeacher.curatorGroup != null)
+            {
+                var group = context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault();
+                group.curatorId = teacher.teacherId;
+                context.groups.Update(group);
+            }
             context.SaveChanges();
             return RedirectToAction("Admin", "Admin");
         }

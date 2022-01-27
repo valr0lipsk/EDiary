@@ -93,12 +93,23 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="subjectTeacher" type="text" required value=""/>
+                            <input class="form-control" id="subName" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="subjectGroup" type="text" required value=""/>
+                            <input class="form-control" id="subjectTeacher" type="text" list="subTeachers" required value=""/>
+                            <datalist id="subTeachers">
+                                <option></option>
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="subjectGroup" type="text" list="subGroups" required value=""/>
+                            <datalist id="subGroups">
+                                <option></option>
+                            </datalist>
                         </div>
                     </div>
                 </div>

@@ -52,7 +52,7 @@
         console.log($(this).attr('data-object'))
         if ($(this).attr('data-object') === 'subject') {
             $('#subjectName').val($(this).parent().parent().children()[0].textContent);
-            $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[0].textContent + '"?');
+            $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[0].textContent.trim() + '"?');
         }
         else {
             $('#userLogin').val($(this).parent().parent().children()[0].textContent);
@@ -63,7 +63,6 @@
 
     $('.btnUpdate').click(function ()
     {
-        console.log($(this).attr('data-object'))
         if ($(this).attr('data-object') === 'user') {
             $('#userLogin').val($(this).parent().parent().children()[0].textContent);
             $('#userSurname').val($(this).parent().parent().children()[1].textContent);
@@ -74,8 +73,8 @@
                 $('#userGroup').val($(this).parent().parent().children()[5].textContent);
             }
         }
-        else {
-            $('#subjectName').val('ftbftg');
+        else if ($(this).attr('data-object') === 'subject') {
+            $('#subName').val($(this).parent().parent().children()[0].textContent);
             $('#subjectTeacher').val($(this).parent().parent().children()[1].textContent);
             $('#subjectGroup').val($(this).parent().parent().children()[2].textContent);
         }
