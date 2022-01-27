@@ -72,7 +72,7 @@ namespace EDiary.Controllers
             Student student = new Student { studentSurname = createStudent.studentSurname, studentName = createStudent.studentName, studentLastname = createStudent.studentLastname, studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = identityStudentUser.Id };
             context.students.Add(student);
             context.SaveChanges();
-            return RedirectToAction("Admin", "Admin");
+            return RedirectToAction("ShowStudents");
         }
 
         //добавление препода
@@ -103,7 +103,7 @@ namespace EDiary.Controllers
                 context.groups.Update(group);
             }
             context.SaveChanges();
-            return RedirectToAction("Admin", "Admin");
+            return RedirectToAction("ShowTeachers");
         }
 
         //добавление предмета
@@ -122,7 +122,7 @@ namespace EDiary.Controllers
             subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = (from teacher in context.teachers where (teacher.teacherSurname + " " + teacher.teacherName + " " + teacher.teacherLastname).Trim() == addSubject.teacher.Trim() select teacher.teacherId).First(), groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName).Select(gr => gr.groupId).First() };
             context.subjectTaughts.Add(subjectTaught);
             context.SaveChanges();
-            return RedirectToAction("Admin","Admin");
+            return RedirectToAction("ShowSubjects");
         }
 
         //таблица студентов
