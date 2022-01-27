@@ -80,7 +80,10 @@
                         <div class="row mb-2">
                             <input class="form-control" id="subjectTeacher" type="text" list="subTeachers" required value=""/>
                             <datalist id="subTeachers">
-                                <option></option>
+                                @foreach (var teacher in Model.teachers)
+                                {
+                                    <option>@teacher.teacherSurname @teacher.teacherName.Substring(0,1).Trim(). @teacher.teacherLastname.Substring(0,1).Trim().</option>        
+                                }
                             </datalist>
                         </div>
                     </div>
@@ -88,7 +91,10 @@
                         <div class="row mb-2">
                             <input class="form-control" id="subjectGroup" type="text" list="subGroups" required value=""/>
                             <datalist id="subGroups">
-                                <option></option>
+                                @foreach (var group in Model.groups)
+                                {
+                                    <option>@group.groupName</option>        
+                                }
                             </datalist>
                         </div>
                     </div>

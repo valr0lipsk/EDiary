@@ -1,32 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
 @model TableTeacherModel
-@*<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th scope="col">Логин</th>
-            <th scope="col">Email</th>
-            <th scope="col">Фамилия</th>
-            <th scope="col">Имя</th>
-            <th scope="col">Отчество</th>
-            <th scope="col">Предметы</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var teacherUserSubject in Model.teachers)
-        {
-        <tr>
-            <td>@teacherUserSubject.teacherLogin</td>
-            <td>@teacherUserSubject.teacherEmail</td>
-            <td>@teacherUserSubject.teacherSurname</td>
-            <td>@teacherUserSubject.teacherName</td>
-            <td>@teacherUserSubject.teacherLastname</td>
-            <td>@teacherUserSubject.subjectName</td>
-        </tr>
-        }
-    </tbody>
-</table>*@
-
 <div class="col-12">
     <div class="row">
         <div class="col-12">
