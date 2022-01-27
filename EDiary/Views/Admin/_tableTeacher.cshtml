@@ -48,11 +48,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" enctype="multipart/form-data">
+            <form asp-action="DeleteTeacher" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input id="userlogin" type="hidden" value=""/>
+                            <input asp-for="teacherLogin" id="userlogin" type="hidden" value=""/>
                             <p id="confirmText">Вы действительно хотите удалить запись</p>
                         </div>
                     </div>
@@ -75,31 +75,31 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" enctype="multipart/form-data">
+            <form asp-action="UpdateTeacher" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userLogin" type="text" disabled value=""/>
+                            <input asp-for="teacherLogin" class="form-control" id="userLogin" type="text" disabled value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userSurname" type="text" required value=""/>
+                            <input asp-for="teacherSurname" class="form-control" id="userSurname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userName" type="text" required value=""/>
+                            <input asp-for="teacherName" class="form-control" id="userName" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userLastname" type="text" required value=""/>
+                            <input asp-for="teacherLastname" class="form-control" id="userLastname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userEmail" type="text" required value=""/>
+                            <input asp-for="teacherEmail" class="form-control" id="userEmail" type="text" required value=""/>
                         </div>
                     </div>
                 </div>

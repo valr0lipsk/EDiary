@@ -7,7 +7,7 @@
                 <label for="sName" class="form-label mb-0">Название предмета</label>
                 <input asp-for="subjectName" type="text" class="form-control" id="sName" required>
                 <div class="form-check d-flex align-items-center">
-                    <input class="form-check-input" type="checkbox" value="" id="labsCheck">
+                    <input asp-for="haveLabs" class="form-check-input" type="checkbox" value="" id="labsCheck">
                     <label class="form-check-label" for="labsCheck">
                         Есть лабораторные
                     </label>
@@ -17,7 +17,7 @@
         <div class="col-5">
             <div class="row mb-3">
                 <label for="sTeacher" class="form-label mb-0">Преподаватель</label>
-                <input asp-for="teacher" type="text" class="form-control" id="sTeacher" list="teachers" required value="">
+                <input asp-for="firstTeacher" type="text" class="form-control" id="sTeacher" list="teachers" required value="">
                 <datalist id="teachers">
                     @foreach (var teacher in Model.Teachers)
                     {
@@ -31,7 +31,7 @@
                 <div class="col-12">
                     <div class="row mb-3">
                         <label for="sTeacherLab" class="form-label mb-0">Второй преподаватель</label>
-                        <input @*asp-for="teacher"*@ type="text" class="form-control" id="sTeacherLab" list="teachersLab" required value="">
+                        <input asp-for="secondTeacher" type="text" class="form-control" id="sTeacherLab" list="teachersLab" required value="">
                         <datalist id="teachersLab">
                             @foreach (var teacher in Model.Teachers)
                             {
@@ -43,7 +43,7 @@
                 <div class="col-12">
                     <div class="row">
                         <label for="sLabHours" class="form-label mb-0">Количество часов (лабораторных)</label>
-                        <input asp-for="teacher" type="text" class="form-control" id="sLabHours" required value="">
+                        <input asp-for="labsCount" type="text" class="form-control" id="sLabHours" required value="">
                     </div>
                 </div>
             </div>

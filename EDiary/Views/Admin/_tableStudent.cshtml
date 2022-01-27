@@ -47,7 +47,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" enctype="multipart/form-data">
+            <form asp-action="DeleteStudent" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
@@ -74,36 +74,36 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" enctype="multipart/form-data">
+            <form asp-action="UpdateStudent" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userLogin" type="text" disabled value=""/>
+                            <input asp-for="studentLogin" class="form-control" id="userLogin" type="text" disabled value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userSurname" type="text" required value=""/>
+                            <input asp-for="studentSurname" class="form-control" id="userSurname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userName" type="text" required value=""/>
+                            <input asp-for="studentName" class="form-control" id="userName" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userLastname" type="text" required value=""/>
+                            <input asp-for="studentLastname" class="form-control" id="userLastname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userEmail" type="text" required value=""/>
+                            <input asp-for="studentEmail" class="form-control" id="userEmail" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="userGroup" type="text" required list="groupsSt"/>
+                            <input asp-for="studentGroup" class="form-control" id="userGroup" type="text" required list="groupsSt"/>
                             <datalist id="groupsSt">
                                 @foreach (var group in Model.groups)
                                 {
