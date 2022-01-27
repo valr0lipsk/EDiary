@@ -6,6 +6,12 @@
             <div class="row mb-3">
                 <label for="sName" class="form-label mb-0">Название предмета</label>
                 <input asp-for="subjectName" type="text" class="form-control" id="sName" required>
+                <div class="form-check d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="labsCheck">
+                    <label class="form-check-label" for="labsCheck">
+                        Есть лабораторные
+                    </label>
+                </div>
             </div>
         </div>
         <div class="col-5">
@@ -18,6 +24,28 @@
                         <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
                     }
                 </datalist>
+            </div>
+        </div>
+        <div class="col-5 labs__block d-none">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="row mb-3">
+                        <label for="sTeacherLab" class="form-label mb-0">Второй преподаватель</label>
+                        <input @*asp-for="teacher"*@ type="text" class="form-control" id="sTeacherLab" list="teachersLab" required value="">
+                        <datalist id="teachersLab">
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <label for="sLabHours" class="form-label mb-0">Количество часов (лабораторных)</label>
+                        <input asp-for="teacher" type="text" class="form-control" id="sLabHours" required value="">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-5">
@@ -39,3 +67,5 @@
         </div>
     </form>
 </div>
+
+<script src="~/js/partialScript.js"></script>

@@ -92,4 +92,8 @@
             }
         })
     })
+
+    $('#labsCheck').change(function () {
+        $('.labs__block').toggleClass('d-none');
+    })
 })
