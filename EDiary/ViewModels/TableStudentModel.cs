@@ -10,6 +10,7 @@ namespace EDiary.ViewModels
     {
         public IEnumerable<collegeGroup> groups { get; set; }
         public IEnumerable<AspStudentGroupModel> students { get; set; }
+        public string studentLogin { get; set; }
 
     }
 }
