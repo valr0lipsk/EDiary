@@ -86,7 +86,6 @@ namespace EDiary.Controllers
             
             var subid = id;
             var labid = labId;
-
             //предметы препода
             var subjects = (from tsub in context.subjectTaughts
                             join subject in context.subjects on tsub.subjectId equals subject.subjectId
@@ -590,7 +589,7 @@ namespace EDiary.Controllers
                                           studentId = student.studentId,
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentName,
-                                          studentLastname = student.studentLastname,
+                                          studentLastname = student.studentLastname
                                       }).ToList();
                 //промежуток
                 if (string.IsNullOrEmpty(lessDates.lessonDate.ToString()))
@@ -719,181 +718,54 @@ namespace EDiary.Controllers
 
 
         //экспорт статистики 
-        public async Task<IActionResult> SaveStatisticsAsync()
+        public IActionResult SaveStatistics()
         {
             using (var workbook = new XLWorkbook())
             {
-                //var digitals= (from mark in context.marks where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв"
-                //             select new Mark { markId = mark.markId, mark = mark.mark.Trim() }).ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
-                //var stNB = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н/б").GroupBy(sm => sm.sM.studentId).Select(m=>m.Count()).AsEnumerable() ;
-                //var stN = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => m.m.mark == "н").GroupBy(sm => sm.sM.studentId).Select(m => m.Count()).AsEnumerable();
-                //var stM = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM }).Where(m => digitals.Values.Contains(m.m.mark)).GroupBy(sm => sm.sM.studentId).Select(m=>Convert.ToInt32(m.FirstOrDefault().m.mark)).AsEnumerable();
-                
-
-                //var statistic = new StatisticModel();
-                //выбор только цифр в словарь
-
-                //выбор таблиц и группировка по айди
-                ///*var all = (from st in context.students
-                //           join sM in context.setMarks on st.studentId equals sM.studentId
-                //           join mark in context.marks on sM.markId equals mark.markId
-                //           join gr in context.groups on st.studentGroup equals gr.groupId
-                //           where gr.groupName == "8к2492"
-                //           orderby st.studentSurname
-                //           select new
-                //           {
-                //               st, sM, mark, gr,
-                //               name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
-                //               marks = (from stud in context.students
-                //                        join setm in context.setMarks on stud.studentId equals setm.studentId
-                //                        join m in context.marks on setm.markId equals m.markId
-                //                        join grou in context.groups on stud.studentGroup equals grou.groupId
-                //                        where grou.groupName == "8к2492" && m.mark == marks.FirstOrDefault().Value
-                //                        select m.mark.Count()).AsEnumerable().GroupBy(stats => st.studentId, stats=>st.studentSurname)
-                //           }).AsEnumerable().GroupBy(stats => stats.st.studentId);
-
-                ///*че-то новое*/
-                //var allwork = (from st in context.students
-                //               join sM in context.setMarks on st.studentId equals sM.studentId
-                //               join mark in context.marks on sM.markId equals mark.markId
-                //               join gr in context.groups on st.studentGroup equals gr.groupId
-                //               where gr.groupName == "8к2492"
-                //               orderby st.studentSurname
-                //               select new
-                //               {
-                //                   st,
-                //                   sM,
-                //                   mark,
-                //                   gr
-                //               } into stats
-                //               group stats by stats.st.studentId into statits
-                //               select new
-                //               {
-                //                   name = string.Join(" ", statits.FirstOrDefault().st.studentSurname, statits.FirstOrDefault().st.studentName.Substring(0, 1) + "."),
-                //                   noReason = (from m1 in statits
-                //                               where m1.mark.mark == "н/б"
-                //                               select m1.mark.mark).Count(),
-                //                   reason = (from m2 in statits
-                //                             where m2.mark.mark == "н"
-                //                             select m2.mark).Count(),
-                //                   average = (from m3 in statits
-                //                              where m3.mark.mark.Contains("%[0-9]%")
-                //                              select Convert.ToInt32(m3.mark)).Average()
-                //               }).AsEnumerable();
-
-                ///*еще новее*/
-                //var allwork2 = (from st in context.students
-                //                join sM in context.setMarks on st.studentId equals sM.studentId
-                //                join mark in context.marks on sM.markId equals mark.markId
-                //                join gr in context.groups on st.studentGroup equals gr.groupId
-                //                where gr.groupName == "8к2492"
-                //                orderby st.studentSurname
-                //                select new
-                //                {
-                //                    st,
-                //                    sM,
-                //                    mark,
-                //                    gr,
-                //                    name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
-                //                    noReason = (from m1 in context.marks
-                //                                where m1.mark == "н/б"
-                //                                select m1.mark).Count(),
-                //                    reason = (from m2 in context.marks
-                //                              where m2.mark == "н"
-                //                              select m2.mark).Count(),
-                //                    average = (from m3 in context.marks
-                //                               where m3.mark == marks.FirstOrDefault().Value
-                //                               select Convert.ToInt32(m3.mark)).Average()
-                //                }).AsEnumerable().GroupBy(st => st.st.studentId);
-
-                //попытка
-                ///*var aln = (from st in context.students
-                //           join sM in context.setMarks on st.studentId equals sM.studentId
-                //           join mark in context.marks on sM.markId equals mark.markId
-                //           join gr in context.groups on st.studentGroup equals gr.groupId
-                //           where gr.groupName == "8к2492"
-                //           orderby st.studentSurname
-                //           select new
-                //           {
-                //               st,
-                //               sM,
-                //               mark,
-                //               gr,
-                //               name = string.Join(" ", st.studentSurname, st.studentName.Substring(0, 1) + "."),
-                //               marks = string.Join(", ",mark.mark)
-                //           }).GroupBy(stats => stats.st).Select(stats=>new { stats.Key, cnt=stats.FirstOrDefault().mark.mark.Count()});*/
-
-                //среднее
-                ///*var average = (from st in context.students
-                //               join sM in context.setMarks on st.studentId equals sM.studentId
-                //               where sM.mark.mark != "н/б" && sM.mark.mark != "н/а" && sM.mark.mark != "зач" && sM.mark.mark != "незач" && sM.mark.mark != "н"
-                //               select Convert.ToInt32(sM.mark.mark)).AsEnumerable();*/
-
-                //ФИО
-                ///*statistic.fullName = (from student in context.students
-                //                      join gr in context.groups on student.studentGroup equals gr.groupId
-                //                      orderby student.studentSurname
-                //                      where gr.groupName == "8к2492"
-                //                      select string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".")).ToList();*/
-
-                //пропуски без причины
-                ///*= (from nrp in all
-                //           where nrp.FirstOrDefault().mark.mark == "н/б" && nrp.FirstOrDefault().gr.groupName == "8к2492"
-                //           select nrp.FirstOrDefault().mark.mark.Count());*/
-
-                //пропуски по причине
-                ///*statistic.reasonPass = (from st in context.students
-                //                        group st by st.studentId into student
-                //                        join sM in context.setMarks on student.FirstOrDefault().studentId equals sM.studentId
-                //                        join mark in context.marks on sM.markId equals mark.markId
-                //                        join gr in context.groups on student.FirstOrDefault().studentGroup equals gr.groupId
-                //                        orderby student.FirstOrDefault().studentSurname
-                //                        where mark.mark.Trim() == "н" && subT.tsubjectId == 1 && gr.groupName == "8к2492"
-                //                        select mark.mark.Count()).ToList();*/
-                //фио
-                ///*var name = (from al in all
-                //            select string.Join(" ", al.FirstOrDefault().st.studentSurname, al.FirstOrDefault().st.studentName.Substring(0, 1) + ".")).ToList();*/
-                //средний балл
-                ///*var averageMark = (from al in all
-                //                   join mr in marks on al.FirstOrDefault().mark.markId equals mr.Key
-                //                   join st in context.students on al.FirstOrDefault().st.studentId equals st.studentId
-                //                   join sM in context.setMarks on st.studentId equals sM.studentId
-                //                   join mark in context.marks on al.FirstOrDefault().mark.markId equals mark.markId
-                //                   join gr in context.groups on al.FirstOrDefault().gr.groupId equals gr.groupId
-                //                   where al.FirstOrDefault().gr.groupName == "8к2492" && al.FirstOrDefault().sM.studentId == al.FirstOrDefault().st.studentId
-                //                   select Convert.ToInt32(al.FirstOrDefault().mark.mark.Trim())).ToList();*/
-
+                //выборка всех оценок 0-10
+                var digitals = context.marks.Where(mark=>mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
+                                            .Select(mark=>new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                var studentsStats = (from student in context.students
+                                     join gr in context.groups on student.studentGroup equals gr.groupId
+                                     join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
+                                     orderby student.studentSurname
+                                     select new StudentJurnal
+                                     {
+                                         studentId = student.studentId,
+                                         studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
+                                         studentPassesReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                      .Where(m => m.m.mark == "н")
+                                                                      .Where(m => m.sM.studentId == student.studentId)
+                                                                      .GroupBy(sm => sm.sM.studentId)
+                                                                      .Select(m => m.Count()).FirstOrDefault(),
+                                         studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                      .Where(m => m.m.mark == "н/б")
+                                                                      .Where(m => m.sM.studentId == student.studentId)
+                                                                      .GroupBy(sm => sm.sM.studentId)
+                                                                      .Select(m => m.Count()).FirstOrDefault(),
+                                         studentAverage = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                      .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                      .Where(m => m.sM.studentId == student.studentId)
+                                                                      .GroupBy(sm => sm.sM.studentId)
+                                                                      .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
+                                     }).Distinct().ToList();
 
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "ФИО";
                 worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
-                worksheet.Cell(currentRow, 3).Value = "Пропуски не по уваж.";
+                worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
                 worksheet.Cell(currentRow, 4).Value = "Средний балл";
-                using (SqlConnection connection = new SqlConnection(Config.ConnectionString))
-                {
-                    await connection.OpenAsync();
-                    SqlCommand command = new SqlCommand("FullStatistic", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                currentRow++;
-                                worksheet.Cell(currentRow, 1).Value = reader.GetString(0);
-                                worksheet.Cell(currentRow, 2).Value = reader.GetInt32(1);
-                                worksheet.Cell(currentRow, 3).Value = reader.GetInt32(2);
-                                worksheet.Cell(currentRow, 4).Value = reader.GetDouble(3);
-                            }
-                        }
-                    }
-                }
-                //foreach (var stats in statistic)
-                //{
 
-                //}
+                foreach (var student in studentsStats.OrderBy(s=>s.studentFullname))
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = student.studentFullname;
+                    worksheet.Cell(currentRow, 2).Value = student.studentPassesNoReason;
+                    worksheet.Cell(currentRow, 3).Value = student.studentPassesReason;
+                    worksheet.Cell(currentRow, 4).Value = student.studentAverage;
+                }
 
                 using (var stream = new MemoryStream())
                 {
