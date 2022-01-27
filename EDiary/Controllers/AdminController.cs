@@ -72,7 +72,7 @@ namespace EDiary.Controllers
             Student student = new Student { studentSurname = createStudent.studentSurname, studentName = createStudent.studentName, studentLastname = createStudent.studentLastname, studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = identityStudentUser.Id };
             context.students.Add(student);
             context.SaveChanges();
-            return RedirectToAction("Admin", "Admin");
+            return RedirectToAction("ShowStudents");
         }
 
         //добавление препода
@@ -103,7 +103,7 @@ namespace EDiary.Controllers
                 context.groups.Update(group);
             }
             context.SaveChanges();
-            return RedirectToAction("Admin", "Admin");
+            return RedirectToAction("ShowTeachers");
         }
 
         //добавление предмета
@@ -122,7 +122,7 @@ namespace EDiary.Controllers
             subjectTaught subjectTaught = new subjectTaught { subjectId = subject.subjectId, teacherId = (from teacher in context.teachers where (teacher.teacherSurname + " " + teacher.teacherName + " " + teacher.teacherLastname).Trim() == addSubject.teacher.Trim() select teacher.teacherId).First(), groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName).Select(gr => gr.groupId).First() };
             context.subjectTaughts.Add(subjectTaught);
             context.SaveChanges();
-            return RedirectToAction("Admin","Admin");
+            return RedirectToAction("ShowSubjects");
         }
 
         //таблица студентов
@@ -182,7 +182,7 @@ namespace EDiary.Controllers
         //таблица предметов
         public IActionResult ShowSubjects()
         {
-            var teacherGroupSubject = (from teacher in context.teachers
+            var subjects = (from teacher in context.teachers
                                        join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
                                        from sub in context.subjects
                                        join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
@@ -199,8 +199,10 @@ namespace EDiary.Controllers
                                                         orderby sub.subjectName
                                                         select gr.groupName).FirstOrDefault(),
                                        }).ToList();
-
-            return PartialView("~/Views/Admin/_tableSubject.cshtml", teacherGroupSubject);
+            var groups = context.groups.ToList();
+            var teachers = context.teachers.ToList();
+            var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
+            return PartialView("~/Views/Admin/_tableSubject.cshtml", tableSubjects);
         }
     }
 }
