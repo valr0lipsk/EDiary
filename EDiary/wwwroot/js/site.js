@@ -45,6 +45,10 @@ $(document).ready(function () {
     $('#allSb').click(function () {
         $('#partialDiv').load('/Admin/ShowSubjects');
     })
+    //add group
+    $('#addG').click(function () {
+        $('#partialDiv').load('/Admin/AddGroup')
+    })
 
 
     //-------------------------------------------
