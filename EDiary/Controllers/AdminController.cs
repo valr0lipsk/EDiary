@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using EDiary.Repositories;
 using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using IdentityUser = Microsoft.AspNetCore.Identity.IdentityUser;
 
 namespace EDiary.Controllers
 {
@@ -65,17 +64,17 @@ namespace EDiary.Controllers
             stGroup = new AddStudentModel { groups = groups };
             return PartialView("~/Views/Admin/_addStudent.cshtml", stGroup);
         }
-        public async Task<IActionResult> CreateStudentAsync(AddStudentModel createStudent)
+        public IActionResult CreateStudent(AddStudentModel createStudent)
         {
-            await context.Database.BeginTransactionAsync();
+            context.Database.BeginTransaction();
             IdentityUser identityStudentUser = new IdentityUser { Id = createStudent.studentLogin, UserName = "st" + createStudent.studentLogin, NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
-            await context.Users.AddAsync(identityStudentUser);
-            await context.SaveChangesAsync();
-            await userManager.AddToRoleAsync(identityStudentUser, "student");
+            context.Users.Add(identityStudentUser);
+            context.SaveChanges();
+            userManager.AddToRoleAsync(identityStudentUser, "student");
             Student student = new Student { studentSurname = createStudent.studentSurname, studentName = createStudent.studentName, studentLastname = createStudent.studentLastname, studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = identityStudentUser.Id, studentSubgroup = 1 };
-            await context.students.AddAsync(student);
-            await context.SaveChangesAsync();
-            await context.Database.CommitTransactionAsync();
+            context.students.Add(student);
+            context.SaveChanges();
+            context.Database.CommitTransactionAsync();
             return RedirectToAction("ShowStudents");
         }
 
@@ -322,6 +321,108 @@ namespace EDiary.Controllers
             var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
             return PartialView("~/Views/Admin/_tableSubject.cshtml", tableSubjects);
         }
+
+
+
+        /**********CRUD-группы**********/
+
+        //добавление группы
+        public IActionResult AddGroup(TableGroupModel addGroup)
+        {
+            var teachers = context.teachers.ToList();
+            return PartialView("~/Views/Admin/_addGroup.cshtml", teachers);
+        }
+        //public IActionResult CreateGroup(TableGroupModel addGroup)
+        //{
+        //    Subject subject = new Subject { subjectName = addSubject.subjectName };
+        //    context.subjects.Add(subject);
+        //    context.SaveChanges();
+        //    subjectTaught subjectTaught = new subjectTaught
+        //    {
+        //        subjectId = subject.subjectId,
+        //        teacherId = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName, tr.teacherLastname).Trim() == addSubject.firstTeacher.Trim())
+        //                                    .Select(tr => tr.teacherId).FirstOrDefault(),
+        //        groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
+        //                                .Select(gr => gr.groupId).FirstOrDefault()
+        //    };
+        //    context.subjectTaughts.Add(subjectTaught);
+        //    context.SaveChanges();
+        //    if (addSubject.haveLabs)
+        //    {
+        //        Labs labaFirst = new Labs
+        //        {
+        //            labName = string.Join(" ", addSubject.subjectName, "(лабораторная, 1-ая подгруппа)"),
+        //            subgroupId = 1,
+        //            teacherId = subjectTaught.teacherId,
+        //            countLabs = addSubject.labsCount,
+        //            tsubjectId = subjectTaught.tsubjectId
+        //        };
+        //        context.labs.Add(labaFirst);
+        //        context.SaveChanges();
+        //        Labs labaSecond = new Labs
+        //        {
+        //            labName = string.Join(" ", addSubject.subjectName, "(лабораторная, 2-ая подгруппа)"),
+        //            subgroupId = 2,
+        //            teacherId = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName, tr.teacherLastname).Trim() == addSubject.secondTeacher.Trim())
+        //                                    .Select(tr => tr.teacherId).FirstOrDefault(),
+        //            countLabs = addSubject.labsCount,
+        //            tsubjectId = subjectTaught.tsubjectId
+        //        };
+        //        context.labs.Add(labaSecond);
+        //        context.SaveChanges();
+        //    }
+        //    return RedirectToAction("ShowSubjects");
+        //}
+
+        ////удаление группы
+        //public IActionResult DeleteGroup(TableSubjectModel deleteSubject)
+        //{
+        //    var subject = context.subjects.Where(s => s.subjectName == deleteSubject.subjectName).FirstOrDefault();
+        //    context.subjects.Remove(subject);
+        //    context.SaveChanges();
+        //    return RedirectToAction("ShowSubjects");
+        //}
+
+        ////обновление группы 
+        //public IActionResult UpdateGroup(TableSubjectModel updateSubject)
+        //{
+        //    var subject = context.subjects.Where(s => s.subjectId == updateSubject.subjectId).FirstOrDefault();
+        //    subject.subjectName = updateSubject.subjectName;
+        //    context.subjects.Update(subject);
+        //    context.SaveChanges();
+        //    var teacher = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher).FirstOrDefault();
+        //    var group = context.groups.Where(gr => gr.groupName == updateSubject.group).FirstOrDefault();
+        //    var subTaught = context.subjectTaughts.Where(sT => sT.subjectId == subject.subjectId).FirstOrDefault();
+        //    context.subjectTaughts.Update(subTaught);
+        //    context.SaveChanges();
+        //    return RedirectToAction("Show");
+        //}
+
+        ////таблица групп
+        //public IActionResult ShowGroups()
+        //{
+        //    var subjects = (from teacher in context.teachers
+        //                    join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
+        //                    from sub in context.subjects
+        //                    join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+        //                    where subTaught.teacherId == teacher.teacherId
+        //                    orderby sub.subjectName
+        //                    select new AspTeacherSubjectGroupModel
+        //                    {
+        //                        teacherFullname = string.Join(", ", string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + ".")),
+        //                        subjectName = sub.subjectName,
+        //                        groupName = (from sub in context.subjects
+        //                                     join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+        //                                     join gr in context.groups on subTaught.groupId equals gr.groupId
+        //                                     where subTaught.teacherId == teacher.teacherId
+        //                                     orderby sub.subjectName
+        //                                     select gr.groupName).FirstOrDefault(),
+        //                    }).ToList();
+        //    var groups = context.groups.ToList();
+        //    var teachers = context.teachers.ToList();
+        //    var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
+        //    return PartialView("~/Views/Admin/_tableSubject.cshtml", tableSubjects);
+        //}
     }
 }
   

@@ -12,9 +12,9 @@ namespace EDiary.IRepositories
         IEnumerable<Student> Get();
         IEnumerable<Student> GetList();
         IQueryable<Student> GetStudents();
-        void Create(Student item);
-        void Remove(Student item);
-        void Update(Student item);
+        void AddStudent(Student item);
+        void DeleteStudent(Student item);
+        void UpdateStudent(Student item);
         void Save();
     }
 }

@@ -36,17 +36,17 @@ namespace EDiary.Repositories
             return dbSetStudent.Find(studentId);
         }
 
-        public void Create(Student item)
+        public void AddStudent(Student item)
         {
             dbSetStudent.Add(item);
             context.SaveChanges();
         }
-        public void Update(Student item)
+        public void UpdateStudent(Student item)
         {
             context.Entry(item).State = EntityState.Modified;
             context.SaveChanges();
         }
-        public void Remove(Student item)
+        public void DeleteStudent(Student item)
         {
             dbSetStudent.Remove(item);
             context.SaveChanges();
