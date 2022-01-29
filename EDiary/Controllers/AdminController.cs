@@ -330,49 +330,22 @@ namespace EDiary.Controllers
         public IActionResult AddGroup(TableGroupModel addGroup)
         {
             var teachers = context.teachers.ToList();
-            return PartialView("~/Views/Admin/_addGroup.cshtml", teachers);
+            addGroup = new TableGroupModel { teachers = teachers };
+            return PartialView("~/Views/Admin/_addGroup.cshtml", addGroup);
         }
-        //public IActionResult CreateGroup(TableGroupModel addGroup)
-        //{
-        //    Subject subject = new Subject { subjectName = addSubject.subjectName };
-        //    context.subjects.Add(subject);
-        //    context.SaveChanges();
-        //    subjectTaught subjectTaught = new subjectTaught
-        //    {
-        //        subjectId = subject.subjectId,
-        //        teacherId = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName, tr.teacherLastname).Trim() == addSubject.firstTeacher.Trim())
-        //                                    .Select(tr => tr.teacherId).FirstOrDefault(),
-        //        groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
-        //                                .Select(gr => gr.groupId).FirstOrDefault()
-        //    };
-        //    context.subjectTaughts.Add(subjectTaught);
-        //    context.SaveChanges();
-        //    if (addSubject.haveLabs)
-        //    {
-        //        Labs labaFirst = new Labs
-        //        {
-        //            labName = string.Join(" ", addSubject.subjectName, "(лабораторная, 1-ая подгруппа)"),
-        //            subgroupId = 1,
-        //            teacherId = subjectTaught.teacherId,
-        //            countLabs = addSubject.labsCount,
-        //            tsubjectId = subjectTaught.tsubjectId
-        //        };
-        //        context.labs.Add(labaFirst);
-        //        context.SaveChanges();
-        //        Labs labaSecond = new Labs
-        //        {
-        //            labName = string.Join(" ", addSubject.subjectName, "(лабораторная, 2-ая подгруппа)"),
-        //            subgroupId = 2,
-        //            teacherId = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName, tr.teacherLastname).Trim() == addSubject.secondTeacher.Trim())
-        //                                    .Select(tr => tr.teacherId).FirstOrDefault(),
-        //            countLabs = addSubject.labsCount,
-        //            tsubjectId = subjectTaught.tsubjectId
-        //        };
-        //        context.labs.Add(labaSecond);
-        //        context.SaveChanges();
-        //    }
-        //    return RedirectToAction("ShowSubjects");
-        //}
+        public IActionResult CreateGroup(TableGroupModel addGroup)
+        {
+            collegeGroup group = new collegeGroup
+            {
+                groupName = addGroup.groupName,
+                curatorId = context.teachers
+                            .Where(tr => string.Join(" ", tr.teacherSurname + ".", tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
+                            .Select(tr => tr.teacherId).FirstOrDefault()
+            };
+            context.groups.Add(group);
+            context.SaveChanges();
+            return RedirectToAction("ShowSubjects");
+        }
 
         ////удаление группы
         //public IActionResult DeleteGroup(TableSubjectModel deleteSubject)

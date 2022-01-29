@@ -10,6 +10,6 @@ namespace EDiary.ViewModels
     {
         public string groupName { get; set; }
         public string curator { get; set; }
-        public IEnumerable<Teacher> Teachers { get; set; }
+        public IEnumerable<Teacher> teachers { get; set; }
     }
 }
