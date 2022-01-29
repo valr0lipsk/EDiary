@@ -72,6 +72,7 @@
             if ($('#userGroup')) {
                 $('#userGroup').val($(this).parent().parent().children()[5].textContent);
             }
+
         }
         else if ($(this).attr('data-object') === 'subject') {
             $('#subName').val($(this).parent().parent().children()[0].textContent);
