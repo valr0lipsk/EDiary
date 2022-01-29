@@ -26,6 +26,7 @@ namespace EDiary.Models
         public EDContext(DbContextOptions<EDContext> options):base(options) {}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Student>().Property(st=>st.studentSubgroup).HasDefaultValue(1);
             base.OnModelCreating(modelBuilder);
 
             //добавление ролей

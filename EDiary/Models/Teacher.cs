@@ -14,17 +14,17 @@ namespace EDiary.Models
         public int teacherId { get; set; }
 
         [Display(Name = "Фамилия")]
-        [StringLength(15)]
+        [StringLength(30)]
         [Required]
         public string teacherSurname { get; set; }
 
         [Display(Name = "Имя")]
-        [StringLength(15)]
+        [StringLength(30)]
         [Required]
         public string teacherName { get; set; }
 
         [Display(Name = "Отчество")]
-        [StringLength(15)]
+        [StringLength(30)]
         public string teacherLastname { get; set; }
 
         [Display(Name = "Аватарка")]

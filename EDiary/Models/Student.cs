@@ -14,17 +14,17 @@ namespace EDiary.Models
         public int studentId { get; set; }
 
         [Display(Name = "Фамилия")]
-        [StringLength(15)]
+        [StringLength(30)]
         [Required]
         public string studentSurname { get; set; }
 
         [Display(Name = "Имя")]
-        [StringLength(15)]
+        [StringLength(30)]
         [Required]
         public string studentName { get; set; }
 
         [Display(Name = "Отчество")]
-        [StringLength(15)]
+        [StringLength(30)]
         public string studentLastname { get; set; }
 
         [Display(Name = "Аватарка")]
@@ -35,7 +35,6 @@ namespace EDiary.Models
         public int studentGroup { get; set; }
 
         [Display(Name = "Подгруппа")]
-        [Required]
         public int studentSubgroup { get; set; }
 
         [Display(Name = "Эмодзи-статус")]

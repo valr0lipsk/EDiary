@@ -51,14 +51,19 @@ namespace EDiary.Controllers
         public IActionResult Admin() => View();
 
 
+
         /**********CRUD-студента**********/
 
         //добавление студента
         public IActionResult AddStudent(AddStudentModel stGroup)
         {
             var studentLogin = generateLogin();
+            if (userManager.FindByNameAsync("st" + studentLogin).Result != null) 
+            {
+                studentLogin = generateLogin();
+            }
             var studentPass = generatePassword();
-            var groups = context.groups.ToList();
+            var groups = context.groups.AsNoTracking().ToList();
             ViewBag.studentLogin = studentLogin;
             ViewBag.studentPass = studentPass;
             stGroup = new AddStudentModel { groups = groups };
@@ -67,41 +72,58 @@ namespace EDiary.Controllers
         public IActionResult CreateStudent(AddStudentModel createStudent)
         {
             context.Database.BeginTransaction();
-            IdentityUser identityStudentUser = new IdentityUser { Id = createStudent.studentLogin, UserName = "st" + createStudent.studentLogin, NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword) };
+            IdentityUser identityStudentUser = new IdentityUser
+            {
+                Id = createStudent.studentLogin,
+                UserName = "st" + createStudent.studentLogin,
+                NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(),
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword)
+            };
             context.Users.Add(identityStudentUser);
             context.SaveChanges();
-            userManager.AddToRoleAsync(identityStudentUser, "student");
-            Student student = new Student { studentSurname = createStudent.studentSurname, studentName = createStudent.studentName, studentLastname = createStudent.studentLastname, studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup).Select(gr => gr.groupId).First(), studentUser = identityStudentUser.Id, studentSubgroup = 1 };
+            Student student = new Student 
+            { 
+                studentSurname = createStudent.studentSurname,
+                studentName = createStudent.studentName, studentLastname = createStudent.studentLastname,
+                studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
+                                             .Select(gr => gr.groupId).FirstOrDefault(),
+                studentUser = identityStudentUser.Id
+            };
             context.students.Add(student);
             context.SaveChanges();
-            context.Database.CommitTransactionAsync();
-            return RedirectToAction("ShowStudents");
+            userManager.AddToRoleAsync(identityStudentUser, "student");
+            context.Database.CommitTransaction();
+            return RedirectToAction("Admin/Admin");
         }
 
         //удаление студента
         public IActionResult DeleteStudent(TableStudentModel deleteStudent)
         {
+            context.Database.BeginTransaction();
             var student = userManager.FindByNameAsync(deleteStudent.studentLogin).Result;
             context.Users.Remove(student);
             context.SaveChanges();
-            return RedirectToAction("ShowStudents");
+            context.Database.CommitTransaction();
+            return RedirectToAction("Admin/Admin");
         }
 
         //обновление студента
         public IActionResult UpdateStudent(TableStudentModel updateStudent)
         {
+            context.Database.BeginTransaction();
             var user = userManager.FindByNameAsync(updateStudent.studentLogin).Result;
             user.Email = updateStudent.studentEmail;
             context.Users.Update(user);
             context.SaveChanges();
-            var student = context.students.Where(st => st.studentUser == user.Id).First();
+            var student = context.students.Where(st => st.studentUser == user.Id).FirstOrDefault();
             student.studentName = updateStudent.studentName;
             student.studentSurname = updateStudent.studentSurname;
             student.studentLastname = updateStudent.studentLastname;
-            student.studentGroup = context.groups.Where(gr => gr.groupName == updateStudent.studentGroup).Select(gr => gr.groupId).First();
+            student.studentGroup = context.groups.Where(gr => gr.groupName == updateStudent.studentGroup).Select(gr => gr.groupId).FirstOrDefault();
             context.students.Update(student);
             context.SaveChanges();
-            return RedirectToAction("ShowStudents");
+            context.Database.CommitTransaction();
+            return RedirectToAction("Admin/Admin");
         }
 
         //таблица студентов
@@ -120,9 +142,8 @@ namespace EDiary.Controllers
                                studentLastname = student.studentLastname,
                                groupName = gr.groupName,
                                studentEmail = aspuser.Email,
-                               groups = context.groups.ToList()
                            };
-            var tableStudents = new TableStudentModel { students = students, groups = context.groups.ToList() };
+            var tableStudents = new TableStudentModel { students = students, groups = context.groups.AsNoTracking().ToList() };
             return PartialView("~/Views/Admin/_tableStudent.cshtml", tableStudents);
         }
 
@@ -134,8 +155,12 @@ namespace EDiary.Controllers
         public IActionResult AddTeacher(AddTeacherModel curGroup)
         {
             var teacherLogin = generateLogin();
+            if (userManager.FindByNameAsync("tr" + teacherLogin).Result != null) 
+            {
+                teacherLogin = generateLogin();
+            }
             var teacherPass = generatePassword();
-            var groups = context.groups.ToList();
+            var groups = context.groups.AsNoTracking().ToList();
             ViewBag.teacherLogin = teacherLogin;
             ViewBag.teacherPass = teacherPass;
             curGroup.groups = groups;
@@ -143,31 +168,47 @@ namespace EDiary.Controllers
         }
         public IActionResult CreateTeacher(AddTeacherModel createTeacher)
         {
-            IdentityUser identityTeacherUser = new IdentityUser { Id = createTeacher.teacherLogin, UserName = "tr" + createTeacher.teacherLogin, NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(), PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword) };
+            context.Database.BeginTransaction();
+            IdentityUser identityTeacherUser = new IdentityUser
+            {
+                Id = createTeacher.teacherLogin,
+                UserName = "tr" + createTeacher.teacherLogin,
+                NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(),
+                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword)
+            };
             context.Users.Add(identityTeacherUser);
             context.SaveChanges();
-            userManager.AddToRoleAsync(identityTeacherUser, "teacher");
-            context.SaveChanges();
-            Teacher teacher = new Teacher { teacherSurname = createTeacher.teacherSurname, teacherName = createTeacher.teacherName, teacherLastname = createTeacher.teacherLastname, teacherUser = identityTeacherUser.Id };
+            Teacher teacher = new Teacher
+            {
+                teacherSurname = createTeacher.teacherSurname,
+                teacherName = createTeacher.teacherName,
+                teacherLastname = createTeacher.teacherLastname,
+                teacherUser = identityTeacherUser.Id
+            };
             context.teachers.Add(teacher);
             context.SaveChanges();
             if (createTeacher.curatorGroup != null)
             {
                 var group = context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault();
                 group.curatorId = teacher.teacherId;
-                context.groups.Update(group);
+                context.groups.Update(group); 
+                context.SaveChanges();
             }
+            userManager.AddToRoleAsync(identityTeacherUser, "teacher");
             context.SaveChanges();
-            return RedirectToAction("ShowTeachers");
+            context.Database.CommitTransaction();
+            return RedirectToAction("Admin");
         }
-        
+
         //удаление препода
         public IActionResult DeleteTeacher(TableTeacherModel deleteTeacher)
         {
+            context.Database.BeginTransaction();
             var teacher = userManager.FindByNameAsync(deleteTeacher.teacherLogin).Result;
             context.Users.Remove(teacher);
             context.SaveChanges();
-            return RedirectToAction("ShowTeachers");
+            context.Database.CommitTransaction();
+            return RedirectToAction("Admin");
         }
         
         //обновление препода
@@ -177,13 +218,13 @@ namespace EDiary.Controllers
             user.Email = updateTeacher.teacherEmail;
             context.Users.Update(user);
             context.SaveChanges();
-            var teacher = context.teachers.Where(tr => tr.teacherUser == user.Id).First();
+            var teacher = context.teachers.Where(tr => tr.teacherUser == user.Id).FirstOrDefault();
             teacher.teacherName = updateTeacher.teacherName;
-            teacher.teacherSurname = teacher.teacherSurname;
-            teacher.teacherLastname = teacher.teacherLastname;
+            teacher.teacherSurname = updateTeacher.teacherSurname;
+            teacher.teacherLastname = updateTeacher.teacherLastname;
             context.teachers.Update(teacher);
             context.SaveChanges();
-            return RedirectToAction("ShowTeachers");
+            return RedirectToAction("Admin");
         }
 
         //таблица преподов
@@ -269,7 +310,7 @@ namespace EDiary.Controllers
                 context.labs.Add(labaSecond);
                 context.SaveChanges();
             }
-            return RedirectToAction("ShowSubjects");
+            return RedirectToAction("Admin");
         }
 
         //удаление предмета
@@ -278,7 +319,7 @@ namespace EDiary.Controllers
             var subject = context.subjects.Where(s => s.subjectName == deleteSubject.subjectName).FirstOrDefault();
             context.subjects.Remove(subject);
             context.SaveChanges();
-            return RedirectToAction("ShowSubjects");
+            return RedirectToAction("Admin/Admin");
         }
 
         //обновление предмета  нужно доделать!!!
@@ -288,12 +329,12 @@ namespace EDiary.Controllers
             subject.subjectName = updateSubject.subjectName;
             context.subjects.Update(subject);
             context.SaveChanges();
-            var teacher = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher).FirstOrDefault();
+            var teacher = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher).FirstOrDefault();
             var group = context.groups.Where(gr => gr.groupName == updateSubject.group).FirstOrDefault();
             var subTaught = context.subjectTaughts.Where(sT => sT.subjectId == subject.subjectId).FirstOrDefault();
             context.subjectTaughts.Update(subTaught);
             context.SaveChanges();
-            return RedirectToAction("Show");
+            return RedirectToAction("Admin");
         }
 
         //таблица предметов
@@ -329,7 +370,7 @@ namespace EDiary.Controllers
         //добавление группы
         public IActionResult AddGroup(TableGroupModel addGroup)
         {
-            var teachers = context.teachers.ToList();
+            var teachers = context.teachers.Select(tr => string.Join(" ", tr.teacherSurname, tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".")).ToList();
             addGroup = new TableGroupModel { teachers = teachers };
             return PartialView("~/Views/Admin/_addGroup.cshtml", addGroup);
         }
@@ -339,63 +380,14 @@ namespace EDiary.Controllers
             {
                 groupName = addGroup.groupName,
                 curatorId = context.teachers
-                            .Where(tr => string.Join(" ", tr.teacherSurname + ".", tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
-                            .Select(tr => tr.teacherId).FirstOrDefault()
+                            .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
+                            .Select(tr=>tr.teacherId)
+                            .FirstOrDefault()
             };
             context.groups.Add(group);
             context.SaveChanges();
-            return RedirectToAction("ShowSubjects");
+            return RedirectToAction("Admin/Admin");
         }
-
-        ////удаление группы
-        //public IActionResult DeleteGroup(TableSubjectModel deleteSubject)
-        //{
-        //    var subject = context.subjects.Where(s => s.subjectName == deleteSubject.subjectName).FirstOrDefault();
-        //    context.subjects.Remove(subject);
-        //    context.SaveChanges();
-        //    return RedirectToAction("ShowSubjects");
-        //}
-
-        ////обновление группы 
-        //public IActionResult UpdateGroup(TableSubjectModel updateSubject)
-        //{
-        //    var subject = context.subjects.Where(s => s.subjectId == updateSubject.subjectId).FirstOrDefault();
-        //    subject.subjectName = updateSubject.subjectName;
-        //    context.subjects.Update(subject);
-        //    context.SaveChanges();
-        //    var teacher = context.teachers.Where(tr => string.Join(" ", tr.teacherSurname, tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher).FirstOrDefault();
-        //    var group = context.groups.Where(gr => gr.groupName == updateSubject.group).FirstOrDefault();
-        //    var subTaught = context.subjectTaughts.Where(sT => sT.subjectId == subject.subjectId).FirstOrDefault();
-        //    context.subjectTaughts.Update(subTaught);
-        //    context.SaveChanges();
-        //    return RedirectToAction("Show");
-        //}
-
-        ////таблица групп
-        //public IActionResult ShowGroups()
-        //{
-        //    var subjects = (from teacher in context.teachers
-        //                    join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
-        //                    from sub in context.subjects
-        //                    join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-        //                    where subTaught.teacherId == teacher.teacherId
-        //                    orderby sub.subjectName
-        //                    select new AspTeacherSubjectGroupModel
-        //                    {
-        //                        teacherFullname = string.Join(", ", string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + ".")),
-        //                        subjectName = sub.subjectName,
-        //                        groupName = (from sub in context.subjects
-        //                                     join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-        //                                     join gr in context.groups on subTaught.groupId equals gr.groupId
-        //                                     where subTaught.teacherId == teacher.teacherId
-        //                                     orderby sub.subjectName
-        //                                     select gr.groupName).FirstOrDefault(),
-        //                    }).ToList();
-        //    var groups = context.groups.ToList();
-        //    var teachers = context.teachers.ToList();
-        //    var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
-        //    return PartialView("~/Views/Admin/_tableSubject.cshtml", tableSubjects);
-        //}
     }
 }
   
