@@ -55,7 +55,7 @@
             $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[0].textContent.trim() + '"?');
         }
         else {
-            $('#userLogin').val($(this).parent().parent().children()[0].textContent);
+            $('#userLog').val($(this).parent().parent().children()[0].textContent);
             $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[1].textContent + ' ' + $(this).parent().parent().children()[2].textContent + ' ' + $(this).parent().parent().children()[3].textContent + '"?');
         }
         $('#сonfirmModal').modal('show');
