@@ -450,9 +450,22 @@ td > input{
     background-color: white;
 }
 
-.sidebar__acc, .sidebar__notes, .account__group, .main__subjects, .subjects__side {
+.sidebar__acc, .sidebar__notes, .account__group, .main__subjects, .subjects__side, sidebar  {
     /*    background-color: #f8f8f8;*/
     background-color: white;
+}
+
+.admin__menu{
+    width: 20px;
+    height: 20px;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .admin__sidebar{
+        background-color: white;
+        position: absolute;
+        z-index: 1;
+    }
 }
 
 .sidebar__notes::-webkit-scrollbar {

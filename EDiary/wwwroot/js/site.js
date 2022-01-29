@@ -50,6 +50,18 @@ $(document).ready(function () {
         $('#partialDiv').load('/Admin/AddGroup')
     })
 
+    $('.admin__menu').click(function () {
+        if ($('.admin__sidebar').hasClass('d-none')) {
+            $('.admin__sidebar').removeClass('d-none')
+            $('.admin__sidebar').addClass('d-block')
+        }
+        else {
+            $('.admin__sidebar').addClass('d-none')
+            $('.admin__sidebar').removeClass('d-block')
+        }
+
+    })
+
 
     //-------------------------------------------
     //common funcs
@@ -263,7 +275,4 @@ $(document).ready(function () {
         }
     })
 });
-
-
-
 

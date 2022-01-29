@@ -96,4 +96,12 @@
     $('#labsCheck').change(function () {
         $('.labs__block').toggleClass('d-none');
     })
+
+    if ($('#admin__menu')) {
+        console.log($('#admin__menu'))
+    }
+
+    $('#admin__menu').click(function () {
+        $('#admin__sidebar').toggle('d-md-none border-bottom')
+    })
 })
