@@ -81,15 +81,23 @@ namespace EDiary.Controllers
             };
             context.Users.Add(identityStudentUser);
             context.SaveChanges();
-            Student student = new Student 
-            { 
-                studentSurname = createStudent.studentSurname,
-                studentName = createStudent.studentName, studentLastname = createStudent.studentLastname,
-                studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
-                                             .Select(gr => gr.groupId).FirstOrDefault(),
-                studentUser = identityStudentUser.Id
-            };
-            context.students.Add(student);
+            if (context.groups.Where(gr => gr.groupName == createStudent.studentGroup) == null)
+            {
+                ModelState.AddModelError(nameof(AddStudentModel.studentGroup), "Такой группы не существует");
+            }
+            else
+            {
+                Student student = new Student
+                {
+                    studentSurname = createStudent.studentSurname,
+                    studentName = createStudent.studentName,
+                    studentLastname = createStudent.studentLastname,
+                    studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
+                                                 .Select(gr => gr.groupId).FirstOrDefault(),
+                    studentUser = identityStudentUser.Id
+                };
+                context.students.Add(student);
+            }
             context.SaveChanges();
             userManager.AddToRoleAsync(identityStudentUser, "student");
             context.Database.CommitTransaction();
@@ -121,7 +129,7 @@ namespace EDiary.Controllers
             student.studentLastname = updateStudent.studentLastname;
             if (context.groups.Where(gr => gr.groupName == updateStudent.studentGroup) == null) 
             {
-                ModelState.AddModelError(nameof(updateStudent.studentGroup), "Такой группы не существует");
+                ModelState.AddModelError(nameof(TableStudentModel.studentGroup), "Такой группы не существует");
             }
             else student.studentGroup = context.groups.Where(gr => gr.groupName == updateStudent.studentGroup).Select(gr => gr.groupId).FirstOrDefault();
             context.students.Update(student);
@@ -193,10 +201,17 @@ namespace EDiary.Controllers
             context.SaveChanges();
             if (createTeacher.curatorGroup != null)
             {
-                var group = context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault();
-                group.curatorId = teacher.teacherId;
-                context.groups.Update(group); 
-                context.SaveChanges();
+                if (context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault() == null)
+                {
+                    ModelState.AddModelError(nameof(AddTeacherModel.curatorGroup), "Такой группы не существует");
+                }
+                else
+                {
+                    var group = context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault();
+                    group.curatorId = teacher.teacherId;
+                    context.groups.Update(group);
+                    context.SaveChanges();
+                }
             }
             userManager.AddToRoleAsync(identityTeacherUser, "teacher");
             context.SaveChanges();
@@ -327,7 +342,7 @@ namespace EDiary.Controllers
             context.subjects.Remove(subject);
             context.SaveChanges();
             context.Database.CommitTransaction();
-            return RedirectToAction("Admin/Admin");
+            return RedirectToAction("Admin");
         }
 
         //обновление предмета  нужно доделать!!!
@@ -398,7 +413,7 @@ namespace EDiary.Controllers
             context.groups.Add(group);
             context.SaveChanges();
             context.Database.CommitTransaction();
-            return RedirectToAction("Admin/Admin");
+            return RedirectToAction("Admin");
         }
     }
 }
