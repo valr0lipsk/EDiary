@@ -151,7 +151,7 @@ $(document).ready(function () {
         if ($(this).attr('data-idsm')) {
             const markID = $(this).attr('data-idsm');
             const td = $(this);
-            const value = $(this).text();
+            const value = $(this).text().trim();
             $.ajax({
                 url: this.url,
                 type: "PUT",
@@ -178,7 +178,7 @@ $(document).ready(function () {
             lessId = $(this).attr('data-idLess');
             studId = $(this).attr('data-idStud');
             const td = $(this);
-            const value = $(this).text();
+            const value = $(this).text().trim();
             $.ajax({
                 url: this.URL,
                 type: "POST",
