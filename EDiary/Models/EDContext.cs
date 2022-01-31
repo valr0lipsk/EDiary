@@ -21,6 +21,7 @@ namespace EDiary.Models
         public DbSet<Student> students { get; set; }
         public DbSet<lessonType> lessonType { get; set; }
         public DbSet<EmojiStatus> emojiStatuses { get; set; }
+        public DbSet<subjectIcons> subjectIcons { get; set; }
         public DbSet<Labs> labs { get; set; }
         public DbSet<Subgroup> subgroups { get; set; }
         public EDContext(DbContextOptions<EDContext> options):base(options) {}
