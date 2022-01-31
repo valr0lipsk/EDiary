@@ -379,8 +379,8 @@ namespace EDiary.Controllers
         public IActionResult DeleteSubject(TableSubjectModel deleteSubject)
         {
             context.Database.BeginTransaction();
-            var subject = context.subjects.Where(s => s.subjectName == deleteSubject.subjectName).FirstOrDefault();
-            context.subjects.Remove(subject);
+            var subjectTaught = context.subjectTaughts.Where(s => s.tsubjectId == deleteSubject.tsubjectId).FirstOrDefault();
+            context.subjectTaughts.Remove(subjectTaught);
             context.SaveChanges();
             context.Database.CommitTransaction();
             return RedirectToAction("Admin");
@@ -390,14 +390,13 @@ namespace EDiary.Controllers
         public IActionResult UpdateSubject(TableSubjectModel updateSubject)
         {
             context.Database.BeginTransaction();
-            var subject = context.subjects.Where(s => s.subjectId == updateSubject.subjectId).FirstOrDefault();
-            subject.subjectName = updateSubject.subjectName;
-            context.subjects.Update(subject);
-            context.SaveChanges();
-            var teacher = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher).FirstOrDefault();
-            var group = context.groups.Where(gr => gr.groupName == updateSubject.group).FirstOrDefault();
-            var subTaught = context.subjectTaughts.Where(sT => sT.subjectId == subject.subjectId).FirstOrDefault();
-            context.subjectTaughts.Update(subTaught);
+            var subjectTaught = context.subjectTaughts.Where(sT => sT.tsubjectId == updateSubject.tsubjectId).FirstOrDefault();
+            subjectTaught.subjectId = context.subjects.Where(s => s.subjectName == updateSubject.subjectName).Select(s => s.subjectId).FirstOrDefault();
+            subjectTaught.groupId = context.groups.Where(gr => gr.groupName == updateSubject.group).Select(gr => gr.groupId).FirstOrDefault();
+            subjectTaught.teacherId = context.teachers
+                                      .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher)
+                                      .Select(tr => tr.teacherId).FirstOrDefault();
+            context.subjectTaughts.Update(subjectTaught);
             context.SaveChanges();
             context.Database.CommitTransaction();
             return RedirectToAction("Admin");
