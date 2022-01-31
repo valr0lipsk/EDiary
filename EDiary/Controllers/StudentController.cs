@@ -69,13 +69,7 @@ namespace EDiary.Controllers
                                {
                                    subjectName = labs.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа", ""),
                                    labaId = labs.labId,
-                                   tsubjectId = sT.tsubjectId,
-                                   zachCount = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                      .Where(m => m.m.mark == "зач")
-                                                                      .Where(m => m.sM.studentId == student.studentId)
-                                                                      .GroupBy(sm => sm.sM.studentId)
-                                                                      .Select(m => m.Count()).FirstOrDefault(),
-                                   labaCount = labs.countLabs
+                                   tsubjectId = sT.tsubjectId
                                }).ToList();
 
             //задачи
@@ -89,13 +83,18 @@ namespace EDiary.Controllers
                                 where student.studentUser == userManager.GetUserId(User)
                                 select new SubjectGroupModel
                                 {
-                                    subjectName = labs.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа",""),
+                                    subjectName = labs.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
                                     labaId = labs.labId,
                                     tsubjectId = sT.tsubjectId,
-                                    zachCount = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                       .Where(m => m.m.mark == "зач")
-                                                                       .Where(m => m.sM.studentId == student.studentId)
-                                                                       .GroupBy(sm => sm.sM.studentId)
+                                    zachCount = context.subjects.Join(context.subjectTaughts, s => s.subjectId, sT => sT.subjectId, (s, sT) => new { s, sT })
+                                                                       .Join(context.labs, sT => sT.sT.tsubjectId, laba => laba.tsubjectId, (sT, laba) => new { sT, laba })
+                                                                       .Join(context.lessons, sT => sT.sT.sT.tsubjectId, less => less.tsubjectId, (sT, less) => new { sT, less })
+                                                                       .Join(context.setMarks, less => less.less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
+                                                                       .Join(context.marks, sM => sM.sM.markId, mark => mark.markId, (sM, mark) => new { sM, mark })
+                                                                       .Join(context.students, sM => sM.sM.sM.studentId, stud => stud.studentId, (sM, student) => new { sM, student })
+                                                                       .Where(m => m.sM.mark.mark == "зач")
+                                                                       .Where(st => st.student.studentUser == userManager.GetUserId(User))
+                                                                       .GroupBy(sT => sT.sM.sM.less.sT.laba.labId)
                                                                        .Select(m => m.Count()).FirstOrDefault(),
                                     labaCount = labs.countLabs
                                 }).ToList();
