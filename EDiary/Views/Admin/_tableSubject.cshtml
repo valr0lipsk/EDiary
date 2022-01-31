@@ -21,7 +21,7 @@
             @foreach (var teacherUserSubject in Model.subjects)
                 {
                     <tr>
-                        <td>@teacherUserSubject.subjectName</td>
+                        <td data-idTSub="@teacherUserSubject.tsubjectId">@teacherUserSubject.subjectName</td>
                         <td>@teacherUserSubject.teacherFullname</td>
                         <td>@teacherUserSubject.groupName</td>
                         <td>
@@ -46,7 +46,7 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="subjectName" id="subjectName" type="hidden" value=""/>
+                            <input asp-for="subjectName" id="tSubjectIdRmv" type="hidden" value=""/>
                             <p id="confirmText">Вы действительно хотите удалить запись</p>
                         </div>
                     </div>
@@ -71,6 +71,11 @@
             </div>
             <form asp-action="UpdateSubject" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input @*asp-for="subjectName"*@ class="form-control" id="tSubjectIdUpdt" type="hidden"/>
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div class="row mb-2">
                             <input asp-for="subjectName" class="form-control" id="subName" type="text" required value=""/>

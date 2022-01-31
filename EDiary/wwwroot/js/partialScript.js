@@ -51,7 +51,8 @@
     $('.btnRemove').click(function () {
         console.log($(this).attr('data-object'))
         if ($(this).attr('data-object') === 'subject') {
-            $('#subjectName').val($(this).parent().parent().children()[0].textContent);
+            const cell1 = $(this).parent().parent().children()[0];
+            $('#tSubjectIdRmv').val($(cell1).attr('data-idTSub'));
             $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[0].textContent.trim() + '"?');
         }
         else {
@@ -76,6 +77,8 @@
         }
         else if ($(this).attr('data-object') === 'subject') {
             $('#subName').val($(this).parent().parent().children()[0].textContent);
+            const cell1 = $(this).parent().parent().children()[0];
+            $('#tSubjectIdUpdt').val($(cell1).attr('data-idTSub'));
             $('#subjectTeacher').val($(this).parent().parent().children()[1].textContent);
             $('#subjectGroup').val($(this).parent().parent().children()[2].textContent);
         }
@@ -97,10 +100,6 @@
     $('#labsCheck').change(function () {
         $('.labs__block').toggleClass('d-none');
     })
-
-    if ($('#admin__menu')) {
-        console.log($('#admin__menu'))
-    }
 
     $('#admin__menu').click(function () {
         $('#admin__sidebar').toggle('d-md-none border-bottom')
