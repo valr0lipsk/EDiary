@@ -99,9 +99,9 @@ namespace EDiary.Controllers
                                                                        .Select(m => m.Count()).FirstOrDefault(),
                                     labaCount = labs.countLabs
                                 }).ToList();
-            //var statuses = context.emojiStatuses.Take(8).ToList();
+            var statuses = context.emojiStatuses.Take(8).ToList();
             var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = subLabs, tasks = studentTasks /*, statuses = statuses*/ };
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = subLabs, tasks = studentTasks, statuses = statuses};
             return View(studentSubjectGroup);
         }
 

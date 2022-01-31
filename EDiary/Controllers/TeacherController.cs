@@ -68,9 +68,9 @@ namespace EDiary.Controllers
                             tsubjectId = tsub.tsubjectId,
                             groupName = gr.groupName
                         }).ToList();
-            //var statuses = context.emojiStatuses.TakeLast(7).ToList();
+            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
             var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs/*, statuses = statuses*/ };
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs, statuses = statuses };
             return View(teacherSubjectGroup);
         }
         
