@@ -76,7 +76,6 @@ namespace EDiary.Controllers
                                                                       .GroupBy(sm => sm.sM.studentId)
                                                                       .Select(m => m.Count()).FirstOrDefault(),
                                    labaCount = labs.countLabs
-
                                }).ToList();
             //var statuses = context.emojiStatuses.Take(8).ToList();
             var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
