@@ -14,6 +14,7 @@ namespace EDiary.ViewModels
         public IEnumerable<collegeGroup> groups { get; set; }
         public IEnumerable<EmojiStatus> statuses { get; set; }
         public int teacherId { get; set; }
+        public int tsubjectId { get; set; }
         public string teacherLastname { get; set; }
         public string teacherFullname { get; set; }
         public string teacherName { get; set; } 

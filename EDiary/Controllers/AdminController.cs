@@ -293,42 +293,83 @@ namespace EDiary.Controllers
         public IActionResult CreateSubject(AddSubjectModel addSubject)
         {
             context.Database.BeginTransaction();
-            Subject subject = new Subject { subjectName = addSubject.subjectName };
-            context.subjects.Add(subject);
-            context.SaveChanges();
-            subjectTaught subjectTaught = new subjectTaught
+            if (context.subjects.Where(s => s.subjectName == addSubject.subjectName) == null)
             {
-                subjectId = subject.subjectId,
-                teacherId = context.teachers.Where(tr => tr.teacherSurname + tr.teacherName + tr.teacherLastname == addSubject.firstTeacher)
-                                            .Select(tr => tr.teacherId).FirstOrDefault(),
-                groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
-                                        .Select(gr => gr.groupId).FirstOrDefault()
-            };
-            context.subjectTaughts.Add(subjectTaught);
-            context.SaveChanges();
-            if(addSubject.haveLabs)
-            {
-                Labs labaFirst = new Labs
-                {
-                    labName = addSubject.subjectName + "(лабораторная, 1-ая подгруппа)",
-                    subgroupId = 1,
-                    teacherId = subjectTaught.teacherId,
-                    countLabs = addSubject.labsCount,
-                    tsubjectId = subjectTaught.tsubjectId
-                };
-                context.labs.Add(labaFirst);
+                Subject subject = new Subject { subjectName = addSubject.subjectName };
+                context.subjects.Add(subject);
                 context.SaveChanges();
-                Labs labaSecond = new Labs
+                subjectTaught subjectTaught = new subjectTaught
                 {
-                    labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
-                    subgroupId = 2,
-                    teacherId = context.teachers.Where(tr => tr.teacherSurname + tr.teacherName + tr.teacherLastname == addSubject.secondTeacher)
+                    subjectId = subject.subjectId,
+                    teacherId = context.teachers.Where(tr => tr.teacherSurname + tr.teacherName + tr.teacherLastname == addSubject.firstTeacher)
                                                 .Select(tr => tr.teacherId).FirstOrDefault(),
-                    countLabs = addSubject.labsCount,
-                    tsubjectId = subjectTaught.tsubjectId
+                    groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
+                                            .Select(gr => gr.groupId).FirstOrDefault()
                 };
-                context.labs.Add(labaSecond);
+                context.subjectTaughts.Add(subjectTaught);
                 context.SaveChanges();
+                if (addSubject.haveLabs)
+                {
+                    Labs labaFirst = new Labs
+                    {
+                        labName = addSubject.subjectName + "(лабораторная, 1-ая подгруппа)",
+                        subgroupId = 1,
+                        teacherId = subjectTaught.teacherId,
+                        countLabs = addSubject.labsCount,
+                        tsubjectId = subjectTaught.tsubjectId
+                    };
+                    context.labs.Add(labaFirst);
+                    context.SaveChanges();
+                    Labs labaSecond = new Labs
+                    {
+                        labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
+                        subgroupId = 2,
+                        teacherId = context.teachers.Where(tr => tr.teacherSurname + tr.teacherName + tr.teacherLastname == addSubject.secondTeacher)
+                                                    .Select(tr => tr.teacherId).FirstOrDefault(),
+                        countLabs = addSubject.labsCount,
+                        tsubjectId = subjectTaught.tsubjectId
+                    };
+                    context.labs.Add(labaSecond);
+                    context.SaveChanges();
+                }
+            }
+            else
+            {
+                var sub = context.subjects.Where(s => s.subjectName == addSubject.subjectName).Select(s => s.subjectId).FirstOrDefault();
+                subjectTaught subjectTaught = new subjectTaught
+                {
+                    subjectId = sub,
+                    teacherId = context.teachers.Where(tr => tr.teacherSurname + tr.teacherName + tr.teacherLastname == addSubject.firstTeacher)
+                                               .Select(tr => tr.teacherId).FirstOrDefault(),
+                    groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
+                                           .Select(gr => gr.groupId).FirstOrDefault()
+                };
+                context.subjectTaughts.Add(subjectTaught);
+                context.SaveChanges();
+                if (addSubject.haveLabs)
+                {
+                    Labs labaFirst = new Labs
+                    {
+                        labName = addSubject.subjectName + "(лабораторная, 1-ая подгруппа)",
+                        subgroupId = 1,
+                        teacherId = subjectTaught.teacherId,
+                        countLabs = addSubject.labsCount,
+                        tsubjectId = subjectTaught.tsubjectId
+                    };
+                    context.labs.Add(labaFirst);
+                    context.SaveChanges();
+                    Labs labaSecond = new Labs
+                    {
+                        labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
+                        subgroupId = 2,
+                        teacherId = context.teachers.Where(tr => tr.teacherSurname + tr.teacherName + tr.teacherLastname == addSubject.secondTeacher)
+                                                    .Select(tr => tr.teacherId).FirstOrDefault(),
+                        countLabs = addSubject.labsCount,
+                        tsubjectId = subjectTaught.tsubjectId
+                    };
+                    context.labs.Add(labaSecond);
+                    context.SaveChanges();
+                }
             }
             context.Database.CommitTransaction();
             return RedirectToAction("Admin");
@@ -381,6 +422,7 @@ namespace EDiary.Controllers
                                                         where subTaught.teacherId == teacher.teacherId
                                                         orderby sub.subjectName
                                                         select gr.groupName).FirstOrDefault(),
+                                           tsubjectId= subTaught.tsubjectId
                                        }).ToList();
             var groups = context.groups.AsNoTracking().ToList();
             var teachers = context.teachers.AsNoTracking().ToList();
