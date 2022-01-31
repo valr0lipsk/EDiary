@@ -11,9 +11,7 @@ namespace EDiary.ViewModels
     {
         public IEnumerable<Student> students { get; set; }
         public IEnumerable<SubjectGroupModel> subjects { get; set; }
-        public IEnumerable<LabModel> labs { get; set; }
-        public IEnumerable<collegeGroup> groups { get; set; }
-        public IEnumerable<EmojiStatus> statuses { get; set; }
+        public IEnumerable<SubjectGroupModel> tasks { get; set; }
         public int studentId { get; set; }
         public string studentLastname { get; set; }
         public string studentName { get; set; }
