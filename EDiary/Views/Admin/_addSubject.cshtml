@@ -19,7 +19,7 @@
                 <label for="sTeacher" class="form-label mb-0">Преподаватель</label>
                 <input asp-for="firstTeacher" type="text" class="form-control" id="sTeacher" list="teachers" required value="">
                 <datalist id="teachers">
-                    @foreach (var teacher in Model.Teachers)
+                    @foreach (var teacher in Model.teachers)
                     {
                         <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
                     }
@@ -33,7 +33,7 @@
                         <label for="sTeacherLab" class="form-label mb-0">Второй преподаватель</label>
                         <input asp-for="secondTeacher" type="text" class="form-control" id="sTeacherLab" list="teachersLab" required value="">
                         <datalist id="teachersLab">
-                            @foreach (var teacher in Model.Teachers)
+                            @foreach (var teacher in Model.teachers)
                             {
                                 <option>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</option>
                             }
@@ -53,7 +53,7 @@
                 <label for="validationCustom02" class="form-label mb-0">Группа</label>
                 <input asp-for="groupName" type="text" class="form-control" id="validationCustom02" list="groups" required value="">
                 <datalist id="groups">
-                    @foreach (var group in Model.Groups)
+                    @foreach (var group in Model.groups)
                     {
                         <option>@group.groupName</option>
                     }
