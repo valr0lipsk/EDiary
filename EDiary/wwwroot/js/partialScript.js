@@ -120,10 +120,11 @@
         $('.selection__item').click(function () {
             $.each($('.selection__item'), function () {
                 if ($(this).hasClass('checked')) {
-                    $(this).removeClass('checked')
+                    $(this).removeClass('checked');
                 }
             })
-            $(this).toggleClass('checked')
+            $(this).toggleClass('checked');
+            $('#sImgId').val($(this).attr('data-idImg'));
         })
     })
 })
