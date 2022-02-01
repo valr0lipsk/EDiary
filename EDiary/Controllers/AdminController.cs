@@ -285,9 +285,10 @@ namespace EDiary.Controllers
         //добавление предмета
         public IActionResult AddSubject(AddSubjectModel createSubject)
         {
-            var groups = context.groups.ToList();
-            var teachers = context.teachers.ToList();
-            createSubject = new AddSubjectModel { Groups = groups, Teachers = teachers };
+            var groups = context.groups.AsNoTracking().ToList();
+            var teachers = context.teachers.AsNoTracking().ToList();
+            var icons = context.subjectIcons.AsNoTracking().ToList();
+            createSubject = new AddSubjectModel { groups = groups, teachers = teachers, icons = icons };
             return PartialView("~/Views/Admin/_addSubject.cshtml", createSubject);
         }
         public IActionResult CreateSubject(AddSubjectModel addSubject)
