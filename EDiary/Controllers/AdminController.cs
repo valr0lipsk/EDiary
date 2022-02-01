@@ -285,9 +285,10 @@ namespace EDiary.Controllers
         //добавление предмета
         public IActionResult AddSubject(AddSubjectModel createSubject)
         {
-            var groups = context.groups.ToList();
-            var teachers = context.teachers.ToList();
-            createSubject = new AddSubjectModel { Groups = groups, Teachers = teachers };
+            var groups = context.groups.AsNoTracking().ToList();
+            var teachers = context.teachers.AsNoTracking().ToList();
+            var icons = context.subjectIcons.AsNoTracking().ToList();
+            createSubject = new AddSubjectModel { groups = groups, teachers = teachers, icons = icons };
             return PartialView("~/Views/Admin/_addSubject.cshtml", createSubject);
         }
         public IActionResult CreateSubject(AddSubjectModel addSubject)
@@ -379,25 +380,38 @@ namespace EDiary.Controllers
         public IActionResult DeleteSubject(TableSubjectModel deleteSubject)
         {
             context.Database.BeginTransaction();
-            var subject = context.subjects.Where(s => s.subjectName == deleteSubject.subjectName).FirstOrDefault();
-            context.subjects.Remove(subject);
+            var subjectTaught = context.subjectTaughts.Where(s => s.tsubjectId == deleteSubject.tsubjectId).FirstOrDefault();
+            context.subjectTaughts.Remove(subjectTaught);
             context.SaveChanges();
             context.Database.CommitTransaction();
             return RedirectToAction("Admin");
         }
 
-        //обновление предмета  нужно доделать!!!
+        //обновление предмета 
         public IActionResult UpdateSubject(TableSubjectModel updateSubject)
         {
             context.Database.BeginTransaction();
-            var subject = context.subjects.Where(s => s.subjectId == updateSubject.subjectId).FirstOrDefault();
-            subject.subjectName = updateSubject.subjectName;
-            context.subjects.Update(subject);
-            context.SaveChanges();
-            var teacher = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher).FirstOrDefault();
-            var group = context.groups.Where(gr => gr.groupName == updateSubject.group).FirstOrDefault();
-            var subTaught = context.subjectTaughts.Where(sT => sT.subjectId == subject.subjectId).FirstOrDefault();
-            context.subjectTaughts.Update(subTaught);
+            var subjectTaught = context.subjectTaughts.Where(sT => sT.tsubjectId == updateSubject.tsubjectId).FirstOrDefault();
+            if (context.subjects.Where(s => s.subjectName == updateSubject.subjectName.Trim()) != null)
+            { 
+                subjectTaught.subjectId = context.subjects.Where(s => s.subjectName == updateSubject.subjectName.Trim()).Select(s => s.subjectId).FirstOrDefault(); 
+            }
+            else { ModelState.AddModelError(nameof(TableSubjectModel.subjectName), "Такого предмета не существует"); }
+            
+            if (context.groups.Where(gr => gr.groupName == updateSubject.group.Trim()).FirstOrDefault() != null)
+            { 
+                subjectTaught.groupId = context.groups.Where(gr => gr.groupName == updateSubject.group.Trim()).Select(gr => gr.groupId).FirstOrDefault(); 
+            }
+            else { ModelState.AddModelError(nameof(TableSubjectModel.group), "Такой группы не существует"); }
+
+            if (context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher.Trim()).FirstOrDefault() != null)
+            {
+                subjectTaught.teacherId = context.teachers
+                                          .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + tr.teacherLastname.Substring(0, 1) + ".") == updateSubject.teacher.Trim())
+                                          .Select(tr => tr.teacherId).FirstOrDefault();
+            }
+            else { ModelState.AddModelError(nameof(TableSubjectModel.teacher), "Такого преподавателя не существует"); }
+            context.subjectTaughts.Update(subjectTaught);
             context.SaveChanges();
             context.Database.CommitTransaction();
             return RedirectToAction("Admin");
@@ -414,7 +428,7 @@ namespace EDiary.Controllers
                                        orderby sub.subjectName
                                        select new AspTeacherSubjectGroupModel
                                        {
-                                           teacherFullname = string.Join(", ", string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + ".")),
+                                           teacherFullname = string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + "."),
                                            subjectName = sub.subjectName,
                                            groupName = (from sub in context.subjects
                                                         join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId

@@ -14,7 +14,8 @@ namespace EDiary.ViewModels
         public string groupName { get; set; }
         public int labsCount { get; set; }
         public bool haveLabs { get; set; }
-        public IEnumerable<Teacher> Teachers { get; set; }
-        public IEnumerable<collegeGroup> Groups { get; set; }
+        public IEnumerable<Teacher> teachers { get; set; }
+        public IEnumerable<collegeGroup> groups { get; set; }
+        public IEnumerable<subjectIcons> icons { get; set; }
     }
 }

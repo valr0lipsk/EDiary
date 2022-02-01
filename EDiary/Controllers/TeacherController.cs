@@ -68,9 +68,31 @@ namespace EDiary.Controllers
                             tsubjectId = tsub.tsubjectId,
                             groupName = gr.groupName
                         }).ToList();
-            //var statuses = context.emojiStatuses.TakeLast(7).ToList();
+
+            //задачи
+            var tasks = (from tsub in context.subjectTaughts
+                         join gr in context.groups on tsub.groupId equals gr.groupId
+                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
+                         join teacher in context.teachers on lab.teacherId equals teacher.teacherId
+                         join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
+                         where teacher.teacherUser == userManager.GetUserId(User)
+                         orderby lab.labName
+                         select new SubjectGroupModel
+                         {
+                             subjectName = lab.labName,
+                             labaId = lab.labId,
+                             tsubjectId = tsub.tsubjectId,
+                             groupName = gr.groupName,
+                             labaCount = lab.countLabs,
+                             lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                        .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                        .Where(less => less.sT.less.lessonTypeId == 6)
+                                                        .GroupBy(less => less.lab.labId)
+                                                        .Count()
+                         }).ToList();
+            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
             var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs/*, statuses = statuses*/ };
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs, statuses = statuses, tasks = tasks };
             return View(teacherSubjectGroup);
         }
         
