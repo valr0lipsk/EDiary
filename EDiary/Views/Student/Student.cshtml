@@ -73,7 +73,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form asp-action="AddPicture" asp-controller="Student" method="post" enctype="multipart/form-data">
+                                <form method="post" enctype="multipart/form-data">
                                     <div class="modal-body d-flex flex-wrap">
                                         @foreach(var status in Model.statuses)
                                         {
@@ -84,6 +84,7 @@
                                                 <p>@status.status</p>
                                             </div>
                                         }
+                                        <input type="hidden" id="statusId" value=""/>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>

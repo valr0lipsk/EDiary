@@ -155,6 +155,7 @@ $(document).ready(function () {
             }
         })
         $(this).addClass('selection__item-check');
+        $('#statusId').val($(this).attr('data-idStatus'));
     })
 
     //-----------------------------------------
