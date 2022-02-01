@@ -1,22 +1,24 @@
-﻿        function zero_first_format(value) {
-            if (value < 10) {
-                value = '0' + value;
-            }
-            return value;
-        }
-
-    function date_time()
-    {
-        var current_datetime = new Date();
-        var day = zero_first_format(current_datetime.getDate());
-        var month = zero_first_format(current_datetime.getMonth()+1);
-        var year = current_datetime.getFullYear();
-        var hours = zero_first_format(current_datetime.getHours());
-        var minutes = zero_first_format(current_datetime.getMinutes());
-        var seconds = zero_first_format(current_datetime.getSeconds());
-
-        return hours + ":" + minutes + ":" +seconds+" "+day+"."+month+"."+year;
+﻿//adding null before 1..9 numbers
+function zero_first_format(value) {
+    if (value < 10) {
+        value = '0' + value;
     }
+    return value;
+}
+
+//getting current date and time
+function date_time()
+{
+    let current_datetime = new Date();
+    let day = zero_first_format(current_datetime.getDate());
+    let month = zero_first_format(current_datetime.getMonth() + 1);
+    let year = current_datetime.getFullYear();
+    let hours = zero_first_format(current_datetime.getHours());
+    let minutes = zero_first_format(current_datetime.getMinutes());
+    let seconds = zero_first_format(current_datetime.getSeconds());
+
+    return hours + ":" + minutes + ":" + seconds + " " + day + "." + month + "." + year;
+}
 
 $(document).ready(function () {
     //admin funcs
@@ -50,6 +52,7 @@ $(document).ready(function () {
         $('#partialDiv').load('/Admin/AddGroup')
     })
 
+    //???
     $('.admin__menu').click(function () {
         if ($('.admin__sidebar').hasClass('d-none')) {
             $('.admin__sidebar').removeClass('d-none')
@@ -110,10 +113,11 @@ $(document).ready(function () {
         $('#dropdown').toggleClass('show');
     })
 
+    //close kebab-menu in acc
     $(window).click(() => {
         if (!event.target.matches('#icons__dots')) {
 
-            const dropdowns = $(document).find('dropdown-content');
+            const dropdowns = $(document).find('.dropdown-content');
             for (let i = 0; i < dropdowns.length; i++) {
                 const openDropdown = dropdowns[i];
                 if (openDropdown.classList.contains('show')) {
@@ -125,10 +129,33 @@ $(document).ready(function () {
 
     //hide info messagge in pass changing
     if ($('#valForNew').text() != '') {
-        $('#passwordHelpBlock').addClass('d-none')
+        $('#passwordHelpBlock').addClass('d-none');
     }
 
+    //open and choose emoji status
+    $('#emojiStatus').click(function () {
+        $('#statusModal').modal('show');
+    })
 
+    //emoji hover
+    $('.selection__item').mouseover(function () {
+        $(this).addClass('selection__item-hover');
+    })
+    $('.selection__item').mouseout(function () {
+        $(this).removeClass('selection__item-hover');
+    })
+
+    $('.selection__item').click(function () {
+        $.each($('.selection__item'), function () {
+            if ($(this).hasClass('selection__item-hover')) {
+                $(this).removeClass('selection__item-hover');
+            }
+            if ($(this).hasClass('selection__item-check')) {
+                $(this).removeClass('selection__item-check');
+            }
+        })
+        $(this).addClass('selection__item-check');
+    })
 
     //-----------------------------------------
     //jurnal funcs

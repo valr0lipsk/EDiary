@@ -3,7 +3,7 @@
 
     function sortTable(f, n)
     {
-        var rows = $('.table tbody  tr').get();
+        let rows = $('.table tbody  tr').get();
         console.log(rows);
 
         rows.sort(function (a, b)
@@ -25,7 +25,7 @@
 
         function getVal(elm)
         {
-            var v = $(elm).children('td').eq(n).text().toUpperCase();
+            let v = $(elm).children('td').eq(n).text().toUpperCase();
             if ($.isNumeric(v))
             {
                 v = parseInt(v, 10);
@@ -40,7 +40,7 @@
     }
     let f_sl = 1;
 
-
+    //soft table by thead clicking
     $('.table thead tr th').click(function ()
     {
         f_sl *= -1;
@@ -48,6 +48,7 @@
         sortTable(f_sl, n);
     });
 
+    //confirm deleting smth
     $('.btnRemove').click(function () {
         console.log($(this).attr('data-object'))
         if ($(this).attr('data-object') === 'subject') {
@@ -62,6 +63,7 @@
         $('#сonfirmModal').modal('show');
     })
 
+    //fill update inputs
     $('.btnUpdate').click(function ()
     {
         if ($(this).attr('data-object') === 'user') {
@@ -85,6 +87,7 @@
         $('#updateModal').modal('show');
     })
 
+    //find smth in tables
     $('#findInput').keyup(function () {
         _this = this;
 
@@ -97,17 +100,18 @@
         })
     })
 
+    //show labs inputs
     $('#labsCheck').change(function () {
         $('.labs__block').toggleClass('d-none');
     })
 
+    //show admin menu in mobile/small desktop version
     $('#admin__menu').click(function () {
         $('#admin__sidebar').toggle('d-md-none border-bottom')
     })
 
-    //$('.dropdown-menu').parent().on('shown.bs.dropdown', function () {
-        
-    //});
+
+    //img selection in adding subject
     $('.img__selection').click(function () {
         event.preventDefault();
         if ($('.dropdown-menu').hasClass('show')) {
@@ -127,4 +131,5 @@
             $('#sImgId').val($(this).attr('data-idImg'));
         })
     })
+
 })
