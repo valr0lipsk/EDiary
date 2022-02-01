@@ -460,6 +460,37 @@ td > input{
     height: 20px;
 }
 
+.selection__dropdown {
+    max-height: 200px !important;
+    min-width: 100px !important;
+    overflow: auto;
+}
+
+.selection__dropdown::-webkit-scrollbar {
+    width: 7px;
+    background-color: #f9f9fd;
+}
+
+.selection__dropdown::-webkit-scrollbar-thumb { 
+    background-color: #00000029;
+}
+
+.selection__item > img {
+    width: 45px;
+    height: 45px;
+    margin: 5px 0px;
+}
+
+.checked::after{
+    content: "";
+    position: absolute;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    right: 7px;
+    background: url('source/checkIcon.png') no-repeat;
+}
+
 @media (max-width: 991px) {
     .admin__sidebar{
         background-color: white;
