@@ -66,7 +66,7 @@ namespace EDiary.Controllers
                                join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
                                join gr in context.groups on sT.groupId equals gr.groupId
                                join sub in context.subjects on sT.subjectId equals sub.subjectId
-                               where students.studentUser == userManager.GetUserId(User)
+                               where students.studentUser == userManager.GetUserId(User) && students.studentGroup == gr.groupId
                                select new SubjectGroupModel
                                {
                                    subjectName = labs.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа", ""),
@@ -83,7 +83,7 @@ namespace EDiary.Controllers
                                 join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
                                 join gr in context.groups on sT.groupId equals gr.groupId
                                 join sub in context.subjects on sT.subjectId equals sub.subjectId
-                                where students.studentUser == userManager.GetUserId(User)
+                                where students.studentUser == userManager.GetUserId(User) && students.studentGroup == gr.groupId
                                 select new SubjectGroupModel
                                 {
                                     subjectName = labs.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),

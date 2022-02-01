@@ -59,7 +59,7 @@
                             {
                                 @foreach (var student in Model.students)
                                 {
-                                    <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName <sup class="acc__status" id="emojiStatus">&#x1F913;</sup></p>
+                                    <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
                                 }
                             }
                         </div>
