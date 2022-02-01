@@ -59,9 +59,38 @@
                             {
                                 @foreach (var student in Model.students)
                                 {
-                                    <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName <sup>&#x1F913;</sup></p>
+                                    <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName <sup class="acc__status" id="emojiStatus">&#x1F913;</sup></p>
                                 }
                             }
+                        </div>
+                    </div>
+                     <div id="statusModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Выбрать статус</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form asp-action="AddPicture" asp-controller="Student" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body d-flex flex-wrap">
+                                        @foreach(var status in Model.statuses)
+                                        {
+                                            <div class="selection__item col-3 d-flex flex-column justify-content-start align-items-center text-center" data-idStatus="@status.statusId">
+                                                <div class="item__circle rounded-circle d-flex align-content-center align-items-center justify-content-center">
+                                                    <img src="data:image/*;base64,@(Convert.ToBase64String(status.emoji))"/>
+                                                </div>
+                                                <p>@status.status</p>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                        <input type="submit" class="btn btn-primary" value="Выбрать" />
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,6 +144,12 @@
                     <div class="subjects__block col-11">
                         <div class="row d-flex flex-column p-3">
                             <h2 class="block__tile text-center mb-4">Мои предметы:</h2>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">Поиск</button>
+                                </div>
+                            </div>
                             @foreach (var subject in Model.subjects)
                             {
                                 <div class="block__item col-12 mb-4">
