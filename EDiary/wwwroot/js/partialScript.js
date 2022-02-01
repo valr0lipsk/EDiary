@@ -104,4 +104,27 @@
     $('#admin__menu').click(function () {
         $('#admin__sidebar').toggle('d-md-none border-bottom')
     })
+
+    //$('.dropdown-menu').parent().on('shown.bs.dropdown', function () {
+        
+    //});
+    $('.img__selection').click(function () {
+        event.preventDefault();
+        if ($('.dropdown-menu').hasClass('show')) {
+            $('.dropdown-menu').dropdown('hide');
+        }
+        else {
+            $('.dropdown-menu').dropdown('show');
+        }
+
+        $('.selection__item').click(function () {
+            $.each($('.selection__item'), function () {
+                if ($(this).hasClass('checked')) {
+                    $(this).removeClass('checked');
+                }
+            })
+            $(this).toggleClass('checked');
+            $('#sImgId').val($(this).attr('data-idImg'));
+        })
+    })
 })
