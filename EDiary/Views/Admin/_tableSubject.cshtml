@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="subjectTeacher" type="text" list="subTeachers" required value=""/>
+                            <input asp-for="teacher" class="form-control" id="subjectTeacher" type="text" list="subTeachers" required value=""/>
                             <datalist id="subTeachers">
                                 @foreach (var teacher in Model.teachers)
                                 {
@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="subjectGroup" type="text" list="subGroups" required value=""/>
+                            <input asp-for="group" class="form-control" id="subjectGroup" type="text" list="subGroups" required value=""/>
                             <datalist id="subGroups">
                                 @foreach (var group in Model.groups)
                                 {
