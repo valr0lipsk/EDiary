@@ -23,9 +23,11 @@ namespace EDiary.Controllers
         EDContext context;
         public MarksController(EDContext context, UserManager<IdentityUser> userManager) => (this.context, this.userManager) = (context, userManager);
 
-        //представление журнала
-        //public IActionResult Jurnal() => View();
-
+        //переадресация на нужный POST-метода
+        [HttpPost]
+        [Route("Marks/Jurnal/{id?}")]
+        public IActionResult Jurnal(int studId, int lessId, string value, LessonModel lessDates) => value == null ? Jurnal(lessDates) : Jurnal(studId, lessId, value);
+        
         //обновление оценки
         [HttpPut]
         public IActionResult Jurnal(int id, string value)
@@ -55,8 +57,6 @@ namespace EDiary.Controllers
 
 
         //добавление оценки
-        [HttpPost]
-        [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
             var marks = (from mark in context.marks where mark.mark == value select mark.mark).FirstOrDefault();
@@ -138,7 +138,7 @@ namespace EDiary.Controllers
                         join lab in context.labs on subGr.subgroupId equals lab.subgroupId
                         join sT in context.subjectTaughts on lab.tsubjectId equals sT.tsubjectId
                         join sub in context.subjects on sT.subjectId equals sub.subjectId
-                        where student.studentUser == userManager.GetUserId(User)
+                        where student.studentUser == userManager.GetUserId(User) && student.studentGroup == sT.groupId
                         select new SubjectGroupModel
                         {
                             subjectName = lab.labName,
@@ -332,8 +332,6 @@ namespace EDiary.Controllers
 
 
         
-        [HttpPost, ActionName("showDates")]
-        [Route("Marks/Jurnal/{id?}")]
         //показать занятия по промежутку
         public IActionResult Jurnal(LessonModel lessDates)
         {
@@ -378,7 +376,7 @@ namespace EDiary.Controllers
                             join gr in context.groups on sT.groupId equals gr.groupId
                             join st in context.students on gr.groupId equals st.studentGroup
                             join aspusers in context.Users on st.studentUser equals aspusers.Id
-                            where st.studentUser == userManager.GetUserId(User)
+                            where st.studentUser == userManager.GetUserId(User) 
                             select new SubjectGroupModel
                             {
                                 tsubjectId = sT.tsubjectId,
@@ -391,7 +389,7 @@ namespace EDiary.Controllers
                         join lab in context.labs on subGr.subgroupId equals lab.subgroupId
                         join sT in context.subjectTaughts on lab.tsubjectId equals sT.tsubjectId
                         join sub in context.subjects on sT.subjectId equals sub.subjectId
-                        where student.studentUser == userManager.GetUserId(User)
+                        where student.studentUser == userManager.GetUserId(User) && student.studentGroup == sT.groupId
                         select new SubjectGroupModel
                         {
                             subjectName = lab.labName,
@@ -525,15 +523,10 @@ namespace EDiary.Controllers
                                         setmarkId = setMark.setmarkId,
                                         studentId = setMark.studentId
                                     }).ToList();
-                }    
+                }
 
                 //типы занятий
-                var types = (from type in context.lessonType
-                             select new lessonType
-                             {
-                                 lessonTypeId = type.lessonTypeId,
-                                 typeName = type.typeName
-                             }).ToList();
+                var types = context.lessonType.AsNoTracking().ToList();
 
                 jurnal.Teachers = teacherJurnal;
                 jurnal.Groups = groupJurnal;
