@@ -33,17 +33,18 @@ namespace EDiary.Controllers
                                               select Convert.ToInt32(mark.mark)).Average(), 2);
 
             //ФИО учника
-            var studentFullName = (from student in context.students
-                                   join aspusers in context.Users on student.studentUser equals aspusers.Id
-                                   where student.studentUser == userManager.GetUserId(User)
-                                   select new Student
-                                   {
-                                       studentId = student.studentId,
-                                       studentSurname = student.studentSurname,
-                                       studentName = student.studentName,
-                                       studentLastname = student.studentLastname,
-                                       studentPic = student.studentPic
-                                   }).ToList();
+            var student = (from students in context.students
+                           join aspusers in context.Users on students.studentUser equals aspusers.Id
+                           where students.studentUser == userManager.GetUserId(User)
+                           select new StudentModel
+                           {
+                               studentId = students.studentId,
+                               studentSurname = students.studentSurname,
+                               studentName = students.studentName,
+                               studentLastname = students.studentLastname,
+                               studentPic = students.studentPic,
+                               studentStatus = students.status.emoji
+                           }).ToList();
             //предметы
             var studentSubject = (from sub in context.subjects
                                   join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
@@ -58,14 +59,14 @@ namespace EDiary.Controllers
                                       subIcon = sub.Icon.subjectPicture
                                   }).ToList();
             //лабы
-            var studentLabs = (from student in context.students
-                               join aspusers in context.Users on student.studentUser equals aspusers.Id
-                               join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
+            var studentLabs = (from students in context.students
+                               join aspusers in context.Users on students.studentUser equals aspusers.Id
+                               join subGr in context.subgroups on students.studentSubgroup equals subGr.subgroupId
                                join labs in context.labs on subGr.subgroupId equals labs.subgroupId
                                join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
                                join gr in context.groups on sT.groupId equals gr.groupId
                                join sub in context.subjects on sT.subjectId equals sub.subjectId
-                               where student.studentUser == userManager.GetUserId(User)
+                               where students.studentUser == userManager.GetUserId(User)
                                select new SubjectGroupModel
                                {
                                    subjectName = labs.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа", ""),
@@ -75,14 +76,14 @@ namespace EDiary.Controllers
                                }).ToList();
 
             //задачи
-            var studentTasks = (from student in context.students
-                                join aspusers in context.Users on student.studentUser equals aspusers.Id
-                                join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
+            var studentTasks = (from students in context.students
+                                join aspusers in context.Users on students.studentUser equals aspusers.Id
+                                join subGr in context.subgroups on students.studentSubgroup equals subGr.subgroupId
                                 join labs in context.labs on subGr.subgroupId equals labs.subgroupId
                                 join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
                                 join gr in context.groups on sT.groupId equals gr.groupId
                                 join sub in context.subjects on sT.subjectId equals sub.subjectId
-                                where student.studentUser == userManager.GetUserId(User)
+                                where students.studentUser == userManager.GetUserId(User)
                                 select new SubjectGroupModel
                                 {
                                     subjectName = labs.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
@@ -99,14 +100,15 @@ namespace EDiary.Controllers
                                 }).ToList();
             var statuses = context.emojiStatuses.Take(8).ToList();
             var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = studentFullName, subjects = subLabs, tasks = studentTasks, statuses = statuses};
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = studentTasks, statuses = statuses};
             return View(studentSubjectGroup);
         }
 
         //добавление фотографии студента
         [HttpPost]
-        public IActionResult AddPicture(AvatarModel studentPicture)
+        public IActionResult AddPicture(AvatarStatusModel studentPicture)
         {
+            context.Database.BeginTransaction();
             var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
             byte[] pic = null;
             using (var binaryReader = new BinaryReader(studentPicture.Picture.OpenReadStream()))
@@ -116,6 +118,20 @@ namespace EDiary.Controllers
             student.studentPic = pic;
             context.students.Update(student);
             context.SaveChanges();
+            context.Database.CommitTransaction();
+            return RedirectToAction("Student", "Student");
+        }
+
+        //добавление эмоджи статуса
+        [HttpPost]
+        public IActionResult AddStatus(AvatarStatusModel studentStatus)
+        {
+            context.Database.BeginTransaction();
+            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
+            student.studentStatus = studentStatus.statusId;
+            context.students.Update(student);
+            context.SaveChanges();
+            context.Database.CommitTransaction();
             return RedirectToAction("Student", "Student");
         }
     }

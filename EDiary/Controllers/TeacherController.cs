@@ -29,23 +29,24 @@ namespace EDiary.Controllers
                                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
                                                    .Select(gr => gr.gr.groupName).FirstOrDefault();
             //инфо о преподе
-            var teacherNamePic = (from teacher in context.teachers
-                                  join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                  where teacher.teacherUser == userManager.GetUserId(User)
-                                  select new Teacher
-                                  {
-                                      teacherSurname = teacher.teacherSurname,
-                                      teacherName = teacher.teacherName,
-                                      teacherLastname = teacher.teacherLastname,
-                                      teacherPic = teacher.teacherPic
-                                  }).ToList();
+            var teacher = (from teachers in context.teachers
+                           join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
+                           where teachers.teacherUser == userManager.GetUserId(User)
+                           select new TeacherModel
+                           {
+                               teacherSurname = teachers.teacherSurname,
+                               teacherName = teachers.teacherName,
+                               teacherLastname = teachers.teacherLastname,
+                               teacherPic = teachers.teacherPic,
+                               teacherStatus = teachers.status.emoji
+                           }).ToList();
             //предметы
             var subjectGroups = (from tsub in context.subjectTaughts
                                  join subject in context.subjects on tsub.subjectId equals subject.subjectId
                                  join gr in context.groups on tsub.groupId equals gr.groupId
-                                 join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                                 join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                                 where teacher.teacherUser == userManager.GetUserId(User)
+                                 join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
+                                 join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
+                                 where teachers.teacherUser == userManager.GetUserId(User)
                                  orderby subject.subjectName
                                  select new SubjectGroupModel
                                  {
@@ -58,9 +59,9 @@ namespace EDiary.Controllers
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
-                        join teacher in context.teachers on lab.teacherId equals teacher.teacherId
-                        join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                        where teacher.teacherUser == userManager.GetUserId(User)
+                        join teachers in context.teachers on lab.teacherId equals teachers.teacherId
+                        join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
+                        where teachers.teacherUser == userManager.GetUserId(User)
                         orderby lab.labName
                         select new SubjectGroupModel
                         {
@@ -75,9 +76,9 @@ namespace EDiary.Controllers
             var tasks = (from tsub in context.subjectTaughts
                          join gr in context.groups on tsub.groupId equals gr.groupId
                          join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
-                         join teacher in context.teachers on lab.teacherId equals teacher.teacherId
-                         join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                         where teacher.teacherUser == userManager.GetUserId(User)
+                         join teachers in context.teachers on lab.teacherId equals teachers.teacherId
+                         join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
+                         where teachers.teacherUser == userManager.GetUserId(User)
                          orderby lab.labName
                          select new SubjectGroupModel
                          {
@@ -94,13 +95,13 @@ namespace EDiary.Controllers
                          }).ToList();
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
             var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacherNamePic, subjectGroups = subLabs, statuses = statuses, tasks = tasks };
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacher, subjectGroups = subLabs, statuses = statuses, tasks = tasks };
             return View(teacherSubjectGroup);
         }
         
         //добавление фотографии преподавателя
         [HttpPost]
-        public IActionResult AddPicture(AvatarModel teacherPicture)
+        public IActionResult AddPicture(AvatarStatusModel teacherPicture)
         {
             var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
             byte[] pic = null;
@@ -111,6 +112,19 @@ namespace EDiary.Controllers
             teacher.teacherPic = pic;
             context.teachers.Update(teacher);
             context.SaveChanges();
+            return RedirectToAction("Teacher", "Teacher");
+        }
+
+        //добавление эмоджи статуса
+        [HttpPost]
+        public IActionResult AddStatus(AvatarStatusModel teacherStatus)
+        {
+            context.Database.BeginTransaction();
+            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).FirstOrDefault();
+            teacher.teacherStatus = teacherStatus.statusId;
+            context.teachers.Update(teacher);
+            context.SaveChanges();
+            context.Database.CommitTransaction();
             return RedirectToAction("Teacher", "Teacher");
         }
 

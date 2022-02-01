@@ -9,7 +9,7 @@ namespace EDiary.ViewModels
 {
     public class AspTeacherSubjectGroupModel
     {
-        public IEnumerable<Teacher> Teachers { get; set; }
+        public IEnumerable<TeacherModel> Teachers { get; set; }
         public IEnumerable<SubjectGroupModel> subjectGroups { get; set; }
         public IEnumerable<collegeGroup> groups { get; set; }
         public IEnumerable<EmojiStatus> statuses { get; set; }

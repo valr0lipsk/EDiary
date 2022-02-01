@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace EDiary.ViewModels
 {
-    public class AvatarModel
+    public class AvatarStatusModel
     {
         public IFormFile Picture { get; set; }
+        public int statusId { get; set; }
     }
 }
