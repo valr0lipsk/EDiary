@@ -56,7 +56,7 @@ namespace EDiary.Controllers
 
 
         //добавление оценки
-        [HttpPost]
+        [HttpPost("studId, lessId, value")]
         [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
