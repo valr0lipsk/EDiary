@@ -28,7 +28,6 @@ namespace EDiary.Controllers
 
         //обновление оценки
         [HttpPut]
-        [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int id, string value)
         {
             var markId = value;
@@ -56,7 +55,7 @@ namespace EDiary.Controllers
 
 
         //добавление оценки
-        [HttpPost("studId, lessId, value")]
+        [HttpPost]
         [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
@@ -333,7 +332,7 @@ namespace EDiary.Controllers
 
 
         
-        [HttpPost("lessDates")]
+        [HttpPost, ActionName("showDates")]
         [Route("Marks/Jurnal/{id?}")]
         //показать занятия по промежутку
         public IActionResult Jurnal(LessonModel lessDates)
@@ -456,14 +455,14 @@ namespace EDiary.Controllers
                                       }).ToList();
 
                 //выбор промежутка
-                if (string.IsNullOrEmpty(lessDates.lessonDate.ToString()))
+                if (lessDates.lessonDate.Year == 0001)
                 { 
                     //занятие
                     jurnal.Lessons = (from lesson in context.lessons
                                         join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                         join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
                                         where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                        where lesson.lessonDate > lessDates.lessonDateStart && lesson.lessonDate < lessDates.lessonDateEnd
+                                        where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
                                         orderby lesson.lessonDate
                                         select new Lesson
                                         {
@@ -482,7 +481,7 @@ namespace EDiary.Controllers
                                     orderby student.studentSurname
                                     orderby lesson.lessonDate
                                     where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                    where lesson.lessonDate > lessDates.lessonDateStart && lesson.lessonDate < lessDates.lessonDateEnd
+                                    where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
                                     select new setMark
                                     {
                                         mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -499,7 +498,7 @@ namespace EDiary.Controllers
                                         join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                         join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
                                         where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                        where lesson.lessonDate > lessDates.lessonDateStart && lesson.lessonDate < lessDates.lessonDateEnd
+                                        where lesson.lessonDate == lessDates.lessonDate
                                         orderby lesson.lessonDate
                                         select new Lesson
                                         {
@@ -592,13 +591,13 @@ namespace EDiary.Controllers
                                           studentLastname = student.studentLastname
                                       }).ToList();
                 //промежуток
-                if (string.IsNullOrEmpty(lessDates.lessonDate.ToString()))
+                if (lessDates.lessonDate.Year == 1)
                 {
 
                     //занятие
-                    var lessonJurnal = (from lesson in context.lessons
+                    jurnal.Lessons = (from lesson in context.lessons
                                         where lesson.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                        where lesson.lessonDate > lessDates.lessonDateStart && lesson.lessonDate < lessDates.lessonDateEnd
+                                        where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
                                         orderby lesson.lessonDate
                                         select new Lesson
                                         {
@@ -608,7 +607,7 @@ namespace EDiary.Controllers
                                         }).ToList();
 
                     //выставленные отметки
-                    var setMarks = (from setMark in context.setMarks
+                    jurnal.setMarks = (from setMark in context.setMarks
                                     join student in context.students on setMark.studentId equals student.studentId
                                     join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
                                     join mark in context.marks on setMark.markId equals mark.markId
@@ -616,7 +615,7 @@ namespace EDiary.Controllers
                                     orderby student.studentSurname
                                     orderby lesson.lessonDate
                                     where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                    where lesson.lessonDate > lessDates.lessonDateStart && lesson.lessonDate < lessDates.lessonDateEnd
+                                    where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
                                     select new setMark
                                     {
                                         mark = new Mark() { mark = mark.mark, markId = mark.markId },

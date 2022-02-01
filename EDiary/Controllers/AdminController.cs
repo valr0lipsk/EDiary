@@ -301,7 +301,7 @@ namespace EDiary.Controllers
                 var sub = context.subjects.Where(s => s.subjectName == addSubject.subjectName).Select(s => s).FirstOrDefault();
                 if (sub == null)
                 {
-                    Subject subject = new Subject { subjectName = addSubject.subjectName };
+                    Subject subject = new Subject { subjectName = addSubject.subjectName, subjectPicture = addSubject.subjectIcon };
                     context.subjects.Add(subject);
                     context.SaveChanges();
                     subjectTaught subjectTaught = new subjectTaught

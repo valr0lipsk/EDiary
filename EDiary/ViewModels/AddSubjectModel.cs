@@ -11,6 +11,7 @@ namespace EDiary.ViewModels
         public string firstTeacher { get; set; }
         public string secondTeacher { get; set; }
         public string subjectName { get; set; }
+        public int subjectIcon { get; set; }
         public string groupName { get; set; }
         public int labsCount { get; set; }
         public IEnumerable<Teacher> teachers { get; set; }

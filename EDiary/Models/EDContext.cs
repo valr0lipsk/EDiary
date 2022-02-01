@@ -28,6 +28,7 @@ namespace EDiary.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Student>().Property(st=>st.studentSubgroup).HasDefaultValue(1);
+            modelBuilder.Entity<Subject>().Property(s => s.subjectPicture).HasDefaultValue(8);
             base.OnModelCreating(modelBuilder);
 
             //добавление ролей

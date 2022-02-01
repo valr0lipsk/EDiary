@@ -15,5 +15,6 @@ namespace EDiary.ViewModels
         public int labaCount { get; set; }
         public int zachCount { get; set; }
         public int lessCount { get; set; }
+        public byte[] subIcon { get; set; }
     }
 }

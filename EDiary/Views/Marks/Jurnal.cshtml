@@ -299,7 +299,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form method="post" enctype="multipart/form-data" asp-action="Jurnal" asp-controller="Marks">
+                                <form method="post" enctype="multipart/form-data" asp-action="showDates" asp-controller="Marks">
                                     <div class="modal-body">
                                         @foreach (var subject in Model.Subjects)
                                         {
@@ -324,7 +324,6 @@
                                                 <input asp-for="lessDates.lessonDateEnd" type="datetime-local" id="secondDate" required />
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>

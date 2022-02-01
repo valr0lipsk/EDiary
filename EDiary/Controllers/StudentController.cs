@@ -54,7 +54,8 @@ namespace EDiary.Controllers
                                   select new SubjectGroupModel
                                   {
                                       tsubjectId = sT.tsubjectId,
-                                      subjectName = sub.subjectName
+                                      subjectName = sub.subjectName,
+                                      subIcon = sub.Icon.subjectPicture
                                   }).ToList();
             //лабы
             var studentLabs = (from student in context.students
@@ -69,7 +70,8 @@ namespace EDiary.Controllers
                                {
                                    subjectName = labs.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа", ""),
                                    labaId = labs.labId,
-                                   tsubjectId = sT.tsubjectId
+                                   tsubjectId = sT.tsubjectId,
+                                   subIcon = sub.Icon.subjectPicture
                                }).ToList();
 
             //задачи

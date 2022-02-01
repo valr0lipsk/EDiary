@@ -51,7 +51,8 @@ namespace EDiary.Controllers
                                  {
                                      groupName = gr.groupName,
                                      subjectName = subject.subjectName,
-                                     tsubjectId = tsub.tsubjectId
+                                     tsubjectId = tsub.tsubjectId,
+                                     subIcon = subject.Icon.subjectPicture
                                  }).ToList();
             //лабы
             var labs = (from tsub in context.subjectTaughts
@@ -66,7 +67,8 @@ namespace EDiary.Controllers
                             subjectName = lab.labName,
                             labaId = lab.labId,
                             tsubjectId = tsub.tsubjectId,
-                            groupName = gr.groupName
+                            groupName = gr.groupName,
+                            subIcon = tsub.subject.Icon.subjectPicture
                         }).ToList();
 
             //задачи
