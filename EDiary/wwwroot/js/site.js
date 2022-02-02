@@ -1,24 +1,25 @@
 ﻿//adding null before 1..9 numbers
-function zero_first_format(value) {
-    if (value < 10) {
-        value = '0' + value;
-    }
-    return value;
-}
+//function zero_first_format(value) {
+//    if (value < 10) {
+//        value = '0' + value;
+//    }
+//    return value;
+//}
 
-//getting current date and time
-function date_time()
-{
-    let current_datetime = new Date();
-    let day = zero_first_format(current_datetime.getDate());
-    let month = zero_first_format(current_datetime.getMonth() + 1);
-    let year = current_datetime.getFullYear();
-    let hours = zero_first_format(current_datetime.getHours());
-    let minutes = zero_first_format(current_datetime.getMinutes());
-    let seconds = zero_first_format(current_datetime.getSeconds());
+////getting current date and time
+//function date_time()
+//{
+//    let current_datetime = new Date();
+//    let day = zero_first_format(current_datetime.getDate());
+//    let month = zero_first_format(current_datetime.getMonth() + 1);
+//    let year = current_datetime.getFullYear();
+//    let hours = zero_first_format(current_datetime.getHours());
+//    let minutes = zero_first_format(current_datetime.getMinutes());
+//    let seconds = zero_first_format(current_datetime.getSeconds());
 
-    return hours + ":" + minutes + ":" + seconds + " " + day + "." + month + "." + year;
-}
+//    return hours + ":" + minutes + ":" + seconds + " " + day + "." + month + "." + year;
+//}
+import { date_time } from './currentDateTimeModule.js'
 
 $(document).ready(function () {
     //admin funcs
@@ -133,7 +134,7 @@ $(document).ready(function () {
     }
 
     //open and choose emoji status
-    $('#emojiStatus').click(function () {
+    $('.openEmojiModal').click(function () {
         $('#statusModal').modal('show');
     })
 

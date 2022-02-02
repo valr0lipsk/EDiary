@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="row mb-4">
-                <input id="findInput" type="text" class="form-control" placeholder="Поиск по предметам" />
+                <input class="form-control" id="findInput" type="text" placeholder="Поиск по предметам" />
             </div>
         </div>
         <table class="table table-bordered overflow-auto table-responsive">
@@ -46,14 +46,14 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="tsubjectId" id="tSubjectIdRmv" type="hidden" value=""/>
+                            <input id="tSubjectIdRmv" asp-for="tsubjectId" type="hidden" value=""/>
                             <p id="confirmText">Вы действительно хотите удалить запись</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Удалить" />
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Удалить" />
                 </div>
             </form>
         </div>
@@ -73,17 +73,17 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="tsubjectId" class="form-control" id="tSubjectIdUpdt" type="hidden"/>
+                            <input class="form-control" id="tSubjectIdUpdt" asp-for="tsubjectId" type="hidden"/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="subjectName" class="form-control" id="subName" type="text" required value=""/>
+                            <input class="form-control" id="subName" asp-for="subjectName" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacher" class="form-control" id="subjectTeacher" type="text" list="subTeachers" required value=""/>
+                            <input class="form-control" id="subjectTeacher" asp-for="teacher" type="text" list="subTeachers" required value=""/>
                             <datalist id="subTeachers">
                                 @foreach (var teacher in Model.teachers)
                                 {
@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="group" class="form-control" id="subjectGroup" type="text" list="subGroups" required value=""/>
+                            <input class="form-control" id="subjectGroup" asp-for="group" type="text" list="subGroups" required value=""/>
                             <datalist id="subGroups">
                                 @foreach (var group in Model.groups)
                                 {
@@ -105,8 +105,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Обновить" />
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Обновить" />
                 </div>
             </form>
         </div>
