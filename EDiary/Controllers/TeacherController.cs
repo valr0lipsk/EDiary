@@ -55,6 +55,7 @@ namespace EDiary.Controllers
                                      tsubjectId = tsub.tsubjectId,
                                      subIcon = subject.Icon.subjectPicture
                                  }).AsNoTracking().ToList();
+
             //лабы
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
@@ -142,8 +143,5 @@ namespace EDiary.Controllers
             context.Database.CommitTransaction();
             return RedirectToAction("Teacher", "Teacher");
         }
-
-        //представление журнала
-        public IActionResult Jurnal() => RedirectToAction("Jurnal", "Marks");
     }
 }

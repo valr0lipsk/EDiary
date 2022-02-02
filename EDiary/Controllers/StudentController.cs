@@ -93,10 +93,9 @@ namespace EDiary.Controllers
                                     tsubjectId = sT.tsubjectId,
                                     zachCount = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                              .Join(context.lessons, sM => sT.tsubjectId, less => less.tsubjectId, (sM, less) => new { sM, less })
-                                                             .Where(less => less.less.lessonTypeId == 6)
-                                                             .Where(m => m.sM.sM.mark.mark == "зач")
-                                                             .Where(m => m.sM.sM.studentId == 2)
-                                                             .GroupBy(less => less.less.tsubjectId)
+                                                             .Join(context.students, sM => sM.sM.sM.studentId, st => st.studentId, (sM, st) => new { sM, st })
+                                                             .Where(less => less.sM.less.lessonTypeId == 6 && less.sM.sM.m.mark == "зач" && less.st.studentUser == userManager.GetUserId(User))
+                                                             .GroupBy(st => st.sM.less.tsubjectId)
                                                              .Select(m => m.Count()).FirstOrDefault(),
                                     labaCount = labs.countLabs
                                 }).AsNoTracking().ToList();

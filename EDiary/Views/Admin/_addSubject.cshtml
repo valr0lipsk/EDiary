@@ -1,7 +1,7 @@
 ﻿@using EDiary.ViewModels
 @model AddSubjectModel
 <div class="col-12">
-    <form class="row d-flex flex-column">
+    <form asp-action="CreateSubject" class="row d-flex flex-column">
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
                 <label for="sName" class="form-label mb-0">Название предмета</label>
@@ -79,7 +79,7 @@
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6 col-12">
             <div class="row justify-content-center justify-content-sm-start">
-                <button asp-action="CreateSubject" class="btn btn-primary" type="submit">Сохранить предмет</button>
+                <button class="btn btn-primary" type="submit">Сохранить предмет</button>
             </div>
         </div>
     </form>
