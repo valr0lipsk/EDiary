@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="row mb-4">
-                <input id="findInput" type="text" class="form-control" placeholder="Поиск по преподавателям" />
+                <input class="form-control" id="findInput" type="text" placeholder="Поиск по преподавателям" />
             </div>
         </div>
         <table class="table table-bordered overflow-auto table-responsive">
@@ -52,14 +52,14 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacherLogin" id="userLog" type="hidden" value=""/>
+                            <input id="userLog" asp-for="teacherLogin" type="hidden" value=""/>
                             <p id="confirmText">Вы действительно хотите удалить запись</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Удалить" />
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Удалить" />
                 </div>
             </form>
         </div>
@@ -79,33 +79,33 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacherLogin" class="form-control" id="userLogin" type="text" readonly/>
+                            <input class="form-control" id="userLogin" asp-for="teacherLogin" type="text" readonly/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacherSurname" class="form-control" id="userSurname" type="text" required value=""/>
+                            <input class="form-control" id="userSurname" asp-for="teacherSurname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacherName" class="form-control" id="userName" type="text" required value=""/>
+                            <input class="form-control" id="userName" asp-for="teacherName" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacherLastname" class="form-control" id="userLastname" type="text" required value=""/>
+                            <input class="form-control" id="userLastname" asp-for="teacherLastname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="teacherEmail" class="form-control" id="userEmail" type="email" value=""/>
+                            <input class="form-control" id="userEmail" asp-for="teacherEmail" type="email" value=""/>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Обновить" />
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Обновить" />
                 </div>
             </form>
         </div>

@@ -11,14 +11,14 @@
                     <div class="acc__icons col-12 mb-2">
                         <div class="icons__dropdown">
                             <img id="icons__dots" src="/css/source/dots.png">
-                            <div id="dropdown" class="dropdown__content">
-                                <a href="#" class="openIconModal">Сменить фото</a>
+                            <div class="dropdown__content" id="dropdown">
+                                <a class="openIconModal" href="#">Сменить фото</a>
                                 <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
                                 <a href="#">Сменить почту</a>
                             </div>
                         </div>
                     </div>
-                    <div class="acc__photoplace col-12 d-flex justify-content-center mb-1">
+                    <div class="acc__photoplace col-12 mb-1 d-flex justify-content-center">
                         @foreach (var teacher in Model.Teachers)
                         {
                             @if (teacher.teacherPic != null)
@@ -42,11 +42,11 @@
                                 </div>
                                 <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
-                                        <input name="Picture" class="form-control-file" type="file" required accept="image/*" />
+                                        <input class="form-control-file" name="Picture" type="file" required accept="image/*" />
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                        <input type="submit" class="btn btn-primary" value="Добавить" />
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                                        <input class="btn btn-primary" type="submit" value="Добавить" />
                                     </div>
                                 </form>
                             </div>
@@ -58,7 +58,7 @@
                             {
                                 foreach (var teacherName in Model.Teachers)
                                 {
-                            <p class="m-0" data-idStud="@teacherName.teacherId">@teacherName.teacherSurname @teacherName.teacherName<sup>&#x1F913;</sup></p>
+                                    <p class="m-0" data-idStud="@teacherName.teacherId">@teacherName.teacherSurname @teacherName.teacherName<sup>&#x1F913;</sup></p>
                                 }
                             }
                         </div>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="sidebar__status border col-1 mw-100 d-flex align-items-center">
-                <div class="row d-flex flex-column pr-2 pl-2">
+                <div class="row pr-2 pl-2 d-flex flex-column">
                     <p class="status__text mb-2">Дата и время:&nbsp;<time id="statusDate"></time></p>
                     <p class="status__text m-0">
                         Курируемая группа:
@@ -92,7 +92,7 @@
                                 <div class="row p-3">
                                     <div class="col-2 pt-1 pb-1 pl-1 pr-2">
                                         <div class="row">
-                                            <img src="~/css/source/todoIcon.png" class="col-12" />
+                                            <img class="col-12" src="~/css/source/todoIcon.png"/>
                                         </div>
                                     </div>
                                     <div class="note__texts col-10">
@@ -116,16 +116,16 @@
                 <div class="row h-100">
                     <div class="subjects__side col-1 border-right">
                         <div class="row">
-                            <a class="subject__find col-12 border-bottom p-1 text-center d-flex justify-content-center align-items-center">Все</a>
-                            <a class="subject__find col-12 border-bottom p-1 text-center d-flex justify-content-center align-items-center">Лекции</a>
-                            <a class="subject__find col-12 border-bottom p-1 text-center d-flex justify-content-center align-items-center">Лаб. работы</a>
+                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom">Все</a>
+                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom">Лекции</a>
+                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom">Лаб. работы</a>
                         </div>
                     </div>
                     <div class="subjects__block col-11">
-                        <div class="row d-flex flex-column p-3">
-                            <h2 class="block__tile text-center mb-4">Мои предметы:</h2>
+                        <div class="row p-3 d-flex flex-column">
+                            <h2 class="block__tile mb-4 text-center">Мои предметы:</h2>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
+                                <input class="form-control" type="text" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="button">Поиск</button>
                                 </div>
@@ -134,16 +134,16 @@
                             {
                                 <div class="block__item col-12 mb-4">
                                     <div class="row p-2">
-                                        <div class="item__circle rounded-circle mr-3 d-flex align-content-center align-items-center justify-content-center">
+                                        <div class="item__circle mr-3 d-flex align-content-center align-items-center justify-content-center rounded-circle">
                                             <img src="data:image/*;base64,@(Convert.ToBase64String(subjectGroup.subIcon))" />
                                         </div>
                                         @if (subjectGroup.labaId == 0)
                                         {
-                                            <a class="item__title col-9 d-flex p-0 m-0 align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                                            <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
                                         }
                                         else
                                         {
-                                            <a class="item__title col-9 d-flex p-0 m-0 align-items-center" data-labaid="@subjectGroup.labaId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                                            <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-labaid="@subjectGroup.labaId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
                                         }
                                     </div>
                                 </div>

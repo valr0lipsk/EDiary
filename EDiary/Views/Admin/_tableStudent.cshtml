@@ -5,7 +5,7 @@
     <div class="row"> 
         <div class="col-12">
             <div class="row mb-4">
-                <input id="findInput" type="text" class="form-control" placeholder="Поиск по учащимся" />
+                <input class="form-control" id="findInput" type="text" placeholder="Поиск по учащимся" />
             </div>
         </div>
         <table class="table table-bordered overflow-auto table-responsive">
@@ -52,14 +52,14 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentLogin" id="userLog" type="hidden" value=""/>
+                            <input id="userLog" asp-for="studentLogin" type="hidden" value=""/>
                             <p id="confirmText">Вы действительно хотите удалить запись</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Удалить" />
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Удалить" />
                 </div>
             </form>
         </div>
@@ -79,32 +79,32 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentLogin" class="form-control" id="userLogin" type="text" readonly/>
+                            <input class="form-control" id="userLogin" asp-for="studentLogin" type="text" readonly/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentSurname" class="form-control" id="userSurname" type="text" required value=""/>
+                            <input class="form-control" id="userSurname" asp-for="studentSurname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentName" class="form-control" id="userName" type="text" required value=""/>
+                            <input class="form-control" id="userName" asp-for="studentName" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentLastname" class="form-control" id="userLastname" type="text" required value=""/>
+                            <input class="form-control" id="userLastname" asp-for="studentLastname" type="text" required value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentEmail" class="form-control" id="userEmail" type="email" value=""/>
+                            <input class="form-control" id="userEmail" asp-for="studentEmail" type="email" value=""/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input asp-for="studentGroup" class="form-control" id="userGroup" type="text" required list="groupsSt"/>
+                            <input class="form-control" id="userGroup" asp-for="studentGroup" type="text" required list="groupsSt"/>
                             <datalist id="groupsSt">
                                 @foreach (var group in Model.groups)
                                 {
@@ -115,8 +115,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <input type="submit" class="btn btn-primary" value="Обновить" />
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Обновить" />
                 </div>
             </form>
         </div>

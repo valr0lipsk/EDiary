@@ -4,41 +4,41 @@
     <form class="row d-flex flex-column">
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="tSurname" class="form-label mb-0">Фамилия</label>
-                <input asp-for="teacherSurname" type="text" class="form-control" id="tSurname" required>
+                <label class="form-label mb-0" for="tSurname">Фамилия</label>
+                <input class="form-control" id="tSurname" asp-for="teacherSurname" type="text" required>
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="tName" class="form-label mb-0">Имя</label>
-                <input asp-for="teacherName" type="text" class="form-control" id="tName" required>
+                <label class="form-label mb-0" for="tName">Имя</label>
+                <input class="form-control" id="tName" asp-for="teacherName" type="text" required>
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="tLName" class="form-label mb-0">Отчество</label>
-                <input asp-for="teacherLastname" type="text" class="form-control" id="tLName">
+                <label class="form-label mb-0" for="tLName">Отчество</label>
+                <input class="form-control" id="tLName" asp-for="teacherLastname" type="text">
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="validationCustomUsername" class="form-label mb-0">Имя пользователя</label>
+                <label class="form-label mb-0" for="tLogin">Имя пользователя</label>
                 <div class="input-group has-validation">
                     <span class="input-group-text b-r-0" id="preTLogin">tr</span>
-                    <input asp-for="teacherLogin" type="text" class="form-control" id="tLogin" readonly="readonly" required value="@ViewBag.teacherLogin">
+                    <input class="form-control" id="tLogin" asp-for="teacherLogin" type="text" readonly="readonly" required value="@ViewBag.teacherLogin">
                 </div>
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="tPass" class="form-label mb-0">Пароль</label>
-                <input asp-for="teacherPassword" type="text" class="form-control" readonly="readonly" id="tPass" required value="@ViewBag.teacherPass">
+                <label class="form-label mb-0" for="tPass">Пароль</label>
+                <input class="form-control" id="tPass" asp-for="teacherPassword" type="text" readonly="readonly" required value="@ViewBag.teacherPass">
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="tGroup" class="form-label mt-2 mb-0">Курируемая группа</label>
-                <input asp-for="curatorGroup" type="text" class="form-control" id="tGroup" list="Groups" value="">
+                <label class="form-label mt-2 mb-0" for="tGroup">Курируемая группа</label>
+                <input class="form-control" id="tGroup" asp-for="curatorGroup" type="text" list="Groups" value="">
                 <datalist id="Groups">
                     @foreach (var group in Model.groups)
                     {
@@ -49,7 +49,7 @@
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6 col-12">
             <div class="row mb-3 justify-content-center justify-content-sm-start">
-                <button asp-action="CreateTeacher" class="btn btn-primary" type="submit">Сохранить преподавателя</button>
+                <button class="btn btn-primary" asp-action="CreateTeacher" type="submit">Сохранить преподавателя</button>
             </div>
         </div>
     </form>
