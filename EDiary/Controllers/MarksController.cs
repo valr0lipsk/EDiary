@@ -23,12 +23,12 @@ namespace EDiary.Controllers
         EDContext context;
         public MarksController(EDContext context, UserManager<IdentityUser> userManager) => (this.context, this.userManager) = (context, userManager);
 
-        //переадресация на нужный POST-метода
+        //переадресация на нужный POST-метод
         [HttpPost]
         [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int studId, int lessId, string value, LessonModel lessDates) => value == null ? Jurnal(lessDates) : Jurnal(studId, lessId, value);
         
-        //обновление оценки
+        //обновление и удаление оценки
         [HttpPut]
         public IActionResult Jurnal(int id, string value)
         {
@@ -37,15 +37,19 @@ namespace EDiary.Controllers
             var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
             if (updatedMark != null && value != null)
             {
-                updatedMark.markId = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
+                context.Database.BeginTransaction();
+                updatedMark.markId = context.marks.Where(mark => mark.mark == value).Select(mark => mark.markId).FirstOrDefault();
                 context.setMarks.Update(updatedMark);
                 context.SaveChanges();
+                context.Database.CommitTransaction();
                 return Json(new { status = "updated", message = "Оценка обновлена" });
             }
             else if (value == null)
             {
+                context.Database.BeginTransaction();
                 context.setMarks.Remove(updatedMark);
                 context.SaveChanges();
+                context.Database.CommitTransaction();
                 return Json(new { status = "deleted", message = "Оценка удалена" });
             }
             else
@@ -59,14 +63,21 @@ namespace EDiary.Controllers
         //добавление оценки
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
-            var marks = (from mark in context.marks where mark.mark == value select mark.mark).FirstOrDefault();
+            var marks = context.marks.Where(mark => mark.mark == value).Select(mark => mark.mark).FirstOrDefault();
             if (marks != null)
             {
-                var markValue = (from mark in context.marks where mark.mark == value select mark.markId).FirstOrDefault();
-                setMark setMark = new setMark { studentId = studId, lessonId = lessId, markId = markValue };
+                var markValue = context.marks.Where(mark => mark.mark == value).Select(mark => mark.markId).FirstOrDefault();
+                context.Database.BeginTransaction();
+                setMark setMark = new setMark
+                {
+                    studentId = studId,
+                    lessonId = lessId,
+                    markId = markValue
+                };
                 context.setMarks.Add(setMark);
                 context.SaveChanges();
                 var markId = (from sM in context.setMarks orderby sM.setmarkId descending select sM.setmarkId).FirstOrDefault();
+                context.Database.CommitTransaction();
                 return Json(new { status = "added", message = "Оценка добавлена", markId = markId });
             }
             else
@@ -82,9 +93,9 @@ namespace EDiary.Controllers
         [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int id, int labId)
         {
-            
             var subid = id;
             var labid = labId;
+            
             //предметы препода
             var subjects = (from tsub in context.subjectTaughts
                             join subject in context.subjects on tsub.subjectId equals subject.subjectId
@@ -98,8 +109,8 @@ namespace EDiary.Controllers
                                 groupName = gr.groupName,
                                 subjectName = subject.subjectName,
                                 tsubjectId = tsub.tsubjectId
-                            }).ToList();
-            //лабы
+                            }).AsNoTracking().ToList();
+            //лабы препода
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
@@ -113,12 +124,17 @@ namespace EDiary.Controllers
                             labaId = lab.labId,
                             tsubjectId = tsub.tsubjectId,
                             groupName = gr.groupName
-                        }).ToList();
+                        }).AsNoTracking().ToList();
+
             //если ученик, то его предметы
             if (User.IsInRole("student"))
             {
-                var studentId = (from st in context.students join us in context.Users on st.studentUser equals us.Id where us.Id == userManager.GetUserId(User) select st.studentId).FirstOrDefault();
+                //получение айди ученика
+                var studentId = context.students.Join(context.Users, st => st.studentUser, us => us.Id, (st, us) => new { st, us })
+                                                .Where(us => us.us.Id == userManager.GetUserId(User))
+                                                .Select(st => st.st.studentId).FirstOrDefault();
                 ViewBag.studentId = studentId;
+
                 //предметы ученика
                 subjects = (from sub in context.subjects
                             join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
@@ -130,7 +146,8 @@ namespace EDiary.Controllers
                             {
                                 tsubjectId = sT.tsubjectId,
                                 subjectName = sub.subjectName
-                            }).ToList();
+                            }).AsNoTracking().ToList();
+
                 //лабы ученика
                 labs = (from student in context.students
                         join aspusers in context.Users on student.studentUser equals aspusers.Id
@@ -144,24 +161,24 @@ namespace EDiary.Controllers
                             subjectName = lab.labName,
                             labaId = lab.labId,
                             tsubjectId = sT.tsubjectId,
-                        }).ToList();
+                        }).AsNoTracking().ToList();
             }
             var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
 
 
-
-            //если лаба
+            //если журнал лабы
             if (labId != 0)
             {
-                var teacherJurnal = (from teacher in context.teachers
-                                     join lab in context.labs on teacher.teacherId equals lab.teacherId
-                                     where lab.labId == labid
-                                     select new Teacher
-                                     {
-                                         teacherSurname = teacher.teacherSurname,
-                                         teacherName = teacher.teacherName,
-                                         teacherLastname = teacher.teacherLastname
-                                     }).ToList();
+                //препод
+                var teacherJurnal = context.teachers.Join(context.labs, tr => tr.teacherId, lab => lab.teacherId, (tr, lab) => new { tr, lab })
+                                                    .Where(lab => lab.lab.labId == labid)
+                                                    .Select(tr => new Teacher
+                                                    {
+                                                        teacherSurname = tr.tr.teacherSurname,
+                                                        teacherName = tr.tr.teacherName,
+                                                        teacherLastname = tr.tr.teacherLastname
+                                                    }).AsNoTracking().ToList();
+
                 //группы
                 var groupJurnal = (from lab in context.labs
                                    join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
@@ -171,7 +188,7 @@ namespace EDiary.Controllers
                                    select new collegeGroup
                                    {
                                        groupName = string.Join(" ", gr.groupName, subGr.subgroupName)
-                                   }).ToList();
+                                   }).AsNoTracking().ToList();
 
                 //предмет
                 var subjectJurnal = (from lab in context.labs
@@ -183,7 +200,7 @@ namespace EDiary.Controllers
                                      {
                                          subjectName = lab.labName,
                                          labaId = labId
-                                     }).ToList();
+                                     }).AsNoTracking().ToList();
 
                 //студенты
                 var studentsJurnal = (from student in context.students
@@ -199,7 +216,7 @@ namespace EDiary.Controllers
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentName,
                                           studentLastname = student.studentLastname
-                                      }).ToList();
+                                      }).AsNoTracking().ToList();
                 //занятие
                 var lessonJurnal = (from lesson in context.lessons
                                     join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
@@ -211,7 +228,7 @@ namespace EDiary.Controllers
                                         lessonId = lesson.lessonId,
                                         lessonDate = lesson.lessonDate,
                                         lessonTypeId = lesson.lessonTypeId
-                                    }).ToList();
+                                    }).AsNoTracking().ToList();
 
                 //выставленные отметки
                 var setMarks = (from setMark in context.setMarks
@@ -229,52 +246,52 @@ namespace EDiary.Controllers
                                     lessonId = setMark.lessonId,
                                     setmarkId = setMark.setmarkId,
                                     studentId = setMark.studentId
-                                }).ToList();
+                                }).AsNoTracking().ToList();
 
                 //типы занятий
-                var types = (from type in context.lessonType
-                             select new lessonType
-                             {
-                                 lessonTypeId = type.lessonTypeId,
-                                 typeName = type.typeName
-                             }).ToList();
+                var types = context.lessonType.AsNoTracking().ToList();
 
-                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, userSubjects = subLabs };
+                //объединение в одну модель вывода журнала лабораторных
+                var jurnal = new JurnalModel 
+                { 
+                    Teachers = teacherJurnal,
+                    Groups = groupJurnal,
+                    Lessons = lessonJurnal,
+                    Students = studentsJurnal,
+                    Subjects = subjectJurnal,
+                    setMarks = setMarks,
+                    types = types,
+                    userSubjects = subLabs 
+                };
+
                 return View(jurnal);
             }
 
 
-            //то предмет
+            //то журнал предмета
             else
             {
                 //преподаватель
-                var teacherJurnal = (from teacher in context.teachers
-                                     join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
-                                     where subTaught.tsubjectId == subid
-                                     select new Teacher
-                                     {
-                                         teacherSurname = teacher.teacherSurname,
-                                         teacherName = teacher.teacherName,
-                                         teacherLastname = teacher.teacherLastname
-                                     }).ToList();
+                var teacherJurnal = context.teachers.Join(context.subjectTaughts, tr => tr.teacherId, sT => sT.teacherId, (tr, sT) => new { tr, sT })
+                                                    .Where(sT => sT.sT.tsubjectId == subid)
+                                                    .Select(tr => new Teacher
+                                                    {
+                                                        teacherSurname = tr.tr.teacherSurname,
+                                                        teacherName = tr.tr.teacherName,
+                                                        teacherLastname = tr.tr.teacherLastname
+                                                    }).AsNoTracking().ToList();
+
                 //группы
-                var groupJurnal = (from subTaught in context.subjectTaughts
-                                   join gr in context.groups on subTaught.groupId equals gr.groupId
-                                   where subTaught.tsubjectId == subid
-                                   select new collegeGroup
-                                   {
-                                       groupName = gr.groupName,
-                                   }).ToList();
+                var groupJurnal = context.subjectTaughts.Join(context.groups, sT => sT.groupId, gr => gr.groupId, (sT, gr) => new { sT, gr })
+                                                        .Where(sT => sT.sT.tsubjectId == subid)
+                                                        .Select(gr => new collegeGroup { groupName = gr.gr.groupName })
+                                                        .AsNoTracking().ToList();
 
                 //предмет
-                var subjectJurnal = (from subTaught in context.subjectTaughts
-                                     join st in context.subjects on subTaught.subjectId equals st.subjectId
-                                     where subTaught.tsubjectId == subid
-                                     select new SubjectGroupModel
-                                     {
-                                         subjectName = st.subjectName,
-                                         tsubjectId = subid
-                                     }).ToList();
+                var subjectJurnal = context.subjectTaughts.Join(context.subjects, sT => sT.subjectId, sub => sub.subjectId, (sT, sub) => new { sT, sub })
+                                                          .Where(sT => sT.sT.tsubjectId == subid)
+                                                          .Select(sub => new SubjectGroupModel { subjectName = sub.sub.subjectName, tsubjectId = subid })
+                                                          .AsNoTracking().ToList();
 
                 //студенты
                 var studentsJurnal = (from student in context.students
@@ -288,17 +305,16 @@ namespace EDiary.Controllers
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentName,
                                           studentLastname = student.studentLastname
-                                      }).ToList();
+                                      }).AsNoTracking().ToList();
+
                 //занятие
-                var lessonJurnal = (from lesson in context.lessons
-                                    where lesson.tsubjectId == subid && lesson.lessonTypeId != 6
-                                    orderby lesson.lessonDate
-                                    select new Lesson
-                                    {
-                                        lessonId = lesson.lessonId,
-                                        lessonDate = lesson.lessonDate,
-                                        lessonTypeId = lesson.lessonTypeId
-                                    }).ToList();
+                var lessonJurnal = context.lessons.Where(less => less.tsubjectId == subid && less.lessonTypeId != 6)
+                                                  .Select(less => new Lesson 
+                                                  { 
+                                                      lessonId = less.lessonId,
+                                                      lessonDate = less.lessonDate,
+                                                      lessonTypeId = less.lessonTypeId
+                                                  }).AsNoTracking().ToList();
 
                 //выставленные отметки
                 var setMarks = (from setMark in context.setMarks
@@ -315,17 +331,24 @@ namespace EDiary.Controllers
                                     lessonId = setMark.lessonId,
                                     setmarkId = setMark.setmarkId,
                                     studentId = setMark.studentId
-                                }).ToList();
+                                }).AsNoTracking().ToList();
 
                 //типы занятий
-                var types = (from type in context.lessonType
-                             select new lessonType
-                             {
-                                 lessonTypeId = type.lessonTypeId,
-                                 typeName = type.typeName
-                             }).Take(5).ToList();
+                var types = context.lessonType.AsNoTracking().Take(5).ToList();
 
-                var jurnal = new JurnalModel { Teachers = teacherJurnal, Groups = groupJurnal, Lessons = lessonJurnal, Students = studentsJurnal, Subjects = subjectJurnal, setMarks = setMarks, types = types, userSubjects = subLabs };
+                //объединение в одну модель вывода журнала предмета
+                var jurnal = new JurnalModel
+                {
+                    Teachers = teacherJurnal,
+                    Groups = groupJurnal,
+                    Lessons = lessonJurnal,
+                    Students = studentsJurnal,
+                    Subjects = subjectJurnal,
+                    setMarks = setMarks,
+                    types = types,
+                    userSubjects = subLabs
+                };
+
                 return View(jurnal);
             }
         }
@@ -336,6 +359,7 @@ namespace EDiary.Controllers
         public IActionResult Jurnal(LessonModel lessDates)
         {
             var jurnal = new JurnalModel();
+
             //предметы препода
             var subjects = (from tsub in context.subjectTaughts
                             join subject in context.subjects on tsub.subjectId equals subject.subjectId
@@ -349,8 +373,9 @@ namespace EDiary.Controllers
                                 groupName = gr.groupName,
                                 subjectName = subject.subjectName,
                                 tsubjectId = tsub.tsubjectId
-                            }).ToList();
-            //лабы
+                            }).AsNoTracking().ToList();
+
+            //лабораторные преподавателя
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
@@ -364,24 +389,30 @@ namespace EDiary.Controllers
                             labaId = lab.labId,
                             tsubjectId = tsub.tsubjectId,
                             groupName = gr.groupName
-                        }).ToList();
+                        }).AsNoTracking().ToList();
+
             //если ученик, то его предметы
             if (User.IsInRole("student"))
             {
-                var studentId = (from st in context.students join us in context.Users on st.studentUser equals us.Id where us.Id == userManager.GetUserId(User) select st.studentId).FirstOrDefault();
+                //получение айди ученика
+                var studentId = context.students.Join(context.Users, st => st.studentUser, us => us.Id, (st, us) => new { st, us })
+                                                .Where(us => us.us.Id == userManager.GetUserId(User))
+                                                .Select(st => st.st.studentId).FirstOrDefault();
                 ViewBag.studentId = studentId;
+
                 //предметы ученика
                 subjects = (from sub in context.subjects
                             join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
                             join gr in context.groups on sT.groupId equals gr.groupId
                             join st in context.students on gr.groupId equals st.studentGroup
                             join aspusers in context.Users on st.studentUser equals aspusers.Id
-                            where st.studentUser == userManager.GetUserId(User) 
+                            where st.studentUser == userManager.GetUserId(User)
                             select new SubjectGroupModel
                             {
                                 tsubjectId = sT.tsubjectId,
                                 subjectName = sub.subjectName
-                            }).ToList();
+                            }).AsNoTracking().ToList();
+
                 //лабы ученика
                 labs = (from student in context.students
                         join aspusers in context.Users on student.studentUser equals aspusers.Id
@@ -395,24 +426,24 @@ namespace EDiary.Controllers
                             subjectName = lab.labName,
                             labaId = lab.labId,
                             tsubjectId = sT.tsubjectId,
-                        }).ToList();
+                        }).AsNoTracking().ToList();
             }
             var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
 
 
-
-            //если лаба
+            //если журнал лабораторных
             if (lessDates.labId != 0)
             {
-                var teacherJurnal = (from teacher in context.teachers
-                                     join lab in context.labs on teacher.teacherId equals lab.teacherId
-                                     where lab.labId == lessDates.labId
-                                     select new Teacher
-                                     {
-                                         teacherSurname = teacher.teacherSurname,
-                                         teacherName = teacher.teacherName,
-                                         teacherLastname = teacher.teacherLastname
-                                     }).ToList();
+                //преподаватель
+                var teacherJurnal = context.teachers.Join(context.labs, tr => tr.teacherId, lab => lab.teacherId, (tr, lab) => new { tr, lab })
+                                                    .Where(lab => lab.lab.labId == lessDates.labId)
+                                                    .Select(tr => new Teacher
+                                                    {
+                                                        teacherSurname = tr.tr.teacherSurname,
+                                                        teacherName = tr.tr.teacherName,
+                                                        teacherLastname = tr.tr.teacherLastname
+                                                    }).AsNoTracking().ToList();
+
                 //группы
                 var groupJurnal = (from lab in context.labs
                                    join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
@@ -422,7 +453,7 @@ namespace EDiary.Controllers
                                    select new collegeGroup
                                    {
                                        groupName = string.Join(" ", gr.groupName, subGr.subgroupName)
-                                   }).ToList();
+                                   }).AsNoTracking().ToList();
 
                 //предмет
                 var subjectJurnal = (from lab in context.labs
@@ -434,7 +465,7 @@ namespace EDiary.Controllers
                                      {
                                          subjectName = lab.labName,
                                          labaId = lessDates.labId
-                                     }).ToList();
+                                     }).AsNoTracking().ToList();
 
                 //студенты
                 var studentsJurnal = (from student in context.students
@@ -450,125 +481,120 @@ namespace EDiary.Controllers
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentName,
                                           studentLastname = student.studentLastname
-                                      }).ToList();
+                                      }).AsNoTracking().ToList();
 
-                //выбор промежутка
+                //выбор промежутка отображения журнала лабораторных
                 if (lessDates.lessonDate.Year == 0001)
-                { 
+                {
                     //занятие
                     jurnal.Lessons = (from lesson in context.lessons
-                                        join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
-                                        join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                        where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                        where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
-                                        orderby lesson.lessonDate
-                                        select new Lesson
-                                        {
-                                            lessonId = lesson.lessonId,
-                                            lessonDate = lesson.lessonDate,
-                                            lessonTypeId = lesson.lessonTypeId
-                                        }).ToList();
+                                      join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
+                                      join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
+                                      where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
+                                      where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
+                                      orderby lesson.lessonDate
+                                      select new Lesson
+                                      {
+                                          lessonId = lesson.lessonId,
+                                          lessonDate = lesson.lessonDate,
+                                          lessonTypeId = lesson.lessonTypeId
+                                      }).AsNoTracking().ToList();
 
                     //выставленные отметки
                     jurnal.setMarks = (from setMark in context.setMarks
-                                    join student in context.students on setMark.studentId equals student.studentId
-                                    join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
-                                    join mark in context.marks on setMark.markId equals mark.markId
-                                    join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
-                                    join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
-                                    orderby student.studentSurname
-                                    orderby lesson.lessonDate
-                                    where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                    where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
-                                    select new setMark
-                                    {
-                                        mark = new Mark() { mark = mark.mark, markId = mark.markId },
-                                        lessonId = setMark.lessonId,
-                                        setmarkId = setMark.setmarkId,
-                                        studentId = setMark.studentId
-                                    }).ToList();
+                                       join student in context.students on setMark.studentId equals student.studentId
+                                       join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                       join mark in context.marks on setMark.markId equals mark.markId
+                                       join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                       join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
+                                       orderby student.studentSurname
+                                       orderby lesson.lessonDate
+                                       where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
+                                       where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
+                                       select new setMark
+                                       {
+                                           mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                           lessonId = setMark.lessonId,
+                                           setmarkId = setMark.setmarkId,
+                                           studentId = setMark.studentId
+                                       }).AsNoTracking().ToList();
                 }
 
-                //выбор месяца
+                //выбор месяца отображения журнала лабораторных 
                 else
                 {
                     jurnal.Lessons = (from lesson in context.lessons
-                                        join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
-                                        join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                        where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                        where lesson.lessonDate == lessDates.lessonDate
-                                        orderby lesson.lessonDate
-                                        select new Lesson
-                                        {
-                                            lessonId = lesson.lessonId,
-                                            lessonDate = lesson.lessonDate,
-                                            lessonTypeId = lesson.lessonTypeId
-                                        }).ToList();
+                                      join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
+                                      join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
+                                      where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
+                                      where lesson.lessonDate == lessDates.lessonDate
+                                      orderby lesson.lessonDate
+                                      select new Lesson
+                                      {
+                                          lessonId = lesson.lessonId,
+                                          lessonDate = lesson.lessonDate,
+                                          lessonTypeId = lesson.lessonTypeId
+                                      }).AsNoTracking().ToList();
 
                     //выставленные отметки
                     jurnal.setMarks = (from setMark in context.setMarks
-                                    join student in context.students on setMark.studentId equals student.studentId
-                                    join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
-                                    join mark in context.marks on setMark.markId equals mark.markId
-                                    join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
-                                    join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
-                                    orderby student.studentSurname
-                                    orderby lesson.lessonDate
-                                    where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                    where lesson.lessonDate == lessDates.lessonDate
-                                    select new setMark
-                                    {
-                                        mark = new Mark() { mark = mark.mark, markId = mark.markId },
-                                        lessonId = setMark.lessonId,
-                                        setmarkId = setMark.setmarkId,
-                                        studentId = setMark.studentId
-                                    }).ToList();
+                                       join student in context.students on setMark.studentId equals student.studentId
+                                       join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                       join mark in context.marks on setMark.markId equals mark.markId
+                                       join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                       join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
+                                       orderby student.studentSurname
+                                       orderby lesson.lessonDate
+                                       where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
+                                       where lesson.lessonDate == lessDates.lessonDate
+                                       select new setMark
+                                       {
+                                           mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                           lessonId = setMark.lessonId,
+                                           setmarkId = setMark.setmarkId,
+                                           studentId = setMark.studentId
+                                       }).AsNoTracking().ToList();
                 }
 
                 //типы занятий
-                var types = context.lessonType.AsNoTracking().ToList();
+                var types = context.lessonType.AsNoTracking().Take(5).ToList();
 
+                //объединение в одну модель
                 jurnal.Teachers = teacherJurnal;
                 jurnal.Groups = groupJurnal;
                 jurnal.Students = studentsJurnal; 
                 jurnal.Subjects = subjectJurnal;
                 jurnal.types = types;
                 jurnal.userSubjects = subLabs;
+
                 return View(jurnal);
             }
 
 
-            //то предмет
+            //то журнал предмета
             else
             {
                 //преподаватель
-                var teacherJurnal = (from teacher in context.teachers
-                                     join subTaught in context.subjectTaughts on teacher.teacherId equals subTaught.teacherId
-                                     where subTaught.tsubjectId == lessDates.id
-                                     select new Teacher
-                                     {
-                                         teacherSurname = teacher.teacherSurname,
-                                         teacherName = teacher.teacherName,
-                                         teacherLastname = teacher.teacherLastname
-                                     }).ToList();
+                var teacherJurnal = context.teachers.Join(context.subjectTaughts, tr => tr.teacherId, sT => sT.teacherId, (tr, sT) => new { tr, sT })
+                                                    .Where(sT => sT.sT.tsubjectId == lessDates.id)
+                                                    .Select(tr => new Teacher
+                                                    {
+                                                        teacherSurname = tr.tr.teacherSurname,
+                                                        teacherName = tr.tr.teacherName,
+                                                        teacherLastname = tr.tr.teacherLastname
+                                                    }).AsNoTracking().ToList();
+
                 //группы
-                var groupJurnal = (from subTaught in context.subjectTaughts
-                                   join gr in context.groups on subTaught.groupId equals gr.groupId
-                                   where subTaught.tsubjectId == lessDates.id
-                                   select new collegeGroup
-                                   {
-                                       groupName = gr.groupName,
-                                   }).ToList();
+                var groupJurnal = context.subjectTaughts.Join(context.groups, sT => sT.groupId, gr => gr.groupId, (sT, gr) => new { sT, gr })
+                                                        .Where(sT => sT.sT.tsubjectId == lessDates.id)
+                                                        .Select(gr => new collegeGroup { groupName = gr.gr.groupName })
+                                                        .AsNoTracking().ToList();
 
                 //предмет
-                var subjectJurnal = (from subTaught in context.subjectTaughts
-                                     join st in context.subjects on subTaught.subjectId equals st.subjectId
-                                     where subTaught.tsubjectId == lessDates.id
-                                     select new SubjectGroupModel
-                                     {
-                                         subjectName = st.subjectName,
-                                         tsubjectId = lessDates.id
-                                     }).ToList();
+                var subjectJurnal = context.subjectTaughts.Join(context.subjects, sT => sT.subjectId, sub => sub.subjectId, (sT, sub) => new { sT, sub })
+                                                          .Where(sT => sT.sT.tsubjectId == lessDates.id)
+                                                          .Select(sub => new SubjectGroupModel { subjectName = sub.sub.subjectName, tsubjectId = lessDates.id })
+                                                          .AsNoTracking().ToList();
 
                 //студенты
                 var studentsJurnal = (from student in context.students
@@ -582,88 +608,84 @@ namespace EDiary.Controllers
                                           studentSurname = student.studentSurname,
                                           studentName = student.studentName,
                                           studentLastname = student.studentLastname
-                                      }).ToList();
-                //промежуток
+                                      }).AsNoTracking().ToList();
+
+                //промежуток отображения журнала предметов
                 if (lessDates.lessonDate.Year == 1)
                 {
-
-                    //занятие
-                    jurnal.Lessons = (from lesson in context.lessons
-                                        where lesson.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                        where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
-                                        orderby lesson.lessonDate
-                                        select new Lesson
-                                        {
-                                            lessonId = lesson.lessonId,
-                                            lessonDate = lesson.lessonDate,
-                                            lessonTypeId = lesson.lessonTypeId
-                                        }).ToList();
+                    //занятия
+                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lessDates.id && less.lessonTypeId != 6)
+                                                    .Where(less => less.lessonDate >= lessDates.lessonDateStart && less.lessonDate <= lessDates.lessonDateEnd)
+                                                    .OrderBy(less => less.lessonDate)
+                                                    .Select(less => new Lesson
+                                                    {
+                                                        lessonId = less.lessonId,
+                                                        lessonDate = less.lessonDate,
+                                                        lessonTypeId = less.lessonTypeId
+                                                    }).AsNoTracking().ToList();
 
                     //выставленные отметки
                     jurnal.setMarks = (from setMark in context.setMarks
-                                    join student in context.students on setMark.studentId equals student.studentId
-                                    join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
-                                    join mark in context.marks on setMark.markId equals mark.markId
-                                    join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
-                                    orderby student.studentSurname
-                                    orderby lesson.lessonDate
-                                    where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                    where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
-                                    select new setMark
-                                    {
-                                        mark = new Mark() { mark = mark.mark, markId = mark.markId },
-                                        lessonId = setMark.lessonId,
-                                        setmarkId = setMark.setmarkId,
-                                        studentId = setMark.studentId
-                                    }).ToList();
+                                       join student in context.students on setMark.studentId equals student.studentId
+                                       join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                       join mark in context.marks on setMark.markId equals mark.markId
+                                       join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                       orderby student.studentSurname
+                                       orderby lesson.lessonDate
+                                       where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
+                                       where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
+                                       select new setMark
+                                       {
+                                           mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                           lessonId = setMark.lessonId,
+                                           setmarkId = setMark.setmarkId,
+                                           studentId = setMark.studentId
+                                       }).AsNoTracking().ToList();
                 }
-                //за месяц
+
+                //месяц отображения журнала предметов
                 else
                 {
-                    jurnal.Lessons = (from lesson in context.lessons
-                                        where lesson.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                        where lesson.lessonDate == lessDates.lessonDate
-                                        orderby lesson.lessonDate
-                                        select new Lesson
-                                        {
-                                            lessonId = lesson.lessonId,
-                                            lessonDate = lesson.lessonDate,
-                                            lessonTypeId = lesson.lessonTypeId
-                                        }).ToList();
+                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lessDates.id && less.lessonTypeId != 6)
+                                                    .Where(less => less.lessonDate == lessDates.lessonDate)
+                                                    .OrderBy(less => less.lessonDate)
+                                                    .Select(less => new Lesson
+                                                    {
+                                                        lessonId = less.lessonId,
+                                                        lessonDate = less.lessonDate,
+                                                        lessonTypeId = less.lessonTypeId
+                                                    }).AsNoTracking().ToList();
 
                     //выставленные отметки
                     jurnal.setMarks = (from setMark in context.setMarks
-                                    join student in context.students on setMark.studentId equals student.studentId
-                                    join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
-                                    join mark in context.marks on setMark.markId equals mark.markId
-                                    join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
-                                    orderby student.studentSurname
-                                    orderby lesson.lessonDate
-                                    where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                    where lesson.lessonDate == lessDates.lessonDate
-                                    select new setMark
-                                    {
-                                        mark = new Mark() { mark = mark.mark, markId = mark.markId },
-                                        lessonId = setMark.lessonId,
-                                        setmarkId = setMark.setmarkId,
-                                        studentId = setMark.studentId
-                                    }).ToList();
+                                       join student in context.students on setMark.studentId equals student.studentId
+                                       join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                       join mark in context.marks on setMark.markId equals mark.markId
+                                       join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                       orderby student.studentSurname
+                                       orderby lesson.lessonDate
+                                       where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
+                                       where lesson.lessonDate == lessDates.lessonDate
+                                       select new setMark
+                                       {
+                                           mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                           lessonId = setMark.lessonId,
+                                           setmarkId = setMark.setmarkId,
+                                           studentId = setMark.studentId
+                                       }).AsNoTracking().ToList();
                 }
 
                 //типы занятий
-                var types = (from type in context.lessonType
-                             select new lessonType
-                             {
-                                 lessonTypeId = type.lessonTypeId,
-                                 typeName = type.typeName
-                             }).Take(5).ToList();
+                var types = context.lessonType.AsNoTracking().Take(5).ToList();
 
+                //объединение в одну модель журнала
                 jurnal.Teachers = teacherJurnal;
                 jurnal.Groups = groupJurnal;
                 jurnal.Students = studentsJurnal;
                 jurnal.Subjects = subjectJurnal;
                 jurnal.types = types;
                 jurnal.userSubjects = subLabs;
+
                 return View(jurnal);
             }
         }
@@ -675,9 +697,16 @@ namespace EDiary.Controllers
         {
             if (addLesson.labId == 0)
             {
-                Lesson lesson = new Lesson { tsubjectId = addLesson.id, lessonDate = addLesson.lessonDate, lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault() };
+                context.Database.BeginTransaction();
+                Lesson lesson = new Lesson
+                {
+                    tsubjectId = addLesson.id,
+                    lessonDate = addLesson.lessonDate,
+                    lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()
+                };
                 context.lessons.Add(lesson);
                 context.SaveChanges();
+                context.Database.CommitTransaction();
                 return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
             }
             else
@@ -685,9 +714,16 @@ namespace EDiary.Controllers
                 var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab })
                                                  .Where(l => l.lab.labId == addLesson.labId)
                                                  .Select(sT => sT.st.tsubjectId).FirstOrDefault();
-                Lesson lesson = new Lesson { tsubjectId = tsub, lessonDate = addLesson.lessonDate, lessonTypeId = 6 };
+                context.Database.BeginTransaction();
+                Lesson lesson = new Lesson 
+                { 
+                    tsubjectId = tsub,
+                    lessonDate = addLesson.lessonDate,
+                    lessonTypeId = 6
+                };
                 context.lessons.Add(lesson);
                 context.SaveChanges();
+                context.Database.CommitTransaction();
                 return RedirectToAction("Jurnal", "Marks", new { addLesson.labId });
             }
         }
@@ -697,9 +733,11 @@ namespace EDiary.Controllers
         //удаление занятия
         public IActionResult DeleteLesson(LessonModel deleteLesson)
         {
+            context.Database.BeginTransaction();
             var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.lessonId).FirstOrDefault();
             context.lessons.Remove(lesson);
             context.SaveChanges();
+            context.Database.CommitTransaction();
             if (deleteLesson.labId == 0)
             {
                 return RedirectToAction("Jurnal", "Marks", new { deleteLesson.id });
@@ -741,7 +779,7 @@ namespace EDiary.Controllers
                                                                       .Where(m => m.sM.studentId == student.studentId)
                                                                       .GroupBy(sm => sm.sM.studentId)
                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
-                                     }).Distinct().ToList();
+                                     }).Distinct().AsNoTracking().ToList();
 
                 var worksheet = workbook.Worksheets.Add("Статистика");
                 var currentRow = 1;
