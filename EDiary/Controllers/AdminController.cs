@@ -294,9 +294,9 @@ namespace EDiary.Controllers
 
         public IActionResult CreateSubject(AddSubjectModel addSubject)
         {
-            if (context.subjects.Select(s => s.subjectName).FirstOrDefault() != addSubject.subjectName.Trim() &&
+            if (context.subjects.Select(s => s.subjectName).FirstOrDefault().Trim() != addSubject.subjectName.Trim() &&
                context.teachers.Select(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname).FirstOrDefault() != addSubject.firstTeacher.Trim() &&
-               context.groups.Select(gr => gr.groupName).FirstOrDefault() != addSubject.groupName.Trim())
+               context.groups.Select(gr => gr.groupName).FirstOrDefault().Trim() != addSubject.groupName.Trim())
             {
                 context.Database.BeginTransaction();
                 var sub = context.subjects.Where(s => s.subjectName == addSubject.subjectName).Select(s => s).FirstOrDefault();
@@ -382,9 +382,9 @@ namespace EDiary.Controllers
                 return RedirectToAction("Admin");
             }
             else 
-            { 
+            {
                 ModelState.AddModelError(nameof(AddSubjectModel), "Такой предмет уже существует");
-                return View(addSubject); 
+                return View("Admin");
             }     
         }
 
