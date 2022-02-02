@@ -443,23 +443,19 @@ namespace EDiary.Controllers
         public IActionResult ShowSubjects()
         {
             var subjects = (from teacher in context.teachers
-                                       join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
-                                       from sub in context.subjects
-                                       join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                       where subTaught.teacherId == teacher.teacherId
-                                       orderby sub.subjectName
-                                       select new AspTeacherSubjectGroupModel
-                                       {
-                                           teacherFullname = string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + "."),
-                                           subjectName = sub.subjectName,
-                                           groupName = (from sub in context.subjects
-                                                        join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                                        join gr in context.groups on subTaught.groupId equals gr.groupId
-                                                        where subTaught.teacherId == teacher.teacherId
-                                                        orderby sub.subjectName
-                                                        select gr.groupName).FirstOrDefault(),
-                                           tsubjectId= subTaught.tsubjectId
-                                       }).ToList();
+                            join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
+                            from sub in context.subjects
+                            join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
+                            join gr in context.groups on subTaught.groupId equals gr.groupId
+                            where subTaught.teacherId == teacher.teacherId
+                            orderby sub.subjectName
+                            select new AspTeacherSubjectGroupModel
+                            {
+                                teacherFullname = string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + "."),
+                                subjectName = sub.subjectName,
+                                groupName = gr.groupName,
+                                tsubjectId = subTaught.tsubjectId
+                            }).ToList();
             var groups = context.groups.AsNoTracking().ToList();
             var teachers = context.teachers.AsNoTracking().ToList();
             var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
