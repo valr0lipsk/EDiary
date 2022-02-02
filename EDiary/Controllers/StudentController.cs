@@ -93,6 +93,7 @@ namespace EDiary.Controllers
                                     tsubjectId = sT.tsubjectId,
                                     zachCount = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                              .Join(context.lessons, sM => sT.tsubjectId, less => less.tsubjectId, (sM, less) => new { sM, less })
+                                                             .Where(less => less.less.lessonTypeId == 6)
                                                              .Where(m => m.sM.sM.mark.mark == "зач")
                                                              .Where(m => m.sM.sM.studentId == 2)
                                                              .GroupBy(less => less.less.tsubjectId)

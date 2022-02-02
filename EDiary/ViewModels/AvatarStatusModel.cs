@@ -9,6 +9,6 @@ namespace EDiary.ViewModels
     public class AvatarStatusModel
     {
         public IFormFile Picture { get; set; }
-        public int statusId { get; set; }
+        public int? statusId { get; set; }
     }
 }
