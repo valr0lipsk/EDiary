@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EDiary.Controllers
@@ -29,22 +31,21 @@ namespace EDiary.Controllers
             ViewBag.averageMark = Math.Round((from st in context.students
                                               join sm in context.setMarks on st.studentId equals sm.studentId
                                               join mark in context.marks on sm.markId equals mark.markId
-                                              where mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && st.studentUser == userManager.GetUserId(User)
+                                              where mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н/б" && mark.mark != "н" && mark.mark != "н/а" && st.studentUser == userManager.GetUserId(User)
                                               select Convert.ToInt32(mark.mark)).Average(), 2);
 
             //ФИО учника
-            var student = (from students in context.students
-                           join aspusers in context.Users on students.studentUser equals aspusers.Id
-                           where students.studentUser == userManager.GetUserId(User)
-                           select new StudentModel
-                           {
-                               studentId = students.studentId,
-                               studentSurname = students.studentSurname,
-                               studentName = students.studentName,
-                               studentLastname = students.studentLastname,
-                               studentPic = students.studentPic,
-                               studentStatus = students.status.emoji
-                           }).ToList();
+            var student = context.students.Where(st => st.studentUser == userManager.GetUserId(User))
+                                          .Select(st => new StudentModel
+                                          {
+                                              studentId = st.studentId,
+                                              studentSurname = st.studentSurname,
+                                              studentName = st.studentName,
+                                              studentLastname = st.studentLastname,
+                                              studentPic = st.studentPic,
+                                              studentStatus = st.status.emoji
+                                          }).AsNoTracking().ToList();
+
             //предметы
             var studentSubject = (from sub in context.subjects
                                   join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
@@ -57,7 +58,8 @@ namespace EDiary.Controllers
                                       tsubjectId = sT.tsubjectId,
                                       subjectName = sub.subjectName,
                                       subIcon = sub.Icon.subjectPicture
-                                  }).ToList();
+                                  }).AsNoTracking().ToList();
+
             //лабы
             var studentLabs = (from students in context.students
                                join aspusers in context.Users on students.studentUser equals aspusers.Id
@@ -73,7 +75,7 @@ namespace EDiary.Controllers
                                    labaId = labs.labId,
                                    tsubjectId = sT.tsubjectId,
                                    subIcon = sub.Icon.subjectPicture
-                               }).ToList();
+                               }).AsNoTracking().ToList();
 
             //задачи
             var studentTasks = (from students in context.students
@@ -89,17 +91,22 @@ namespace EDiary.Controllers
                                     subjectName = labs.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
                                     labaId = labs.labId,
                                     tsubjectId = sT.tsubjectId,
-                                    zachCount = context.marks.Join(context.setMarks, mark => mark.markId, sM => sM.markId, (mark, sM) => new { mark, sM })
-                                                                       .Join(context.lessons, sM => sM.sM.lessonId, less => less.lessonId, (sM, less) => new { sM, less })
-                                                                       .Join(context.subjectTaughts, less => less.less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                                                       .Join(context.labs, sT => sT.sT.tsubjectId, laba => laba.tsubjectId, (sT, laba) => new { sT, laba })
-                                                                       .Where(m => m.sT.less.sM.mark.mark == "зач")
-                                                                       .GroupBy(sT => sT.laba.labId)
-                                                                       .Select(m => m.Count()).FirstOrDefault(),
+                                    zachCount = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                             .Join(context.lessons, sM => sT.tsubjectId, less => less.tsubjectId, (sM, less) => new { sM, less })
+                                                             .Where(m => m.sM.sM.mark.mark == "зач")
+                                                             .Where(m => m.sM.sM.studentId == 2)
+                                                             .GroupBy(less => less.less.tsubjectId)
+                                                             .Select(m => m.Count()).FirstOrDefault(),
                                     labaCount = labs.countLabs
-                                }).ToList();
-            var statuses = context.emojiStatuses.Take(8).ToList();
+                                }).AsNoTracking().ToList();
+
+            //эмоджи-статусы
+            var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
+            
+            //объединение предметов и лаб
             var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
+
+            //объединение в одну модель
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = studentTasks, statuses = statuses};
             return View(studentSubjectGroup);
         }

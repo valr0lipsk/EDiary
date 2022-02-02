@@ -28,18 +28,18 @@ namespace EDiary.Controllers
             ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
                                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
                                                    .Select(gr => gr.gr.groupName).FirstOrDefault();
+
             //инфо о преподе
-            var teacher = (from teachers in context.teachers
-                           join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
-                           where teachers.teacherUser == userManager.GetUserId(User)
-                           select new TeacherModel
-                           {
-                               teacherSurname = teachers.teacherSurname,
-                               teacherName = teachers.teacherName,
-                               teacherLastname = teachers.teacherLastname,
-                               teacherPic = teachers.teacherPic,
-                               teacherStatus = teachers.status.emoji
-                           }).ToList();
+            var teacher = context.teachers.Where(tr => tr.teacherUser == userManager.GetUserId(User))
+                                          .Select(tr => new TeacherModel
+                                          {
+                                              teacherSurname = tr.teacherSurname,
+                                              teacherName = tr.teacherName,
+                                              teacherLastname = tr.teacherLastname,
+                                              teacherPic = tr.teacherPic,
+                                              teacherStatus = tr.status.emoji
+                                          }).AsNoTracking().ToList();
+
             //предметы
             var subjectGroups = (from tsub in context.subjectTaughts
                                  join subject in context.subjects on tsub.subjectId equals subject.subjectId
@@ -54,7 +54,7 @@ namespace EDiary.Controllers
                                      subjectName = subject.subjectName,
                                      tsubjectId = tsub.tsubjectId,
                                      subIcon = subject.Icon.subjectPicture
-                                 }).ToList();
+                                 }).AsNoTracking().ToList();
             //лабы
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
@@ -70,7 +70,7 @@ namespace EDiary.Controllers
                             tsubjectId = tsub.tsubjectId,
                             groupName = gr.groupName,
                             subIcon = tsub.subject.Icon.subjectPicture
-                        }).ToList();
+                        }).AsNoTracking().ToList();
 
             //задачи
             var tasks = (from tsub in context.subjectTaughts
@@ -92,10 +92,23 @@ namespace EDiary.Controllers
                                                         .Where(less => less.sT.less.lessonTypeId == 6)
                                                         .GroupBy(less => less.lab.labId)
                                                         .Count()
-                         }).ToList();
+                         }).AsNoTracking().ToList();
+
+            //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
+
+            //объединение лаб и предметов
             var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel { Teachers = teacher, subjectGroups = subLabs, statuses = statuses, tasks = tasks };
+
+            //объединение в одну модель
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+            {
+                Teachers = teacher,
+                subjectGroups = subLabs,
+                statuses = statuses,
+                tasks = tasks
+            };
+
             return View(teacherSubjectGroup);
         }
         
@@ -103,6 +116,7 @@ namespace EDiary.Controllers
         [HttpPost]
         public IActionResult AddPicture(AvatarStatusModel teacherPicture)
         {
+            context.Database.BeginTransaction();
             var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
             byte[] pic = null;
             using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))
@@ -112,6 +126,7 @@ namespace EDiary.Controllers
             teacher.teacherPic = pic;
             context.teachers.Update(teacher);
             context.SaveChanges();
+            context.Database.CommitTransaction();
             return RedirectToAction("Teacher", "Teacher");
         }
 
