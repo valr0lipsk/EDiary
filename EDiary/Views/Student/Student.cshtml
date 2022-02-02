@@ -59,7 +59,14 @@
                             {
                                 @foreach (var student in Model.students)
                                 {
-                                    <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
+                                    if (student.studentStatus != null)
+                                    {
+                                        <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
+                                    }
+                                    else
+                                    {
+                                         <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status" id="emojiStatus"></sup></p>
+                                    }
                                 }
                             }
                         </div>
