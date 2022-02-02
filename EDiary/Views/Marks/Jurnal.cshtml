@@ -1,252 +1,21 @@
 ﻿@using EDiary.ViewModels
 @model JurnalModel 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="~/js/markTable.js"></script>
-    @*<div class="container h-100">
-        <div class="row h-100">
-            <div class="col-12 jurnalF h-100 p-3">
-                <div class="row h-100">
-                    <div class="col-12 h-100 text-center">*@
-@*                        <form asp-action="SaveStatistics">
-                            <button type="submit">Статистика</button>
-                        </form>*@
-                        @*<h3 class="p-0">
-                            Журнал предмета:
-                            @foreach (var subject in Model.Subjects)
-                            {
-                                @subject.subjectName
-                            }
-                        </h3>
-                    </div>
-                    <div class="col-12 h-100">
-                        <div class="row h-100 mt-3">
-                            <div class="col-4">
-                                <div class="row pl-3">
-                                    <small class="text-secondary mb-0" style="text-decoration: underline">Номер группы:</small>
-                                </div>
-                                <div class="row pl-3">
-                                    @foreach (var group in Model.Groups)
-                                    {
-                                        <label>@group.groupName</label>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row h-100 mt-2">
-                            <div class="col-lg-4 col-11">
-                                <div class="row pl-3">
-                                    <small class="text-secondary mb-0" style="text-decoration: underline">Преподаватель:</small>
-                                </div>
-                                <div class="row pl-3">
-                                    @foreach (var teacher in Model.Teachers)
-                                    {
-                                        <label>@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</label>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 accountF h-100 pr-3 pl-3 pb-3">
-                <div class="row h-100 sticky-table sticky-ltr-cells m-1">
-                    @if (User.IsInRole("teacher"))
-                    {
-                        <input type="button" value="+ Добавить занятие" class="btn btn-primary" id="addLessModal" />
-                        <div id="lessModal" class="modal" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Добавить занятие</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form asp-controller="Marks" asp-action="AddLesson" method="post" enctype="multipart/form-data">
-                                        <div class="modal-body">
-                                            @foreach (var subject in Model.Subjects)
-                                            {
-                                                <input asp-for="addLesson.id" type="hidden" readonly value="@subject.subjectId" />
-                                            }
-                                            <input asp-for="addLesson.lessonDate" type="datetime-local" required />
-                                            <input asp-for="addLesson.lessonType" type="text" list="lessTypes" required />
-                                            <datalist id="lessTypes">
-                                                @foreach (var type in Model.types)
-                                                {
-                                                    <option value="@type.typeName"></option>
-                                                }
-                                            </datalist>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                            <input type="submit" class="btn btn-primary" value="Добавить" />
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    <table class="table _table table-hover table-bordered editableTable">
-                        <tr class="sticky-header">
-                            <th></th>
-                            @if (User.IsInRole("teacher"))
-                            {
-                                @foreach (var dateLesson in Model.Lessons)
-                                {
-                                    <th class="vt-text delLes" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
-                            }
-                            else
-                            {
-                                @foreach (var dateLesson in Model.Lessons)
-                                {
-                                    <th class="vt-text" data-lessType="@dateLesson.lessonTypeId" data-idLess="@dateLesson.lessonId">@dateLesson.lessonDate.ToString("d")</th>
-                                }
-                            }
-                        </tr>
-                        <tbody>
-                            @foreach (var student in Model.Students)
-                            {
-                                @if (student.studentId == ViewBag.studentId)
-                                {
-                                    <tr class="currentStudent">
-                                        @if (student.studentLastname != null)
-                                        {
-                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
-                                        }
-                                        else
-                                        {
-                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
-                                        }
-
-                                        @if (User.IsInRole("teacher"))
-                                        {
-                                            @foreach (var dateLesson in Model.Lessons)
-                                            {
-                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                                if (sm != null)
-                                                {
-                                                    <td class="editable" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
-                                                }
-                                                else
-                                                {
-                                                    <td class="editable" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            @foreach (var dateLesson in Model.Lessons)
-                                            {
-                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                                if (sm != null)
-                                                {
-                                                    <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
-                                                }
-                                                else
-                                                {
-                                                    <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
-                                                }
-                                            }
-                                        }
-
-                                    </tr>
-                                }
-                                else
-                                {
-                                    <tr>
-                                        @if (student.studentLastname != null)
-                                        {
-                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).@student.studentLastname.Substring(0, 1).</th>
-                                        }
-                                        else
-                                        {
-                                            <th data-idStud="@student.studentId" class="sticky-cell">@student.studentSurname @student.studentName.Substring(0, 1).</th>
-                                        }
-
-                                        @if (User.IsInRole("teacher"))
-                                        {
-                                            @foreach (var dateLesson in Model.Lessons)
-                                            {
-                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                                if (sm != null)
-                                                {
-                                                    <td class="editable" data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
-                                                }
-                                                else
-                                                {
-                                                    <td class="editable" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            @foreach (var dateLesson in Model.Lessons)
-                                            {
-                                                var sm = Model.setMarks.Where(x => x.studentId == student.studentId && x.lessonId == dateLesson.lessonId).FirstOrDefault();
-                                                if (sm != null)
-                                                {
-                                                    <td data-idsm="@sm.setmarkId" data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId">@sm.mark.mark</td>
-                                                }
-                                                else
-                                                {
-                                                    <td data-idLess="@dateLesson.lessonId" data-idStud="@student.studentId"></td>
-                                                }
-                                            }
-                                        }
-
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                    <div id="delLessModal" class="modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Удалить занятие</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form asp-controller="Marks" asp-action="DeleteLesson" method="post" enctype="multipart/form-data">
-                                    <div class="modal-body">
-                                        @foreach (var subject in Model.Subjects)
-                                        {
-                                            <input asp-for="deleteLesson.id" type="hidden" readonly value="@subject.subjectId" />
-                                        }
-                                        <input asp-for="deleteLesson.lessonId" id="idLess" type="hidden" value="" />
-                                        <p id="delLabel">Удалить занятие </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                        <input type="submit" class="btn btn-primary" value="Удалить" />
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
 <div class="row min-vh-100">
     <div class="jurnal__subjects col-lg-3">
-        <div class="row h-100 d-flex flex-column p-3 align-items-center">
+        <div class="row h-100 p-3 d-flex flex-column align-items-center">
             <h2 class="notes__title mb-4">Мои предметы</h2>
-            <dl class="list-group list-group-flush w-100 text-center">
+            <dl class="w-100 list-group list-group-flush text-center">
                 @if (User.IsInRole("teacher"))
                 {
                     @foreach (var sub in Model.userSubjects)
                     {
                         @if (sub.labaId == 0)
                         {
-                            <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
+                            <dd class="jurnal__link list-group-item list-group-item-action cursor" data-subId="@sub.tsubjectId">@sub.subjectName (@sub.groupName)</dd>
                         }
                         else
                         {
-                            <dd class="list-group-item list-group-item-action cursor jurnal__link" data-labaid="@sub.labaId">@sub.subjectName (@sub.groupName)</dd>
+                            <dd class="jurnal__link list-group-item list-group-item-action cursor" data-labaid="@sub.labaId">@sub.subjectName (@sub.groupName)</dd>
                         }
                     }
                 }
@@ -256,11 +25,11 @@
                         {
                             @if (sub.labaId == 0)
                             {
-                                <dd class="list-group-item list-group-item-action cursor jurnal__link" data-subId="@sub.tsubjectId">@sub.subjectName</dd>
+                                <dd class="jurnal__link list-group-item list-group-item-action cursor" data-subId="@sub.tsubjectId">@sub.subjectName</dd>
                             }
                             else
                             {
-                                <dd class="list-group-item list-group-item-action cursor jurnal__link" data-labaid="@sub.labaId">@sub.subjectName</dd>
+                                <dd class="jurnal__link list-group-item list-group-item-action cursor" data-labaid="@sub.labaId">@sub.subjectName</dd>
                             }
                         }
                 }
@@ -270,7 +39,7 @@
     <div class="jurnal__main main col-lg-9">
         <div class="row h-100 p-3 d-flex flex-column align-items-center">
             <div class="jurnal__block col-12">
-                <div class="row d-flex flex-column p-3 pt-4">
+                <div class="row p-3 pt-4 d-flex flex-column">
                     <h3 class="p-0 text-center">
                         Журнал предмета:<br />
                         @foreach (var subject in Model.Subjects)
@@ -278,8 +47,8 @@
                             @subject.subjectName
                         }
                     </h3>
-                    <div class="col-12 jurnal__text mt-4">
-                        <div class="row d-flex flex-column pl-3">
+                    <div class="jurnal__text col-12 mt-4">
+                        <div class="row pl-3 d-flex flex-column">
                             @foreach (var group in Model.Groups)
                             {
                                 <p class="text__group">Номер группы: @group.groupName</p>
@@ -315,19 +84,19 @@
                                         <div class="col-12">
                                             <div class="row mb-2">
                                                 <label class="pr-3" for="firstDate">С:</label>
-                                                <input asp-for="lessDates.lessonDateStart" type="datetime-local" id="firstDate" required />
+                                                <input id="firstDate" asp-for="lessDates.lessonDateStart" type="datetime-local" required />
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="row">
                                                 <label class="pr-1" for="secondDate">По:</label>
-                                                <input asp-for="lessDates.lessonDateEnd" type="datetime-local" id="secondDate" required />
+                                                <input id="secondDate" asp-for="lessDates.lessonDateEnd" type="datetime-local" required />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                        <input type="submit" class="btn btn-primary" value="Добавить" />
+                                        <input class="btn btn-primary" type="submit" value="Добавить" />
                                     </div>
                                 </form>
                             </div>
@@ -621,3 +390,5 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="~/js/markTable.js"></script>

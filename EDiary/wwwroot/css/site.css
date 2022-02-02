@@ -495,7 +495,12 @@ td > input{
     opacity: 1 !important;
 }
 
-.selection__item-check::after{
+.acc__status > img{
+    height: 25px;
+    width: 25px;
+}
+
+.selection__item-check::after {
     content: "";
     position: absolute;
     z-index: 1;
