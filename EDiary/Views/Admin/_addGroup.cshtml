@@ -1,17 +1,17 @@
 ﻿@using EDiary.ViewModels
 @model TableGroupModel
 <div class="col-12">
-    <form asp-action="CreateGroup" class="row d-flex flex-column">
+    <form class="row d-flex flex-column" asp-action="CreateGroup">
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="groupName" class="form-label mb-0">Номер</label>
-                <input asp-for="groupName" type="text" class="form-control" id="groupName" required>
+                <label class="form-label mb-0" for="groupName">Номер</label>
+                <input class="form-control" id="groupName" asp-for="groupName" type="text" required>
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="groupTeacher" class="form-labal" mb-0>Куратор</label>
-                <input asp-for="curator" type="text" class="form-control" id="groupTeacher" list="teachers" required />
+                <label class="form-labal mb-0" for="groupTeacher">Куратор</label>
+                <input class="form-control" id="groupTeacher" asp-for="curator" type="text" list="teachers" required />
                 <datalist id="teachers">
                     @foreach (var teacher in Model.teachers)
                     {
@@ -22,7 +22,7 @@
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6 col-12">
             <div class="row mb-3 justify-content-center justify-content-sm-start">
-                <button asp-action="" class="btn btn-primary" type="submit">Сохранить группу</button>
+                <button class="btn btn-primary" type="submit">Сохранить группу</button>
             </div>
         </div>
     </form>

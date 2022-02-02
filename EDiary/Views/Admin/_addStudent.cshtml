@@ -4,41 +4,41 @@
     <form class="row d-flex flex-column">
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="stName" class="form-label mb-0">Фамилия</label>
-                <input asp-for="studentSurname" type="text" class="form-control" id="stSurname" required>
+                <label class="form-label mb-0" for="stName">Фамилия</label>
+                <input class="form-control" id="stSurname" asp-for="studentSurname" type="text" required>
             </div>
         </div>
         <div class="col-lg-5 col-md-5 col-sm-7">
             <div class="row mb-3">
-                <label for="stName" class="form-label mb-0">Имя</label>
-                <input asp-for="studentName" type="text" class="form-control" id="stName" required>
+                <label class="form-label mb-0" for="stName">Имя</label>
+                <input class="form-control" id="stName" asp-for="studentName" type="text" required>
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="stLName" class="form-label mb-0">Отчество</label>
-                <input asp-for="studentLastname" type="text" class="form-control" id="stLName">
+                <label class="form-label mb-0" for="stLName">Отчество</label>
+                <input class="form-control" id="stLName" asp-for="studentLastname" type="text">
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="validationCustomUsername" class="form-label mb-0">Имя пользователя</label>
+                <label class="form-label mb-0" for="stLogin">Имя пользователя</label>
                 <div class="input-group has-validation">
                     <span class="input-group-text b-r-0" id="preStLogin">st</span>
-                    <input asp-for="studentLogin" type="text" class="form-control" id="stLogin" readonly required value="@ViewBag.studentLogin">
+                    <input class="form-control" id="stLogin" asp-for="studentLogin" type="text" readonly required value="@ViewBag.studentLogin">
                 </div>
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="stPass" class="form-label mb-0">Пароль</label>
-                <input asp-for="studentPassword" type="text" class="form-control" id="stPass" readonly required value="@ViewBag.studentPass">
+                <label class="form-label mb-0" for="stPass">Пароль</label>
+                <input class="form-control" id="stPass" asp-for="studentPassword" type="text" readonly required value="@ViewBag.studentPass">
             </div>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="stGroup" class="form-label mb-0">Группа</label>
-                <input asp-for="studentGroup" type="text" class="form-control" id="stGroup" list="Groups" value="">
+                <label class="form-label mb-0" for="stGroup">Группа</label>
+                <input class="form-control" id="stGroup" asp-for="studentGroup" type="text" list="Groups" value="">
                 <datalist id="Groups">
                     @foreach (var group in Model.groups)
                     {
@@ -49,7 +49,7 @@
         </div>
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
-                <label for="stSubgroup" class="col-form-label mb-0">Подгруппа</label>
+                <label class="col-form-label mb-0" for="stSubgroup">Подгруппа</label>
                 <select class="form-control" id="stSubgroup">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -58,7 +58,7 @@
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6">
             <div class="row justify-content-center justify-content-sm-start">
-                <button asp-action="CreateStudent" class="btn btn-primary" type="submit">Сохранить учащегося</button>
+                <button class="btn btn-primary" asp-action="CreateStudent" type="submit">Сохранить учащегося</button>
             </div>
         </div>
     </form>
