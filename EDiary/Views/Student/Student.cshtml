@@ -14,6 +14,7 @@
                             <img id="icons__dots" src="/css/source/dots.png">
                             <div class="dropdown__content" id="dropdown">
                                 <a class="openIconModal" href="#">Сменить фото</a>
+                                <a class="openEmojiModal" href="#">Выбрать статус</a>
                                 <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
                                 <a href="#">Сменить почту</a>
                             </div>
@@ -61,11 +62,11 @@
                                 {
                                     if (student.studentStatus != null)
                                     {
-                                        <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
+                                        <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status openEmojiModal" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
                                     }
                                     else
                                     {
-                                         <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status" id="emojiStatus"></sup></p>
+                                         <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status openEmojiModal" id="emojiStatus"></sup></p>
                                     }
                                 }
                             }

@@ -31,7 +31,7 @@
                 <div class="col-12">
                     <div class="row mb-3">
                         <label class="form-label mb-0" for="sTeacherLab">Второй преподаватель</label>
-                        <input class="form-control" id="sTeacherLab" asp-for="secondTeacher" type="text" list="teachersLab" required value="">
+                        <input class="form-control" id="sTeacherLab" asp-for="secondTeacher" type="text" list="teachersLab" value="">
                         <datalist id="teachersLab">
                             @foreach (var teacher in Model.teachers)
                             {
@@ -43,7 +43,7 @@
                 <div class="col-12">
                     <div class="row">
                         <label class="form-label mb-0" for="sLabHours">Количество часов (лабораторных)</label>
-                        <input class="form-control" id="sLabHours" asp-for="labsCount" type="text" required value="">
+                        <input class="form-control" id="sLabHours" asp-for="labsCount" type="text" value="">
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
         <div class="col-lg-5 col-md-6 col-sm-7">
             <div class="row mb-3">
                 <label class="form-label mb-0" for="subGroup">Группа</label>
-                <input class="form-control" id="subGroup" asp-for="groupName" type="text" list="groups" required value="">
+                <input class="form-control" id="subGroup" asp-for="groupName" type="text" list="groups" value="">
                 <datalist id="groups">
                     @foreach (var group in Model.groups)
                     {
