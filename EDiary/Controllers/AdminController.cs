@@ -291,6 +291,7 @@ namespace EDiary.Controllers
             createSubject = new AddSubjectModel { groups = groups, teachers = teachers, icons = icons };
             return PartialView("~/Views/Admin/_addSubject.cshtml", createSubject);
         }
+
         public IActionResult CreateSubject(AddSubjectModel addSubject)
         {
             if (context.subjects.Select(s => s.subjectName).FirstOrDefault() != addSubject.subjectName.Trim() &&
