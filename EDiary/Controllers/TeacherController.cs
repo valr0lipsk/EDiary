@@ -73,27 +73,30 @@ namespace EDiary.Controllers
                         }).AsNoTracking().ToList();
 
             //задачи
-            var tasks = (from tsub in context.subjectTaughts
-                         join gr in context.groups on tsub.groupId equals gr.groupId
-                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
+            var tasks = (from lab in context.labs
                          join teachers in context.teachers on lab.teacherId equals teachers.teacherId
                          where teachers.teacherUser == userManager.GetUserId(User)
                          select new SubjectGroupModel
                          {
                              subjectName = lab.labName,
                              labaId = lab.labId,
-                             tsubjectId = tsub.tsubjectId,
-                             groupName = gr.groupName,
+                             tsubjectId = lab.tsubjectId,
+                             groupName = lab.tsubject.@group.groupName,
                              labaCount = lab.countLabs,
-                             lessCount = context.lessons.Where(less => less.lessonTypeId == 6)
-                                                        .GroupBy(less => less.tsubjectId)
-                                                        .Select(less => less.Key).Count()
-                         }).AsNoTracking().ToList().OrderBy(s => s.subjectName).OrderBy(gr => gr.groupName);
-
-            ViewBag.lessons = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                             lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
                                              .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
                                              .Where(less => less.sT.less.lessonTypeId == 6)
-                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User));
+                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                             .GroupBy(l => l.lab.labId)
+                                             .Select(lab => lab).Count()
+                         }).AsNoTracking().ToList();
+
+            var lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                             .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                             .Where(less => less.sT.less.lessonTypeId == 6)
+                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                             .GroupBy(l=>l.lab.labId)
+                                             .Select(lab=>lab.Count());
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
@@ -113,6 +116,8 @@ namespace EDiary.Controllers
             return View(teacherSubjectGroup);
         }
         
+
+
         //добавление фотографии преподавателя
         [HttpPost]
         public IActionResult AddPicture(AvatarStatusModel teacherPicture)
@@ -130,6 +135,8 @@ namespace EDiary.Controllers
             context.Database.CommitTransaction();
             return RedirectToAction("Teacher", "Teacher");
         }
+
+
 
         //добавление эмоджи статуса
         [HttpPost]
