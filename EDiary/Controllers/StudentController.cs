@@ -24,6 +24,7 @@ namespace EDiary.Controllers
         private UserManager<IdentityUser> userManager;
         public StudentController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
 
+
         //представление ученика (все предметы и лабы)
         public IActionResult Student()
         {
@@ -102,12 +103,12 @@ namespace EDiary.Controllers
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
-            
+
             //объединение предметов и лаб
-            var subLabs = studentSubject.Concat(studentLabs).OrderBy(x=>x.subjectName);
+            var subLabs = studentSubject.Concat(studentLabs).OrderBy(x => x.subjectName);
 
             //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = studentTasks, statuses = statuses};
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = studentTasks, statuses = statuses };
             return View(studentSubjectGroup);
         }
 
