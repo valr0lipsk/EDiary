@@ -72,7 +72,7 @@ namespace EDiary.Controllers
                             groupName = gr.groupName,
                             subIcon = tsub.subject.Icon.subjectPicture
                         }).AsNoTracking().ToList();
-
+  
             //задачи
             var tasks = (from tsub in context.subjectTaughts
                          join gr in context.groups on tsub.groupId equals gr.groupId
