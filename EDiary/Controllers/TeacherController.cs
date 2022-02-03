@@ -47,7 +47,7 @@ namespace EDiary.Controllers
                                  join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
                                  join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
                                  where teachers.teacherUser == userManager.GetUserId(User)
-                                 orderby subject.subjectName
+                                 orderby subject.subjectName, gr.groupName
                                  select new SubjectGroupModel
                                  {
                                      groupName = gr.groupName,
@@ -63,7 +63,7 @@ namespace EDiary.Controllers
                         join teachers in context.teachers on lab.teacherId equals teachers.teacherId
                         join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
                         where teachers.teacherUser == userManager.GetUserId(User)
-                        orderby lab.labName
+                        orderby lab.labName, gr.groupName
                         select new SubjectGroupModel
                         {
                             subjectName = lab.labName,
@@ -80,7 +80,6 @@ namespace EDiary.Controllers
                          join teachers in context.teachers on lab.teacherId equals teachers.teacherId
                          join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
                          where teachers.teacherUser == userManager.GetUserId(User)
-                         orderby lab.labName
                          select new SubjectGroupModel
                          {
                              subjectName = lab.labName,
@@ -91,15 +90,16 @@ namespace EDiary.Controllers
                              lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
                                                         .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
                                                         .Where(less => less.sT.less.lessonTypeId == 6)
-                                                        .GroupBy(less => less.lab.labId)
-                                                        .Count()
-                         }).AsNoTracking().ToList();
+                                                        .Where(tr => lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                        .GroupBy(lab => lab.lab.labId)
+                                                        .Select(less => less.Count()).FirstOrDefault()
+                         }).AsNoTracking().ToList().OrderBy(s=>s.subjectName).OrderBy(gr=>gr.groupName);
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
 
             //объединение лаб и предметов
-            var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName);
+            var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName).OrderBy(gr=>gr.groupName);
 
             //объединение в одну модель
             AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel

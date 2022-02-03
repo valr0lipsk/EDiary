@@ -208,7 +208,7 @@ namespace EDiary.Controllers
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
                                       join subTaught in context.subjectTaughts on laba.tsubjectId equals subTaught.tsubjectId
                                       join gr in context.groups on subTaught.groupId equals gr.groupId
-                                      where laba.labId == labid
+                                      where laba.labId == labid && student.studentGroup == subTaught.groupId
                                       orderby student.studentSurname
                                       select new Student
                                       {
@@ -473,7 +473,7 @@ namespace EDiary.Controllers
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
                                       join subTaught in context.subjectTaughts on laba.tsubjectId equals subTaught.tsubjectId
                                       join gr in context.groups on subTaught.groupId equals gr.groupId
-                                      where laba.labId == lessDates.labId
+                                      where laba.labId == lessDates.labId && student.studentGroup == subTaught.groupId
                                       orderby student.studentSurname
                                       select new Student
                                       {

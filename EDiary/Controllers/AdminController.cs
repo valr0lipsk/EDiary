@@ -273,7 +273,7 @@ namespace EDiary.Controllers
                                              where subTaught.teacherId == teacher.teacherId
                                              orderby teacher.teacherSurname
                                              select gr.groupName).FirstOrDefault(),
-                            }).ToList();
+                            }).AsNoTracking().ToList();
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = context.groups.AsNoTracking().ToList() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
         }
@@ -294,9 +294,11 @@ namespace EDiary.Controllers
 
         public IActionResult CreateSubject(AddSubjectModel addSubject)
         {
-            if (context.subjects.Select(s => s.subjectName).FirstOrDefault().Trim() != addSubject.subjectName.Trim() &&
-               context.teachers.Select(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname).FirstOrDefault() != addSubject.firstTeacher.Trim() &&
-               context.groups.Select(gr => gr.groupName).FirstOrDefault().Trim() != addSubject.groupName.Trim())
+            var havedSub = context.subjectTaughts.Where(s => s.subject.subjectName.Trim() == addSubject.subjectName.Trim())
+                                                 .Where(tr => tr.teacher.teacherSurname + " " + tr.teacher.teacherName + " " + tr.teacher.teacherLastname == addSubject.firstTeacher.Trim())
+                                                 .Where(gr => gr.group.groupName.Trim() == addSubject.groupName.Trim())
+                                                 .Select(s=>s).FirstOrDefault();
+            if (havedSub == null) 
             {
                 context.Database.BeginTransaction();
                 var sub = context.subjects.Where(s => s.subjectName == addSubject.subjectName).Select(s => s).FirstOrDefault();
@@ -403,7 +405,7 @@ namespace EDiary.Controllers
         public IActionResult UpdateSubject(TableSubjectModel updateSubject)
         {
 
-            if (context.subjects.Select(s => s.subjectName).FirstOrDefault() != updateSubject.subjectName.Trim() &&
+            if (context.subjects.Select(s => s.subjectName).FirstOrDefault().Trim() != updateSubject.subjectName.Trim() &&
                context.teachers.Select(tr => tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ").FirstOrDefault() != updateSubject.teacher.Trim() &&
                context.groups.Select(gr => gr.groupName).FirstOrDefault() != updateSubject.group.Trim())
             {
@@ -456,7 +458,7 @@ namespace EDiary.Controllers
                                 subjectName = sub.subjectName,
                                 groupName = gr.groupName,
                                 tsubjectId = subTaught.tsubjectId
-                            }).ToList();
+                            }).AsNoTracking().ToList();
             var groups = context.groups.AsNoTracking().ToList();
             var teachers = context.teachers.AsNoTracking().ToList();
             var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
