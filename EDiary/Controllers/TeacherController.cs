@@ -87,12 +87,11 @@ namespace EDiary.Controllers
                              tsubjectId = tsub.tsubjectId,
                              groupName = gr.groupName,
                              labaCount = lab.countLabs,
-                             lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                                        .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                                        .Where(less => less.sT.less.lessonTypeId == 6)
-                                                        .Where(tr => lab.teacher.teacherUser == userManager.GetUserId(User))
-                                                        .GroupBy(lab => lab.lab.labId)
-                                                        .Select(less => less.Count()).FirstOrDefault()
+                             lessCount = context.labs.Join(context.subjectTaughts, lab => lab.tsubjectId, sT => sT.tsubjectId, (lab, sT) => new { lab, sT })
+                                                     .Join(context.lessons, sT => sT.sT.tsubjectId, less => less.tsubjectId, (sT, less) => new { sT, less })
+                                                     .Where(less => less.less.lessonTypeId == 6 && lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                     .GroupBy(less=>less.less.lessonId)
+                                                     .Select(less=>less.Count()).FirstOrDefault()
                          }).AsNoTracking().ToList().OrderBy(s=>s.subjectName).OrderBy(gr=>gr.groupName);
 
             //эмоджи-статусы
