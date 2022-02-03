@@ -89,7 +89,7 @@ namespace EDiary.Controllers
                                              .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
                                              .GroupBy(l => l.lab.labId)
                                              .Select(lab => lab).Count()
-                         }).AsNoTracking().ToList();
+                         }).AsNoTracking().Distinct().ToList();
 
             var lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
                                              .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
