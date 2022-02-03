@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using EDiary.Repositories;
 using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data.Common;
+using EDiary.Service;
 
 namespace EDiary.Controllers
 {
@@ -71,37 +73,45 @@ namespace EDiary.Controllers
         }
         public IActionResult CreateStudent(AddStudentModel createStudent)
         {
-            context.Database.BeginTransaction();
-            IdentityUser identityStudentUser = new IdentityUser
+            using var transaction = context.Database.BeginTransaction();
+            try
             {
-                Id = createStudent.studentLogin,
-                UserName = "st" + createStudent.studentLogin,
-                NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(),
-                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword)
-            };
-            context.Users.Add(identityStudentUser);
-            context.SaveChanges();
-            if (context.groups.Where(gr => gr.groupName == createStudent.studentGroup) == null)
-            {
-                ModelState.AddModelError(nameof(AddStudentModel.studentGroup), "Такой группы не существует");
-            }
-            else
-            {
-                Student student = new Student
+                IdentityUser identityStudentUser = new IdentityUser
                 {
-                    studentSurname = createStudent.studentSurname,
-                    studentName = createStudent.studentName,
-                    studentLastname = createStudent.studentLastname,
-                    studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
-                                                 .Select(gr => gr.groupId).FirstOrDefault(),
-                    studentUser = identityStudentUser.Id
+                    Id = createStudent.studentLogin,
+                    UserName = "st" + createStudent.studentLogin,
+                    NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(),
+                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword)
                 };
-                context.students.Add(student);
+                context.Users.Add(identityStudentUser);
+                context.SaveChanges();
+                if (context.groups.Where(gr => gr.groupName == createStudent.studentGroup) == null)
+                {
+                    ModelState.AddModelError(nameof(AddStudentModel.studentGroup), "Такой группы не существует");
+                }
+                else
+                {
+                    Student student = new Student
+                    {
+                        studentSurname = createStudent.studentSurname,
+                        studentName = createStudent.studentName,
+                        studentLastname = createStudent.studentLastname,
+                        studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
+                                                     .Select(gr => gr.groupId).FirstOrDefault(),
+                        studentUser = identityStudentUser.Id
+                    };
+                    context.students.Add(student);
+                }
+                context.SaveChanges();
+                userManager.AddToRoleAsync(identityStudentUser, "student");
+                transaction.Commit();
+                return RedirectToAction("Admin");
             }
-            context.SaveChanges();
-            userManager.AddToRoleAsync(identityStudentUser, "student");
-            context.Database.CommitTransaction();
-            return RedirectToAction("Admin");
+            catch 
+            { 
+                transaction.Rollback();
+                return RedirectToAction("Admin");
+            }
         }
 
         //удаление студента

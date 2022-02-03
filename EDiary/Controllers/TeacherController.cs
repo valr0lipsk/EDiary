@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +46,6 @@ namespace EDiary.Controllers
                                  join subject in context.subjects on tsub.subjectId equals subject.subjectId
                                  join gr in context.groups on tsub.groupId equals gr.groupId
                                  join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
-                                 join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
                                  where teachers.teacherUser == userManager.GetUserId(User)
                                  orderby subject.subjectName, gr.groupName
                                  select new SubjectGroupModel
@@ -61,7 +61,6 @@ namespace EDiary.Controllers
                         join gr in context.groups on tsub.groupId equals gr.groupId
                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
                         join teachers in context.teachers on lab.teacherId equals teachers.teacherId
-                        join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
                         where teachers.teacherUser == userManager.GetUserId(User)
                         orderby lab.labName, gr.groupName
                         select new SubjectGroupModel
@@ -72,13 +71,12 @@ namespace EDiary.Controllers
                             groupName = gr.groupName,
                             subIcon = tsub.subject.Icon.subjectPicture
                         }).AsNoTracking().ToList();
-  
+
             //задачи
             var tasks = (from tsub in context.subjectTaughts
                          join gr in context.groups on tsub.groupId equals gr.groupId
                          join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
                          join teachers in context.teachers on lab.teacherId equals teachers.teacherId
-                         join aspusers in context.Users on teachers.teacherUser equals aspusers.Id
                          where teachers.teacherUser == userManager.GetUserId(User)
                          select new SubjectGroupModel
                          {
@@ -87,12 +85,15 @@ namespace EDiary.Controllers
                              tsubjectId = tsub.tsubjectId,
                              groupName = gr.groupName,
                              labaCount = lab.countLabs,
-                             lessCount = context.labs.Join(context.subjectTaughts, lab => lab.tsubjectId, sT => sT.tsubjectId, (lab, sT) => new { lab, sT })
-                                                     .Join(context.lessons, sT => sT.sT.tsubjectId, less => less.tsubjectId, (sT, less) => new { sT, less })
-                                                     .Where(less => less.less.lessonTypeId == 6 && lab.teacher.teacherUser == userManager.GetUserId(User))
-                                                     .GroupBy(less=>less.less.lessonId)
-                                                     .Select(less=>less.Count()).FirstOrDefault()
-                         }).AsNoTracking().ToList().OrderBy(s=>s.subjectName).OrderBy(gr=>gr.groupName);
+                             lessCount = context.lessons.Where(less => less.lessonTypeId == 6)
+                                                        .GroupBy(less => less.tsubjectId)
+                                                        .Select(less => less.Key).Count()
+                         }).AsNoTracking().ToList().OrderBy(s => s.subjectName).OrderBy(gr => gr.groupName);
+
+            ViewBag.lessons = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                             .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                             .Where(less => less.sT.less.lessonTypeId == 6)
+                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User));
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
