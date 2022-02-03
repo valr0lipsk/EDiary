@@ -62,11 +62,11 @@
                                 {
                                     if (student.studentStatus != null)
                                     {
-                                        <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status openEmojiModal" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
+                                        <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status cursor openEmojiModal" id="emojiStatus"><img src="data:image/*;base64,@(Convert.ToBase64String(student.studentStatus))"/></sup></p>
                                     }
                                     else
                                     {
-                                         <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status openEmojiModal" id="emojiStatus"></sup></p>
+                                         <p class="m-0" data-idStud="@student.studentId">@student.studentSurname @student.studentName<sup class="acc__status cursor openEmojiModal" id="emojiStatus"></sup></p>
                                     }
                                 }
                             }
