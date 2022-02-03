@@ -321,7 +321,7 @@ namespace EDiary.Controllers
                     {
                         Labs labaFirst = new Labs
                         {
-                            labName = addSubject.subjectName + "(лабораторная, 1-ая подгруппа)",
+                            labName = addSubject.subjectName.Trim() + " (лабораторная, 1-ая подгруппа)",
                             subgroupId = 1,
                             teacherId = subjectTaught.teacherId,
                             countLabs = addSubject.labsCount,
@@ -331,7 +331,7 @@ namespace EDiary.Controllers
                         context.SaveChanges();
                         Labs labaSecond = new Labs
                         {
-                            labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
+                            labName = addSubject.subjectName.Trim() + " (лабораторная, 2-ая подгруппа)",
                             subgroupId = 2,
                             teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
                                                         .Select(tr => tr.teacherId).FirstOrDefault(),
