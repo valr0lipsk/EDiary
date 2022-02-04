@@ -73,30 +73,30 @@ namespace EDiary.Controllers
                         }).AsNoTracking().ToList();
 
             //задачи
-            var tasks = (from lab in context.labs
-                         join teachers in context.teachers on lab.teacherId equals teachers.teacherId
-                         where teachers.teacherUser == userManager.GetUserId(User)
-                         select new SubjectGroupModel
-                         {
-                             subjectName = lab.labName,
-                             labaId = lab.labId,
-                             tsubjectId = lab.tsubjectId,
-                             groupName = lab.tsubject.@group.groupName,
-                             labaCount = lab.countLabs,
-                             lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                             .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                             .Where(less => less.sT.less.lessonTypeId == 6)
-                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                             .GroupBy(l => l.lab.labId)
-                                             .Select(lab => lab).Count()
-                         }).AsNoTracking().Distinct().ToList();
+            var tasks = context.labs.Join(context.teachers, lab => lab.teacherId, tr => tr.teacherId, (lab, tr) => new { lab, tr })
+                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                    .Select(task => new SubjectGroupModel
+                                    {
+                                        subjectName = task.lab.labName,
+                                        groupName = task.lab.tsubject.@group.groupName,
+                                        labaCount = task.lab.countLabs
+                                    }).AsNoTracking().OrderBy(lab=>lab.subjectName).OrderBy(gr=>gr.groupName).ToList();
 
-            var lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                             .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                             .Where(less => less.sT.less.lessonTypeId == 6)
-                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                             .GroupBy(l=>l.lab.labId)
-                                             .Select(lab=>lab.Count());
+            //подсчет проведенных лаб
+            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                      .Where(less => less.sT.less.lessonTypeId == 6)
+                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                      .OrderBy(lab => lab.lab.labName)
+                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
+                                      .GroupBy(l => l.lab.labId)
+                                      .Select(lab => lab.Count()).ToList();
+
+            //подсчет проведенных лаб в каждой задаче
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                tasks[i].lessCount = less[i];
+            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();

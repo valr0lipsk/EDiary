@@ -48,72 +48,70 @@ namespace EDiary.Controllers
                                           }).AsNoTracking().ToList();
 
             //предметы
-            var studentSubject = (from sub in context.subjects
-                                  join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
-                                  join gr in context.groups on sT.groupId equals gr.groupId
-                                  join st in context.students on gr.groupId equals st.studentGroup
-                                  where st.studentUser == userManager.GetUserId(User)
-                                  select new SubjectGroupModel
-                                  {
-                                      tsubjectId = sT.tsubjectId,
-                                      subjectName = sub.subjectName,
-                                      subIcon = sub.Icon.subjectPicture
-                                  }).AsNoTracking().ToList();
+            var subjects = (from sub in context.subjects
+                            join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
+                            join gr in context.groups on sT.groupId equals gr.groupId
+                            join st in context.students on gr.groupId equals st.studentGroup
+                            where st.studentUser == userManager.GetUserId(User)
+                            select new SubjectGroupModel
+                            {
+                                tsubjectId = sT.tsubjectId,
+                                subjectName = sub.subjectName,
+                                subIcon = sub.Icon.subjectPicture
+                            }).AsNoTracking().ToList();
 
             //лабы
-            var studentLabs = (from students in context.students
-                               join subGr in context.subgroups on students.studentSubgroup equals subGr.subgroupId
-                               join labs in context.labs on subGr.subgroupId equals labs.subgroupId
-                               join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
-                               join gr in context.groups on sT.groupId equals gr.groupId
-                               join sub in context.subjects on sT.subjectId equals sub.subjectId
-                               where students.studentUser == userManager.GetUserId(User) && students.studentGroup == gr.groupId
-                               select new SubjectGroupModel
-                               {
-                                   subjectName = labs.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа", ""),
-                                   labaId = labs.labId,
-                                   tsubjectId = sT.tsubjectId,
-                                   subIcon = sub.Icon.subjectPicture
-                               }).AsNoTracking().ToList();
+            var labs = (from students in context.students
+                        join subGr in context.subgroups on students.studentSubgroup equals subGr.subgroupId
+                        join lab in context.labs on subGr.subgroupId equals lab.subgroupId
+                        join sT in context.subjectTaughts on lab.tsubjectId equals sT.tsubjectId
+                        join gr in context.groups on sT.groupId equals gr.groupId
+                        join sub in context.subjects on sT.subjectId equals sub.subjectId
+                        where students.studentUser == userManager.GetUserId(User) && students.studentGroup == gr.groupId
+                        select new SubjectGroupModel
+                        {
+                            subjectName = lab.labName.Replace(", 2-ая подгруппа", "").Replace(", 1-ая подгруппа", ""),
+                            labaId = lab.labId,
+                            tsubjectId = sT.tsubjectId,
+                            subIcon = sub.Icon.subjectPicture
+                        }).AsNoTracking().ToList();
 
             //задачи
-            var studentTasks = (from students in context.students
-                                join subGr in context.subgroups on students.studentSubgroup equals subGr.subgroupId
-                                join labs in context.labs on subGr.subgroupId equals labs.subgroupId
-                                join sT in context.subjectTaughts on labs.tsubjectId equals sT.tsubjectId
-                                join gr in context.groups on sT.groupId equals gr.groupId
-                                where students.studentUser == userManager.GetUserId(User) && students.studentGroup == gr.groupId
-                                select new SubjectGroupModel
-                                {
-                                    subjectName = labs.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
-                                    labaId = labs.labId,
-                                    tsubjectId = sT.tsubjectId,
-                                    labaCount = labs.countLabs,
-                                    zachCount = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
-                                                               .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
-                                                               .Where(less => less.sM.less.lessonTypeId == 6)
-                                                               .Where(m => m.m.mark == "зач")
-                                                               .Where(st => st.sM.sM.student.studentUser == userManager.GetUserId(User))
-                                                               .GroupBy(less => less.sM.less.subjectTaught.tsubjectId)
-                                                               .Select(m => m.Count()).FirstOrDefault()
-                                }).AsNoTracking().ToList();
+            var tasks = (from students in context.students
+                         join subGr in context.subgroups on students.studentSubgroup equals subGr.subgroupId
+                         join lab in context.labs on subGr.subgroupId equals lab.subgroupId
+                         join sT in context.subjectTaughts on lab.tsubjectId equals sT.tsubjectId
+                         join gr in context.groups on sT.groupId equals gr.groupId
+                         where students.studentUser == userManager.GetUserId(User) && students.studentGroup == gr.groupId
+                         select new SubjectGroupModel
+                         {
+                             subjectName = lab.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
+                             labaCount = lab.countLabs
+                         }).AsNoTracking().ToList();
 
+            //подсчет сданных лаб
             var zach = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
-                                                               .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
-                                                               .Where(less => less.sM.less.lessonTypeId == 6)
-                                                               .Where(m => m.m.mark == "зач")
-                                                               .Where(st => st.sM.sM.student.studentUser == userManager.GetUserId(User))
-                                                               .GroupBy(less => less.sM.less.subjectTaught.tsubjectId)
-                                                               .Select(m => m.Count()).ToList();
+                                      .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
+                                      .Where(less => less.sM.less.lessonTypeId == 6)
+                                      .Where(m => m.m.mark == "зач")
+                                      .Where(st => st.sM.sM.student.studentUser == userManager.GetUserId(User))
+                                      .GroupBy(less => less.sM.less.subjectTaught.tsubjectId)
+                                      .Select(m => m.Count()).ToList();
+
+            //подсчет сданных лаб в каждой задаче
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                tasks[i].zachCount = zach[i];
+            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = studentSubject.Concat(studentLabs).OrderBy(x => x.subjectName);
+            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
 
             //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = studentTasks, statuses = statuses };
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = tasks, statuses = statuses };
             return View(studentSubjectGroup);
         }
 
