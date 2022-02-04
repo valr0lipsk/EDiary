@@ -25,8 +25,9 @@ namespace EDiary.Controllers
         public StudentController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
 
 
+
         //представление ученика (все предметы и лабы)
-        public IActionResult Student()
+        public IActionResult Student(string search)
         {
             //средний балл
             ViewBag.averageMark = Math.Round((from st in context.students
@@ -109,10 +110,23 @@ namespace EDiary.Controllers
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
+            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(x=>x.groupName).ToList();
+            
+            //поиск
+            if (!string.IsNullOrEmpty(search))
+            {
+                subLabs = subLabs.Where(s => s.subjectName.ToLower().Contains(search.ToLower()) || s.groupName.ToLower().Contains(search.ToLower())).ToList();
+            }
 
             //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = tasks, statuses = statuses };
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
+            { 
+                students = student,
+                subjects = subLabs,
+                tasks = tasks,
+                statuses = statuses
+            };
+
             return View(studentSubjectGroup);
         }
 
@@ -189,10 +203,16 @@ namespace EDiary.Controllers
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = labs.OrderBy(x => x.subjectName);
+            var subLabs = labs.OrderBy(x => x.subjectName).OrderBy(x=>x.groupName);
 
             //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = tasks, statuses = statuses };
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
+            { 
+                students = student,
+                subjects = subLabs,
+                tasks = tasks,
+                statuses = statuses 
+            };
 
             return View("Student", studentSubjectGroup);
         }
@@ -267,10 +287,16 @@ namespace EDiary.Controllers
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = subjects.OrderBy(x => x.subjectName);
+            var subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(x=>x.groupName);
 
             //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel { students = student, subjects = subLabs, tasks = tasks, statuses = statuses };
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
+            {
+                students = student,
+                subjects = subLabs,
+                tasks = tasks,
+                statuses = statuses
+            };
 
             return View("Student", studentSubjectGroup);
         }
