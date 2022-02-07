@@ -33,6 +33,7 @@ namespace EDiary.Controllers
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
                                             .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
                                             .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+
             //средний балл
             ViewBag.averageMark = Math.Round((from st in context.students
                                               join sm in context.setMarks on st.studentId equals sm.studentId

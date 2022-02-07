@@ -13,5 +13,6 @@ namespace EDiary.ViewModels
         public string teacherLastname { get; set; }
         public byte[] teacherPic { get; set; }
         public byte[] teacherStatus { get; set; }
+        public int teacherGroup { get; set; }
     }
 }

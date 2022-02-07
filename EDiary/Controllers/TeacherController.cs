@@ -27,6 +27,11 @@ namespace EDiary.Controllers
         //представление препода(фамилия, предметы и группы, поиск)
         public IActionResult Teacher(string search)
         {
+            //отметки-цифры
+            var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
+                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+
             //кураторская группа
             ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
                                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
@@ -40,7 +45,9 @@ namespace EDiary.Controllers
                                               teacherName = tr.teacherName,
                                               teacherLastname = tr.teacherLastname,
                                               teacherPic = tr.teacherPic,
-                                              teacherStatus = tr.status.emoji
+                                              teacherStatus = tr.status.emoji,
+                                              teacherGroup = context.groups.Where(tr=>tr.teacher.teacherUser==userManager.GetUserId(User))
+                                                                           .Select(gr => gr.groupId).FirstOrDefault()
                                           }).AsNoTracking().ToList();
 
             //предметы
@@ -92,6 +99,23 @@ namespace EDiary.Controllers
                                       .GroupBy(l => l.lab.labId)
                                       .Select(lab => lab.Count()).ToList();
 
+            //учащиеся кураторской группы
+            var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
+                                            .Select(st => new StudentModel
+                                            {
+                                                 studentId = st.studentId,
+                                                 studentSurname = st.studentSurname,
+                                                 studentName = st.studentName,
+                                                 studentLastname = st.studentLastname,
+                                                 studentPic = st.studentPic,
+                                                 studentStatus = st.status.emoji,
+                                                 studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                       .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                       .Where(m => m.sM.studentId == st.studentId)
+                                                                       .GroupBy(sm => sm.sM.studentId)
+                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
+                                            }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
+
             //подсчет проведенных лаб в каждой задаче
             for (int i = 0; i < tasks.Count(); i++)
             {
@@ -116,7 +140,8 @@ namespace EDiary.Controllers
                 Teachers = teacher,
                 subjectGroups = subLabs,
                 statuses = statuses,
-                tasks = tasks
+                tasks = tasks,
+                students = students,
             };
 
             return View(teacherSubjectGroup);
