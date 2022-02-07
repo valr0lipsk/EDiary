@@ -29,11 +29,15 @@ namespace EDiary.Controllers
         //представление ученика (все предметы и лабы)
         public IActionResult Student(string search)
         {
+            //отметки-цифры
+            var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
+                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
             //средний балл
             ViewBag.averageMark = Math.Round((from st in context.students
                                               join sm in context.setMarks on st.studentId equals sm.studentId
                                               join mark in context.marks on sm.markId equals mark.markId
-                                              where mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н/б" && mark.mark != "н" && mark.mark != "н/а" && st.studentUser == userManager.GetUserId(User)
+                                              where digitals.Values.Contains(mark.mark) && st.studentUser == userManager.GetUserId(User)
                                               select Convert.ToInt32(mark.mark)).Average(), 2);
 
             //ФИО учника
@@ -45,7 +49,8 @@ namespace EDiary.Controllers
                                               studentName = st.studentName,
                                               studentLastname = st.studentLastname,
                                               studentPic = st.studentPic,
-                                              studentStatus = st.status.emoji
+                                              studentStatus = st.status.emoji,
+                                              studentGroup = st.studentGroup
                                           }).AsNoTracking().ToList();
 
             //предметы
@@ -100,6 +105,24 @@ namespace EDiary.Controllers
                                       .GroupBy(less => less.sM.sM.lesson.tsubjectId)
                                       .Select(m => m.Count()).ToList();
 
+            //одногруппники
+            var groupmates = context.students.Where(gr => gr.studentGroup == student.FirstOrDefault().studentGroup)
+                                             .Where(st => st.studentUser != userManager.GetUserId(User))
+                                             .Select(st => new StudentModel
+                                             {
+                                                 studentId = st.studentId,
+                                                 studentSurname = st.studentSurname,
+                                                 studentName = st.studentName,
+                                                 studentLastname = st.studentLastname,
+                                                 studentPic = st.studentPic,
+                                                 studentStatus = st.status.emoji,
+                                                 studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                       .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                       .Where(m => m.sM.studentId == st.studentId)
+                                                                       .GroupBy(sm => sm.sM.studentId)
+                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
+                                             }).AsNoTracking().OrderBy(st=>st.studentSurname).OrderBy(st=>st.studentName).ToList();
+
             //подсчет сданных лаб в каждой задаче
             for (int i = 0; i < tasks.Count(); i++)
             {
@@ -119,9 +142,10 @@ namespace EDiary.Controllers
             }
 
             //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
-            { 
-                students = student,
+            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
+            {
+                student = student,
+                students = groupmates,
                 subjects = subLabs,
                 tasks = tasks,
                 statuses = statuses
