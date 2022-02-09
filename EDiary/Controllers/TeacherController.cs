@@ -286,7 +286,10 @@ namespace EDiary.Controllers
             //подсчет проведенных лаб в каждой задаче
             for (int i = 0; i <= tasks.Count(); i++)
             {
-                tasks[i].lessCount = less[i];
+                if (less.Count() != 0)
+                    tasks[i].lessCount = less[i];
+                else
+                    tasks[i].lessCount = 0;
             }
 
             //эмоджи-статусы
