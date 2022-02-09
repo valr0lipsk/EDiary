@@ -124,10 +124,13 @@ namespace EDiary.Controllers
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                              }).AsNoTracking().OrderBy(st=>st.studentSurname).OrderBy(st=>st.studentName).ToList();
 
-            //подсчет сданных лаб в каждой задаче
+                //подсчет сданных лаб в каждой задаче
             for (int i = 0; i < tasks.Count(); i++)
             {
-                tasks[i].zachCount = zach[i];
+                if (zach.Count() != 0)
+                    tasks[i].zachCount = zach[i];
+                else
+                    tasks[i].zachCount = 0;
             }
 
             //эмоджи-статусы

@@ -282,9 +282,9 @@ namespace EDiary.Controllers
                                       .OrderBy(gr => gr.lab.tsubject.group.groupName)
                                       .GroupBy(l => l.lab.labId)
                                       .Select(lab => lab.Count()).ToList();
-
+            
             //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
+            for (int i = 0; i <= tasks.Count(); i++)
             {
                 tasks[i].lessCount = less[i];
             }
