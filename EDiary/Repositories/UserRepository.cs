@@ -9,12 +9,12 @@ using System.Xml.Linq;
 
 namespace EDiary.Repositories
 {
-    public class GroupRepository : IGroupRepository
+    public class UserRepository : IUserRepository
     {
         EDContext context;
         DbSet<collegeGroup> dbSetGroup;
 
-        public GroupRepository(EDContext context)
+        public UserRepository(EDContext context)
         {
             this.context = context;
             this.dbSetGroup = context.Set<collegeGroup>();

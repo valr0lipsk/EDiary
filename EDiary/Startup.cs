@@ -36,12 +36,10 @@ namespace EDiary
             //подключения сервиса отправки на почту
             services.AddTransient<EmailService>();
             //подключение интерфейсов и репозиториев
-            services.AddTransient<IGroupRepository, GroupRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ILessonRepository, LessonRepository>();
             services.AddTransient<IMarkRepository, MarkRepository>();
-            services.AddTransient<ISetMarkRepository, setMarkRepository>();
             services.AddTransient<IStudentRepository, StudentRepository>();
-            services.AddTransient<ISubjectRepository, SubjectRepository>();
             services.AddTransient<ISubjectTaughtRepository, subjectTaughtRepository>();
             services.AddTransient<ITeacherRepository, TeacherRepository>();
             //подключение идентификации пользователей

@@ -12,35 +12,35 @@ namespace EDiary.Repositories
     public class MarkRepository : IMarkRepository
     {
         EDContext context;
-        DbSet<Mark> dbSetMark;
+        DbSet<setMark> dbSetMark;
 
         public MarkRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetMark = context.Set<Mark>();
+            this.dbSetMark = context.Set<setMark>();
         }
 
-        public IEnumerable<Mark> Get()
+        public IEnumerable<setMark> Get()
         {
             return dbSetMark.AsNoTracking().ToList();
         }
 
-        public Mark FindById(Guid lessonId)
+        public setMark FindById(int lessonId)
         {
             return dbSetMark.Find(lessonId);
         }
 
-        public void Create(Mark item)
+        public void Create(setMark item)
         {
             dbSetMark.Add(item);
             context.SaveChanges();
         }
-        public void Update(Mark item)
+        public void Update(setMark item)
         {
             context.Entry(item).State = EntityState.Modified;
             context.SaveChanges();
         }
-        public void Remove(Mark item)
+        public void Remove(setMark item)
         {
             dbSetMark.Remove(item);
             context.SaveChanges();

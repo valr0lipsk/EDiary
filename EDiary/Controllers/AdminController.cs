@@ -142,6 +142,7 @@ namespace EDiary.Controllers
                 student.studentGroup = context.groups.Where(gr => gr.groupName == updateStudent.studentGroup).Select(gr => gr.groupId).FirstOrDefault();
                 context.students.Update(student);
                 context.SaveChanges();
+                transaction.Commit();
             }
             catch
             {
@@ -370,8 +371,9 @@ namespace EDiary.Controllers
                             };
                             context.labs.Add(labaSecond);
                             context.SaveChanges();
-                            transaction.Commit();
+                            
                         }
+                        transaction.Commit();
                     }
                     catch
                     {
@@ -416,8 +418,8 @@ namespace EDiary.Controllers
                             };
                             context.labs.Add(labaSecond);
                             context.SaveChanges();
-                            transaction.Commit();
                         }
+                        transaction.Commit();
                     }
                     catch
                     {
@@ -549,25 +551,30 @@ namespace EDiary.Controllers
         }
         public IActionResult CreateGroup(TableGroupModel addGroup)
         {
-            using var transaction = context.Database.BeginTransaction();
-            try
+            if (context.groups.Where(gr => gr.groupName == addGroup.groupName).FirstOrDefault() == null)
             {
-                collegeGroup group = new collegeGroup
+                using var transaction = context.Database.BeginTransaction();
+                try
                 {
-                    groupName = addGroup.groupName,
-                    curatorId = context.teachers
-                                .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
-                                .Select(tr => tr.teacherId)
-                                .FirstOrDefault()
-                };
-                context.groups.Add(group);
-                context.SaveChanges();
-                transaction.Commit();
+                    collegeGroup group = new collegeGroup
+                    {
+                        groupName = addGroup.groupName,
+                        curatorId = context.teachers
+                                    .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
+                                    .Select(tr => tr.teacherId)
+                                    .FirstOrDefault()
+                    };
+                    context.groups.Add(group);
+                    context.SaveChanges();
+                    transaction.Commit();
+                }
+
+                catch
+                {
+                    transaction.Rollback();
+                }
             }
-            catch
-            {
-                transaction.Rollback();
-            }
+            else { ModelState.AddModelError(nameof(TableGroupModel), "Такая группа уже существует"); };
             return RedirectToAction("Admin");
         }
     }

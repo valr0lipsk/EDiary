@@ -7,7 +7,7 @@ using EDiary.Models;
 
 namespace EDiary.IRepositories
 {
-    public interface IGroupRepository
+    public interface IUserRepository
     {
         collegeGroup FindById(Guid id);
         IEnumerable<collegeGroup> Get();

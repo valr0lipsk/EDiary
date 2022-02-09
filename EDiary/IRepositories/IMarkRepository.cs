@@ -8,11 +8,11 @@ namespace EDiary.IRepositories
 {
     public interface IMarkRepository
     {
-        Mark FindById(Guid markId);
-        IEnumerable<Mark> Get();
-        void Create(Mark item);
-        void Remove(Mark item);
-        void Update(Mark item);
+        setMark FindById(int markId);
+        IEnumerable<setMark> Get();
+        void Create(setMark item);
+        void Remove(setMark item);
+        void Update(setMark item);
         void Save();
     }
 }
