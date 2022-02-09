@@ -28,7 +28,7 @@ namespace EDiary.Controllers
 
         //представление ученика (все предметы и лабы)
         public IActionResult Student(string search)
-        {
+         {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
                                          .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
@@ -124,13 +124,16 @@ namespace EDiary.Controllers
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                              }).AsNoTracking().OrderBy(st=>st.studentSurname).OrderBy(st=>st.studentName).ToList();
 
-                //подсчет сданных лаб в каждой задаче
+            //подсчет сданных лаб в каждой задаче
             for (int i = 0; i < tasks.Count(); i++)
             {
-                if (zach.Count() != 0)
-                    tasks[i].zachCount = zach[i];
-                else
+                if (zach.Count() == 0)
                     tasks[i].zachCount = 0;
+                else if (zach.Count() == i)
+                    tasks[i].zachCount = 0;
+                else
+                    tasks[i].zachCount = zach[i];
+
             }
 
             //эмоджи-статусы

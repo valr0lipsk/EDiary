@@ -282,14 +282,17 @@ namespace EDiary.Controllers
                                       .OrderBy(gr => gr.lab.tsubject.group.groupName)
                                       .GroupBy(l => l.lab.labId)
                                       .Select(lab => lab.Count()).ToList();
-            
+
             //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i <= tasks.Count(); i++)
+            for (int i = 0; i < tasks.Count(); i++)
             {
-                if (less.Count() != 0)
-                    tasks[i].lessCount = less[i];
+                if (less.Count() == 0)
+                    tasks[i].zachCount = 0;
+                else if (less.Count() == i)
+                    tasks[i].zachCount = 0;
                 else
-                    tasks[i].lessCount = 0;
+                    tasks[i].zachCount = less[i];
+
             }
 
             //эмоджи-статусы
