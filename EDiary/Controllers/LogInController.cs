@@ -74,7 +74,7 @@ namespace EDiary.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByEmailAsync(forgotPassword.userEmail.Trim());
-                if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)
                 {
                     ModelState.AddModelError(nameof(ForgotPasswordModel.userEmail), "Не удалось найти пользователя с указанным адресом эл. почты");
                 }
