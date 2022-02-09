@@ -76,75 +76,78 @@ namespace EDiary.Controllers
             using var transaction = context.Database.BeginTransaction();
             try
             {
-                IdentityUser identityStudentUser = new IdentityUser
+                IdentityUser user = new IdentityUser
                 {
                     Id = createStudent.studentLogin,
                     UserName = "st" + createStudent.studentLogin,
                     NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(),
                     PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword)
                 };
-                context.Users.Add(identityStudentUser);
+                context.Users.Add(user);
                 context.SaveChanges();
-                if (context.groups.Where(gr => gr.groupName == createStudent.studentGroup) == null)
+                Student student = new Student
                 {
-                    ModelState.AddModelError(nameof(AddStudentModel.studentGroup), "Такой группы не существует");
-                }
-                else
-                {
-                    Student student = new Student
-                    {
-                        studentSurname = createStudent.studentSurname,
-                        studentName = createStudent.studentName,
-                        studentLastname = createStudent.studentLastname,
-                        studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
-                                                     .Select(gr => gr.groupId).FirstOrDefault(),
-                        studentUser = identityStudentUser.Id
-                    };
-                    context.students.Add(student);
-                }
+                    studentSurname = createStudent.studentSurname,
+                    studentName = createStudent.studentName,
+                    studentLastname = createStudent.studentLastname,
+                    studentGroup = context.groups.Where(gr => gr.groupName == createStudent.studentGroup)
+                                                 .Select(gr => gr.groupId).FirstOrDefault(),
+                    studentUser = user.Id
+                };
+                context.students.Add(student);
                 context.SaveChanges();
-                userManager.AddToRoleAsync(identityStudentUser, "student");
+                userManager.AddToRoleAsync(user, "student");
                 transaction.Commit();
-                return RedirectToAction("Admin");
             }
             catch 
-            { 
+            {
+                ModelState.AddModelError(nameof(AddStudentModel.studentGroup), "Такой группы не существует");
                 transaction.Rollback();
-                return RedirectToAction("Admin");
             }
+            return RedirectToAction("Admin");
         }
 
         //удаление студента
         public IActionResult DeleteStudent(TableStudentModel deleteStudent)
         {
-            context.Database.BeginTransaction();
-            var student = userManager.FindByNameAsync(deleteStudent.studentLogin).Result;
-            context.Users.Remove(student);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var student = userManager.FindByNameAsync(deleteStudent.studentLogin).Result;
+                context.Users.Remove(student);
+                context.SaveChanges();
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
             return RedirectToAction("Admin");
         }
 
         //обновление студента
         public IActionResult UpdateStudent(TableStudentModel updateStudent)
         {
-            context.Database.BeginTransaction();
-            var user = userManager.FindByNameAsync(updateStudent.studentLogin).Result;
-            user.Email = updateStudent.studentEmail;
-            context.Users.Update(user);
-            context.SaveChanges();
-            var student = context.students.Where(st => st.studentUser == user.Id).FirstOrDefault();
-            student.studentName = updateStudent.studentName;
-            student.studentSurname = updateStudent.studentSurname;
-            student.studentLastname = updateStudent.studentLastname;
-            if (context.groups.Where(gr => gr.groupName == updateStudent.studentGroup) == null) 
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var user = userManager.FindByNameAsync(updateStudent.studentLogin).Result;
+                user.Email = updateStudent.studentEmail;
+                context.Users.Update(user);
+                context.SaveChanges();
+                var student = context.students.Where(st => st.studentUser == user.Id).FirstOrDefault();
+                student.studentName = updateStudent.studentName;
+                student.studentSurname = updateStudent.studentSurname;
+                student.studentLastname = updateStudent.studentLastname;
+                student.studentGroup = context.groups.Where(gr => gr.groupName == updateStudent.studentGroup).Select(gr => gr.groupId).FirstOrDefault();
+                context.students.Update(student);
+                context.SaveChanges();
+            }
+            catch
             {
                 ModelState.AddModelError(nameof(TableStudentModel.studentGroup), "Такой группы не существует");
+                transaction.Rollback();
             }
-            else student.studentGroup = context.groups.Where(gr => gr.groupName == updateStudent.studentGroup).Select(gr => gr.groupId).FirstOrDefault();
-            context.students.Update(student);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
             return RedirectToAction("Admin");
         }
 
@@ -154,7 +157,7 @@ namespace EDiary.Controllers
             var students = from student in context.students
                            join gr in context.groups on student.studentGroup equals gr.groupId
                            join aspuser in context.Users on student.studentUser equals aspuser.Id
-                           orderby student.studentSurname
+                           orderby student.studentSurname, student.studentName
                            select new AspStudentGroupModel
                            {
                                studentId = student.studentId,
@@ -190,71 +193,85 @@ namespace EDiary.Controllers
         }
         public IActionResult CreateTeacher(AddTeacherModel createTeacher)
         {
-            context.Database.BeginTransaction();
-            IdentityUser identityTeacherUser = new IdentityUser
+            using var transaction = context.Database.BeginTransaction();
+            try
             {
-                Id = createTeacher.teacherLogin,
-                UserName = "tr" + createTeacher.teacherLogin,
-                NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(),
-                PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword)
-            };
-            context.Users.Add(identityTeacherUser);
-            context.SaveChanges();
-            Teacher teacher = new Teacher
-            {
-                teacherSurname = createTeacher.teacherSurname,
-                teacherName = createTeacher.teacherName,
-                teacherLastname = createTeacher.teacherLastname,
-                teacherUser = identityTeacherUser.Id
-            };
-            context.teachers.Add(teacher);
-            context.SaveChanges();
-            if (createTeacher.curatorGroup != null)
-            {
-                if (context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault() == null)
+                IdentityUser user = new IdentityUser
                 {
-                    ModelState.AddModelError(nameof(AddTeacherModel.curatorGroup), "Такой группы не существует");
-                }
-                else
+                    Id = createTeacher.teacherLogin,
+                    UserName = "tr" + createTeacher.teacherLogin,
+                    NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(),
+                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword)
+                };
+                context.Users.Add(user);
+                context.SaveChanges();
+                Teacher teacher = new Teacher
+                {
+                    teacherSurname = createTeacher.teacherSurname,
+                    teacherName = createTeacher.teacherName,
+                    teacherLastname = createTeacher.teacherLastname,
+                    teacherUser = user.Id
+                };
+                context.teachers.Add(teacher);
+                context.SaveChanges();
+                if (createTeacher.curatorGroup != null)
                 {
                     var group = context.groups.Where(grId => grId.groupName == createTeacher.curatorGroup).FirstOrDefault();
                     group.curatorId = teacher.teacherId;
                     context.groups.Update(group);
                     context.SaveChanges();
                 }
+                userManager.AddToRoleAsync(user, "teacher");
+                context.SaveChanges();
+                transaction.Commit();
             }
-            userManager.AddToRoleAsync(identityTeacherUser, "teacher");
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            catch
+            {
+                ModelState.AddModelError(nameof(AddTeacherModel.curatorGroup), "Такой группы не существует");
+                transaction.Rollback();
+            }
             return RedirectToAction("Admin");
         }
 
         //удаление препода
         public IActionResult DeleteTeacher(TableTeacherModel deleteTeacher)
         {
-            context.Database.BeginTransaction();
-            var teacher = userManager.FindByNameAsync(deleteTeacher.teacherLogin).Result;
-            context.Users.Remove(teacher);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var teacher = userManager.FindByNameAsync(deleteTeacher.teacherLogin).Result;
+                context.Users.Remove(teacher);
+                context.SaveChanges();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
             return RedirectToAction("Admin");
         }
         
         //обновление препода
         public IActionResult UpdateTeacher(TableTeacherModel updateTeacher)
         {
-            context.Database.BeginTransaction();
-            var user = userManager.FindByNameAsync(updateTeacher.teacherLogin).Result;
-            user.Email = updateTeacher.teacherEmail;
-            context.Users.Update(user);
-            context.SaveChanges();
-            var teacher = context.teachers.Where(tr => tr.teacherUser == user.Id).FirstOrDefault();
-            teacher.teacherName = updateTeacher.teacherName;
-            teacher.teacherSurname = updateTeacher.teacherSurname;
-            teacher.teacherLastname = updateTeacher.teacherLastname;
-            context.teachers.Update(teacher);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var user = userManager.FindByNameAsync(updateTeacher.teacherLogin).Result;
+                user.Email = updateTeacher.teacherEmail;
+                context.Users.Update(user);
+                context.SaveChanges();
+                var teacher = context.teachers.Where(tr => tr.teacherUser == user.Id).FirstOrDefault();
+                teacher.teacherName = updateTeacher.teacherName;
+                teacher.teacherSurname = updateTeacher.teacherSurname;
+                teacher.teacherLastname = updateTeacher.teacherLastname;
+                context.teachers.Update(teacher);
+                context.SaveChanges();
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
             return RedirectToAction("Admin");
         }
 
@@ -308,89 +325,105 @@ namespace EDiary.Controllers
                                                  .Where(tr => tr.teacher.teacherSurname + " " + tr.teacher.teacherName + " " + tr.teacher.teacherLastname == addSubject.firstTeacher.Trim())
                                                  .Where(gr => gr.group.groupName.Trim() == addSubject.groupName.Trim())
                                                  .Select(s=>s).FirstOrDefault();
+            var sub = context.subjects.Where(s => s.subjectName == addSubject.subjectName)
+                                      .Select(s => s).FirstOrDefault();
             if (havedSub == null) 
             {
-                context.Database.BeginTransaction();
-                var sub = context.subjects.Where(s => s.subjectName == addSubject.subjectName).Select(s => s).FirstOrDefault();
                 if (sub == null)
                 {
-                    Subject subject = new Subject { subjectName = addSubject.subjectName, subjectPicture = addSubject.subjectIcon };
-                    context.subjects.Add(subject);
-                    context.SaveChanges();
-                    subjectTaught subjectTaught = new subjectTaught
+                    using var transaction = context.Database.BeginTransaction();
+                    try
                     {
-                        subjectId = subject.subjectId,
-                        teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.firstTeacher)
-                                                    .Select(tr => tr.teacherId).FirstOrDefault(),
-                        groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
-                                                .Select(gr => gr.groupId).FirstOrDefault()
-                    };
-                    context.subjectTaughts.Add(subjectTaught);
-                    context.SaveChanges();
-                    if (addSubject.secondTeacher != null)
-                    {
-                        Labs labaFirst = new Labs
-                        {
-                            labName = addSubject.subjectName.Trim() + " (лабораторная, 1-ая подгруппа)",
-                            subgroupId = 1,
-                            teacherId = subjectTaught.teacherId,
-                            countLabs = addSubject.labsCount,
-                            tsubjectId = subjectTaught.tsubjectId
-                        };
-                        context.labs.Add(labaFirst);
+                        Subject subject = new Subject { subjectName = addSubject.subjectName, subjectPicture = addSubject.subjectIcon };
+                        context.subjects.Add(subject);
                         context.SaveChanges();
-                        Labs labaSecond = new Labs
+                        subjectTaught subjectTaught = new subjectTaught
                         {
-                            labName = addSubject.subjectName.Trim() + " (лабораторная, 2-ая подгруппа)",
-                            subgroupId = 2,
-                            teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
+                            subjectId = subject.subjectId,
+                            teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.firstTeacher)
                                                         .Select(tr => tr.teacherId).FirstOrDefault(),
-                            countLabs = addSubject.labsCount,
-                            tsubjectId = subjectTaught.tsubjectId
+                            groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
+                                                    .Select(gr => gr.groupId).FirstOrDefault()
                         };
-                        context.labs.Add(labaSecond);
+                        context.subjectTaughts.Add(subjectTaught);
                         context.SaveChanges();
+                        if (addSubject.secondTeacher != null)
+                        {
+                            Labs labaFirst = new Labs
+                            {
+                                labName = addSubject.subjectName.Trim() + " (лабораторная, 1-ая подгруппа)",
+                                subgroupId = 1,
+                                teacherId = subjectTaught.teacherId,
+                                countLabs = addSubject.labsCount,
+                                tsubjectId = subjectTaught.tsubjectId
+                            };
+                            context.labs.Add(labaFirst);
+                            context.SaveChanges();
+                            Labs labaSecond = new Labs
+                            {
+                                labName = addSubject.subjectName.Trim() + " (лабораторная, 2-ая подгруппа)",
+                                subgroupId = 2,
+                                teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
+                                                            .Select(tr => tr.teacherId).FirstOrDefault(),
+                                countLabs = addSubject.labsCount,
+                                tsubjectId = subjectTaught.tsubjectId
+                            };
+                            context.labs.Add(labaSecond);
+                            context.SaveChanges();
+                            transaction.Commit();
+                        }
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
                     }
                 }
                 else
                 {
-                    var subject = context.subjects.Where(s => s.subjectName == addSubject.subjectName).Select(s => s.subjectId).FirstOrDefault();
-                    subjectTaught subjectTaught = new subjectTaught
+                    using var transaction = context.Database.BeginTransaction();
+                    try
                     {
-                        subjectId = subject,
-                        teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.firstTeacher)
-                                                   .Select(tr => tr.teacherId).FirstOrDefault(),
-                        groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
-                                               .Select(gr => gr.groupId).FirstOrDefault()
-                    };
-                    context.subjectTaughts.Add(subjectTaught);
-                    context.SaveChanges();
-                    if (addSubject.secondTeacher != null)
+                        subjectTaught subjectTaught = new subjectTaught
+                        {
+                            subjectId = sub.subjectId,
+                            teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.firstTeacher)
+                                                       .Select(tr => tr.teacherId).FirstOrDefault(),
+                            groupId = context.groups.Where(gr => gr.groupName == addSubject.groupName)
+                                                   .Select(gr => gr.groupId).FirstOrDefault()
+                        };
+                        context.subjectTaughts.Add(subjectTaught);
+                        context.SaveChanges();
+                        if (addSubject.secondTeacher != null)
+                        {
+                            Labs labaFirst = new Labs
+                            {
+                                labName = addSubject.subjectName + "(лабораторная, 1-ая подгруппа)",
+                                subgroupId = 1,
+                                teacherId = subjectTaught.teacherId,
+                                countLabs = addSubject.labsCount,
+                                tsubjectId = subjectTaught.tsubjectId
+                            };
+                            context.labs.Add(labaFirst);
+                            context.SaveChanges();
+                            Labs labaSecond = new Labs
+                            {
+                                labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
+                                subgroupId = 2,
+                                teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
+                                                            .Select(tr => tr.teacherId).FirstOrDefault(),
+                                countLabs = addSubject.labsCount,
+                                tsubjectId = subjectTaught.tsubjectId
+                            };
+                            context.labs.Add(labaSecond);
+                            context.SaveChanges();
+                            transaction.Commit();
+                        }
+                    }
+                    catch
                     {
-                        Labs labaFirst = new Labs
-                        {
-                            labName = addSubject.subjectName + "(лабораторная, 1-ая подгруппа)",
-                            subgroupId = 1,
-                            teacherId = subjectTaught.teacherId,
-                            countLabs = addSubject.labsCount,
-                            tsubjectId = subjectTaught.tsubjectId
-                        };
-                        context.labs.Add(labaFirst);
-                        context.SaveChanges();
-                        Labs labaSecond = new Labs
-                        {
-                            labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
-                            subgroupId = 2,
-                            teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
-                                                        .Select(tr => tr.teacherId).FirstOrDefault(),
-                            countLabs = addSubject.labsCount,
-                            tsubjectId = subjectTaught.tsubjectId
-                        };
-                        context.labs.Add(labaSecond);
-                        context.SaveChanges();
+                        transaction.Rollback();
                     }
                 }
-                context.Database.CommitTransaction();
                 return RedirectToAction("Admin");
             }
             else 
@@ -403,43 +436,71 @@ namespace EDiary.Controllers
         //удаление предмета
         public IActionResult DeleteSubject(TableSubjectModel deleteSubject)
         {
-            context.Database.BeginTransaction();
-            var subjectTaught = context.subjectTaughts.Where(s => s.tsubjectId == deleteSubject.tsubjectId).FirstOrDefault();
-            context.subjectTaughts.Remove(subjectTaught);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var subjectTaught = context.subjectTaughts.Where(s => s.tsubjectId == deleteSubject.tsubjectId).FirstOrDefault();
+                context.subjectTaughts.Remove(subjectTaught);
+                context.SaveChanges();
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
             return RedirectToAction("Admin");
         }
 
         //обновление предмета 
         public IActionResult UpdateSubject(TableSubjectModel updateSubject)
         {
-
-            if (context.subjects.Select(s => s.subjectName).FirstOrDefault().Trim() != updateSubject.subjectName.Trim() &&
-               context.teachers.Select(tr => tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ").FirstOrDefault() != updateSubject.teacher.Trim() &&
-               context.groups.Select(gr => gr.groupName).FirstOrDefault() != updateSubject.group.Trim())
+            var havedSub = context.subjectTaughts.Where(s => s.subject.subjectName.Trim() == updateSubject.subjectName.Trim())
+                                                 .Where(tr => tr.teacher.teacherSurname + " " + tr.teacher.teacherName + " " + tr.teacher.teacherLastname == updateSubject.teacher.Trim())
+                                                 .Where(gr => gr.group.groupName.Trim() == updateSubject.group.Trim())
+                                                 .Select(s => s).FirstOrDefault();
+            if (havedSub == null)
             {
-                context.Database.BeginTransaction();
+                using var transaction = context.Database.BeginTransaction();
                 var subjectTaught = context.subjectTaughts.Where(sT => sT.tsubjectId == updateSubject.tsubjectId).FirstOrDefault();
-                if (context.subjects.Where(s => s.subjectName == updateSubject.subjectName.Trim()) != null)
+                try
                 {
-                    subjectTaught.subjectId = context.subjects.Where(s => s.subjectName == updateSubject.subjectName.Trim()).Select(s => s.subjectId).FirstOrDefault();
+                    try
+                    {
+                        subjectTaught.subjectId = context.subjects.Where(s => s.subjectName == updateSubject.subjectName.Trim())
+                                                                  .Select(s => s.subjectId).FirstOrDefault();
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError(nameof(TableSubjectModel.subjectName), "Такого предмета не существует");
+                        transaction.Rollback();
+                    }
+                    try
+                    {
+                        subjectTaught.groupId = context.groups.Where(gr => gr.groupName == updateSubject.group.Trim()).Select(gr => gr.groupId).FirstOrDefault();
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError(nameof(TableSubjectModel.group), "Такой группы не существует");
+                        transaction.Rollback();
+                    }
+                    try
+                    {
+                        subjectTaught.teacherId = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ") == updateSubject.teacher.Trim())
+                                                                  .Select(tr => tr.teacherId).FirstOrDefault();
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError(nameof(TableSubjectModel.teacher), "Такого преподавателя не существует");
+                        transaction.Rollback();
+                    }
+                    context.subjectTaughts.Update(subjectTaught);
+                    context.SaveChanges();
+                    transaction.Commit();
                 }
-                else { ModelState.AddModelError(nameof(TableSubjectModel.subjectName), "Такого предмета не существует"); }
-
-                if (context.groups.Where(gr => gr.groupName == updateSubject.group.Trim()).FirstOrDefault() != null)
+                catch
                 {
-                    subjectTaught.groupId = context.groups.Where(gr => gr.groupName == updateSubject.group.Trim()).Select(gr => gr.groupId).FirstOrDefault();
+                    transaction.Rollback();
                 }
-                else { ModelState.AddModelError(nameof(TableSubjectModel.group), "Такой группы не существует"); }
-
-                if (context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". " == updateSubject.teacher.Trim()).FirstOrDefault() != null)
-                {
-                    subjectTaught.teacherId = context.teachers
-                                              .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ") == updateSubject.teacher.Trim())
-                                              .Select(tr => tr.teacherId).FirstOrDefault();
-                }
-                else { ModelState.AddModelError(nameof(TableSubjectModel.teacher), "Такого преподавателя не существует"); }
                 context.subjectTaughts.Update(subjectTaught);
                 context.SaveChanges();
                 context.Database.CommitTransaction();
@@ -448,7 +509,7 @@ namespace EDiary.Controllers
             else
             {
                 ModelState.AddModelError(nameof(TableSubjectModel), "Такой предмет уже существует");
-                return View(updateSubject);
+                return RedirectToAction("Admin");
             }
         }
 
@@ -488,18 +549,25 @@ namespace EDiary.Controllers
         }
         public IActionResult CreateGroup(TableGroupModel addGroup)
         {
-            context.Database.BeginTransaction();
-            collegeGroup group = new collegeGroup
+            using var transaction = context.Database.BeginTransaction();
+            try
             {
-                groupName = addGroup.groupName,
-                curatorId = context.teachers
-                            .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
-                            .Select(tr=>tr.teacherId)
-                            .FirstOrDefault()
-            };
-            context.groups.Add(group);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+                collegeGroup group = new collegeGroup
+                {
+                    groupName = addGroup.groupName,
+                    curatorId = context.teachers
+                                .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
+                                .Select(tr => tr.teacherId)
+                                .FirstOrDefault()
+                };
+                context.groups.Add(group);
+                context.SaveChanges();
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
             return RedirectToAction("Admin");
         }
     }

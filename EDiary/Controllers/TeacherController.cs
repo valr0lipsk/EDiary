@@ -22,8 +22,216 @@ namespace EDiary.Controllers
         private UserManager<IdentityUser> userManager;
         public TeacherController(UserManager<IdentityUser> userManager, EDContext context)=> (this.userManager, this.context) = (userManager, context);
 
-        //представление препода(фамилия, предметы и группы)
-        public IActionResult Teacher()
+
+
+        //представление препода(фамилия, предметы и группы, поиск)
+        public IActionResult Teacher(string search)
+        {
+            //отметки-цифры
+            var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
+                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+
+            //кураторская группа
+            ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
+                                                   .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                                   .Select(gr => gr.gr.groupName).FirstOrDefault();
+
+            //инфо о преподе
+            var teacher = context.teachers.Where(tr => tr.teacherUser == userManager.GetUserId(User))
+                                          .Select(tr => new TeacherModel
+                                          {
+                                              teacherSurname = tr.teacherSurname,
+                                              teacherName = tr.teacherName,
+                                              teacherLastname = tr.teacherLastname,
+                                              teacherPic = tr.teacherPic,
+                                              teacherStatus = tr.status.emoji,
+                                              teacherGroup = context.groups.Where(tr=>tr.teacher.teacherUser==userManager.GetUserId(User))
+                                                                           .Select(gr => gr.groupId).FirstOrDefault()
+                                          }).AsNoTracking().ToList();
+
+            //предметы
+            var subjectGroups = (from tsub in context.subjectTaughts
+                                 join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                                 join gr in context.groups on tsub.groupId equals gr.groupId
+                                 join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
+                                 where teachers.teacherUser == userManager.GetUserId(User)
+                                 select new SubjectGroupModel
+                                 {
+                                     groupName = gr.groupName,
+                                     subjectName = subject.subjectName,
+                                     tsubjectId = tsub.tsubjectId,
+                                     subIcon = subject.Icon.subjectPicture
+                                 }).AsNoTracking().ToList();
+
+            //лабы
+            var labs = (from tsub in context.subjectTaughts
+                        join gr in context.groups on tsub.groupId equals gr.groupId
+                        join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
+                        join teachers in context.teachers on lab.teacherId equals teachers.teacherId
+                        where teachers.teacherUser == userManager.GetUserId(User)
+                        select new SubjectGroupModel
+                        {
+                            subjectName = lab.labName,
+                            labaId = lab.labId,
+                            tsubjectId = tsub.tsubjectId,
+                            groupName = gr.groupName,
+                            subIcon = tsub.subject.Icon.subjectPicture
+                        }).AsNoTracking().ToList();
+
+            //задачи
+            var tasks = context.labs.Join(context.teachers, lab => lab.teacherId, tr => tr.teacherId, (lab, tr) => new { lab, tr })
+                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                    .Select(task => new SubjectGroupModel
+                                    {
+                                        subjectName = task.lab.labName,
+                                        groupName = task.lab.tsubject.@group.groupName,
+                                        labaCount = task.lab.countLabs
+                                    }).AsNoTracking().OrderBy(lab=>lab.subjectName).OrderBy(gr=>gr.groupName).ToList();
+
+            //подсчет проведенных лаб
+            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                      .Where(less => less.sT.less.lessonTypeId == 6)
+                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                      .OrderBy(lab => lab.lab.labName)
+                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
+                                      .GroupBy(l => l.lab.labId)
+                                      .Select(lab => lab.Count()).ToList();
+
+            //учащиеся кураторской группы
+            var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
+                                            .Select(st => new StudentModel
+                                            {
+                                                 studentId = st.studentId,
+                                                 studentSurname = st.studentSurname,
+                                                 studentName = st.studentName,
+                                                 studentLastname = st.studentLastname,
+                                                 studentPic = st.studentPic,
+                                                 studentStatus = st.status.emoji,
+                                                 studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                       .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                       .Where(m => m.sM.studentId == st.studentId)
+                                                                       .GroupBy(sm => sm.sM.studentId)
+                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
+                                            }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
+
+            //подсчет проведенных лаб в каждой задаче
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                tasks[i].lessCount = less[i];
+            }
+
+            //эмоджи-статусы
+            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
+
+            //объединение лаб и предметов
+            var subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+
+            //поиск
+            if (!string.IsNullOrEmpty(search))
+            {
+                subLabs = subLabs.Where(s => s.subjectName.ToLower().Contains(search.ToLower()) || s.groupName.ToLower().Contains(search.ToLower())).ToList();
+            }
+
+            //объединение в одну модель
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+            {
+                Teachers = teacher,
+                subjectGroups = subLabs,
+                statuses = statuses,
+                tasks = tasks,
+                students = students,
+            };
+
+            return View(teacherSubjectGroup);
+        }
+
+
+
+        //представление препода (лабы)
+        public IActionResult ShowLabs()
+        {
+            //кураторская группа
+            ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
+                                                   .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                                   .Select(gr => gr.gr.groupName).FirstOrDefault();
+
+            //инфо о преподе
+            var teacher = context.teachers.Where(tr => tr.teacherUser == userManager.GetUserId(User))
+                                          .Select(tr => new TeacherModel
+                                          {
+                                              teacherSurname = tr.teacherSurname,
+                                              teacherName = tr.teacherName,
+                                              teacherLastname = tr.teacherLastname,
+                                              teacherPic = tr.teacherPic,
+                                              teacherStatus = tr.status.emoji
+                                          }).AsNoTracking().ToList();
+
+           
+            //лабы
+            var labs = (from tsub in context.subjectTaughts
+                        join gr in context.groups on tsub.groupId equals gr.groupId
+                        join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
+                        join teachers in context.teachers on lab.teacherId equals teachers.teacherId
+                        where teachers.teacherUser == userManager.GetUserId(User)
+                        select new SubjectGroupModel
+                        {
+                            subjectName = lab.labName,
+                            labaId = lab.labId,
+                            tsubjectId = tsub.tsubjectId,
+                            groupName = gr.groupName,
+                            subIcon = tsub.subject.Icon.subjectPicture
+                        }).AsNoTracking().ToList();
+
+            //задачи
+            var tasks = context.labs.Join(context.teachers, lab => lab.teacherId, tr => tr.teacherId, (lab, tr) => new { lab, tr })
+                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                    .Select(task => new SubjectGroupModel
+                                    {
+                                        subjectName = task.lab.labName,
+                                        groupName = task.lab.tsubject.@group.groupName,
+                                        labaCount = task.lab.countLabs
+                                    }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
+
+            //подсчет проведенных лаб
+            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                      .Where(less => less.sT.less.lessonTypeId == 6)
+                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                      .OrderBy(lab => lab.lab.labName)
+                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
+                                      .GroupBy(l => l.lab.labId)
+                                      .Select(lab => lab.Count()).ToList();
+
+            //подсчет проведенных лаб в каждой задаче
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                tasks[i].lessCount = less[i];
+            }
+
+            //эмоджи-статусы
+            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
+
+            //объединение лаб и предметов
+            var subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+
+            //объединение в одну модель
+            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+            {
+                Teachers = teacher,
+                subjectGroups = subLabs,
+                statuses = statuses,
+                tasks = tasks
+            };
+
+            return View("Teacher", teacherSubjectGroup);
+        }
+
+
+
+        //представление препода (предметы)
+        public IActionResult ShowSubjects()
         {
             //кураторская группа
             ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
@@ -47,7 +255,6 @@ namespace EDiary.Controllers
                                  join gr in context.groups on tsub.groupId equals gr.groupId
                                  join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
                                  where teachers.teacherUser == userManager.GetUserId(User)
-                                 orderby subject.subjectName, gr.groupName
                                  select new SubjectGroupModel
                                  {
                                      groupName = gr.groupName,
@@ -56,50 +263,37 @@ namespace EDiary.Controllers
                                      subIcon = subject.Icon.subjectPicture
                                  }).AsNoTracking().ToList();
 
-            //лабы
-            var labs = (from tsub in context.subjectTaughts
-                        join gr in context.groups on tsub.groupId equals gr.groupId
-                        join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
-                        join teachers in context.teachers on lab.teacherId equals teachers.teacherId
-                        where teachers.teacherUser == userManager.GetUserId(User)
-                        orderby lab.labName, gr.groupName
-                        select new SubjectGroupModel
-                        {
-                            subjectName = lab.labName,
-                            labaId = lab.labId,
-                            tsubjectId = tsub.tsubjectId,
-                            groupName = gr.groupName,
-                            subIcon = tsub.subject.Icon.subjectPicture
-                        }).AsNoTracking().ToList();
-
             //задачи
-            var tasks = (from tsub in context.subjectTaughts
-                         join gr in context.groups on tsub.groupId equals gr.groupId
-                         join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
-                         join teachers in context.teachers on lab.teacherId equals teachers.teacherId
-                         where teachers.teacherUser == userManager.GetUserId(User)
-                         select new SubjectGroupModel
-                         {
-                             subjectName = lab.labName,
-                             labaId = lab.labId,
-                             tsubjectId = tsub.tsubjectId,
-                             groupName = gr.groupName,
-                             labaCount = lab.countLabs,
-                             lessCount = context.lessons.Where(less => less.lessonTypeId == 6)
-                                                        .GroupBy(less => less.tsubjectId)
-                                                        .Select(less => less.Key).Count()
-                         }).AsNoTracking().ToList().OrderBy(s => s.subjectName).OrderBy(gr => gr.groupName);
+            var tasks = context.labs.Join(context.teachers, lab => lab.teacherId, tr => tr.teacherId, (lab, tr) => new { lab, tr })
+                                    .Where(tr => tr.tr.teacherUser == userManager.GetUserId(User))
+                                    .Select(task => new SubjectGroupModel
+                                    {
+                                        subjectName = task.lab.labName,
+                                        groupName = task.lab.tsubject.@group.groupName,
+                                        labaCount = task.lab.countLabs
+                                    }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
 
-            ViewBag.lessons = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                             .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                             .Where(less => less.sT.less.lessonTypeId == 6)
-                                             .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User));
+            //подсчет проведенных лаб
+            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                      .Where(less => less.sT.less.lessonTypeId == 6)
+                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                      .OrderBy(lab => lab.lab.labName)
+                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
+                                      .GroupBy(l => l.lab.labId)
+                                      .Select(lab => lab.Count()).ToList();
+
+            //подсчет проведенных лаб в каждой задаче
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                tasks[i].lessCount = less[i];
+            }
 
             //эмоджи-статусы
-            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e=>e.statusId).ToList();
+            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
 
             //объединение лаб и предметов
-            var subLabs = subjectGroups.Concat(labs).OrderBy(x=>x.subjectName).OrderBy(gr=>gr.groupName);
+            var subLabs = subjectGroups.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
 
             //объединение в одну модель
             AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
@@ -110,9 +304,11 @@ namespace EDiary.Controllers
                 tasks = tasks
             };
 
-            return View(teacherSubjectGroup);
+            return View("Teacher", teacherSubjectGroup);
         }
-        
+
+
+
         //добавление фотографии преподавателя
         [HttpPost]
         public IActionResult AddPicture(AvatarStatusModel teacherPicture)
@@ -130,6 +326,8 @@ namespace EDiary.Controllers
             context.Database.CommitTransaction();
             return RedirectToAction("Teacher", "Teacher");
         }
+
+
 
         //добавление эмоджи статуса
         [HttpPost]

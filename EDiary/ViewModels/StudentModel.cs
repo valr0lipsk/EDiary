@@ -9,9 +9,11 @@ namespace EDiary.ViewModels
     {
         public int studentId { get; set; }
         public string studentSurname { get; set; }
+        public int studentGroup { get; set; }
         public string studentName { get; set; }
         public string studentLastname { get; set; }
         public byte[] studentPic { get; set; }
         public byte[] studentStatus { get; set; }
+        public double studentsAverage { get; set; }
     }
 }
