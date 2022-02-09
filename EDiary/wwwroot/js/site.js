@@ -1,4 +1,4 @@
-﻿import { date_time } from './currentDateTimeModule.js'
+﻿import { dateTime } from './currentDateTime.js'
 import { stickyTable } from './tableModule.js'
 import { jurnalStyleTable } from './tableModule.js'
 
@@ -59,7 +59,7 @@ $(document).ready(function () {
     $('.item__title').click(function () {
         const subId = $(this).attr('data-id');
         const labId = $(this).attr('data-labaid');
-        if (labId) { //if subj is lab 
+        if (labId) { 
             $.ajax({
                 type: 'GET',
                 data: {
@@ -72,10 +72,12 @@ $(document).ready(function () {
                 }
             });
         }
-        else { //if not
+        else { 
             $.ajax({
                 type: 'GET',
-                data: { 'id': subId },
+                data: {
+                    'id': subId
+                },
                 cache: false,
                 async: true,
                 success: function (result) {
@@ -92,7 +94,7 @@ $(document).ready(function () {
 
     //setting current date and time
     setInterval(() => {
-        $('#statusDate').text(date_time());
+        $('#statusDate').text(dateTime());
     })
 
     //open kebab-menu in acc
@@ -170,7 +172,7 @@ $(document).ready(function () {
 
     //update, remove or add mark in jurnal
     $('td.pt-3-half').bind('blur', function () {
-        if ($(this).attr('data-idsm')) {
+        if ($(this).attr('data-idsm')) { //update or delete
             const markID = $(this).attr('data-idsm');
             const td = $(this);
             const value = $(this).text().trim();
@@ -196,7 +198,7 @@ $(document).ready(function () {
                 }
             })
         }
-        else if ($(this).text()){
+        else if ($(this).text()){ //add mark
             lessId = $(this).attr('data-idLess');
             studId = $(this).attr('data-idStud');
             const td = $(this);
@@ -227,9 +229,6 @@ $(document).ready(function () {
     $('#periodBtn').click(function () {
         $('#periodModal').modal('show');
     })
-
-    //jurnal table style
-     jurnalStyle();
 
     $('.jurnal__link').click(function () {
         const subId = $(this).attr('data-subid');

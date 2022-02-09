@@ -5,7 +5,7 @@
     return value;
 }
 
-function date_time() {
+function dateTime() {
     let current_datetime = new Date();
     let day = zero_first_format(current_datetime.getDate());
     let month = zero_first_format(current_datetime.getMonth() + 1);
@@ -17,4 +17,4 @@ function date_time() {
     return hours + ":" + minutes + ":" + seconds + " " + day + "." + month + "." + year;
 };
 
-export { date_time }
+export { dateTime }
