@@ -80,7 +80,7 @@ tr, td {
 }
 
 .show {
-  display: block;
+  display: block !important;
 }
 
 .btn-primary {

@@ -1,25 +1,6 @@
-﻿//adding null before 1..9 numbers
-//function zero_first_format(value) {
-//    if (value < 10) {
-//        value = '0' + value;
-//    }
-//    return value;
-//}
-
-////getting current date and time
-//function date_time()
-//{
-//    let current_datetime = new Date();
-//    let day = zero_first_format(current_datetime.getDate());
-//    let month = zero_first_format(current_datetime.getMonth() + 1);
-//    let year = current_datetime.getFullYear();
-//    let hours = zero_first_format(current_datetime.getHours());
-//    let minutes = zero_first_format(current_datetime.getMinutes());
-//    let seconds = zero_first_format(current_datetime.getSeconds());
-
-//    return hours + ":" + minutes + ":" + seconds + " " + day + "." + month + "." + year;
-//}
-import { date_time } from './currentDateTimeModule.js'
+﻿import { date_time } from './currentDateTimeModule.js'
+import { stickyTable } from './tableModule.js'
+import { jurnalStyleTable } from './tableModule.js'
 
 $(document).ready(function () {
     //admin funcs
@@ -32,22 +13,27 @@ $(document).ready(function () {
     $('#addT').click(function () {
         $('#partialDiv').load('/Admin/AddTeacher');
     })
+
     //add subj
     $('#addSb').click(function () {
         $('#partialDiv').load('/Admin/AddSubject');
     })
+
     //show all students
     $('#allSt').click(function () {
         $('#partialDiv').load('/Admin/ShowStudents');
     })
+
     //show all teachers
     $('#allT').click(function () {
         $('#partialDiv').load('/Admin/ShowTeachers');
     })
+
     //show all subjs
     $('#allSb').click(function () {
         $('#partialDiv').load('/Admin/ShowSubjects');
     })
+
     //add group
     $('#addG').click(function () {
         $('#partialDiv').load('/Admin/AddGroup')
@@ -161,6 +147,13 @@ $(document).ready(function () {
 
     //-----------------------------------------
     //jurnal funcs
+
+    //fixed columns 
+    stickyTable();
+
+    //jurnal table style 
+    jurnalStyleTable();
+
     //open adding lesson modal
     $('#addLessModal').click(function () {
         $('#lessModal').modal('show');
@@ -219,7 +212,6 @@ $(document).ready(function () {
                 cache: false,
                 async: true,
                 success: function (result) {
-                    //alert(result.message)
                     td[0].setAttribute('data-idsm', result.markId)
                 },
                 error: function (error) {
@@ -237,43 +229,7 @@ $(document).ready(function () {
     })
 
     //jurnal table style
-    function jurnalStyle() {
-        const table = $('.table').find('th.vt-text');
-        const OKRs = [], KRs = [], SRs = [], EKZs = [];
-        for (let i = 0; i < table.length; i++) {
-            if ($(table[i]).attr('data-lessType') === '2') {
-                OKRs.push(i);
-            }
-            else if ($(table[i]).attr('data-lessType') === '3') {
-                KRs.push(i);
-            }
-            else if ($(table[i]).attr('data-lessType') === '4') {
-                SRs.push(i);
-            }
-            else if ($(table[i]).attr('data-lessType') === '5') {
-                EKZs.push(i);
-            }
-        }
-        const rows = $('.table').find('tr:not(:first)');
-        for (let i = 0; i < rows.length; i++) {
-            for (let j = 0; j < rows[i].children.length; j++) {
-                if (OKRs.indexOf(j) != -1) {
-                    $(rows[i].children[j + 1]).addClass('lessOKR')
-                }
-                else if (KRs.indexOf(j) != -1) {
-                    $(rows[i].children[j + 1]).addClass('lessKR')
-                }
-                else if (SRs.indexOf(j) != -1) {
-                    $(rows[i].children[j + 1]).addClass('lessSR')
-                }
-                else if (EKZs.indexOf(j) != -1) {
-                    $(rows[i].children[j + 1]).addClass('lessEKZ')
-                }
-            }
-        }
-    }
-
-    jurnalStyle();
+     jurnalStyle();
 
     $('.jurnal__link').click(function () {
         const subId = $(this).attr('data-subid');
