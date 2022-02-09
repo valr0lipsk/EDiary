@@ -14,10 +14,11 @@
     <div class="container d-flex flex-column justify-content-center align-content-center align-items-center">
             @RenderBody()
     </div>
-    <button onclick="topFunction()" id="onTop" title="Go to top">↑</button>
+    <button class="d-none" id="onTop" onclick="topFunction()" title="Go to top"></button>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://kit.fontawesome.com/39b6e0d15a.js" crossorigin="anonymous"></script>
+    <script type="module" src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 
