@@ -58,7 +58,7 @@
                         <div class="row">
                             @if (SignInManager.IsSignedIn(User))
                             {
-                                @foreach (var student in Model.students)
+                                @foreach (var student in Model.student)
                                 {
                                     if (student.studentStatus != null)
                                     {

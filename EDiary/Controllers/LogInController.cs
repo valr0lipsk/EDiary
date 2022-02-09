@@ -23,6 +23,7 @@ namespace EDiary.Controllers
         public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context) => (this.userManager, this.signInManager, this.context) = (userManager, signInManager, context);
 
         //представление авторизации
+        [HttpGet]
         [AllowAnonymous]
         public IActionResult Login() => View(new loginViewModel());
         
