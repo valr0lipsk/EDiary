@@ -86,18 +86,15 @@ namespace EDiary.Controllers
                                     {
                                         subjectName = task.lab.labName,
                                         groupName = task.lab.tsubject.@group.groupName,
-                                        labaCount = task.lab.countLabs
+                                        labaCount = task.lab.countLabs,
+                                        lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                                   .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                                   .Where(less => less.sT.less.lessonTypeId == 6)
+                                                                   .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                                   .Where(lb => lb.lab.labId == task.lab.labId)
+                                                                   .GroupBy(l => l.lab.labId)
+                                                                   .Select(lab => lab.Count()).FirstOrDefault()
                                     }).AsNoTracking().OrderBy(lab=>lab.subjectName).OrderBy(gr=>gr.groupName).ToList();
-
-            //подсчет проведенных лаб
-            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                      .Where(less => less.sT.less.lessonTypeId == 6)
-                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                      .OrderBy(lab => lab.lab.labName)
-                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
-                                      .GroupBy(l => l.lab.labId)
-                                      .Select(lab => lab.Count()).ToList();
 
             //учащиеся кураторской группы
             var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
@@ -115,12 +112,6 @@ namespace EDiary.Controllers
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                             }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
-
-            //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                tasks[i].lessCount = less[i];
-            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
@@ -191,24 +182,15 @@ namespace EDiary.Controllers
                                     {
                                         subjectName = task.lab.labName,
                                         groupName = task.lab.tsubject.@group.groupName,
-                                        labaCount = task.lab.countLabs
+                                        labaCount = task.lab.countLabs,
+                                        lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                                   .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                                   .Where(less => less.sT.less.lessonTypeId == 6)
+                                                                   .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                                   .Where(lb => lb.lab.labId == task.lab.labId)
+                                                                   .GroupBy(l => l.lab.labId)
+                                                                   .Select(lab => lab.Count()).FirstOrDefault()
                                     }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
-
-            //подсчет проведенных лаб
-            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                      .Where(less => less.sT.less.lessonTypeId == 6)
-                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                      .OrderBy(lab => lab.lab.labName)
-                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
-                                      .GroupBy(l => l.lab.labId)
-                                      .Select(lab => lab.Count()).ToList();
-
-            //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                tasks[i].lessCount = less[i];
-            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
@@ -270,30 +252,15 @@ namespace EDiary.Controllers
                                     {
                                         subjectName = task.lab.labName,
                                         groupName = task.lab.tsubject.@group.groupName,
-                                        labaCount = task.lab.countLabs
+                                        labaCount = task.lab.countLabs,
+                                        lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                                   .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                                   .Where(less => less.sT.less.lessonTypeId == 6)
+                                                                   .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                                   .Where(lb => lb.lab.labId == task.lab.labId)
+                                                                   .GroupBy(l => l.lab.labId)
+                                                                   .Select(lab => lab.Count()).FirstOrDefault()
                                     }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
-
-            //подсчет проведенных лаб
-            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                      .Where(less => less.sT.less.lessonTypeId == 6)
-                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                      .OrderBy(lab => lab.lab.labName)
-                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
-                                      .GroupBy(l => l.lab.labId)
-                                      .Select(lab => lab.Count()).ToList();
-
-            //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                if (less.Count() == 0)
-                    tasks[i].zachCount = 0;
-                else if (less.Count() == i)
-                    tasks[i].zachCount = 0;
-                else
-                    tasks[i].zachCount = less[i];
-
-            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
@@ -319,18 +286,26 @@ namespace EDiary.Controllers
         [HttpPost]
         public IActionResult AddPicture(AvatarStatusModel teacherPicture)
         {
-            context.Database.BeginTransaction();
-            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
-            byte[] pic = null;
-            using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))
+            using var transaction = context.Database.BeginTransaction();
+            try
             {
-                pic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
+                var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
+                byte[] pic = null;
+                using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))
+                {
+                    pic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
+                }
+                teacher.teacherPic = pic;
+                context.teachers.Update(teacher);
+                context.SaveChanges();
+                transaction.Commit();
+                return RedirectToAction("Teacher", "Teacher");
             }
-            teacher.teacherPic = pic;
-            context.teachers.Update(teacher);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
-            return RedirectToAction("Teacher", "Teacher");
+            catch
+            {
+                transaction.Rollback();
+                return Json("Ошибка");
+            }
         }
 
 
