@@ -8,11 +8,9 @@ namespace EDiary.IRepositories
 {
     public interface ITeacherRepository
     {
-        Teacher FindById(Guid teacherId);
+        Teacher FindById(int teacherId);
         IEnumerable<Teacher> Get();
-        void Create(Teacher item);
-        void Remove(Teacher item);
-        void Update(Teacher item);
-        void Save();
+        Task createTeacher(Teacher teacher);
+        Task updateTeacher(Teacher teacher);
     }
 }

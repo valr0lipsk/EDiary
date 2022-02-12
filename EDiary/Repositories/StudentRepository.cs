@@ -12,11 +12,11 @@ namespace EDiary.Repositories
     public class StudentRepository : IStudentRepository
     {
         private readonly EDContext context;
-        DbSet<Student> dbSetStudent;
+        DbSet<Student> students;
         public StudentRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetStudent = context.Set<Student>();
+            this.students = context.Set<Student>();
         }
         public IQueryable<Student> GetStudents()
         {
@@ -28,34 +28,23 @@ namespace EDiary.Repositories
         }
         public IEnumerable<Student> Get()
         {
-            return dbSetStudent.AsNoTracking().ToList();
+            return students.AsNoTracking().ToList();
         }
 
         public Student FindById(Guid studentId)
         {
-            return dbSetStudent.Find(studentId);
+            return students.Find(studentId);
         }
 
-        public void AddStudent(Student item)
+        public async Task createStudent(Student student)
         {
-            dbSetStudent.Add(item);
-            context.SaveChanges();
+            await students.AddAsync(student);
+            await context.SaveChangesAsync();
         }
-        public void UpdateStudent(Student item)
+        public async Task updateStudent(Student student)
         {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
+            students.Update(student);
+            await context.SaveChangesAsync();
         }
-        public void DeleteStudent(Student item)
-        {
-            dbSetStudent.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
-            context.SaveChanges();
-        }
-
     }
-
 }

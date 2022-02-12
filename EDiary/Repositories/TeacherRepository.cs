@@ -12,44 +12,34 @@ namespace EDiary.Repositories
     public class TeacherRepository : ITeacherRepository
     {
         EDContext context;
-        DbSet<Teacher> dbSetTeacher;
+        DbSet<Teacher> teachers;
 
         public TeacherRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetTeacher = context.Set<Teacher>();
+            this.teachers = context.Set<Teacher>();
         }
 
         public IEnumerable<Teacher> Get()
         {
-            return dbSetTeacher.AsNoTracking().ToList();
+            return teachers.AsNoTracking().ToList();
         }
 
-        public Teacher FindById(Guid teacherId)
+        public Teacher FindById(int teacherId)
         {
-            return dbSetTeacher.Find(teacherId);
+            return teachers.Find(teacherId);
         }
 
-        public void Create(Teacher item)
+        public async Task createTeacher(Teacher item)
         {
-            dbSetTeacher.Add(item);
-            context.SaveChanges();
-        }
-        public void Update(Teacher item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-        public void Remove(Teacher item)
-        {
-            dbSetTeacher.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
-            context.SaveChanges();
+            await teachers.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
+        public async Task updateTeacher(Teacher teacher)
+        {
+            teachers.Update(teacher);
+            await context.SaveChangesAsync();
+        }
     }
-
 }

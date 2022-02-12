@@ -1,5 +1,6 @@
 ﻿using EDiary.IRepositories;
 using EDiary.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,44 +13,31 @@ namespace EDiary.Repositories
     public class UserRepository : IUserRepository
     {
         EDContext context;
-        DbSet<collegeGroup> dbSetGroup;
+        DbSet<IdentityUser> users;
 
         public UserRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetGroup = context.Set<collegeGroup>();
+            this.users = context.Set<IdentityUser>();
         }
 
-        public IEnumerable<collegeGroup> Get()
+        public async Task createUser(IdentityUser user)
         {
-            return dbSetGroup.AsNoTracking().ToList();
+            await users.AddAsync(user);
+            await context.SaveChangesAsync();
         }
 
-        public collegeGroup FindById(Guid groupId)
+        public async Task updateUser(IdentityUser user)
         {
-            return dbSetGroup.Find(groupId);
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
         }
 
-        public void Create(collegeGroup item)
+        public async Task removeUser(IdentityUser user)
         {
-            dbSetGroup.Add(item);
-            context.SaveChanges();
+            users.Remove(user);
+            await context.SaveChangesAsync();
         }
-        public void Update(collegeGroup item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-        public void Remove(collegeGroup item)
-        {
-            dbSetGroup.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
-            context.SaveChanges();
-        }
-
     }
 
 }

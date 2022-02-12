@@ -2,6 +2,7 @@
 using EDiary.Service;
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -20,7 +21,7 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        public TeacherController(UserManager<IdentityUser> userManager, EDContext context)=> (this.userManager, this.context) = (userManager, context);
+        public TeacherController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
 
 
 
@@ -46,7 +47,7 @@ namespace EDiary.Controllers
                                               teacherLastname = tr.teacherLastname,
                                               teacherPic = tr.teacherPic,
                                               teacherStatus = tr.status.emoji,
-                                              teacherGroup = context.groups.Where(tr=>tr.teacher.teacherUser==userManager.GetUserId(User))
+                                              teacherGroup = context.groups.Where(tr => tr.teacher.teacherUser == userManager.GetUserId(User))
                                                                            .Select(gr => gr.groupId).FirstOrDefault()
                                           }).AsNoTracking().ToList();
 
@@ -94,19 +95,19 @@ namespace EDiary.Controllers
                                                                    .Where(lb => lb.lab.labId == task.lab.labId)
                                                                    .GroupBy(l => l.lab.labId)
                                                                    .Select(lab => lab.Count()).FirstOrDefault()
-                                    }).AsNoTracking().OrderBy(lab=>lab.subjectName).OrderBy(gr=>gr.groupName).ToList();
+                                    }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
 
             //учащиеся кураторской группы
             var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
                                             .Select(st => new StudentModel
                                             {
-                                                 studentId = st.studentId,
-                                                 studentSurname = st.studentSurname,
-                                                 studentName = st.studentName,
-                                                 studentLastname = st.studentLastname,
-                                                 studentPic = st.studentPic,
-                                                 studentStatus = st.status.emoji,
-                                                 studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                studentId = st.studentId,
+                                                studentSurname = st.studentSurname,
+                                                studentName = st.studentName,
+                                                studentLastname = st.studentLastname,
+                                                studentPic = st.studentPic,
+                                                studentStatus = st.status.emoji,
+                                                studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                        .Where(m => digitals.Values.Contains(m.m.mark))
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
@@ -159,7 +160,7 @@ namespace EDiary.Controllers
                                               teacherStatus = tr.status.emoji
                                           }).AsNoTracking().ToList();
 
-           
+
             //лабы
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
@@ -284,27 +285,29 @@ namespace EDiary.Controllers
 
         //добавление фотографии преподавателя
         [HttpPost]
-        public IActionResult AddPicture(AvatarStatusModel teacherPicture)
-        {
-            using var transaction = context.Database.BeginTransaction();
-            try
+        public async Task<IActionResult> AddPicture(AvatarStatusModel teacherPicture)
+        { 
+            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).FirstOrDefault();
+            if (teacherPicture.Picture == null)
             {
-                var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
-                byte[] pic = null;
-                using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))
-                {
-                    pic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
-                }
-                teacher.teacherPic = pic;
+                teacher.teacherPic = null;
                 context.teachers.Update(teacher);
-                context.SaveChanges();
-                transaction.Commit();
+                await context.SaveChangesAsync();
                 return RedirectToAction("Teacher", "Teacher");
             }
-            catch
+            else if (teacherPicture.Picture.ContentType.Contains("image"))
+            { 
+                using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))    
+                {
+                    teacher.teacherPic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
+                }
+                context.teachers.Update(teacher);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Teacher", "Teacher");
+            }
+            else
             {
-                transaction.Rollback();
-                return Json("Ошибка");
+                return Json("Error of add picture");
             }
         }
 
@@ -312,14 +315,12 @@ namespace EDiary.Controllers
 
         //добавление эмоджи статуса
         [HttpPost]
-        public IActionResult AddStatus(AvatarStatusModel teacherStatus)
+        public async Task<IActionResult> AddStatus(AvatarStatusModel teacherStatus)
         {
-            context.Database.BeginTransaction();
             var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).FirstOrDefault();
             teacher.teacherStatus = teacherStatus.statusId;
             context.teachers.Update(teacher);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            await context.SaveChangesAsync();
             return RedirectToAction("Teacher", "Teacher");
         }
     }

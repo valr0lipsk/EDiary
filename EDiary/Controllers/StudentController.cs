@@ -303,46 +303,40 @@ namespace EDiary.Controllers
 
         //добавление фотографии студента
         [HttpPost]
-        public IActionResult AddPicture(AvatarStatusModel studentPicture)
+        public async Task <IActionResult> AddPicture(AvatarStatusModel studentPicture)
         {
-            using var transaction = context.Database.BeginTransaction();
-            try
+            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
+            if (studentPicture.Picture == null)
             {
-                var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
-                byte[] pic = null;
+                student.studentPic = null;
+                context.students.Update(student);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Student", "Student");
+            }
+            else if (studentPicture.Picture.ContentType.Contains("image"))
+            { 
                 using (var binaryReader = new BinaryReader(studentPicture.Picture.OpenReadStream()))
                 {
-                    pic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
+                    student.studentPic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
                 }
-                student.studentPic = pic;
                 context.students.Update(student);
-                context.SaveChanges();
-                transaction.Commit();
+                await context.SaveChangesAsync();
+                return RedirectToAction("Student", "Student");
             }
-            catch 
-            { 
-                transaction.Rollback(); 
+            else 
+            {
+                return Json("Error of add picture"); 
             }
-            return RedirectToAction("Student", "Student");
         }
 
         //добавление эмоджи статуса
         [HttpPost]
-        public IActionResult AddStatus(AvatarStatusModel studentStatus)
+        public async Task <IActionResult> AddStatus(AvatarStatusModel studentStatus)
         {
-            using var transaction = context.Database.BeginTransaction();
-            try
-            {
-                var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
-                student.studentStatus = studentStatus.statusId;
-                context.students.Update(student);
-                context.SaveChanges();
-                transaction.Commit();
-            }
-            catch
-            {
-                transaction.Rollback();
-            }
+            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
+            student.studentStatus = studentStatus.statusId;
+            context.students.Update(student);
+            await context.SaveChangesAsync();
             return RedirectToAction("Student", "Student");
         }
     }
