@@ -43,7 +43,7 @@ namespace EDiary.Repositories
         }
         public collegeGroup getGroup(string group)
         {
-            return groups.Find(group);
+            return groups.Where(gr => gr.groupName == group).FirstOrDefault();
         }
     }
 }

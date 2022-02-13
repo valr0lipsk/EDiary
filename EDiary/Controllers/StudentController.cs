@@ -1,4 +1,5 @@
-﻿using EDiary.Models;
+﻿using EDiary.IRepositories;
+using EDiary.Models;
 using EDiary.Service;
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,9 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        public StudentController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
+        IStudentRepository studentsRep;
+        public StudentController(UserManager<IdentityUser> userManager, EDContext context, IStudentRepository studentsRep) 
+                             => (this.userManager, this.context, this.studentsRep) = (userManager, context, studentsRep);
 
 
 
@@ -31,8 +34,8 @@ namespace EDiary.Controllers
         {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
-                                         .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
-                                         .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                                        .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                        .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
             //средний балл
             ViewBag.averageMark = Math.Round((from st in context.students
@@ -125,7 +128,7 @@ namespace EDiary.Controllers
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(x=>x.groupName).ToList();
+            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(x => x.groupName).ToList();
             
             //поиск
             if (!string.IsNullOrEmpty(search))
@@ -210,7 +213,7 @@ namespace EDiary.Controllers
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = labs.OrderBy(x => x.subjectName).OrderBy(x=>x.groupName);
+            var subLabs = labs.OrderBy(x => x.subjectName).OrderBy(x => x.groupName);
 
             //объединение в одну модель
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
@@ -285,7 +288,7 @@ namespace EDiary.Controllers
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(x=>x.groupName);
+            var subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(x => x.groupName);
 
             //объединение в одну модель
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
@@ -305,12 +308,11 @@ namespace EDiary.Controllers
         [HttpPost]
         public async Task <IActionResult> AddPicture(AvatarStatusModel studentPicture)
         {
-            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
+            var student = studentsRep.findStudent(userManager.GetUserId(User));
             if (studentPicture.Picture == null)
             {
                 student.studentPic = null;
-                context.students.Update(student);
-                await context.SaveChangesAsync();
+                await studentsRep.updateStudent(student);
                 return RedirectToAction("Student", "Student");
             }
             else if (studentPicture.Picture.ContentType.Contains("image"))
@@ -319,8 +321,7 @@ namespace EDiary.Controllers
                 {
                     student.studentPic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
                 }
-                context.students.Update(student);
-                await context.SaveChangesAsync();
+                await studentsRep.updateStudent(student);
                 return RedirectToAction("Student", "Student");
             }
             else 
@@ -333,10 +334,9 @@ namespace EDiary.Controllers
         [HttpPost]
         public async Task <IActionResult> AddStatus(AvatarStatusModel studentStatus)
         {
-            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
+            var student = studentsRep.findStudent(userManager.GetUserId(User));
             student.studentStatus = studentStatus.statusId;
-            context.students.Update(student);
-            await context.SaveChangesAsync();
+            await studentsRep.updateStudent(student);
             return RedirectToAction("Student", "Student");
         }
     }

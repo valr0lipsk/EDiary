@@ -1,4 +1,5 @@
-﻿using EDiary.Models;
+﻿using EDiary.IRepositories;
+using EDiary.Models;
 using EDiary.Service;
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,9 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        public TeacherController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
+        ITeacherRepository teachersRep;
+        public TeacherController(UserManager<IdentityUser> userManager, EDContext context, ITeacherRepository teachersRep)
+                             => (this.userManager, this.context, this.teachersRep) = (userManager, context, teachersRep);
 
 
 
@@ -30,8 +33,8 @@ namespace EDiary.Controllers
         {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
-                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
-                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                                        .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                        .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
             //кураторская группа
             ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
@@ -99,8 +102,8 @@ namespace EDiary.Controllers
 
             //учащиеся кураторской группы
             var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
-                                            .Select(st => new StudentModel
-                                            {
+                                           .Select(st => new StudentModel
+                                           {
                                                 studentId = st.studentId,
                                                 studentSurname = st.studentSurname,
                                                 studentName = st.studentName,
@@ -112,7 +115,7 @@ namespace EDiary.Controllers
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                            }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
+                                           }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
@@ -286,13 +289,12 @@ namespace EDiary.Controllers
         //добавление фотографии преподавателя
         [HttpPost]
         public async Task<IActionResult> AddPicture(AvatarStatusModel teacherPicture)
-        { 
-            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).FirstOrDefault();
+        {
+            var teacher = teachersRep.findTeacher(userManager.GetUserId(User));
             if (teacherPicture.Picture == null)
             {
                 teacher.teacherPic = null;
-                context.teachers.Update(teacher);
-                await context.SaveChangesAsync();
+                await teachersRep.updateTeacher(teacher);
                 return RedirectToAction("Teacher", "Teacher");
             }
             else if (teacherPicture.Picture.ContentType.Contains("image"))
@@ -301,8 +303,7 @@ namespace EDiary.Controllers
                 {
                     teacher.teacherPic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
                 }
-                context.teachers.Update(teacher);
-                await context.SaveChangesAsync();
+                await teachersRep.updateTeacher(teacher);
                 return RedirectToAction("Teacher", "Teacher");
             }
             else
@@ -317,10 +318,9 @@ namespace EDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> AddStatus(AvatarStatusModel teacherStatus)
         {
-            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).FirstOrDefault();
+            var teacher = teachersRep.findTeacher(userManager.GetUserId(User));
             teacher.teacherStatus = teacherStatus.statusId;
-            context.teachers.Update(teacher);
-            await context.SaveChangesAsync();
+            await teachersRep.updateTeacher(teacher);
             return RedirectToAction("Teacher", "Teacher");
         }
     }

@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using EDiary.IRepositories;
 using EDiary.Models;
 using EDiary.Service;
 using EDiary.ViewModels;
@@ -21,7 +22,9 @@ namespace EDiary.Controllers
     {
         UserManager<IdentityUser> userManager;
         EDContext context;
-        public MarksController(EDContext context, UserManager<IdentityUser> userManager) => (this.context, this.userManager) = (context, userManager);
+        IMarkRepository marksRep;
+        public MarksController(EDContext context, UserManager<IdentityUser> userManager, IMarkRepository marksRep)
+                           => (this.context, this.userManager, this.marksRep) = (context, userManager, marksRep);
 
         //переадресация на нужный POST-метод
         [HttpPost]

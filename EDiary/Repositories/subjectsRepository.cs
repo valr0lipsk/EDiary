@@ -31,7 +31,7 @@ namespace EDiary.Repositories
         }
         public Subject findSubject(string subject)
         {
-            return subjects.Find(subject);
+            return subjects.Where(sub => sub.subjectName == subject).FirstOrDefault();
         }
         public async Task createSubject(Subject subject)
         {

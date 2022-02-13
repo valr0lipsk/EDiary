@@ -33,7 +33,7 @@ namespace EDiary.Repositories
 
         public Student findStudent(string student)
         {
-            return students.Find(student);
+            return students.Where(st => st.studentUser == student).FirstOrDefault();
         }
 
         public async Task createStudent(Student student)

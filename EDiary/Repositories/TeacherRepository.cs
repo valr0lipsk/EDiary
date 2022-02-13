@@ -27,7 +27,7 @@ namespace EDiary.Repositories
 
         public Teacher findTeacher(string teacher)
         {
-            return teachers.Find(teacher);
+            return teachers.Where(tr => tr.teacherUser == teacher).FirstOrDefault();
         }
 
         public async Task createTeacher(Teacher item)
