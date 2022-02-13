@@ -29,7 +29,7 @@ namespace EDiary.Repositories
 
         public async Task updateUser(IdentityUser user)
         {
-            context.Users.Update(user);
+            users.Update(user);
             await context.SaveChangesAsync();
         }
 

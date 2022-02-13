@@ -8,7 +8,7 @@ namespace EDiary.IRepositories
 {
     public interface IStudentRepository
     {
-        Student FindById(Guid studentId);
+        Student findStudent(string student);
         IEnumerable<Student> Get();
         IEnumerable<Student> GetList();
         IQueryable<Student> GetStudents();

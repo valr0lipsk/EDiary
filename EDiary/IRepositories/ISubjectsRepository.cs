@@ -8,13 +8,14 @@ namespace EDiary.IRepositories
 {
     public interface ISubjectsRepository
     {
-        subjectTaught findSubject(int subjectTaughtId);
-        IEnumerable<subjectTaught> Get();
+        subjectTaught findSubjectTaught(int subjectTaughtId);
+        Subject findSubject(string subject);
         Task createSubject(Subject subject);
         Task createLabs(Labs laba);
         Task createSubjectTaught(subjectTaught subjectTaught);
         Task updateSubjectTaught(subjectTaught subjectTaught);
         Task removeSubjectTaught(subjectTaught subjectTaught);
+        List<subjectIcons> allSubjectIcons();
     }
 }
 

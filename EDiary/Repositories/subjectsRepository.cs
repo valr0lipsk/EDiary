@@ -15,24 +15,24 @@ namespace EDiary.Repositories
         DbSet<subjectTaught> subjectTaughts;
         DbSet<Subject> subjects;
         DbSet<Labs> labs;
+        DbSet<subjectIcons> icons;
         public subjectsRepository(EDContext context)
         {
             this.context = context;
             this.subjectTaughts = context.Set<subjectTaught>();
             this.subjects = context.Set<Subject>();
             this.labs = context.Set<Labs>();
+            this.icons = context.Set<subjectIcons>();
         }
 
-        public IEnumerable<subjectTaught> Get()
-        {
-            return subjectTaughts.AsNoTracking().ToList();
-        }
-
-        public subjectTaught findSubject(int subjectTaughtId)
+        public subjectTaught findSubjectTaught(int subjectTaughtId)
         {
             return subjectTaughts.Find(subjectTaughtId);
         }
-
+        public Subject findSubject(string subject)
+        {
+            return subjects.Find(subject);
+        }
         public async Task createSubject(Subject subject)
         {
             await subjects.AddAsync(subject);
@@ -57,6 +57,10 @@ namespace EDiary.Repositories
         {
             subjectTaughts.Remove(subjectTaught);
             await context.SaveChangesAsync();
+        }
+        public List<subjectIcons> allSubjectIcons()
+        {
+            return icons.AsNoTracking().ToList();
         }
     }
 }

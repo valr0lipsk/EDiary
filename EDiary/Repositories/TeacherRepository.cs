@@ -20,14 +20,14 @@ namespace EDiary.Repositories
             this.teachers = context.Set<Teacher>();
         }
 
-        public IEnumerable<Teacher> Get()
+        public List<Teacher> allTeachers()
         {
             return teachers.AsNoTracking().ToList();
         }
 
-        public Teacher FindById(int teacherId)
+        public Teacher findTeacher(string teacher)
         {
-            return teachers.Find(teacherId);
+            return teachers.Find(teacher);
         }
 
         public async Task createTeacher(Teacher item)

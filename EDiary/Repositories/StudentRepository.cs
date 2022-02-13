@@ -31,9 +31,9 @@ namespace EDiary.Repositories
             return students.AsNoTracking().ToList();
         }
 
-        public Student FindById(Guid studentId)
+        public Student findStudent(string student)
         {
-            return students.Find(studentId);
+            return students.Find(student);
         }
 
         public async Task createStudent(Student student)
