@@ -10,7 +10,8 @@ namespace EDiary.IRepositories
     {
         Teacher findTeacher(string teacher);
         List<Teacher> allTeachers();
-        Task createTeacher(Teacher teacher);
-        Task updateTeacher(Teacher teacher);
+        List<EmojiStatus> teachersStatuses();
+        Task createTeacherAsync(Teacher teacher);
+        Task updateTeacherAsync(Teacher teacher);
     }
 }

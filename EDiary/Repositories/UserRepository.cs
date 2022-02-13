@@ -21,19 +21,22 @@ namespace EDiary.Repositories
             this.users = context.Set<IdentityUser>();
         }
 
-        public async Task createUser(IdentityUser user)
+        //создание пользователя
+        public async Task createUserAsync(IdentityUser user)
         {
             await users.AddAsync(user);
             await context.SaveChangesAsync();
         }
 
-        public async Task updateUser(IdentityUser user)
+        //обновление пользователя
+        public async Task updateUserAsync(IdentityUser user)
         {
             users.Update(user);
             await context.SaveChangesAsync();
         }
 
-        public async Task removeUser(IdentityUser user)
+        //удаление пользователя
+        public async Task removeUserAsync(IdentityUser user)
         {
             users.Remove(user);
             await context.SaveChangesAsync();

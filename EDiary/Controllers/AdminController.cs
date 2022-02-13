@@ -90,7 +90,7 @@ namespace EDiary.Controllers
                     NormalizedUserName = ("st" + createStudent.studentLogin).ToUpper(),
                     PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createStudent.studentPassword)
                 };
-                await usersRep.createUser(user);
+                await usersRep.createUserAsync(user);
                 Student student = new Student
                 {
                     studentSurname = createStudent.studentSurname,
@@ -99,7 +99,7 @@ namespace EDiary.Controllers
                     studentGroup = groupsRep.getGroup(createStudent.studentGroup).groupId,
                     studentUser = user.Id
                 };
-                await studentsRep.createStudent(student);
+                await studentsRep.createStudentAsync(student);
                 await userManager.AddToRoleAsync(user, "student");
                 transaction.Commit();
                 return RedirectToAction("Admin");
@@ -119,7 +119,7 @@ namespace EDiary.Controllers
             try
             {
                 var student = userManager.FindByNameAsync(deleteStudent.studentLogin).Result;
-                await usersRep.removeUser(student);
+                await usersRep.removeUserAsync(student);
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -140,14 +140,14 @@ namespace EDiary.Controllers
                 //пользователь
                 var user = userManager.FindByNameAsync(updateStudent.studentLogin).Result;
                 user.Email = updateStudent.studentEmail;
-                await usersRep.updateUser(user);
+                await usersRep.updateUserAsync(user);
                 //студент
                 var student = studentsRep.findStudent(user.Id);
                 student.studentName = updateStudent.studentName;
                 student.studentSurname = updateStudent.studentSurname;
                 student.studentLastname = updateStudent.studentLastname;
                 student.studentGroup = groupsRep.getGroup(updateStudent.studentGroup).groupId;
-                await studentsRep.updateStudent(student);
+                await studentsRep.updateStudentAsync(student);
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -210,7 +210,7 @@ namespace EDiary.Controllers
                     NormalizedUserName = ("tr" + createTeacher.teacherLogin).ToUpper(),
                     PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, createTeacher.teacherPassword)
                 };
-                await usersRep.createUser(user);
+                await usersRep.createUserAsync(user);
                 Teacher teacher = new Teacher
                 {
                     teacherSurname = createTeacher.teacherSurname,
@@ -218,12 +218,12 @@ namespace EDiary.Controllers
                     teacherLastname = createTeacher.teacherLastname,
                     teacherUser = user.Id
                 };
-                await teachersRep.createTeacher(teacher);
+                await teachersRep.createTeacherAsync(teacher);
                 if (createTeacher.curatorGroup != null)
                 {
                     var group = groupsRep.getGroup(createTeacher.curatorGroup);
                     group.curatorId = teacher.teacherId;
-                    await groupsRep.updateGroup(group);
+                    await groupsRep.updateGroupAsync(group);
                 }
                 await userManager.AddToRoleAsync(user, "teacher");
                 await context.SaveChangesAsync();
@@ -245,7 +245,7 @@ namespace EDiary.Controllers
             try
             {
                 var teacher = userManager.FindByNameAsync(deleteTeacher.teacherLogin).Result;
-                await usersRep.removeUser(teacher);
+                await usersRep.removeUserAsync(teacher);
                 return RedirectToAction("Admin");
             }
             catch
@@ -264,13 +264,13 @@ namespace EDiary.Controllers
                 //пользователь
                 var user = userManager.FindByNameAsync(updateTeacher.teacherLogin).Result;
                 user.Email = updateTeacher.teacherEmail;
-                await usersRep.updateUser(user);
+                await usersRep.updateUserAsync(user);
                 //преподаватель
                 var teacher = teachersRep.findTeacher(user.Id);
                 teacher.teacherName = updateTeacher.teacherName;
                 teacher.teacherSurname = updateTeacher.teacherSurname;
                 teacher.teacherLastname = updateTeacher.teacherLastname;
-                await teachersRep.updateTeacher(teacher);
+                await teachersRep.updateTeacherAsync(teacher);
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -339,7 +339,7 @@ namespace EDiary.Controllers
                     try
                     {
                         Subject subject = new Subject { subjectName = addSubject.subjectName, subjectPicture = addSubject.subjectIcon };
-                        await subjectsRep.createSubject(subject);
+                        await subjectsRep.createSubjectAsync(subject);
                         subjectTaught subjectTaught = new subjectTaught
                         {
                             subjectId = subject.subjectId,
@@ -347,7 +347,7 @@ namespace EDiary.Controllers
                                                         .Select(tr => tr.teacherId).FirstOrDefault(),
                             groupId = groupsRep.getGroup(addSubject.groupName).groupId
                         };
-                        await subjectsRep.createSubjectTaught(subjectTaught);
+                        await subjectsRep.createSubjectTaughtAsync(subjectTaught);
                         if (addSubject.secondTeacher != null)
                         {
                             Labs labaFirst = new Labs
@@ -358,7 +358,7 @@ namespace EDiary.Controllers
                                 countLabs = addSubject.labsCount,
                                 tsubjectId = subjectTaught.tsubjectId
                             };
-                            await subjectsRep.createLabs(labaFirst);
+                            await subjectsRep.createLabAsync(labaFirst);
                             Labs labaSecond = new Labs
                             {
                                 labName = addSubject.subjectName.Trim() + " (лабораторная, 2-ая подгруппа)",
@@ -368,7 +368,7 @@ namespace EDiary.Controllers
                                 countLabs = addSubject.labsCount,
                                 tsubjectId = subjectTaught.tsubjectId
                             };
-                            await subjectsRep.createLabs(labaSecond);
+                            await subjectsRep.createLabAsync(labaSecond);
                         }
                         transaction.Commit();
                         return RedirectToAction("Admin");
@@ -391,7 +391,7 @@ namespace EDiary.Controllers
                                                        .Select(tr => tr.teacherId).FirstOrDefault(),
                             groupId = groupsRep.getGroup(addSubject.groupName).groupId
                         };
-                        await subjectsRep.createSubjectTaught(subjectTaught);
+                        await subjectsRep.createSubjectTaughtAsync(subjectTaught);
                         if (addSubject.secondTeacher != null)
                         {
                             Labs labaFirst = new Labs
@@ -402,7 +402,7 @@ namespace EDiary.Controllers
                                 countLabs = addSubject.labsCount,
                                 tsubjectId = subjectTaught.tsubjectId
                             };
-                            await subjectsRep.createLabs(labaFirst);
+                            await subjectsRep.createLabAsync(labaFirst);
                             Labs labaSecond = new Labs
                             {
                                 labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
@@ -412,7 +412,7 @@ namespace EDiary.Controllers
                                 countLabs = addSubject.labsCount,
                                 tsubjectId = subjectTaught.tsubjectId
                             };
-                            await subjectsRep.createLabs(labaSecond);
+                            await subjectsRep.createLabAsync(labaSecond);
                         }
                         transaction.Commit();
                         return RedirectToAction("Admin");
@@ -437,7 +437,7 @@ namespace EDiary.Controllers
             try
             {
                 var subjectTaught = subjectsRep.findSubjectTaught(deleteSubject.tsubjectId);
-                await subjectsRep.removeSubjectTaught(subjectTaught);
+                await subjectsRep.removeSubjectTaughtAsync(subjectTaught);
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -488,7 +488,7 @@ namespace EDiary.Controllers
                     transaction.Rollback();
                     return Json("Teacher does not exist");
                 }
-                await subjectsRep.updateSubjectTaught(subjectTaught);
+                await subjectsRep.updateSubjectTaughtAsync(subjectTaught);
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -547,7 +547,7 @@ namespace EDiary.Controllers
                                     .Select(tr => tr.teacherId)
                                     .FirstOrDefault()
                     };
-                    await groupsRep.createGroup(group);
+                    await groupsRep.createGroupAsync(group);
                     transaction.Commit();
                     return RedirectToAction("Admin");
                 }

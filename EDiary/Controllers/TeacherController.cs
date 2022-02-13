@@ -118,7 +118,7 @@ namespace EDiary.Controllers
                                            }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
 
             //эмоджи-статусы
-            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
+            var statuses = teachersRep.teachersStatuses();
 
             //объединение лаб и предметов
             var subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
@@ -294,7 +294,7 @@ namespace EDiary.Controllers
             if (teacherPicture.Picture == null)
             {
                 teacher.teacherPic = null;
-                await teachersRep.updateTeacher(teacher);
+                await teachersRep.updateTeacherAsync(teacher);
                 return RedirectToAction("Teacher", "Teacher");
             }
             else if (teacherPicture.Picture.ContentType.Contains("image"))
@@ -303,7 +303,7 @@ namespace EDiary.Controllers
                 {
                     teacher.teacherPic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
                 }
-                await teachersRep.updateTeacher(teacher);
+                await teachersRep.updateTeacherAsync(teacher);
                 return RedirectToAction("Teacher", "Teacher");
             }
             else
@@ -320,7 +320,7 @@ namespace EDiary.Controllers
         {
             var teacher = teachersRep.findTeacher(userManager.GetUserId(User));
             teacher.teacherStatus = teacherStatus.statusId;
-            await teachersRep.updateTeacher(teacher);
+            await teachersRep.updateTeacherAsync(teacher);
             return RedirectToAction("Teacher", "Teacher");
         }
     }

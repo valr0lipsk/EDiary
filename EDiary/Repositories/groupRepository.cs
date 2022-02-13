@@ -21,26 +21,34 @@ namespace EDiary.Repositories
             this.groups = context.Set<collegeGroup>();
         }
 
-        public async Task createGroup(collegeGroup group)
+        //создание группы
+        public async Task createGroupAsync(collegeGroup group)
         {
             await groups.AddAsync(group);
             await context.SaveChangesAsync();
         }
 
-        public async Task removeGroup(collegeGroup group)
+        //удаление группы
+        public async Task removeGroupAsync(collegeGroup group)
         {
             groups.Remove(group);
             await context.SaveChangesAsync();
         }
-        public async Task updateGroup(collegeGroup group)
+
+        //обновление группы
+        public async Task updateGroupAsync(collegeGroup group)
         {
             groups.Update(group);
             await context.SaveChangesAsync();
         }
+
+        //получение всех групп
         public List<collegeGroup> allGroups()
         {
             return groups.AsNoTracking().ToList();
         }
+
+        //получение группы по названию
         public collegeGroup getGroup(string group)
         {
             return groups.Where(gr => gr.groupName == group).FirstOrDefault();

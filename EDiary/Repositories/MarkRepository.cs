@@ -12,44 +12,47 @@ namespace EDiary.Repositories
     public class MarkRepository : IMarkRepository
     {
         EDContext context;
-        DbSet<setMark> dbSetMark;
+        DbSet<setMark> setMarks;
+        DbSet<Mark> marks;
 
         public MarkRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetMark = context.Set<setMark>();
+            this.setMarks = context.Set<setMark>();
+            this.marks = context.Set<Mark>();
         }
 
-        public IEnumerable<setMark> Get()
+        //найти выставленную оценку по айди
+        public setMark findSetMark(int setMarkId)
         {
-            return dbSetMark.AsNoTracking().ToList();
+            return setMarks.Find(setMarkId);
         }
 
-        public setMark FindById(int lessonId)
+        //найти оценку
+        public Mark findMark(string mark)
         {
-            return dbSetMark.Find(lessonId);
+            return marks.Where(m => m.mark == mark).FirstOrDefault();
         }
 
-        public void Create(setMark item)
+        //добавить выставленную оценку
+        public void createSetMark(setMark setMark)
         {
-            dbSetMark.Add(item);
-            context.SaveChanges();
-        }
-        public void Update(setMark item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-        public void Remove(setMark item)
-        {
-            dbSetMark.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
+            setMarks.Add(setMark);
             context.SaveChanges();
         }
 
+        //обновить выставленную оценку
+        public void updateSetMark(setMark setMark)
+        {
+            setMarks.Update(setMark);
+            context.SaveChanges();
+        }
+
+        //удалить выставленную оценку
+        public void removeSetMark(setMark setMark)
+        {
+            setMarks.Remove(setMark);
+            context.SaveChanges();
+        }
     }
-
 }

@@ -25,39 +25,54 @@ namespace EDiary.Repositories
             this.icons = context.Set<subjectIcons>();
         }
 
+        //получение преподаваемого предмета по id
         public subjectTaught findSubjectTaught(int subjectTaughtId)
         {
             return subjectTaughts.Find(subjectTaughtId);
         }
+
+        //получение предмета по названию
         public Subject findSubject(string subject)
         {
             return subjects.Where(sub => sub.subjectName == subject).FirstOrDefault();
         }
-        public async Task createSubject(Subject subject)
+
+        //создание предмета
+        public async Task createSubjectAsync(Subject subject)
         {
             await subjects.AddAsync(subject);
             await context.SaveChangesAsync();
         }
-        public async Task createLabs(Labs laba)
+
+        //создание лабы
+        public async Task createLabAsync(Labs laba)
         {
             await labs.AddAsync(laba);
             await context.SaveChangesAsync();
         }
-        public async Task createSubjectTaught(subjectTaught subjectTaught)
+
+        //создание преподаваемого предмета
+        public async Task createSubjectTaughtAsync(subjectTaught subjectTaught)
         {
             await subjectTaughts.AddAsync(subjectTaught);
             await context.SaveChangesAsync();
         }
-        public async Task updateSubjectTaught(subjectTaught subjectTaught)
+
+        //обновление преподаваемого предмета
+        public async Task updateSubjectTaughtAsync(subjectTaught subjectTaught)
         {
             subjectTaughts.Update(subjectTaught);
             await context.SaveChangesAsync();
         }
-        public async Task removeSubjectTaught(subjectTaught subjectTaught)
+
+        //удаление преподаваемого предмета
+        public async Task removeSubjectTaughtAsync(subjectTaught subjectTaught)
         {
             subjectTaughts.Remove(subjectTaught);
             await context.SaveChangesAsync();
         }
+
+        //получение иконок предметов
         public List<subjectIcons> allSubjectIcons()
         {
             return icons.AsNoTracking().ToList();

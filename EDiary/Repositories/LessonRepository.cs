@@ -12,44 +12,46 @@ namespace EDiary.Repositories
     public class LessonRepository : ILessonRepository
     {
         EDContext context;
-        DbSet<Lesson> dbSetLesson;
+        DbSet<Lesson> lessons;
+        DbSet<lessonType> lessonTypes;
 
         public LessonRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetLesson = context.Set<Lesson>();
+            this.lessons = context.Set<Lesson>();
+            this.lessonTypes = context.Set<lessonType>();
         }
 
-        public IEnumerable<Lesson> Get()
+        //создание занятия
+        public async Task createLessonAsync(Lesson lesson)
         {
-            return dbSetLesson.AsNoTracking().ToList();
+            await lessons.AddAsync(lesson);
+            await context.SaveChangesAsync();
+        }
+        
+        //удаление занятия
+        public async Task removeLessonAsync(Lesson lesson)
+        {
+            lessons.Remove(lesson);
+            await context.SaveChangesAsync();
+        }
+        
+        //получение всех типов занятий
+        public List<lessonType> getLessonTypes()
+        {
+            return lessonTypes.AsNoTracking().Take(5).ToList();
         }
 
-        public Lesson FindById(Guid lessonId)
+        //получение id типа занятия
+        public int findLessonType(string lessonType)
         {
-            return dbSetLesson.Find(lessonId);
+            return lessonTypes.Where(type => type.typeName == lessonType).Select(type => type.lessonTypeId).FirstOrDefault();
         }
 
-        public void Create(Lesson item)
+        //получение занятия
+        public Lesson findLesson(int lessonId)
         {
-            dbSetLesson.Add(item);
-            context.SaveChanges();
+            return lessons.Find(lessonId);
         }
-        public void Update(Lesson item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-        public void Remove(Lesson item)
-        {
-            dbSetLesson.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
-            context.SaveChanges();
-        }
-
     }
-
 }

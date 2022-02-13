@@ -10,9 +10,9 @@ namespace EDiary.IRepositories
 {
     public interface IGroupRepository
     {
-        Task createGroup(collegeGroup group);
-        Task removeGroup(collegeGroup group);
-        Task updateGroup(collegeGroup group);
+        Task createGroupAsync(collegeGroup group);
+        Task removeGroupAsync(collegeGroup group);
+        Task updateGroupAsync(collegeGroup group);
         List<collegeGroup> allGroups();
         collegeGroup getGroup(string group);
     }

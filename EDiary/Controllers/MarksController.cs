@@ -23,36 +23,37 @@ namespace EDiary.Controllers
         UserManager<IdentityUser> userManager;
         EDContext context;
         IMarkRepository marksRep;
+        ILessonRepository lessonsRep;
         public MarksController(EDContext context, UserManager<IdentityUser> userManager, IMarkRepository marksRep)
-                           => (this.context, this.userManager, this.marksRep) = (context, userManager, marksRep);
+                           => (this.context, this.userManager, this.marksRep, this.lessonsRep) = (context, userManager, marksRep, lessonsRep);
 
         //переадресация на нужный POST-метод
         [HttpPost]
         [Route("Marks/Jurnal/{id?}")]
         public IActionResult Jurnal(int studId, int lessId, string value, LessonModel lessDates) => value == null ? Jurnal(lessDates) : Jurnal(studId, lessId, value);
-        
+
+
+
+        /**********CRUD-оценок**********/
+
         //обновление и удаление оценки
         [HttpPut]
         public IActionResult Jurnal(int id, string value)
         {
-            var markId = value;
-            var setmark = id;
-            var updatedMark = context.setMarks.Where(sM => sM.setmarkId == id).FirstOrDefault();
+            var updatedMark = marksRep.findSetMark(id);
             if (updatedMark != null && value != null)
             {
-                context.Database.BeginTransaction();
-                updatedMark.markId = context.marks.Where(mark => mark.mark == value).Select(mark => mark.markId).FirstOrDefault();
-                context.setMarks.Update(updatedMark);
-                context.SaveChanges();
-                context.Database.CommitTransaction();
+                using var transaction = context.Database.BeginTransaction();
+                updatedMark.markId = marksRep.findMark(value).markId;
+                marksRep.updateSetMark(updatedMark);
+                transaction.Commit();
                 return Json(new { status = "updated", message = "Оценка обновлена" });
             }
             else if (value == null)
             {
-                context.Database.BeginTransaction();
-                context.setMarks.Remove(updatedMark);
-                context.SaveChanges();
-                context.Database.CommitTransaction();
+                using var transaction = context.Database.BeginTransaction();
+                marksRep.removeSetMark(updatedMark);
+                transaction.Commit();
                 return Json(new { status = "deleted", message = "Оценка удалена" });
             }
             else
@@ -61,26 +62,23 @@ namespace EDiary.Controllers
             }
         }
 
-
-
         //добавление оценки
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
-            var marks = context.marks.Where(mark => mark.mark == value).Select(mark => mark.mark).FirstOrDefault();
+            var marks = marksRep.findMark(value).mark;
             if (marks != null)
             {
-                var markValue = context.marks.Where(mark => mark.mark == value).Select(mark => mark.markId).FirstOrDefault();
-                context.Database.BeginTransaction();
+                var markValue = marksRep.findMark(value).markId;
+                using var transaction = context.Database.BeginTransaction();
                 setMark setMark = new setMark
                 {
                     studentId = studId,
                     lessonId = lessId,
                     markId = markValue
                 };
-                context.setMarks.Add(setMark);
-                context.SaveChanges();
-                var markId = (from sM in context.setMarks orderby sM.setmarkId descending select sM.setmarkId).FirstOrDefault();
-                context.Database.CommitTransaction();
+                marksRep.createSetMark(setMark);
+                var markId = setMark.setmarkId;
+                transaction.Commit();
                 return Json(new { status = "added", message = "Оценка добавлена", markId = markId });
             }
             else
@@ -90,6 +88,8 @@ namespace EDiary.Controllers
         }
 
 
+
+        /**********ЖУРНАЛ**********/
 
         //журнал предмета и группы
         [HttpGet]
@@ -252,7 +252,7 @@ namespace EDiary.Controllers
                                 }).AsNoTracking().ToList();
 
                 //типы занятий
-                var types = context.lessonType.AsNoTracking().ToList();
+                var types = lessonsRep.getLessonTypes();
 
                 //объединение в одну модель вывода журнала лабораторных
                 var jurnal = new JurnalModel 
@@ -269,7 +269,6 @@ namespace EDiary.Controllers
 
                 return View(jurnal);
             }
-
 
             //то журнал предмета
             else
@@ -337,7 +336,7 @@ namespace EDiary.Controllers
                                 }).AsNoTracking().ToList();
 
                 //типы занятий
-                var types = context.lessonType.AsNoTracking().Take(5).ToList();
+                var types = lessonsRep.getLessonTypes();
 
                 //объединение в одну модель вывода журнала предмета
                 var jurnal = new JurnalModel
@@ -357,7 +356,9 @@ namespace EDiary.Controllers
         }
 
 
-        
+
+        /**********ЖУРНАЛ ПО ДАТАМ**********/
+
         //показать занятия по промежутку
         public IActionResult Jurnal(LessonModel lessDates)
         {
@@ -560,7 +561,7 @@ namespace EDiary.Controllers
                 }
 
                 //типы занятий
-                var types = context.lessonType.AsNoTracking().Take(5).ToList();
+                var types = lessonsRep.getLessonTypes();
 
                 //объединение в одну модель
                 jurnal.Teachers = teacherJurnal;
@@ -679,7 +680,7 @@ namespace EDiary.Controllers
                 }
 
                 //типы занятий
-                var types = context.lessonType.AsNoTracking().Take(5).ToList();
+                var types = lessonsRep.getLessonTypes();
 
                 //объединение в одну модель журнала
                 jurnal.Teachers = teacherJurnal;
@@ -695,21 +696,22 @@ namespace EDiary.Controllers
 
 
 
+        /**********CRUD-занятий**********/
+
         //добавление занятия
-        public IActionResult AddLesson(LessonModel addLesson)
+        public async Task <IActionResult> AddLesson(LessonModel addLesson)
         {
             if (addLesson.labId == 0)
             {
-                context.Database.BeginTransaction();
+                using var transaction = context.Database.BeginTransaction();
                 Lesson lesson = new Lesson
                 {
                     tsubjectId = addLesson.id,
                     lessonDate = addLesson.lessonDate,
-                    lessonTypeId = (from lT in context.lessonType where lT.typeName == addLesson.lessonType select lT.lessonTypeId).FirstOrDefault()
+                    lessonTypeId = lessonsRep.findLessonType(addLesson.lessonType)
                 };
-                context.lessons.Add(lesson);
-                context.SaveChanges();
-                context.Database.CommitTransaction();
+                await lessonsRep.createLessonAsync(lesson);
+                transaction.Commit();
                 return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
             }
             else
@@ -717,16 +719,15 @@ namespace EDiary.Controllers
                 var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab })
                                                  .Where(l => l.lab.labId == addLesson.labId)
                                                  .Select(sT => sT.st.tsubjectId).FirstOrDefault();
-                context.Database.BeginTransaction();
+                using var transaction = context.Database.BeginTransaction();
                 Lesson lesson = new Lesson 
                 { 
                     tsubjectId = tsub,
                     lessonDate = addLesson.lessonDate,
                     lessonTypeId = 6
                 };
-                context.lessons.Add(lesson);
-                context.SaveChanges();
-                context.Database.CommitTransaction();
+                await lessonsRep.createLessonAsync(lesson);
+                transaction.Commit();
                 return RedirectToAction("Jurnal", "Marks", new { addLesson.labId });
             }
         }
@@ -734,13 +735,12 @@ namespace EDiary.Controllers
 
 
         //удаление занятия
-        public IActionResult DeleteLesson(LessonModel deleteLesson)
+        public async Task <IActionResult> DeleteLesson(LessonModel deleteLesson)
         {
-            context.Database.BeginTransaction();
-            var lesson = context.lessons.Where(lessId => lessId.lessonId == deleteLesson.lessonId).FirstOrDefault();
-            context.lessons.Remove(lesson);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            using var transaction = context.Database.BeginTransaction();
+            var lesson = lessonsRep.findLesson(deleteLesson.lessonId);
+            await lessonsRep.removeLessonAsync(lesson);
+            transaction.Commit();
             if (deleteLesson.labId == 0)
             {
                 return RedirectToAction("Jurnal", "Marks", new { deleteLesson.id });
@@ -756,8 +756,8 @@ namespace EDiary.Controllers
             using (var workbook = new XLWorkbook())
             {
                 //выборка всех оценок 0-10
-                var digitals = context.marks.Where(mark=>mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
-                                            .Select(mark=>new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
+                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
                                             .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
                 var studentsStats = (from student in context.students
                                      join gr in context.groups on student.studentGroup equals gr.groupId
@@ -767,21 +767,27 @@ namespace EDiary.Controllers
                                      {
                                          studentId = student.studentId,
                                          studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
+
+                                         //подсчет пропусков по уважительной
                                          studentPassesReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                      .Where(m => m.m.mark == "н")
-                                                                      .Where(m => m.sM.studentId == student.studentId)
-                                                                      .GroupBy(sm => sm.sM.studentId)
-                                                                      .Select(m => m.Count()).FirstOrDefault(),
+                                                                            .Where(m => m.m.mark == "н")
+                                                                            .Where(m => m.sM.studentId == student.studentId)
+                                                                            .GroupBy(sm => sm.sM.studentId)
+                                                                            .Select(m => m.Count()).FirstOrDefault(),
+
+                                         //подсчет пропусков по неуважительной 
                                          studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                      .Where(m => m.m.mark == "н/б")
-                                                                      .Where(m => m.sM.studentId == student.studentId)
-                                                                      .GroupBy(sm => sm.sM.studentId)
-                                                                      .Select(m => m.Count()).FirstOrDefault(),
+                                                                              .Where(m => m.m.mark == "н/б")
+                                                                              .Where(m => m.sM.studentId == student.studentId)
+                                                                              .GroupBy(sm => sm.sM.studentId)
+                                                                              .Select(m => m.Count()).FirstOrDefault(),
+
+                                         //подсчет среднего балла
                                          studentAverage = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                      .Where(m => digitals.Values.Contains(m.m.mark))
-                                                                      .Where(m => m.sM.studentId == student.studentId)
-                                                                      .GroupBy(sm => sm.sM.studentId)
-                                                                      .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
+                                                                       .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                       .Where(m => m.sM.studentId == student.studentId)
+                                                                       .GroupBy(sm => sm.sM.studentId)
+                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
                                      }).Distinct().AsNoTracking().ToList();
 
                 var worksheet = workbook.Worksheets.Add("Статистика");
@@ -791,7 +797,7 @@ namespace EDiary.Controllers
                 worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
                 worksheet.Cell(currentRow, 4).Value = "Средний балл";
 
-                foreach (var student in studentsStats.OrderBy(s=>s.studentFullname))
+                foreach (var student in studentsStats.OrderBy(s => s.studentFullname)) 
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = student.studentFullname;

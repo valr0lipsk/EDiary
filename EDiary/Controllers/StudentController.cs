@@ -285,7 +285,7 @@ namespace EDiary.Controllers
                          }).AsNoTracking().OrderBy(s => s.subjectName).ToList();
 
             //эмоджи-статусы
-            var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
+            var statuses = studentsRep.studentsStatuses();
 
             //объединение предметов и лаб
             var subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(x => x.groupName);
@@ -312,7 +312,7 @@ namespace EDiary.Controllers
             if (studentPicture.Picture == null)
             {
                 student.studentPic = null;
-                await studentsRep.updateStudent(student);
+                await studentsRep.updateStudentAsync(student);
                 return RedirectToAction("Student", "Student");
             }
             else if (studentPicture.Picture.ContentType.Contains("image"))
@@ -321,7 +321,7 @@ namespace EDiary.Controllers
                 {
                     student.studentPic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
                 }
-                await studentsRep.updateStudent(student);
+                await studentsRep.updateStudentAsync(student);
                 return RedirectToAction("Student", "Student");
             }
             else 
@@ -336,7 +336,7 @@ namespace EDiary.Controllers
         {
             var student = studentsRep.findStudent(userManager.GetUserId(User));
             student.studentStatus = studentStatus.statusId;
-            await studentsRep.updateStudent(student);
+            await studentsRep.updateStudentAsync(student);
             return RedirectToAction("Student", "Student");
         }
     }

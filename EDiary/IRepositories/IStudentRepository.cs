@@ -9,10 +9,8 @@ namespace EDiary.IRepositories
     public interface IStudentRepository
     {
         Student findStudent(string student);
-        IEnumerable<Student> Get();
-        IEnumerable<Student> GetList();
-        IQueryable<Student> GetStudents();
-        Task createStudent(Student student);
-        Task updateStudent(Student student);
+        Task createStudentAsync(Student student);
+        Task updateStudentAsync(Student student);
+        List<EmojiStatus> studentsStatuses();
     }
 }

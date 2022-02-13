@@ -10,8 +10,8 @@ namespace EDiary.IRepositories
 {
     public interface IUserRepository
     {
-        Task createUser(IdentityUser user);
-        Task removeUser(IdentityUser user);
-        Task updateUser(IdentityUser user);
+        Task createUserAsync(IdentityUser user);
+        Task removeUserAsync(IdentityUser user);
+        Task updateUserAsync(IdentityUser user);
     }
 }

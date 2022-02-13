@@ -10,11 +10,11 @@ namespace EDiary.IRepositories
     {
         subjectTaught findSubjectTaught(int subjectTaughtId);
         Subject findSubject(string subject);
-        Task createSubject(Subject subject);
-        Task createLabs(Labs laba);
-        Task createSubjectTaught(subjectTaught subjectTaught);
-        Task updateSubjectTaught(subjectTaught subjectTaught);
-        Task removeSubjectTaught(subjectTaught subjectTaught);
+        Task createSubjectAsync(Subject subject);
+        Task createLabAsync(Labs laba);
+        Task createSubjectTaughtAsync(subjectTaught subjectTaught);
+        Task updateSubjectTaughtAsync(subjectTaught subjectTaught);
+        Task removeSubjectTaughtAsync(subjectTaught subjectTaught);
         List<subjectIcons> allSubjectIcons();
     }
 }

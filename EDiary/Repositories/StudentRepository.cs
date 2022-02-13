@@ -13,38 +13,38 @@ namespace EDiary.Repositories
     {
         private readonly EDContext context;
         DbSet<Student> students;
+        DbSet<EmojiStatus> statuses;
         public StudentRepository(EDContext context)
         {
             this.context = context;
             this.students = context.Set<Student>();
-        }
-        public IQueryable<Student> GetStudents()
-        {
-            return context.students.OrderBy(x => x.studentId);
-        }
-        public IEnumerable<Student> GetList()
-        {
-            return context.students;
-        }
-        public IEnumerable<Student> Get()
-        {
-            return students.AsNoTracking().ToList();
+            this.statuses = context.Set<EmojiStatus>();
         }
 
+        //получение студента как пользователя
         public Student findStudent(string student)
         {
             return students.Where(st => st.studentUser == student).FirstOrDefault();
         }
 
-        public async Task createStudent(Student student)
+        //создание студента
+        public async Task createStudentAsync(Student student)
         {
             await students.AddAsync(student);
             await context.SaveChangesAsync();
         }
-        public async Task updateStudent(Student student)
+
+        //обновление студента
+        public async Task updateStudentAsync(Student student)
         {
             students.Update(student);
             await context.SaveChangesAsync();
+        }
+
+        //получение эмоджи-статусов студента
+        public List<EmojiStatus> studentsStatuses()
+        {
+            return statuses.Take(8).AsNoTracking().ToList();
         }
     }
 }
