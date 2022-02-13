@@ -562,6 +562,22 @@ namespace EDiary.Controllers
                 return Json("Group is already exists");
             }
         }
+
+        //удаление группы
+        public async Task<IActionResult> DeleteGroup(TableGroupModel deleteGroup)
+        {
+            try
+            {
+                using var transaction = context.Database.BeginTransaction();
+                await groupsRep.removeGroupAsync(groupsRep.getGroup(deleteGroup.groupName));
+                transaction.Commit();
+                return RedirectToAction("Admin");
+            }
+            catch
+            {
+                return Json("Error of delete group");
+            }
+        }
     }
 }
   
