@@ -24,7 +24,7 @@ namespace EDiary.Controllers
         EDContext context;
         IMarkRepository marksRep;
         ILessonRepository lessonsRep;
-        public MarksController(EDContext context, UserManager<IdentityUser> userManager, IMarkRepository marksRep)
+        public MarksController(EDContext context, UserManager<IdentityUser> userManager, IMarkRepository marksRep, ILessonRepository lessonsRep)
                            => (this.context, this.userManager, this.marksRep, this.lessonsRep) = (context, userManager, marksRep, lessonsRep);
 
         //переадресация на нужный POST-метод
