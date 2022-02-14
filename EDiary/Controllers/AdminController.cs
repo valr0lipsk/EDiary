@@ -81,8 +81,8 @@ namespace EDiary.Controllers
         public async Task <IActionResult> CreateStudent(AddStudentModel createStudent)
         {
             using var transaction = context.Database.BeginTransaction();
-            try
-            {
+            if (groupsRep.getGroup(createStudent.studentGroup) != null)
+            { 
                 IdentityUser user = new IdentityUser
                 {
                     Id = createStudent.studentLogin,
@@ -104,12 +104,11 @@ namespace EDiary.Controllers
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
-            catch 
+            else
             {
                 transaction.Rollback();
                 return Json("Group does not exist");
             }
-            
         }
 
         //удаление студента
@@ -135,7 +134,7 @@ namespace EDiary.Controllers
         public async Task <IActionResult> UpdateStudent(TableStudentModel updateStudent)
         {
             using var transaction = context.Database.BeginTransaction();
-            try
+            if (groupsRep.getGroup(updateStudent.studentGroup) != null)
             {
                 //пользователь
                 var user = userManager.FindByNameAsync(updateStudent.studentLogin).Result;
@@ -151,7 +150,7 @@ namespace EDiary.Controllers
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
-            catch
+            else
             {
                 transaction.Rollback();
                 return Json("Group does not exist");
@@ -201,7 +200,7 @@ namespace EDiary.Controllers
         public async Task <IActionResult> CreateTeacher(AddTeacherModel createTeacher)
         {
             using var transaction = context.Database.BeginTransaction();
-            try
+            if (groupsRep.getGroup(createTeacher.curatorGroup) != null)
             {
                 IdentityUser user = new IdentityUser
                 {
@@ -230,7 +229,7 @@ namespace EDiary.Controllers
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
-            catch
+            else
             {
                 transaction.Rollback();
                 return Json("Group does not exist");
@@ -336,7 +335,7 @@ namespace EDiary.Controllers
                 if (sub == null)
                 {
                     using var transaction = context.Database.BeginTransaction();
-                    try
+                    if (groupsRep.getGroup(addSubject.groupName) != null)
                     {
                         Subject subject = new Subject { subjectName = addSubject.subjectName, subjectPicture = addSubject.subjectIcon };
                         await subjectsRep.createSubjectAsync(subject);
@@ -348,6 +347,7 @@ namespace EDiary.Controllers
                             groupId = groupsRep.getGroup(addSubject.groupName).groupId
                         };
                         await subjectsRep.createSubjectTaughtAsync(subjectTaught);
+
                         if (addSubject.secondTeacher != null)
                         {
                             Labs labaFirst = new Labs
@@ -373,16 +373,16 @@ namespace EDiary.Controllers
                         transaction.Commit();
                         return RedirectToAction("Admin");
                     }
-                    catch
+                    else
                     {
                         transaction.Rollback();
-                        return Json("Error of add subject");
+                        return Json("Group does not exist");
                     }
                 }
                 else
                 {
                     using var transaction = context.Database.BeginTransaction();
-                    try
+                    if (groupsRep.getGroup(addSubject.groupName) != null) 
                     {
                         subjectTaught subjectTaught = new subjectTaught
                         {
@@ -417,10 +417,10 @@ namespace EDiary.Controllers
                         transaction.Commit();
                         return RedirectToAction("Admin");
                     }
-                    catch
+                    else
                     {
                         transaction.Rollback();
-                        return Json("Error of add subject");
+                        return Json("Group does not exist");
                     }
                 }
             }
@@ -460,30 +460,33 @@ namespace EDiary.Controllers
             {
                 using var transaction = context.Database.BeginTransaction();
                 var subjectTaught = subjectsRep.findSubjectTaught(updateSubject.tsubjectId);
-                try
+                var subjectId = subjectsRep.findSubject(updateSubject.subjectName).subjectId;
+                var groupId = groupsRep.getGroup(updateSubject.group).groupId;
+                var teacherId= context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ") == updateSubject.teacher.Trim())
+                                               .Select(tr => tr.teacherId).FirstOrDefault();
+                if (subjectId != 0)
                 {
-                    subjectTaught.subjectId = subjectsRep.findSubject(updateSubject.subjectName).subjectId;
+                    subjectTaught.subjectId = subjectId;
                 }
-                catch
+                else
                 {
                     transaction.Rollback();
                     return Json ("Subject does not exist");                                               
                 }
-                try
+                if (groupId != 0)
                 {
-                    subjectTaught.groupId = groupsRep.getGroup(updateSubject.group).groupId;
+                    subjectTaught.groupId = groupId;
                 }
-                catch
+                else
                 {
                     transaction.Rollback();
                     return Json("Group does not exist");
                 }
-                try
+                if (teacherId != 0)
                 {
-                    subjectTaught.teacherId = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ") == updateSubject.teacher.Trim())        
-                                                              .Select(tr => tr.teacherId).FirstOrDefault();
+                    subjectTaught.teacherId = teacherId;
                 }
-                catch
+                else
                 {
                     transaction.Rollback();
                     return Json("Teacher does not exist");
