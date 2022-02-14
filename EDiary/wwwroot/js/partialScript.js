@@ -53,7 +53,7 @@ $(document).ready(function ()
 
     //find smth in tables
     $('#findInput').keyup(function () {
-        _this = this;
+        const _this = this;
 
         $.each($('.table tbody tr'), function () {
             if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {

@@ -7,8 +7,8 @@
             return mStyle.position.indexOf('sticky') !== -1;
         })();
 
-        const scrollTypeRTL = (function () {
-            const definer = $('<div dir="rtl" style="font-size: 14px; width: 4px; height: 1px; position: absolute; top: -1000px; overflow: scroll">ABCD</div>').appendTo('body')[0],
+        let scrollTypeRTL = (function () {
+            let definer = $('<div dir="rtl" style="font-size: 14px; width: 4px; height: 1px; position: absolute; top: -1000px; overflow: scroll">ABCD</div>').appendTo('body')[0],
                 scrollTypeRTL = 'reverse';
 
             if (definer.scrollLeft > 0) {
