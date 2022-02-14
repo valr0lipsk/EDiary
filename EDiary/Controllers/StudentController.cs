@@ -30,6 +30,7 @@ namespace EDiary.Controllers
 
 
         //представление ученика (все предметы и лабы)
+        [HttpGet]
         public IActionResult Student(string category)
         {
             //отметки-цифры

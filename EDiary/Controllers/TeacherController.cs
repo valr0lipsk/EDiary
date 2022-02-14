@@ -29,6 +29,7 @@ namespace EDiary.Controllers
 
 
         //представление препода(фамилия, предметы и группы, поиск)
+        [HttpGet]
         public IActionResult Teacher(string category)
         {
             //отметки-цифры
