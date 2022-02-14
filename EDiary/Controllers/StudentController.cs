@@ -1,4 +1,5 @@
-﻿using EDiary.Models;
+﻿using EDiary.IRepositories;
+using EDiary.Models;
 using EDiary.Service;
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -22,17 +23,19 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        public StudentController(UserManager<IdentityUser> userManager, EDContext context) => (this.userManager, this.context) = (userManager, context);
+        IStudentRepository studentsRep;
+        public StudentController(UserManager<IdentityUser> userManager, EDContext context, IStudentRepository studentsRep) 
+                             => (this.userManager, this.context, this.studentsRep) = (userManager, context, studentsRep);
 
 
 
         //представление ученика (все предметы и лабы)
         public IActionResult Student(string search)
-         {
+        {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
-                                         .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
-                                         .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                                        .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                        .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
             //средний балл
             ViewBag.averageMark = Math.Round((from st in context.students
@@ -93,18 +96,15 @@ namespace EDiary.Controllers
                          select new SubjectGroupModel
                          {
                              subjectName = lab.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
-                             labaCount = lab.countLabs
-                         }).AsNoTracking().OrderBy(s=>s.subjectName).ToList();
-
-            //подсчет сданных лаб
-            var zach = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
-                                      .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
-                                      .Where(less => less.sM.less.lessonTypeId == 6)
-                                      .Where(m => m.m.mark == "зач")
-                                      .Where(st => st.sM.sM.student.studentUser == userManager.GetUserId(User))
-                                      .OrderBy(s => s.sM.less.subjectTaught.subject.subjectName)
-                                      .GroupBy(less => less.sM.sM.lesson.tsubjectId)
-                                      .Select(m => m.Count()).ToList();
+                             labaCount = lab.countLabs,
+                             zachCount = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
+                                                        .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
+                                                        .Where(m => m.m.mark == "зач")
+                                                        .Where(st => st.sM.sM.student.studentUser == students.studentUser)
+                                                        .Where(less => less.sM.less.tsubjectId == sT.tsubjectId)
+                                                        .GroupBy(less => less.sM.less.tsubjectId)
+                                                        .Select(m => m.Count()).FirstOrDefault()
+                         }).AsNoTracking().OrderBy(s=>s.subjectName).ToList();           
 
             //одногруппники
             var groupmates = context.students.Where(gr => gr.studentGroup == student.FirstOrDefault().studentGroup)
@@ -124,23 +124,11 @@ namespace EDiary.Controllers
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                              }).AsNoTracking().OrderBy(st=>st.studentSurname).OrderBy(st=>st.studentName).ToList();
 
-            //подсчет сданных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                if (zach.Count() == 0)
-                    tasks[i].zachCount = 0;
-                else if (zach.Count() == i)
-                    tasks[i].zachCount = 0;
-                else
-                    tasks[i].zachCount = zach[i];
-
-            }
-
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(x=>x.groupName).ToList();
+            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(x => x.groupName).ToList();
             
             //поиск
             if (!string.IsNullOrEmpty(search))
@@ -211,30 +199,21 @@ namespace EDiary.Controllers
                          select new SubjectGroupModel
                          {
                              subjectName = lab.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
-                             labaCount = lab.countLabs
+                             labaCount = lab.countLabs,
+                             zachCount = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
+                                                        .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
+                                                        .Where(m => m.m.mark == "зач")
+                                                        .Where(st => st.sM.sM.student.studentUser == students.studentUser)
+                                                        .Where(less => less.sM.less.tsubjectId == sT.tsubjectId)
+                                                        .GroupBy(less => less.sM.less.tsubjectId)
+                                                        .Select(m => m.Count()).FirstOrDefault()
                          }).AsNoTracking().OrderBy(s => s.subjectName).ToList();
-
-            //подсчет сданных лаб
-            var zach = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
-                                      .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
-                                      .Where(less => less.sM.less.lessonTypeId == 6)
-                                      .Where(m => m.m.mark == "зач")
-                                      .Where(st => st.sM.sM.student.studentUser == userManager.GetUserId(User))
-                                      .OrderBy(s => s.sM.less.subjectTaught.subject.subjectName)
-                                      .GroupBy(less => less.sM.sM.lesson.tsubjectId)
-                                      .Select(m => m.Count()).ToList();
-
-            //подсчет сданных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                tasks[i].zachCount = zach[i];
-            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
 
             //объединение предметов и лаб
-            var subLabs = labs.OrderBy(x => x.subjectName).OrderBy(x=>x.groupName);
+            var subLabs = labs.OrderBy(x => x.subjectName).OrderBy(x => x.groupName);
 
             //объединение в одну модель
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
@@ -295,30 +274,21 @@ namespace EDiary.Controllers
                          select new SubjectGroupModel
                          {
                              subjectName = lab.labName.Replace("(лабораторная, 2-ая подгруппа)", "").Replace("(лабораторная, 1-ая подгруппа)", ""),
-                             labaCount = lab.countLabs
+                             labaCount = lab.countLabs,
+                             zachCount = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
+                                                        .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
+                                                        .Where(m => m.m.mark == "зач")
+                                                        .Where(st => st.sM.sM.student.studentUser == students.studentUser)
+                                                        .Where(less => less.sM.less.tsubjectId == sT.tsubjectId)
+                                                        .GroupBy(less => less.sM.less.tsubjectId)
+                                                        .Select(m => m.Count()).FirstOrDefault()
                          }).AsNoTracking().OrderBy(s => s.subjectName).ToList();
 
-            //подсчет сданных лаб
-            var zach = context.lessons.Join(context.setMarks, less => less.lessonId, sM => sM.lessonId, (less, sM) => new { less, sM })
-                                      .Join(context.marks, sM => sM.sM.markId, m => m.markId, (sM, m) => new { sM, m })
-                                      .Where(less => less.sM.less.lessonTypeId == 6)
-                                      .Where(m => m.m.mark == "зач")
-                                      .Where(st => st.sM.sM.student.studentUser == userManager.GetUserId(User))
-                                      .OrderBy(s => s.sM.less.subjectTaught.subject.subjectName)
-                                      .GroupBy(less => less.sM.sM.lesson.tsubjectId)
-                                      .Select(m => m.Count()).ToList();
-
-            //подсчет сданных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                tasks[i].zachCount = zach[i];
-            }
-
             //эмоджи-статусы
-            var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
+            var statuses = studentsRep.studentsStatuses();
 
             //объединение предметов и лаб
-            var subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(x=>x.groupName);
+            var subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(x => x.groupName);
 
             //объединение в одну модель
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel 
@@ -336,32 +306,37 @@ namespace EDiary.Controllers
 
         //добавление фотографии студента
         [HttpPost]
-        public IActionResult AddPicture(AvatarStatusModel studentPicture)
+        public async Task <IActionResult> AddPicture(AvatarStatusModel studentPicture)
         {
-            context.Database.BeginTransaction();
-            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
-            byte[] pic = null;
-            using (var binaryReader = new BinaryReader(studentPicture.Picture.OpenReadStream()))
+            var student = studentsRep.findStudent(userManager.GetUserId(User));
+            if (studentPicture.Picture == null)
             {
-                pic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
+                student.studentPic = null;
+                await studentsRep.updateStudentAsync(student);
+                return RedirectToAction("Student", "Student");
             }
-            student.studentPic = pic;
-            context.students.Update(student);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
-            return RedirectToAction("Student", "Student");
+            else if (studentPicture.Picture.ContentType.Contains("image"))
+            { 
+                using (var binaryReader = new BinaryReader(studentPicture.Picture.OpenReadStream()))
+                {
+                    student.studentPic = binaryReader.ReadBytes((int)studentPicture.Picture.Length);
+                }
+                await studentsRep.updateStudentAsync(student);
+                return RedirectToAction("Student", "Student");
+            }
+            else 
+            {
+                return Json("Error of add picture"); 
+            }
         }
 
         //добавление эмоджи статуса
         [HttpPost]
-        public IActionResult AddStatus(AvatarStatusModel studentStatus)
+        public async Task <IActionResult> AddStatus(AvatarStatusModel studentStatus)
         {
-            context.Database.BeginTransaction();
-            var student = context.students.Where(stId => stId.studentUser == userManager.GetUserId(User)).FirstOrDefault();
+            var student = studentsRep.findStudent(userManager.GetUserId(User));
             student.studentStatus = studentStatus.statusId;
-            context.students.Update(student);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            await studentsRep.updateStudentAsync(student);
             return RedirectToAction("Student", "Student");
         }
     }

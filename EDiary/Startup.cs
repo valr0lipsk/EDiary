@@ -40,8 +40,9 @@ namespace EDiary
             services.AddTransient<ILessonRepository, LessonRepository>();
             services.AddTransient<IMarkRepository, MarkRepository>();
             services.AddTransient<IStudentRepository, StudentRepository>();
-            services.AddTransient<ISubjectTaughtRepository, subjectTaughtRepository>();
+            services.AddTransient<ISubjectsRepository, subjectsRepository>();
             services.AddTransient<ITeacherRepository, TeacherRepository>();
+            services.AddTransient<IGroupRepository, GroupRepository>();
             //подключение идентификации пользователей
             services.AddIdentity<IdentityUser, IdentityRole>(opts =>
             {

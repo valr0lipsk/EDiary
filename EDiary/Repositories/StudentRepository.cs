@@ -12,50 +12,39 @@ namespace EDiary.Repositories
     public class StudentRepository : IStudentRepository
     {
         private readonly EDContext context;
-        DbSet<Student> dbSetStudent;
+        DbSet<Student> students;
+        DbSet<EmojiStatus> statuses;
         public StudentRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetStudent = context.Set<Student>();
-        }
-        public IQueryable<Student> GetStudents()
-        {
-            return context.students.OrderBy(x => x.studentId);
-        }
-        public IEnumerable<Student> GetList()
-        {
-            return context.students;
-        }
-        public IEnumerable<Student> Get()
-        {
-            return dbSetStudent.AsNoTracking().ToList();
+            this.students = context.Set<Student>();
+            this.statuses = context.Set<EmojiStatus>();
         }
 
-        public Student FindById(Guid studentId)
+        //получение студента как пользователя
+        public Student findStudent(string student)
         {
-            return dbSetStudent.Find(studentId);
+            return students.Where(st => st.studentUser == student).FirstOrDefault();
         }
 
-        public void AddStudent(Student item)
+        //создание студента
+        public async Task createStudentAsync(Student student)
         {
-            dbSetStudent.Add(item);
-            context.SaveChanges();
-        }
-        public void UpdateStudent(Student item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-        public void DeleteStudent(Student item)
-        {
-            dbSetStudent.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
-            context.SaveChanges();
+            await students.AddAsync(student);
+            await context.SaveChangesAsync();
         }
 
+        //обновление студента
+        public async Task updateStudentAsync(Student student)
+        {
+            students.Update(student);
+            await context.SaveChangesAsync();
+        }
+
+        //получение эмоджи-статусов студента
+        public List<EmojiStatus> studentsStatuses()
+        {
+            return statuses.Take(8).AsNoTracking().ToList();
+        }
     }
-
 }

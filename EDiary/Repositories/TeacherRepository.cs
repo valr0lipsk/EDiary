@@ -12,44 +12,46 @@ namespace EDiary.Repositories
     public class TeacherRepository : ITeacherRepository
     {
         EDContext context;
-        DbSet<Teacher> dbSetTeacher;
+        DbSet<Teacher> teachers;
+        DbSet<EmojiStatus> statuses;
 
         public TeacherRepository(EDContext context)
         {
             this.context = context;
-            this.dbSetTeacher = context.Set<Teacher>();
+            this.teachers = context.Set<Teacher>();
+            this.statuses = context.Set<EmojiStatus>();
         }
 
-        public IEnumerable<Teacher> Get()
+        //получение всех преподавателей
+        public List<Teacher> allTeachers()
         {
-            return dbSetTeacher.AsNoTracking().ToList();
+            return teachers.AsNoTracking().ToList();
         }
 
-        public Teacher FindById(Guid teacherId)
+        //получение преподавателя как пользователя
+        public Teacher findTeacher(string teacher)
         {
-            return dbSetTeacher.Find(teacherId);
+            return teachers.Where(tr => tr.teacherUser == teacher).FirstOrDefault();
         }
 
-        public void Create(Teacher item)
+        //создание преподавателя
+        public async Task createTeacherAsync(Teacher item)
         {
-            dbSetTeacher.Add(item);
-            context.SaveChanges();
-        }
-        public void Update(Teacher item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-        public void Remove(Teacher item)
-        {
-            dbSetTeacher.Remove(item);
-            context.SaveChanges();
-        }
-        public void Save()
-        {
-            context.SaveChanges();
+            await teachers.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
+        //обновление преподавателя
+        public async Task updateTeacherAsync(Teacher teacher)
+        {
+            teachers.Update(teacher);
+            await context.SaveChangesAsync();
+        }
+
+        //получение эмоджи-статусов преподавателя
+        public List<EmojiStatus> teachersStatuses()
+        {
+            return statuses.Take(7).OrderByDescending(e => e.statusId).AsNoTracking().ToList();
+        }
     }
-
 }

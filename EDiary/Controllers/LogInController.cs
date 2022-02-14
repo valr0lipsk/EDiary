@@ -20,7 +20,8 @@ namespace EDiary.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         public EDContext context;
-        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context) => (this.userManager, this.signInManager, this.context) = (userManager, signInManager, context);
+        public LogInController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EDContext context) 
+                           => (this.userManager, this.signInManager, this.context) = (userManager, signInManager, context);
 
         //представление авторизации
         [HttpGet]
@@ -130,7 +131,7 @@ namespace EDiary.Controllers
 
         //смена пароля пользователя
         [Authorize]
-        public IActionResult ChangePassword() => View("ChangePassword");
+        public IActionResult ChangePassword() => View();
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(UserChangePasswordModel userPassword)
@@ -182,7 +183,25 @@ namespace EDiary.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Login", "LogIn");
         }
-        
+
+        //смена почты
+        [Authorize]
+        public async Task<IActionResult> ChangeEmail(string newEmail)
+        {
+            var user = await userManager.FindByIdAsync(userManager.GetUserId(User));
+            user.Email = newEmail;
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
+            if (await userManager.IsInRoleAsync(user, "student"))
+            {
+                return RedirectToAction("Student", "Student");
+            }
+            else if (await userManager.IsInRoleAsync(user, "teacher"))
+            {
+                return RedirectToAction("Teacher", "Teacher");
+            }
+            else { return View(); }
+        }
         //ошибка
         public IActionResult AlertMessage() => PartialView("~/Views/Login/_alertMessage.cshtml");
     }

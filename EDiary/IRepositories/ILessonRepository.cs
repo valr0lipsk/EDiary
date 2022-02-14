@@ -8,11 +8,10 @@ namespace EDiary.IRepositories
 {
     public interface ILessonRepository
     {
-        Lesson FindById(Guid lessonId);
-        IEnumerable<Lesson> Get();
-        void Create(Lesson item);
-        void Remove(Lesson item);
-        void Update(Lesson item);
-        void Save();
+        Task createLessonAsync(Lesson lesson);
+        Task removeLessonAsync(Lesson lesson);
+        Lesson findLesson(int lessonId);
+        int findLessonType(string lessonType);
+        List<lessonType> getLessonTypes();
     }
 }

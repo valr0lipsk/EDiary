@@ -1,7 +1,9 @@
-﻿using EDiary.Models;
+﻿using EDiary.IRepositories;
+using EDiary.Models;
 using EDiary.Service;
 using EDiary.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -20,7 +22,9 @@ namespace EDiary.Controllers
     {
         EDContext context;
         private UserManager<IdentityUser> userManager;
-        public TeacherController(UserManager<IdentityUser> userManager, EDContext context)=> (this.userManager, this.context) = (userManager, context);
+        ITeacherRepository teachersRep;
+        public TeacherController(UserManager<IdentityUser> userManager, EDContext context, ITeacherRepository teachersRep)
+                             => (this.userManager, this.context, this.teachersRep) = (userManager, context, teachersRep);
 
 
 
@@ -29,8 +33,8 @@ namespace EDiary.Controllers
         {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
-                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
-                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+                                        .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                        .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
             //кураторская группа
             ViewBag.curatorGroup = context.teachers.Join(context.groups, tr => tr.teacherId, gr => gr.curatorId, (tr, gr) => new { tr, gr })
@@ -46,7 +50,7 @@ namespace EDiary.Controllers
                                               teacherLastname = tr.teacherLastname,
                                               teacherPic = tr.teacherPic,
                                               teacherStatus = tr.status.emoji,
-                                              teacherGroup = context.groups.Where(tr=>tr.teacher.teacherUser==userManager.GetUserId(User))
+                                              teacherGroup = context.groups.Where(tr => tr.teacher.teacherUser == userManager.GetUserId(User))
                                                                            .Select(gr => gr.groupId).FirstOrDefault()
                                           }).AsNoTracking().ToList();
 
@@ -86,44 +90,35 @@ namespace EDiary.Controllers
                                     {
                                         subjectName = task.lab.labName,
                                         groupName = task.lab.tsubject.@group.groupName,
-                                        labaCount = task.lab.countLabs
-                                    }).AsNoTracking().OrderBy(lab=>lab.subjectName).OrderBy(gr=>gr.groupName).ToList();
-
-            //подсчет проведенных лаб
-            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                      .Where(less => less.sT.less.lessonTypeId == 6)
-                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                      .OrderBy(lab => lab.lab.labName)
-                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
-                                      .GroupBy(l => l.lab.labId)
-                                      .Select(lab => lab.Count()).ToList();
+                                        labaCount = task.lab.countLabs,
+                                        lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                                   .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                                   .Where(less => less.sT.less.lessonTypeId == 6)
+                                                                   .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                                   .Where(lb => lb.lab.labId == task.lab.labId)
+                                                                   .GroupBy(l => l.lab.labId)
+                                                                   .Select(lab => lab.Count()).FirstOrDefault()
+                                    }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
 
             //учащиеся кураторской группы
             var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
-                                            .Select(st => new StudentModel
-                                            {
-                                                 studentId = st.studentId,
-                                                 studentSurname = st.studentSurname,
-                                                 studentName = st.studentName,
-                                                 studentLastname = st.studentLastname,
-                                                 studentPic = st.studentPic,
-                                                 studentStatus = st.status.emoji,
-                                                 studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                           .Select(st => new StudentModel
+                                           {
+                                                studentId = st.studentId,
+                                                studentSurname = st.studentSurname,
+                                                studentName = st.studentName,
+                                                studentLastname = st.studentLastname,
+                                                studentPic = st.studentPic,
+                                                studentStatus = st.status.emoji,
+                                                studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                        .Where(m => digitals.Values.Contains(m.m.mark))
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                            }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
-
-            //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                tasks[i].lessCount = less[i];
-            }
+                                           }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
 
             //эмоджи-статусы
-            var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
+            var statuses = teachersRep.teachersStatuses();
 
             //объединение лаб и предметов
             var subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
@@ -168,7 +163,7 @@ namespace EDiary.Controllers
                                               teacherStatus = tr.status.emoji
                                           }).AsNoTracking().ToList();
 
-           
+
             //лабы
             var labs = (from tsub in context.subjectTaughts
                         join gr in context.groups on tsub.groupId equals gr.groupId
@@ -191,24 +186,15 @@ namespace EDiary.Controllers
                                     {
                                         subjectName = task.lab.labName,
                                         groupName = task.lab.tsubject.@group.groupName,
-                                        labaCount = task.lab.countLabs
+                                        labaCount = task.lab.countLabs,
+                                        lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                                   .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                                   .Where(less => less.sT.less.lessonTypeId == 6)
+                                                                   .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                                   .Where(lb => lb.lab.labId == task.lab.labId)
+                                                                   .GroupBy(l => l.lab.labId)
+                                                                   .Select(lab => lab.Count()).FirstOrDefault()
                                     }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
-
-            //подсчет проведенных лаб
-            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                      .Where(less => less.sT.less.lessonTypeId == 6)
-                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                      .OrderBy(lab => lab.lab.labName)
-                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
-                                      .GroupBy(l => l.lab.labId)
-                                      .Select(lab => lab.Count()).ToList();
-
-            //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                tasks[i].lessCount = less[i];
-            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
@@ -270,30 +256,15 @@ namespace EDiary.Controllers
                                     {
                                         subjectName = task.lab.labName,
                                         groupName = task.lab.tsubject.@group.groupName,
-                                        labaCount = task.lab.countLabs
+                                        labaCount = task.lab.countLabs,
+                                        lessCount = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
+                                                                   .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
+                                                                   .Where(less => less.sT.less.lessonTypeId == 6)
+                                                                   .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
+                                                                   .Where(lb => lb.lab.labId == task.lab.labId)
+                                                                   .GroupBy(l => l.lab.labId)
+                                                                   .Select(lab => lab.Count()).FirstOrDefault()
                                     }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
-
-            //подсчет проведенных лаб
-            var less = context.lessons.Join(context.subjectTaughts, less => less.tsubjectId, sT => sT.tsubjectId, (less, sT) => new { less, sT })
-                                      .Join(context.labs, sT => sT.sT.tsubjectId, lab => lab.tsubjectId, (sT, lab) => new { sT, lab })
-                                      .Where(less => less.sT.less.lessonTypeId == 6)
-                                      .Where(lab => lab.lab.teacher.teacherUser == userManager.GetUserId(User))
-                                      .OrderBy(lab => lab.lab.labName)
-                                      .OrderBy(gr => gr.lab.tsubject.group.groupName)
-                                      .GroupBy(l => l.lab.labId)
-                                      .Select(lab => lab.Count()).ToList();
-
-            //подсчет проведенных лаб в каждой задаче
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                if (less.Count() == 0)
-                    tasks[i].zachCount = 0;
-                else if (less.Count() == i)
-                    tasks[i].zachCount = 0;
-                else
-                    tasks[i].zachCount = less[i];
-
-            }
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.Take(7).OrderByDescending(e => e.statusId).ToList();
@@ -317,34 +288,39 @@ namespace EDiary.Controllers
 
         //добавление фотографии преподавателя
         [HttpPost]
-        public IActionResult AddPicture(AvatarStatusModel teacherPicture)
+        public async Task<IActionResult> AddPicture(AvatarStatusModel teacherPicture)
         {
-            context.Database.BeginTransaction();
-            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).First();
-            byte[] pic = null;
-            using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))
+            var teacher = teachersRep.findTeacher(userManager.GetUserId(User));
+            if (teacherPicture.Picture == null)
             {
-                pic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
+                teacher.teacherPic = null;
+                await teachersRep.updateTeacherAsync(teacher);
+                return RedirectToAction("Teacher", "Teacher");
             }
-            teacher.teacherPic = pic;
-            context.teachers.Update(teacher);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
-            return RedirectToAction("Teacher", "Teacher");
+            else if (teacherPicture.Picture.ContentType.Contains("image"))
+            { 
+                using (var binaryReader = new BinaryReader(teacherPicture.Picture.OpenReadStream()))    
+                {
+                    teacher.teacherPic = binaryReader.ReadBytes((int)teacherPicture.Picture.Length);
+                }
+                await teachersRep.updateTeacherAsync(teacher);
+                return RedirectToAction("Teacher", "Teacher");
+            }
+            else
+            {
+                return Json("Error of add picture");
+            }
         }
 
 
 
         //добавление эмоджи статуса
         [HttpPost]
-        public IActionResult AddStatus(AvatarStatusModel teacherStatus)
+        public async Task<IActionResult> AddStatus(AvatarStatusModel teacherStatus)
         {
-            context.Database.BeginTransaction();
-            var teacher = context.teachers.Where(trId => trId.teacherUser == userManager.GetUserId(User)).FirstOrDefault();
+            var teacher = teachersRep.findTeacher(userManager.GetUserId(User));
             teacher.teacherStatus = teacherStatus.statusId;
-            context.teachers.Update(teacher);
-            context.SaveChanges();
-            context.Database.CommitTransaction();
+            await teachersRep.updateTeacherAsync(teacher);
             return RedirectToAction("Teacher", "Teacher");
         }
     }

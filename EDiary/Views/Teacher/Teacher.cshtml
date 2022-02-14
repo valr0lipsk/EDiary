@@ -15,7 +15,7 @@
                                 <a class="openIconModal" href="#">Сменить фото</a>
                                 <a class="openEmojiModal" href="#">Выбрать статус</a>
                                 <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
-                                <a href="#">Сменить почту</a>
+                                <a asp-controller="LogIn" asp-action="ChangeEmail">Сменить почту</a>
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                                 </div>
                                 <form asp-action="AddPicture" asp-controller="Teacher" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
-                                        <input class="form-control-file" name="Picture" type="file" required accept="image/*" />
+                                        <input class="form-control-file" name="Picture" type="file" accept="image/*" />
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
