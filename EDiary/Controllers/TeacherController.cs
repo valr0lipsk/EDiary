@@ -29,7 +29,7 @@ namespace EDiary.Controllers
 
 
         //представление препода(фамилия, предметы и группы, поиск)
-        public IActionResult Teacher(string subjects)
+        public IActionResult Teacher(string category)
         {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
@@ -122,15 +122,15 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
-            if (subjects == "1")
+            if (category == "1")
             {
                 subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
-            else if (subjects == "2")
+            else if (category == "2")
             {
                 subLabs = subjectGroups.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
-            else if (subjects == "3")
+            else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }

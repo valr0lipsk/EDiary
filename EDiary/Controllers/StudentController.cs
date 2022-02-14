@@ -30,7 +30,7 @@ namespace EDiary.Controllers
 
 
         //представление ученика (все предметы и лабы)
-        public IActionResult Student(string allSubjects)
+        public IActionResult Student(string category)
         {
             //отметки-цифры
             var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
@@ -129,15 +129,15 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
-            if (allSubjects == "1")
+            if (category == "1")
             {
                 subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
-            else if (allSubjects == "2")
+            else if (category == "2")
             {
                 subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
-            else if (allSubjects == "3")
+            else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }            
