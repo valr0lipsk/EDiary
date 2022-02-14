@@ -48,8 +48,8 @@ namespace EDiary
             {
                 opts.Password.RequiredLength = 8;   // минимальная длина
                 opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
-                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
-                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
+                opts.Password.RequireLowercase = true; // требуются ли символы в нижнем регистре
+                opts.Password.RequireUppercase = true; // требуются ли символы в верхнем регистре
                 opts.Password.RequireDigit = true; //требуются ли цифры
             }).AddEntityFrameworkStores<EDContext>().AddDefaultTokenProviders();
             //добавление и настройка сессии
