@@ -701,35 +701,39 @@ namespace EDiary.Controllers
         //добавление занятия
         public async Task <IActionResult> AddLesson(LessonModel addLesson)
         {
-            if (addLesson.labId == 0)
+            if (addLesson.lessonDate.Month != 8 && DateTime.Now.Year == addLesson.lessonDate.Year || DateTime.Now.Year - addLesson.lessonDate.Year == 1)
             {
-                using var transaction = context.Database.BeginTransaction();
-                Lesson lesson = new Lesson
+                if (addLesson.labId == 0)
                 {
-                    tsubjectId = addLesson.id,
-                    lessonDate = addLesson.lessonDate,
-                    lessonTypeId = lessonsRep.findLessonType(addLesson.lessonType)
-                };
-                await lessonsRep.createLessonAsync(lesson);
-                transaction.Commit();
-                return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
+                    using var transaction = context.Database.BeginTransaction();
+                    Lesson lesson = new Lesson
+                    {
+                        tsubjectId = addLesson.id,
+                        lessonDate = addLesson.lessonDate,
+                        lessonTypeId = lessonsRep.findLessonType(addLesson.lessonType)
+                    };
+                    await lessonsRep.createLessonAsync(lesson);
+                    transaction.Commit();
+                    return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
+                }
+                else
+                {
+                    var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab })
+                                                     .Where(l => l.lab.labId == addLesson.labId)
+                                                     .Select(sT => sT.st.tsubjectId).FirstOrDefault();
+                    using var transaction = context.Database.BeginTransaction();
+                    Lesson lesson = new Lesson
+                    {
+                        tsubjectId = tsub,
+                        lessonDate = addLesson.lessonDate,
+                        lessonTypeId = 6
+                    };
+                    await lessonsRep.createLessonAsync(lesson);
+                    transaction.Commit();
+                    return RedirectToAction("Jurnal", "Marks", new { addLesson.labId });
+                }
             }
-            else
-            {
-                var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab })
-                                                 .Where(l => l.lab.labId == addLesson.labId)
-                                                 .Select(sT => sT.st.tsubjectId).FirstOrDefault();
-                using var transaction = context.Database.BeginTransaction();
-                Lesson lesson = new Lesson 
-                { 
-                    tsubjectId = tsub,
-                    lessonDate = addLesson.lessonDate,
-                    lessonTypeId = 6
-                };
-                await lessonsRep.createLessonAsync(lesson);
-                transaction.Commit();
-                return RedirectToAction("Jurnal", "Marks", new { addLesson.labId });
-            }
+            return Json("Incorrect date");
         }
 
 
