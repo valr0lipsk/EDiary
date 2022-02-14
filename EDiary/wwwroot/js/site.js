@@ -199,8 +199,8 @@ $(document).ready(function () {
             })
         }
         else if ($(this).text()){ //add mark
-            lessId = $(this).attr('data-idLess');
-            studId = $(this).attr('data-idStud');
+            const lessId = $(this).attr('data-idLess');
+            const studId = $(this).attr('data-idStud');
             const td = $(this);
             const value = $(this).text().trim();
             $.ajax({
