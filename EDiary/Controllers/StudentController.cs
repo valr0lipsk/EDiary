@@ -140,7 +140,11 @@ namespace EDiary.Controllers
             else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
-            }            
+            }  
+            else
+            {
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+            }
 
             //объединение в одну модель
             AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
