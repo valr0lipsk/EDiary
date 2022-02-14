@@ -55,6 +55,24 @@ $(document).ready(function () {
 
     //-------------------------------------------
     //common funcs
+
+    //filter subjects
+    $('.subject__find').click(function () {
+        const _this = this;
+        const findType = $(this).attr('data-findType');
+        $.ajax({
+            type: 'POST',
+            data: {
+                'category': findType,
+            },
+            cache: false,
+            async: true,
+            success: function (result) {
+                console.log('good');
+            }
+        });
+    })
+
     //get subject id from acc to open jurnal page
     $('.item__title').click(function () {
         const subId = $(this).attr('data-id');

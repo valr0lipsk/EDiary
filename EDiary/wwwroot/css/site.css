@@ -526,6 +526,7 @@ tr, td {
 
 .subject__find {
   height: 60px;
+  color: black;
   font: normal 13px "Ubuntu", sans-serif;
 }
 .subject__find:hover {
