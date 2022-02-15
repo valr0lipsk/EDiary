@@ -131,6 +131,7 @@ namespace EDiary.Controllers
 
         //смена пароля пользователя
         [Authorize]
+        [HttpGet]
         public IActionResult ChangePassword() => View();
 
         [HttpPost]

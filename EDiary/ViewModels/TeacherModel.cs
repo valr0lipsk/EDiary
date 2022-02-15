@@ -7,7 +7,6 @@ namespace EDiary.ViewModels
 {
     public class TeacherModel
     {
-        public int teacherId { get; set; }
         public string teacherSurname { get; set; }
         public string teacherName { get; set; }
         public string teacherLastname { get; set; }
