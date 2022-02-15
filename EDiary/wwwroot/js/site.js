@@ -39,6 +39,11 @@ $(document).ready(function () {
         $('#partialDiv').load('/Admin/AddGroup')
     })
 
+    //all groups
+    $('#allG').click(function () {
+        $('#partialDiv').load('/Admin/ShowGroups')
+    })
+
     //???
     $('.admin__menu').click(function () {
         if ($('.admin__sidebar').hasClass('d-none')) {
