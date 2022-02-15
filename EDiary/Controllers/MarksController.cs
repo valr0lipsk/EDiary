@@ -571,7 +571,7 @@ namespace EDiary.Controllers
                 jurnal.types = types;
                 jurnal.userSubjects = subLabs;
 
-                return View(jurnal);
+                return PartialView("~/Views/Marks/_jurnalTable.cshtml", jurnal);
             }
 
 
