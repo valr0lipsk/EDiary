@@ -1,27 +1,29 @@
-﻿<div class="row p-3 d-flex flex-column">
-    <h2 class="block__tile mb-3 text-center">Мои предметы:</h2>
-    <div class="input-group mb-3">
-        <input class="form-control" id="subjectFind" type="text" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button">Поиск</button>
-        </div>
-    </div>
-    @foreach (var subjectGroup in Model.subjectGroups)
-    {
-        <div class="block__item col-12 mb-4">
-            <div class="row p-2">
-                <div class="item__circle mr-3 d-flex align-content-center align-items-center justify-content-center rounded-circle">
-                    <img src="data:image/*;base64,@(Convert.ToBase64String(subjectGroup.subIcon))" />
-                </div>
-                @if (subjectGroup.labaId == 0)
-                {
-                    <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
-                }
-                else
-                {
-                    <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-labaid="@subjectGroup.labaId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
-                }
+﻿<div class="subjects__block col-11">
+    <div class="row p-3 d-flex flex-column">
+        <h2 class="block__tile mb-3 text-center">Мои предметы:</h2>
+        <div class="input-group mb-3">
+            <input class="form-control" id="subjectFind" type="text" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">Поиск</button>
             </div>
         </div>
-    }
+        @foreach (var subjectGroup in Model.subjectGroups)
+        {
+            <div class="block__item col-12 mb-4">
+                <div class="row p-2">
+                    <div class="item__circle mr-3 d-flex align-content-center align-items-center justify-content-center rounded-circle">
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(subjectGroup.subIcon))" />
+                    </div>
+                    @if (subjectGroup.labaId == 0)
+                    {
+                        <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                    }
+                    else
+                    {
+                        <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-labaid="@subjectGroup.labaId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                    }
+                 </div>
+             </div>
+         }
+    </div>
 </div>
