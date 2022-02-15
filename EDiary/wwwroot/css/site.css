@@ -607,7 +607,7 @@ tr, td {
   }
 }
 #onTop {
-  display: inline-block;
+  display: none;
   background-color: #7748ca;
   opacity: 0.4;
   width: 50px;
