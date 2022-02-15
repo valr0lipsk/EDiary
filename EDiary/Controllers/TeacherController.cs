@@ -56,18 +56,18 @@ namespace EDiary.Controllers
                                           }).AsNoTracking().ToList();
 
             //предметы
-            var subjectGroups = (from tsub in context.subjectTaughts
-                                 join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                                 join gr in context.groups on tsub.groupId equals gr.groupId
-                                 join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
-                                 where teachers.teacherUser == userManager.GetUserId(User)
-                                 select new SubjectGroupModel
-                                 {
-                                     groupName = gr.groupName,
-                                     subjectName = subject.subjectName,
-                                     tsubjectId = tsub.tsubjectId,
-                                     subIcon = subject.Icon.subjectPicture
-                                 }).AsNoTracking().ToList();
+            var subjects = (from tsub in context.subjectTaughts
+                            join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                            join gr in context.groups on tsub.groupId equals gr.groupId
+                            join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
+                            where teachers.teacherUser == userManager.GetUserId(User)
+                            select new SubjectGroupModel
+                            {
+                                groupName = gr.groupName,
+                                subjectName = subject.subjectName,
+                                tsubjectId = tsub.tsubjectId,
+                                subIcon = subject.Icon.subjectPicture
+                            }).AsNoTracking().ToList();
 
             //лабы
             var labs = (from tsub in context.subjectTaughts
@@ -123,34 +123,62 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
+            //все
             if (category == "1")
             {
-                subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+            //только лекции
             else if (category == "2")
             {
-                subLabs = subjectGroups.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+            //только лабы
             else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                
+                //объединение в одну модель
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
             else
             {
-                subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return View(teacherSubjectGroup);
             }
-
-            //объединение в одну модель
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
-            {
-                Teachers = teacher,
-                subjectGroups = subLabs,
-                statuses = statuses,
-                tasks = tasks,
-                students = students,
-            };
-
-            return View(teacherSubjectGroup);
         }
 
 
