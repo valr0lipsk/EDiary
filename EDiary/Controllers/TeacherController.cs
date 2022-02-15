@@ -123,30 +123,62 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
-            if (category == "1" || category == null)
+            //все
+            if (category == "1")
             {
                 subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+            //только лекции
             else if (category == "2")
             {
                 subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+            //только лабы
             else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                
+                //объединение в одну модель
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
-            
-            //объединение в одну модель
-            AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+            else
             {
-                Teachers = teacher,
-                subjectGroups = subLabs,
-                statuses = statuses,
-                tasks = tasks,
-                students = students,
-            };
-
-            return View(teacherSubjectGroup);
+                AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
+                {
+                    Teachers = teacher,
+                    subjectGroups = subLabs,
+                    statuses = statuses,
+                    tasks = tasks,
+                    students = students,
+                };
+                return View(teacherSubjectGroup);
+            }
         }
 
 

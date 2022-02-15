@@ -30,7 +30,7 @@ namespace EDiary.Controllers
         //переадресация на нужный POST-метод
         [HttpPost]
         [Route("Marks/Jurnal/{id?}")]
-        public IActionResult Jurnal(int studId, int lessId, string value, LessonModel lessDates) => value == null ? Jurnal(lessDates) : Jurnal(studId, lessId, value);
+        public IActionResult Jurnal(int studId, int lessId, string value, LessonModel lessDates, string month) => value == null ? Jurnal(lessDates, month) : Jurnal(studId, lessId, value);
 
 
 
@@ -360,7 +360,7 @@ namespace EDiary.Controllers
         /**********ЖУРНАЛ ПО ДАТАМ**********/
 
         //показать занятия по промежутку
-        public IActionResult Jurnal(LessonModel lessDates)
+        public IActionResult Jurnal(LessonModel lessDates, string month)
         {
             var jurnal = new JurnalModel();
 
@@ -488,7 +488,7 @@ namespace EDiary.Controllers
                                       }).AsNoTracking().ToList();
 
                 //выбор промежутка отображения журнала лабораторных
-                if (lessDates.lessonDate.Year == 0001)
+                if (month == null)
                 {
                     //занятие
                     jurnal.Lessons = (from lesson in context.lessons
@@ -531,7 +531,7 @@ namespace EDiary.Controllers
                                       join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                       join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
                                       where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                      where lesson.lessonDate == lessDates.lessonDate
+                                      where lesson.lessonDate.ToLongDateString().Contains(month)
                                       orderby lesson.lessonDate
                                       select new Lesson
                                       {
@@ -550,7 +550,7 @@ namespace EDiary.Controllers
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
                                        where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                       where lesson.lessonDate == lessDates.lessonDate
+                                       where lesson.lessonDate.ToLongDateString().Contains(month)
                                        select new setMark
                                        {
                                            mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -615,7 +615,7 @@ namespace EDiary.Controllers
                                       }).AsNoTracking().ToList();
 
                 //промежуток отображения журнала предметов
-                if (lessDates.lessonDate.Year == 1)
+                if (month == null)
                 {
                     //занятия
                     jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lessDates.id && less.lessonTypeId != 6)
@@ -651,7 +651,7 @@ namespace EDiary.Controllers
                 else
                 {
                     jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lessDates.id && less.lessonTypeId != 6)
-                                                    .Where(less => less.lessonDate == lessDates.lessonDate)
+                                                    .Where(less => less.lessonDate.ToLongDateString().Contains(month))
                                                     .OrderBy(less => less.lessonDate)
                                                     .Select(less => new Lesson
                                                     {
@@ -669,7 +669,7 @@ namespace EDiary.Controllers
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
                                        where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                       where lesson.lessonDate == lessDates.lessonDate
+                                       where lesson.lessonDate.ToLongDateString().Contains(month)
                                        select new setMark
                                        {
                                            mark = new Mark() { mark = mark.mark, markId = mark.markId },
