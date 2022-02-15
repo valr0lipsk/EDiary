@@ -193,6 +193,22 @@ $(document).ready(function () {
         $('#delLessModal').modal('show');
     })
 
+    //mounth selection
+    $('#mounthSelection').change(function () {
+        const month = $(this).val();
+        $.ajax({
+            type: 'POST',
+            data: {
+                'month': month,
+            },
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('.jurnal__main').replaceWith(result)
+            }
+        });
+    })
+
     //update, remove or add mark in jurnal
     $('td.pt-3-half').bind('blur', function () {
         if ($(this).attr('data-idsm')) { //update or delete
