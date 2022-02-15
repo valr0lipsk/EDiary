@@ -56,18 +56,18 @@ namespace EDiary.Controllers
                                           }).AsNoTracking().ToList();
 
             //предметы
-            var subjectGroups = (from tsub in context.subjectTaughts
-                                 join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                                 join gr in context.groups on tsub.groupId equals gr.groupId
-                                 join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
-                                 where teachers.teacherUser == userManager.GetUserId(User)
-                                 select new SubjectGroupModel
-                                 {
-                                     groupName = gr.groupName,
-                                     subjectName = subject.subjectName,
-                                     tsubjectId = tsub.tsubjectId,
-                                     subIcon = subject.Icon.subjectPicture
-                                 }).AsNoTracking().ToList();
+            var subjects = (from tsub in context.subjectTaughts
+                            join subject in context.subjects on tsub.subjectId equals subject.subjectId
+                            join gr in context.groups on tsub.groupId equals gr.groupId
+                            join teachers in context.teachers on tsub.teacherId equals teachers.teacherId
+                            where teachers.teacherUser == userManager.GetUserId(User)
+                            select new SubjectGroupModel
+                            {
+                                groupName = gr.groupName,
+                                subjectName = subject.subjectName,
+                                tsubjectId = tsub.tsubjectId,
+                                subIcon = subject.Icon.subjectPicture
+                            }).AsNoTracking().ToList();
 
             //лабы
             var labs = (from tsub in context.subjectTaughts
@@ -123,23 +123,19 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
-            if (category == "1")
+            if (category == "1" || category == null)
             {
-                subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
             else if (category == "2")
             {
-                subLabs = subjectGroups.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
             else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
             }
-            else
-            {
-                subLabs = subjectGroups.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
-            }
-
+            
             //объединение в одну модель
             AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
             {
@@ -150,7 +146,7 @@ namespace EDiary.Controllers
                 students = students,
             };
 
-            return View(teacherSubjectGroup);
+            return View("Teacher", teacherSubjectGroup);
         }
 
 
