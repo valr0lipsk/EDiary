@@ -1,18 +1,19 @@
 ﻿@using EDiary.ViewModels
+@model ChangeEmailModel
 <div class="container border-right border-left">
     <div class="changePass__block col-10">
         <div class="row p-3 d-flex flex-column">
             <h2>Изменение почты</h2>
-            <form asp-action="" asp-controller="LogIn">
+            <form asp-action="ChageEmail" asp-controller="LogIn">
                 <div class="form-group">
                     <label class="control-label">Старый e-mail</label>
-                    <input class="form-control" type="email" asp-for="" required />
-                    <span class="small text-danger" asp-validation-for=""></span>
+                    <input class="form-control" type="email" asp-for="oldEmail" required />
+                    <span class="small text-danger" asp-validation-for="oldEmail"></span>
                 </div>
                 <div class="form-group">
                     <label class="control-label">Новый e-mail</label>
-                    <input class="form-control" type="email" asp-for="" required/>
-                    <span class="small text-danger" id="valForNew" asp-validation-for=""></span>
+                    <input class="form-control" type="email" asp-for="newEmail" required/>
+                    <span class="small text-danger" id="valForNew" asp-validation-for="newEmail"></span>
                 </div>
                 <div class="form-group">
                     <input class="btn btn-primary" type="submit" value="Сохранить"/>

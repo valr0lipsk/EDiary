@@ -1,5 +1,6 @@
 ﻿@using EDiary.Models
 @using EDiary.ViewModels
+@model TableGroupModel
 <div class="col-12">
     <div class="row"> 
         <div class="col-12">
@@ -16,12 +17,12 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach (var userStudentGroup in Model.students)
+            @foreach (var group in Model.groups)
                 {
                     <tr>
-@*                        <td>@userStudentGroup.studentLogin</td>
-                        <td>@userStudentGroup.studentSurname</td>
-                        <td>@userStudentGroup.studentName</td>*@
+                        <td>@group.groupName</td>
+                        <td>@group.curator</td>
+                        <td>@group.studentsCount</td>
                         <td>
                             <a class="btnUpdate" data-object="user"><img src="/css/source/iconUpdate.png"/></a>
                             <a class="btnRemove"><img src="~/css/source/iconDelete.png"/></a>
@@ -40,7 +41,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-action="" method="post" enctype="multipart/form-data">
+            <form asp-action="DeleteGroup" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
@@ -67,20 +68,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-action="" method="post" enctype="multipart/form-data">
+            <form asp-action="UpdateGroup" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="numberGr" asp-for="" type="text" required/>
+                            <input class="form-control" id="numberGr" asp-for="groupName" type="text" required/>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="row mb-2">
-                            <input class="form-control" id="teacherGr" asp-for="" type="text" required list="teachersGr"/>
+                            <input class="form-control" id="teacherGr" asp-for="curator" type="text" required list="teachersGr"/>
                             <datalist id="teachersGr">
-                                @foreach (var group in Model.groups)
+                                @foreach (var teacher in Model.teachers)
                                 {
-                                    <option value="@group.groupName"></option>
+                                    <option value="@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname"></option>
                                 }
                             </datalist>
                         </div>

@@ -531,7 +531,7 @@ namespace EDiary.Controllers
         //добавление группы
         public IActionResult AddGroup(TableGroupModel addGroup)
         {
-            var teachers = context.teachers.Select(tr => string.Join(" ", tr.teacherSurname, tr.teacherName.Substring(0, 1) + ".", tr.teacherLastname.Substring(0, 1) + ".")).AsNoTracking().ToList();
+            var teachers = teachersRep.allTeachers();
             addGroup = new TableGroupModel { teachers = teachers };
             return PartialView("~/Views/Admin/_addGroup.cshtml", addGroup);
         }
@@ -572,7 +572,7 @@ namespace EDiary.Controllers
             try
             {
                 using var transaction = context.Database.BeginTransaction();
-                await groupsRep.removeGroupAsync(groupsRep.getGroup(deleteGroup.groupName));
+                await groupsRep.removeGroupAsync(context.groups.Where(gr => gr.groupId == deleteGroup.groupId).FirstOrDefault());
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -580,6 +580,25 @@ namespace EDiary.Controllers
             {
                 return Json("Error of delete group");
             }
+        }
+
+        //таблица групп
+        public IActionResult ShowGroups()
+        {
+            var groups = context.groups.Join(context.teachers, gr => gr.curatorId, tr => tr.teacherId, (gr, tr) => new { gr, tr })
+                                       .Select(gr => new GroupModel
+                                       {
+                                           groupId = gr.gr.groupId,
+                                           groupName = gr.gr.groupName,
+                                           curator = string.Join(gr.tr.teacherSurname, gr.tr.teacherName.Substring(0, 1) + ".", gr.tr.teacherLastname.Substring(0, 1) + "."),
+                                           studentsCount = context.students.Join(context.groups, st => st.studentGroup, group => group.groupId, (st, gr) => new { st, gr })
+                                                                           .Where(st => st.st.studentGroup == gr.gr.groupId)
+                                                                           .GroupBy(gr => gr.gr.groupId)
+                                                                           .Select(st => st.Count()).FirstOrDefault()
+                                       }).AsNoTracking().ToList();
+            var teachers = teachersRep.allTeachers();
+            var tableSubjects = new TableGroupModel { teachers = teachers, groups = groups };
+            return PartialView("~/Views/Admin/_tableGroups.cshtml", tableSubjects);
         }
     }
 }

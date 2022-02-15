@@ -94,7 +94,7 @@ namespace EDiary.Controllers
         //журнал предмета и группы
         [HttpGet]
         [Route("Marks/Jurnal/{id?}")]
-        public IActionResult Jurnal(int id, int labId)
+        public IActionResult Jurnal(int id, int labId, JurnalModel jurnal)
         {
             var subid = id;
             var labid = labId;
@@ -253,9 +253,12 @@ namespace EDiary.Controllers
 
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
-
+                if(jurnal.Subjects!=null)
+                {
+                    return View(jurnal);
+                }
                 //объединение в одну модель вывода журнала лабораторных
-                var jurnal = new JurnalModel 
+                jurnal = new JurnalModel 
                 { 
                     Teachers = teacherJurnal,
                     Groups = groupJurnal,
@@ -337,9 +340,12 @@ namespace EDiary.Controllers
 
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
-
+                if (jurnal.Subjects != null)
+                {
+                    return View(jurnal);
+                }
                 //объединение в одну модель вывода журнала предмета
-                var jurnal = new JurnalModel
+                jurnal = new JurnalModel
                 {
                     Teachers = teacherJurnal,
                     Groups = groupJurnal,
@@ -350,7 +356,6 @@ namespace EDiary.Controllers
                     types = types,
                     userSubjects = subLabs
                 };
-
                 return View(jurnal);
             }
         }
@@ -571,7 +576,7 @@ namespace EDiary.Controllers
                 jurnal.types = types;
                 jurnal.userSubjects = subLabs;
 
-                return PartialView("~/Views/Marks/_jurnalTable.cshtml", jurnal);
+                return View(new { jurnal, lessDates.id, lessDates.labId });
             }
 
 
@@ -690,7 +695,7 @@ namespace EDiary.Controllers
                 jurnal.types = types;
                 jurnal.userSubjects = subLabs;
 
-                return PartialView("~/Views/Marks/_jurnalTable.cshtml", jurnal);
+                return View(new { jurnal, lessDates.id, lessDates.labId });
             }
         }
 

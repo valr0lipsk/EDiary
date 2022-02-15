@@ -190,21 +190,28 @@ namespace EDiary.Controllers
         public IActionResult ChangeEmail() => View();
       
         [Authorize]
-        public async Task<IActionResult> ChangeEmail(string newEmail)
+        public async Task<IActionResult> ChangeEmail(ChangeEmailModel changeEmail)
         {
             var user = await userManager.FindByIdAsync(userManager.GetUserId(User));
-            user.Email = newEmail;
-            context.Users.Update(user);
-            await context.SaveChangesAsync();
-            if (await userManager.IsInRoleAsync(user, "student"))
+            if (user.Email == changeEmail.oldEmail)
             {
-                return RedirectToAction("Student", "Student");
+                user.Email = changeEmail.newEmail;
+                context.Users.Update(user);
+                await context.SaveChangesAsync();
+                if (await userManager.IsInRoleAsync(user, "student"))
+                {
+                    return RedirectToAction("Student", "Student");
+                }
+                else if (await userManager.IsInRoleAsync(user, "teacher"))
+                {
+                    return RedirectToAction("Teacher", "Teacher");
+                }
             }
-            else if (await userManager.IsInRoleAsync(user, "teacher"))
+            else
             {
-                return RedirectToAction("Teacher", "Teacher");
+                ModelState.AddModelError(nameof(ChangeEmailModel.oldEmail), "Неправильно введен старый email");
             }
-            else { return View(); }
+            return View(changeEmail);
         }
         //ошибка
         public IActionResult AlertMessage() => PartialView("~/Views/Login/_alertMessage.cshtml");
