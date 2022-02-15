@@ -74,10 +74,10 @@ $(document).ready(function () {
     })
 
     //get subject id from acc to open jurnal page
-    $('.item__title').click(function () {
+    $('body').on('click', '.item__title', function () {
         const subId = $(this).attr('data-id');
         const labId = $(this).attr('data-labaid');
-        if (labId) { 
+        if (labId) {
             $.ajax({
                 type: 'GET',
                 data: {
@@ -90,7 +90,7 @@ $(document).ready(function () {
                 }
             });
         }
-        else { 
+        else {
             $.ajax({
                 type: 'GET',
                 data: {
@@ -180,12 +180,12 @@ $(document).ready(function () {
     jurnalStyleTable();
 
     //open adding lesson modal
-    $('#addLessModal').click(function () {
+    $('body').on('click', '#addLessModal', function () {
         $('#lessModal').modal('show');
     });
 
     //open delete lesson modal
-    $('th.delLes').bind('dblclick', function () {
+    $('body').on('dblclick', 'th.delLes', function () {
         const id = $(this).attr('data-idLess');
         const data = $(this).text();
         $('#idLess').val(id);
@@ -194,23 +194,25 @@ $(document).ready(function () {
     })
 
     //month selection
-    $('#mounthSelection').change(function () {
+    $('body').on('change', '#mounthSelection', function () {
         const month = $(this).val();
-        $.ajax({
-            type: 'POST',
-            data: {
-                'month': month,
-            },
-            cache: false,
-            async: true,
-            success: function (result) {
-                $('.jurnal__main').replaceWith(result)
-            }
-        });
+        if (month) {
+            $.ajax({
+                type: 'POST',
+                data: {
+                    'month': month,
+                },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    $('.jurnal__main').replaceWith(result)
+                }
+            });
+        }
     })
 
     //update, remove or add mark in jurnal
-    $('td.pt-3-half').bind('blur', function () {
+    $('body').on('blur', 'td.pt-3-half', function () {
         if ($(this).attr('data-idsm')) { //update or delete
             const markID = $(this).attr('data-idsm');
             const td = $(this);
@@ -237,7 +239,7 @@ $(document).ready(function () {
                 }
             })
         }
-        else if ($(this).text()){ //add mark
+        else if ($(this).text()) { //add mark
             const lessId = $(this).attr('data-idLess');
             const studId = $(this).attr('data-idStud');
             const td = $(this);
@@ -265,11 +267,13 @@ $(document).ready(function () {
         }
     })
 
-    $('#periodBtn').click(function () {
+    //open choose period modal
+    $('body').on('click', '#periodBtn', function () {
         $('#periodModal').modal('show');
     })
 
-    $('.jurnal__link').click(function () {
+    //link to another subj
+    $('body').on('click', '.jurnal__link', function () {
         const subId = $(this).attr('data-subid');
         const labId = $(this).attr('data-labaid');
         if (labId) { //if subj is lab 
