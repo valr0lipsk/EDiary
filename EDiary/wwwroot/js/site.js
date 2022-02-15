@@ -61,7 +61,7 @@ $(document).ready(function () {
         const _this = this;
         const findType = $(this).attr('data-findType');
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             data: {
                 'category': findType,
             },
