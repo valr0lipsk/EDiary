@@ -137,7 +137,6 @@
 
 function sortTable(f, n) {
     let rows = $('.table tbody  tr').get();
-    console.log(rows);
 
     rows.sort(function (a, b) {
 

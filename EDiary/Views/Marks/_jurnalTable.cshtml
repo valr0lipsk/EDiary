@@ -75,17 +75,19 @@
                                         <div class="form-group">
                                             <label class="m-0" for="mounthSelection">Показать за:</label>
                                             <select class="custom-select" id="mounthSelection">
-                                                <option>Январь</option>
-                                                <option>Февраль</option>
-                                                <option>Март</option>
-                                                <option>Апрель</option>
-                                                <option>Май</option>
-                                                <option>Июнь</option>
-                                                <option>Июль</option>
-                                                <option>Сентябрь</option>
-                                                <option>Октябрь</option>
-                                                <option>Ноябрь</option>
-                                                <option>Декабрь</option>
+                                                <option value="" disabled selected>Выберите...</option>
+                                                <option value="0">Все</option>
+                                                <option value="1">Январь</option>
+                                                <option value="2">Февраль</option>
+                                                <option value="3">Март</option>
+                                                <option value="4">Апрель</option>
+                                                <option value="5">Май</option>
+                                                <option value="6">Июнь</option>
+                                                <option value="7">Июль</option>
+                                                <option value="9">Сентябрь</option>
+                                                <option value="10">Октябрь</option>
+                                                <option value="11">Ноябрь</option>
+                                                <option value="12">Декабрь</option>
                                             </select>
                                         </div>
                                     </div>
@@ -105,6 +107,8 @@
                                         <div class="form-group">
                                             <label class="m-0" for="mounthSelection">Показать за:</label>
                                             <select class="custom-select" id="mounthSelection">
+                                                <option value="" disabled selected>Выберите...</option>
+                                                <option value="0">Все</option>
                                                 <option value="1">Январь</option>
                                                 <option value="2">Февраль</option>
                                                 <option value="3">Март</option>
@@ -141,7 +145,6 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#">Пропуски за месяц</a>
                                                 <a class="dropdown-item" asp-action="SaveStatistics">Балл за месяц</a>
-                                                <a class="dropdown-item" href="#">Семестровая</a>
                                             </div>
                                         </div>
                                     </div>
