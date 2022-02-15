@@ -146,7 +146,7 @@ namespace EDiary.Controllers
                 students = students,
             };
 
-            return View("Teacher", teacherSubjectGroup);
+            return View(teacherSubjectGroup);
         }
 
 
