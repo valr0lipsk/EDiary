@@ -193,7 +193,7 @@ $(document).ready(function () {
         $('#delLessModal').modal('show');
     })
 
-    //mounth selection
+    //month selection
     $('#mounthSelection').change(function () {
         const month = $(this).val();
         $.ajax({
