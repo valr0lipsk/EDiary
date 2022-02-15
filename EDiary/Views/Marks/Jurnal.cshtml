@@ -3,7 +3,7 @@
 <div class="row min-vh-100">
     <div class="jurnal__subjects col-lg-3">
         <div class="row h-100 p-3 d-flex flex-column align-items-center">
-            <h2 class="notes__title mb-4">Мои предметы</h2>
+            <h2 class="notes__title mb-3">Мои предметы</h2>
             <dl class="w-100 list-group list-group-flush text-center">
                 @if (User.IsInRole("teacher"))
                 {
@@ -181,7 +181,6 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#">Пропуски за месяц</a>
                                                 <a class="dropdown-item" asp-action="SaveStatistics">Балл за месяц</a>
-                                                <a class="dropdown-item" href="#">Семестровая</a>
                                             </div>
                                         </div>
                                     </div>

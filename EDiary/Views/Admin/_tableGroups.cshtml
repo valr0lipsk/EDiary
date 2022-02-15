@@ -1,0 +1,99 @@
+﻿@using EDiary.Models
+@using EDiary.ViewModels
+<div class="col-12">
+    <div class="row"> 
+        <div class="col-12">
+            <div class="row mb-4">
+                <input class="form-control" id="findInput" type="text" placeholder="Поиск по группам" />
+            </div>
+        </div>
+        <table class="table table-bordered overflow-auto table-responsive">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Номер</th>
+                    <th scope="col">Куратор</th>
+                    <th scope="col">Количество учащихся</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var userStudentGroup in Model.students)
+                {
+                    <tr>
+@*                        <td>@userStudentGroup.studentLogin</td>
+                        <td>@userStudentGroup.studentSurname</td>
+                        <td>@userStudentGroup.studentName</td>*@
+                        <td>
+                            <a class="btnUpdate" data-object="user"><img src="/css/source/iconUpdate.png"/></a>
+                            <a class="btnRemove"><img src="~/css/source/iconDelete.png"/></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div> 
+<div id="сonfirmModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Удалить запись</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input id="idGr" type="hidden" value=""/>
+                            <p id="confirmText">Вы действительно хотите удалить запись</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Удалить" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="updateModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Обновить запись</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="numberGr" asp-for="" type="text" required/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <input class="form-control" id="teacherGr" asp-for="" type="text" required list="teachersGr"/>
+                            <datalist id="teachersGr">
+                                @foreach (var group in Model.groups)
+                                {
+                                    <option value="@group.groupName"></option>
+                                }
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-primary" type="submit" value="Обновить" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="module" src="~/js/partialScript.js"></script>

@@ -1,0 +1,27 @@
+﻿@using EDiary.ViewModels
+@model UserChangePasswordModel
+<div class="container border-right border-left">
+    <div class="changePass__block col-10">
+        <div class="row p-3 d-flex flex-column">
+            <h2>Изменение пароля</h2>
+            <form asp-action="ChangePassword" asp-controller="LogIn">
+                <div class="form-group">
+                    <label class="control-label">Старый пароль</label>
+                    <input class="form-control" type="password" asp-for="oldPassword" required />
+                    <span class="small text-danger" asp-validation-for="oldPassword"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Новый пароль</label>
+                    <input class="form-control" type="password" asp-for="newPassword" required/>
+                    <span class="small text-danger" id="valForNew" asp-validation-for="newPassword"></span>
+                    <small class="form-text text-muted" id="passwordHelpBlock">
+                        Пароль должен состоять из латинских символов (верхнего и нижнего регистров), цифр и быть не менее 8 символов.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit" value="Сохранить"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
