@@ -169,6 +169,9 @@ namespace EDiary.Controllers
             }
             else
             {
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+
+                //начальная загрузка
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,
