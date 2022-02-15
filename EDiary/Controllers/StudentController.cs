@@ -130,30 +130,63 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
-            if (category == "1" || category == null)
+            //все
+            if (category == "1")
             {
                 subLabs = studentSubjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
+                {
+                    student = student,
+                    students = groupmates,
+                    subjects = subLabs,
+                    tasks = tasks,
+                    statuses = statuses
+                };
+
+                return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
+            //только лекции
             else if (category == "2")
             {
                 subLabs = studentSubjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
+                {
+                    student = student,
+                    students = groupmates,
+                    subjects = subLabs,
+                    tasks = tasks,
+                    statuses = statuses
+                };
+                return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
+            //только лабы
             else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
-            }  
-
-            //объединение в одну модель
-            AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
+                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
+                {
+                    student = student,
+                    students = groupmates,
+                    subjects = subLabs,
+                    tasks = tasks,
+                    statuses = statuses
+                };
+                return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
+            }
+            //начальная загрузка
+            else
             {
-                student = student,
-                students = groupmates,
-                subjects = subLabs,
-                tasks = tasks,
-                statuses = statuses
-            };
-
-            return View(studentSubjectGroup);
+                subLabs = studentSubjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
+                {
+                    student = student,
+                    students = groupmates,
+                    subjects = subLabs,
+                    tasks = tasks,
+                    statuses = statuses
+                };
+                return View(studentSubjectGroup);
+            }            
         }
 
 

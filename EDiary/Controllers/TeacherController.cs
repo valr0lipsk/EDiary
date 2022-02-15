@@ -155,8 +155,6 @@ namespace EDiary.Controllers
             else if (category == "3")
             {
                 subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
-                
-                //объединение в одну модель
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,
@@ -167,11 +165,10 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+            //начальная загрузка
             else
             {
                 subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
-
-                //начальная загрузка
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,

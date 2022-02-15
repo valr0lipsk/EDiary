@@ -531,7 +531,7 @@ namespace EDiary.Controllers
                                       join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                       join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
                                       where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                      where lesson.lessonDate.ToLongDateString().Contains(month)
+                                      where lesson.lessonDate.Month.ToString() == month
                                       orderby lesson.lessonDate
                                       select new Lesson
                                       {
@@ -550,7 +550,7 @@ namespace EDiary.Controllers
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
                                        where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                       where lesson.lessonDate.ToLongDateString().Contains(month)
+                                       where lesson.lessonDate.Month.ToString() == month
                                        select new setMark
                                        {
                                            mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -651,7 +651,7 @@ namespace EDiary.Controllers
                 else
                 {
                     jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lessDates.id && less.lessonTypeId != 6)
-                                                    .Where(less => less.lessonDate.ToLongDateString().Contains(month))
+                                                    .Where(less => less.lessonDate.Month.ToString() == month)
                                                     .OrderBy(less => less.lessonDate)
                                                     .Select(less => new Lesson
                                                     {
@@ -669,7 +669,7 @@ namespace EDiary.Controllers
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
                                        where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
-                                       where lesson.lessonDate.ToLongDateString().Contains(month)
+                                       where lesson.lessonDate.Month.ToString() == month
                                        select new setMark
                                        {
                                            mark = new Mark() { mark = mark.mark, markId = mark.markId },
