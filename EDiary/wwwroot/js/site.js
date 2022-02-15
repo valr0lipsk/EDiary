@@ -68,7 +68,7 @@ $(document).ready(function () {
             cache: false,
             async: true,
             success: function (result) {
-                console.log('good');
+                $('.subjects__block').replaceWith(result)
             }
         });
     })
@@ -163,6 +163,11 @@ $(document).ready(function () {
         })
         $(this).addClass('selection__item-check');
         $('#statusId').val($(this).attr('data-idStatus'));
+    })
+
+    $('#subjectFind').keyup(function () {
+        const _this = this;
+        $.each($)
     })
 
     //-----------------------------------------

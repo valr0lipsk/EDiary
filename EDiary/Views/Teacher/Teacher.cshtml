@@ -121,7 +121,7 @@
             </div>
             <div class="sidebar__notes col-7 mw-100 overflow-auto">
                 <div class="row d-flex justify-content-center">
-                    <h2 class="notes__title mt-2 mb-4">Текущие задачи</h2>
+                    <h2 class="notes__title mt-2 mb-3">Текущие задачи</h2>
                     <div class="notes__block col-11">
                         <div class="row">
                             @foreach (var task in Model.tasks)
@@ -161,9 +161,9 @@
                     </div>
                     <div class="subjects__block col-11">
                         <div class="row p-3 d-flex flex-column">
-                            <h2 class="block__tile mb-4 text-center">Мои предметы:</h2>
+                            <h2 class="block__tile mb-3 text-center">Мои предметы:</h2>
                             <div class="input-group mb-3">
-                                <input class="form-control" type="text" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
+                                <input class="form-control" id="subjectFind" type="text" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="button">Поиск</button>
                                 </div>
