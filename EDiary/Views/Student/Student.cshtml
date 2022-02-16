@@ -29,7 +29,7 @@
                             }
                             @if (student.studentPic == null)
                             {
-                                <img class="acc__photo openIconModal" src="~/css/source/user-image.png" />
+                                <img class="acc__photo openIconModal" src="~/css/source/user-image.png"/>
                             }
                         }
                     </div>
@@ -185,7 +185,35 @@
     </div>
     <aside class="account__group col-lg-3">
         <div class="row h-100 d-flex flex-column">
-
+            @foreach (var stud in Model.students)
+            {
+                <div class="group__mate col">
+                    <div class="row p-2">
+                        <div class="mate__img col-3 d-flex justify-content-center align-items-center rounded-circle">
+                            @if (stud.studentPic != null)
+                            {
+                                <img src="data:image/*;base64,@(Convert.ToBase64String(stud.studentPic))"/>
+                            }
+                            else
+                            {
+                                <img src="~/css/source/user-image.png"/>
+                            }
+                        </div>
+                        <div class="mate__text col-8">
+                            <div class="row d-flex flex-column">
+                                <p class="mate__name m-0">
+                                    @stud.studentSurname @stud.studentName
+                                    @if (stud.studentStatus != null)
+                                    {
+                                        <sup class="acc__status cursor"><img src="data:image/*;base64,@(Convert.ToBase64String(stud.studentStatus))"/></sup>
+                                    }
+                                </p>
+                                <small class="mate__ball m-0">Средний балл: @stud.studentsAverage</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div> 
     </aside>
 </div>
