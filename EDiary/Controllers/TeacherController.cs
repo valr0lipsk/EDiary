@@ -99,7 +99,7 @@ namespace EDiary.Controllers
                                                                    .Where(lb => lb.lab.labId == task.lab.labId)
                                                                    .GroupBy(l => l.lab.labId)
                                                                    .Select(lab => lab.Count()).FirstOrDefault()
-                                    }).AsNoTracking().OrderBy(lab => lab.subjectName).OrderBy(gr => gr.groupName).ToList();
+                                    }).AsNoTracking().OrderBy(lab => lab.subjectName).ThenBy(gr => gr.groupName).ToList();
 
             //учащиеся кураторской группы
             var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
@@ -116,7 +116,7 @@ namespace EDiary.Controllers
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                           }).AsNoTracking().OrderBy(st => st.studentSurname).OrderBy(st => st.studentName).ToList();
+                                           }).AsNoTracking().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName).ToList();
 
             //эмоджи-статусы
             var statuses = teachersRep.teachersStatuses();
@@ -126,7 +126,7 @@ namespace EDiary.Controllers
             //все
             if (category == "1")
             {
-                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,
@@ -140,7 +140,7 @@ namespace EDiary.Controllers
             //только лекции
             else if (category == "2")
             {
-                subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,
@@ -154,7 +154,7 @@ namespace EDiary.Controllers
             //только лабы
             else if (category == "3")
             {
-                subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = labs.OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,
@@ -168,7 +168,7 @@ namespace EDiary.Controllers
             //начальная загрузка
             else
             {
-                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspTeacherSubjectGroupModel teacherSubjectGroup = new AspTeacherSubjectGroupModel
                 {
                     Teachers = teacher,

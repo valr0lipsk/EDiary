@@ -105,7 +105,7 @@ namespace EDiary.Controllers
                                                         .Where(less => less.sM.less.tsubjectId == sT.tsubjectId)
                                                         .GroupBy(less => less.sM.less.tsubjectId)
                                                         .Select(m => m.Count()).FirstOrDefault()
-                         }).AsNoTracking().OrderBy(s=>s.subjectName).ToList();
+                         }).AsNoTracking().OrderBy(s => s.subjectName).ToList();
 
             //одногруппники
             var groupmates = context.students.Where(gr => gr.studentGroup == student.FirstOrDefault().studentGroup)
@@ -123,7 +123,7 @@ namespace EDiary.Controllers
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                             }).AsNoTracking().OrderByDescending(st => st.studentsAverage).ToList();
+                                             }).AsNoTracking().OrderByDescending(st => st.studentsAverage).ThenBy(st => st.studentSurname).ToList();
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
@@ -133,7 +133,7 @@ namespace EDiary.Controllers
             //все
             if (category == "1")
             {
-                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -147,7 +147,7 @@ namespace EDiary.Controllers
             //только лекции
             else if (category == "2")
             {
-                subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -161,7 +161,7 @@ namespace EDiary.Controllers
             //только лабы
             else if (category == "3")
             {
-                subLabs = labs.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = labs.OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -175,7 +175,7 @@ namespace EDiary.Controllers
             //начальная загрузка
             else
             {
-                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,

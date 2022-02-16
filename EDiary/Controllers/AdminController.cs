@@ -291,7 +291,7 @@ namespace EDiary.Controllers
                 teacherSurname = tr.teacherSurname,
                 teacherLogin = tr.user.UserName,
                 teacherEmail = tr.user.Email,
-                subjectName = string.Join(", ", context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).GroupBy(sub=>sub.subjectId).Select(sub => sub.FirstOrDefault().subject.subjectName).ToArray())
+                subjectName = string.Join(", ", context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).Distinct().Select(sub => sub.subject.subjectId).ToArray())
             }).AsNoTracking().ToList();
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
