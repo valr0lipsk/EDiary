@@ -46,6 +46,7 @@ namespace EDiary.Controllers
             var teacher = context.teachers.Where(tr => tr.teacherUser == userManager.GetUserId(User))
                                           .Select(tr => new TeacherModel
                                           {
+                                              teacherId = tr.teacherId,
                                               teacherSurname = tr.teacherSurname,
                                               teacherName = tr.teacherName,
                                               teacherLastname = tr.teacherLastname,
@@ -102,21 +103,17 @@ namespace EDiary.Controllers
                                     }).AsNoTracking().OrderBy(lab => lab.subjectName).ThenBy(gr => gr.groupName).ToList();
 
             //учащиеся кураторской группы
-            var students = context.students.Where(gr => gr.studentGroup == teacher.FirstOrDefault().teacherGroup)
-                                           .Select(st => new StudentModel
-                                           {
-                                                studentId = st.studentId,
-                                                studentSurname = st.studentSurname,
-                                                studentName = st.studentName,
-                                                studentLastname = st.studentLastname,
-                                                studentPic = st.studentPic,
-                                                studentStatus = st.status.emoji,
-                                                studentsAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                       .Where(m => digitals.Values.Contains(m.m.mark))
-                                                                       .Where(m => m.sM.studentId == st.studentId)
-                                                                       .GroupBy(sm => sm.sM.studentId)
-                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                           }).AsNoTracking().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName).ToList();
+            var colleagues = context.teachers.Join(context.subjectTaughts, tr => tr.teacherId, sT => sT.teacherId, (tr, sT) => new { tr, sT })
+                                             .Where(sub => sub.sT.subject.subjectName == subjects.FirstOrDefault().subjectName)
+                                             .Where(tr => tr.tr.teacherId != teacher.FirstOrDefault().teacherId)
+                                             .Select(tr => new TeacherModel
+                                             {
+                                                 teacherSurname = tr.tr.teacherSurname,
+                                                 teacherName = tr.tr.teacherName,
+                                                 teacherLastname = tr.tr.teacherLastname,
+                                                 teacherPic = tr.tr.teacherPic,
+                                                 teacherStatus = tr.tr.status.emoji
+                                             }).AsNoTracking().OrderBy(tr => tr.teacherSurname).ThenBy(tr => tr.teacherName).ToList();
 
             //эмоджи-статусы
             var statuses = teachersRep.teachersStatuses();
@@ -133,7 +130,7 @@ namespace EDiary.Controllers
                     subjectGroups = subLabs,
                     statuses = statuses,
                     tasks = tasks,
-                    students = students,
+                    colleagues = colleagues,
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
@@ -147,7 +144,7 @@ namespace EDiary.Controllers
                     subjectGroups = subLabs,
                     statuses = statuses,
                     tasks = tasks,
-                    students = students,
+                    colleagues = colleagues,
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
@@ -161,7 +158,7 @@ namespace EDiary.Controllers
                     subjectGroups = subLabs,
                     statuses = statuses,
                     tasks = tasks,
-                    students = students,
+                    colleagues = colleagues,
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
@@ -175,7 +172,7 @@ namespace EDiary.Controllers
                     subjectGroups = subLabs,
                     statuses = statuses,
                     tasks = tasks,
-                    students = students,
+                    colleagues = colleagues,
                 };
                 return View(teacherSubjectGroup);
             }

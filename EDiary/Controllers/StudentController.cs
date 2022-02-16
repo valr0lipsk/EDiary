@@ -133,7 +133,7 @@ namespace EDiary.Controllers
             //все
             if (category == "1")
             {
-                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -147,7 +147,7 @@ namespace EDiary.Controllers
             //только лекции
             else if (category == "2")
             {
-                subLabs = subjects.OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
+                subLabs = subjects.OrderBy(x => x.subjectName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -161,7 +161,7 @@ namespace EDiary.Controllers
             //только лабы
             else if (category == "3")
             {
-                subLabs = labs.OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
+                subLabs = labs.OrderBy(x => x.subjectName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
