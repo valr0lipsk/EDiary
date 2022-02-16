@@ -175,7 +175,7 @@ namespace EDiary.Controllers
             //начальная загрузка
             else
             {
-                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ThenBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,

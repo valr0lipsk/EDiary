@@ -200,7 +200,7 @@ namespace EDiary.Controllers
         public async Task <IActionResult> CreateTeacher(AddTeacherModel createTeacher)
         {
             using var transaction = context.Database.BeginTransaction();
-            if (groupsRep.getGroup(createTeacher.curatorGroup) != null)
+            try
             {
                 IdentityUser user = new IdentityUser
                 {
@@ -218,23 +218,15 @@ namespace EDiary.Controllers
                     teacherUser = user.Id
                 };
                 await teachersRep.createTeacherAsync(teacher);
-                if (createTeacher.curatorGroup != null)
-                {
-                    var group = groupsRep.getGroup(createTeacher.curatorGroup);
-                    group.curatorId = teacher.teacherId;
-                    await groupsRep.updateGroupAsync(group);
-                }
                 await userManager.AddToRoleAsync(user, "teacher");
                 await context.SaveChangesAsync();
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
-            else
+            catch
             {
-                transaction.Rollback();
-                return Json("Group does not exist");
+                return Json("Error of add group");
             }
-
         }
 
         //удаление препода
@@ -291,7 +283,7 @@ namespace EDiary.Controllers
                 teacherSurname = tr.teacherSurname,
                 teacherLogin = tr.user.UserName,
                 teacherEmail = tr.user.Email,
-                subjectName = string.Join(", ", context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).Distinct().Select(sub => sub.subject.subjectId).ToArray())
+                subjectName = string.Join(", ", (context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).Select(sub => sub.subject.subjectId).Distinct().ToArray()))
             }).AsNoTracking().ToList();
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
