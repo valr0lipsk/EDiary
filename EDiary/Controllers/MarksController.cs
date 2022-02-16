@@ -94,7 +94,7 @@ namespace EDiary.Controllers
         //журнал предмета и группы
         [HttpGet]
         [Route("Marks/Jurnal/{id?}")]
-        public IActionResult Jurnal(int id, int labId, JurnalModel jurnal)
+        public IActionResult Jurnal(int id, int labId)
         {
             var subid = id;
             var labid = labId;
@@ -253,12 +253,9 @@ namespace EDiary.Controllers
 
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
-                if(jurnal.Subjects!=null)
-                {
-                    return View(jurnal);
-                }
+              
                 //объединение в одну модель вывода журнала лабораторных
-                jurnal = new JurnalModel 
+                var jurnal = new JurnalModel 
                 { 
                     Teachers = teacherJurnal,
                     Groups = groupJurnal,
@@ -340,12 +337,9 @@ namespace EDiary.Controllers
 
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
-                if (jurnal.Subjects != null)
-                {
-                    return View(jurnal);
-                }
+                
                 //объединение в одну модель вывода журнала предмета
-                jurnal = new JurnalModel
+                var jurnal = new JurnalModel
                 {
                     Teachers = teacherJurnal,
                     Groups = groupJurnal,
@@ -368,77 +362,6 @@ namespace EDiary.Controllers
         public IActionResult Jurnal(LessonModel lessDates, string month)
         {
             var jurnal = new JurnalModel();
-
-            //предметы препода
-            var subjects = (from tsub in context.subjectTaughts
-                            join subject in context.subjects on tsub.subjectId equals subject.subjectId
-                            join gr in context.groups on tsub.groupId equals gr.groupId
-                            join teacher in context.teachers on tsub.teacherId equals teacher.teacherId
-                            join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                            where teacher.teacherUser == userManager.GetUserId(User)
-                            orderby subject.subjectName
-                            select new SubjectGroupModel
-                            {
-                                groupName = gr.groupName,
-                                subjectName = subject.subjectName,
-                                tsubjectId = tsub.tsubjectId
-                            }).AsNoTracking().ToList();
-
-            //лабораторные преподавателя
-            var labs = (from tsub in context.subjectTaughts
-                        join gr in context.groups on tsub.groupId equals gr.groupId
-                        join lab in context.labs on tsub.tsubjectId equals lab.tsubjectId
-                        join teacher in context.teachers on lab.teacherId equals teacher.teacherId
-                        join aspusers in context.Users on teacher.teacherUser equals aspusers.Id
-                        where teacher.teacherUser == userManager.GetUserId(User)
-                        orderby lab.labName
-                        select new SubjectGroupModel
-                        {
-                            subjectName = lab.labName,
-                            labaId = lab.labId,
-                            tsubjectId = tsub.tsubjectId,
-                            groupName = gr.groupName
-                        }).AsNoTracking().ToList();
-
-            //если ученик, то его предметы
-            if (User.IsInRole("student"))
-            {
-                //получение айди ученика
-                var studentId = context.students.Join(context.Users, st => st.studentUser, us => us.Id, (st, us) => new { st, us })
-                                                .Where(us => us.us.Id == userManager.GetUserId(User))
-                                                .Select(st => st.st.studentId).FirstOrDefault();
-                ViewBag.studentId = studentId;
-
-                //предметы ученика
-                subjects = (from sub in context.subjects
-                            join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
-                            join gr in context.groups on sT.groupId equals gr.groupId
-                            join st in context.students on gr.groupId equals st.studentGroup
-                            join aspusers in context.Users on st.studentUser equals aspusers.Id
-                            where st.studentUser == userManager.GetUserId(User)
-                            select new SubjectGroupModel
-                            {
-                                tsubjectId = sT.tsubjectId,
-                                subjectName = sub.subjectName
-                            }).AsNoTracking().ToList();
-
-                //лабы ученика
-                labs = (from student in context.students
-                        join aspusers in context.Users on student.studentUser equals aspusers.Id
-                        join subGr in context.subgroups on student.studentSubgroup equals subGr.subgroupId
-                        join lab in context.labs on subGr.subgroupId equals lab.subgroupId
-                        join sT in context.subjectTaughts on lab.tsubjectId equals sT.tsubjectId
-                        join sub in context.subjects on sT.subjectId equals sub.subjectId
-                        where student.studentUser == userManager.GetUserId(User) && student.studentGroup == sT.groupId
-                        select new SubjectGroupModel
-                        {
-                            subjectName = lab.labName,
-                            labaId = lab.labId,
-                            tsubjectId = sT.tsubjectId,
-                        }).AsNoTracking().ToList();
-            }
-            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
-
 
             //если журнал лабораторных
             if (lessDates.labId != 0)
@@ -574,9 +497,7 @@ namespace EDiary.Controllers
                 jurnal.Students = studentsJurnal; 
                 jurnal.Subjects = subjectJurnal;
                 jurnal.types = types;
-                jurnal.userSubjects = subLabs;
-
-                return View(new { jurnal, lessDates.id, lessDates.labId });
+                return PartialView("~/Views/Marks/_jurnalTable.cshtml", jurnal);
             }
 
 
@@ -693,9 +614,8 @@ namespace EDiary.Controllers
                 jurnal.Students = studentsJurnal;
                 jurnal.Subjects = subjectJurnal;
                 jurnal.types = types;
-                jurnal.userSubjects = subLabs;
 
-                return View(new { jurnal, lessDates.id, lessDates.labId });
+                return PartialView("~/Views/Marks/_jurnalTable.cshtml", jurnal);
             }
         }
 

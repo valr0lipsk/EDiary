@@ -79,9 +79,9 @@
                         <div class="row mb-2">
                             <input class="form-control" id="teacherGr" asp-for="curator" type="text" required list="teachersGr"/>
                             <datalist id="teachersGr">
-                                @foreach (var teacher in Model.teachers)
+                                @foreach (var teacher in Model.groups)
                                 {
-                                    <option value="@teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname"></option>
+                                    <option value="@teacher.curator"></option>
                                 }
                             </datalist>
                         </div>
