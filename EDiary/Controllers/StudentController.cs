@@ -142,7 +142,6 @@ namespace EDiary.Controllers
                     tasks = tasks,
                     statuses = statuses
                 };
-
                 return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
             //только лекции

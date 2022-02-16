@@ -15,7 +15,7 @@
                 <datalist id="teachers">
                     @foreach (var teacher in Model.teachers)
                     {
-                        <option value="@teacher"></option>
+                        <option value="@teacher.teacherSurname @teacher.teacherName.Substring(0,1). @teacher.teacherLastname.Substring(0,1)."></option>
                     }
                 </datalist>
             </div>

@@ -291,7 +291,7 @@ namespace EDiary.Controllers
                 teacherSurname = tr.teacherSurname,
                 teacherLogin = tr.user.UserName,
                 teacherEmail = tr.user.Email,
-                subjectName = string.Join(", ", context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).Select(sub => sub.subject.subjectName).ToArray())
+                subjectName = string.Join(", ", context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).GroupBy(sub=>sub.subjectId).Select(sub => sub.FirstOrDefault().subject.subjectName).ToArray())
             }).AsNoTracking().ToList();
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
@@ -532,10 +532,9 @@ namespace EDiary.Controllers
                     collegeGroup group = new collegeGroup
                     {
                         groupName = addGroup.groupName,
-                        curatorId = context.teachers
-                                    .Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
-                                    .Select(tr => tr.teacherId)
-                                    .FirstOrDefault()
+                        curatorId = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
+                                                    .Select(tr => tr.teacherId)
+                                                    .FirstOrDefault()
                     };
                     await groupsRep.createGroupAsync(group);
                     transaction.Commit();
@@ -548,6 +547,36 @@ namespace EDiary.Controllers
                 }
             }
             else 
+            {
+                return Json("Group is already exists");
+            }
+        }
+
+        //обновление группы
+        public async Task<IActionResult> UpdateGroup(TableGroupModel addGroup)
+        {
+            var group = context.groups.Where(gr => gr.groupId == addGroup.groupId).FirstOrDefault();
+            var groupName = groupsRep.getGroup(addGroup.groupName);
+            if (groupName == null)
+            {
+                using var transaction = context.Database.BeginTransaction();
+                try
+                {
+                    group.groupName = addGroup.groupName;
+                    group.curatorId = context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + "." + " " + tr.teacherLastname.Substring(0, 1) + ".") == addGroup.curator)
+                                                      .Select(tr => tr.teacherId)
+                                                      .FirstOrDefault();
+                    await groupsRep.updateGroupAsync(group);
+                    transaction.Commit();
+                    return RedirectToAction("Admin");
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return Json("Error of update group");
+                }
+            }
+            else
             {
                 return Json("Group is already exists");
             }
