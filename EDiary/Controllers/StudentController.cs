@@ -59,17 +59,17 @@ namespace EDiary.Controllers
                                           }).AsNoTracking().ToList();
 
             //предметы
-            var studentSubjects = (from sub in context.subjects
-                                   join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
-                                   join gr in context.groups on sT.groupId equals gr.groupId
-                                   join st in context.students on gr.groupId equals st.studentGroup
-                                   where st.studentUser == userManager.GetUserId(User)
-                                   select new SubjectGroupModel
-                                   {
-                                       tsubjectId = sT.tsubjectId,
-                                       subjectName = sub.subjectName,
-                                       subIcon = sub.Icon.subjectPicture
-                                   }).AsNoTracking().ToList();
+            var subjects = (from sub in context.subjects
+                            join sT in context.subjectTaughts on sub.subjectId equals sT.subjectId
+                            join gr in context.groups on sT.groupId equals gr.groupId
+                            join st in context.students on gr.groupId equals st.studentGroup
+                            where st.studentUser == userManager.GetUserId(User)
+                            select new SubjectGroupModel
+                            {
+                                tsubjectId = sT.tsubjectId,
+                                subjectName = sub.subjectName,
+                                subIcon = sub.Icon.subjectPicture
+                            }).AsNoTracking().ToList();
 
             //лабы
             var labs = (from students in context.students
@@ -133,7 +133,7 @@ namespace EDiary.Controllers
             //все
             if (category == "1")
             {
-                subLabs = studentSubjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -142,13 +142,12 @@ namespace EDiary.Controllers
                     tasks = tasks,
                     statuses = statuses
                 };
-
                 return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
             //только лекции
             else if (category == "2")
             {
-                subLabs = studentSubjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
@@ -176,7 +175,7 @@ namespace EDiary.Controllers
             //начальная загрузка
             else
             {
-                subLabs = studentSubjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
+                subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).OrderBy(gr => gr.groupName).ToList();
                 AspStudentGroupModel studentSubjectGroup = new AspStudentGroupModel
                 {
                     student = student,
