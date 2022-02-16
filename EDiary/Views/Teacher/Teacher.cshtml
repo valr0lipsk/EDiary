@@ -160,7 +160,7 @@
                         </div>
                     </div>
                     <div class="subjects__block col-11">
-                        <div class="row p-3 d-flex flex-column">
+                        <div class="row p-3 d-flex flex-column" id="subsBlock">
                             <h2 class="block__tile mb-3 text-center">Мои предметы:</h2>
                             <div class="input-group mb-3">
                                 <input class="form-control" id="subjectFind" type="text" placeholder="Введите название предмета или номер группы" aria-describedby="button-addon2">
@@ -194,7 +194,41 @@
     </div>
     <aside class="account__group col-lg-3">
         <div class="row h-100 d-flex flex-column">
-
+            <div class="row p-3 pt-3 pb-3 pl-2 pr-2 d-flex flex-column">
+                <h3 class="group__title mb-3 text-center">Другие преподаватели:</h3>
+                <div class="group__block" id="matesBlock">
+                    <div class="row d-flex justify-content-sm-center">
+                        @foreach (var teach in Model.colleagues)
+                        {
+                            <div class="group__mate col-12 col-sm-11">
+                                <div class="row p-1 d-flex align-items-center">
+                                    <div class="mate__img col-3 d-flex justify-content-center align-items-center">
+                                        @if (teach.teacherPic != null)
+                                        {
+                                            <img src="data:image/*;base64,@(Convert.ToBase64String(teach.teacherPic))"/>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/css/source/user-image.png"/>
+                                        }
+                                    </div>
+                                    <div class="mate__text col-8">
+                                        <div class="row d-flex flex-column">
+                                            <p class="mate__name m-0">
+                                                @teach.teacherSurname @teach.teacherName
+                                                @if (teach.teacherStatus != null)
+                                                {
+                                                    <sup class="acc__status cursor"><img src="data:image/*;base64,@(Convert.ToBase64String(teach.teacherStatus))"/></sup>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div> 
         </div>
     </aside>
 </div>

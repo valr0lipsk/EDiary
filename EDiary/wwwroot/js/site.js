@@ -60,6 +60,7 @@ $(document).ready(function () {
 
     //-------------------------------------------
     //common funcs
+    //change mates block height
     const block = $('#matesBlock');
     $(block).height($('#subsBlock').height());
 
