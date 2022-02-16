@@ -60,6 +60,9 @@ $(document).ready(function () {
 
     //-------------------------------------------
     //common funcs
+    const block = $('#matesBlock');
+    $(block).height($('#subsBlock').height());
+
 
     //filter subjects
     $('.subject__find').click(function () {
@@ -73,7 +76,8 @@ $(document).ready(function () {
             cache: false,
             async: true,
             success: function (result) {
-                $('.subjects__block').replaceWith(result)
+                $('.subjects__block').replaceWith(result);
+                $(block).height($('#subsBlock').height());
             }
         });
     })
