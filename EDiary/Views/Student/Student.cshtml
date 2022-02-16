@@ -29,7 +29,7 @@
                             }
                             @if (student.studentPic == null)
                             {
-                                <img class="acc__photo openIconModal" src="~/css/source/user-image.png" />
+                                <img class="acc__photo openIconModal" src="~/css/source/user-image.png"/>
                             }
                         }
                     </div>
@@ -145,9 +145,9 @@
                 <div class="row h-100">
                     <div class="subjects__side col-1 border-right">
                         <div class="row">
-                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom">Все</a>
-                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom">Лекции</a>
-                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom">Лаб. работы</a>
+                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom" data-findType="1">Все</a>
+                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom" data-findType="2">Лекции</a>
+                            <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom" data-findType="3">Лаб. работы</a>
                         </div>
                     </div>
                     <div class="subjects__block col-11">
@@ -184,8 +184,41 @@
         </div>
     </div>
     <aside class="account__group col-lg-3">
-        <div class="row h-100 d-flex flex-column">
-
+        <div class="row p-3 d-flex flex-column">
+            <h3 class="group__title mb-3 text-center">Моя группа:</h3>
+            <div class="group__block">
+                <div class="row d-flex flex-column">
+                    @foreach (var stud in Model.students)
+                    {
+                        <div class="group__mate col">
+                            <div class="row p-2">
+                                <div class="mate__img col-3 d-flex justify-content-center align-items-center">
+                                    @if (stud.studentPic != null)
+                                    {
+                                        <img src="data:image/*;base64,@(Convert.ToBase64String(stud.studentPic))"/>
+                                    }
+                                    else
+                                    {
+                                        <img src="~/css/source/user-image.png"/>
+                                    }
+                                </div>
+                                <div class="mate__text col-8">
+                                    <div class="row d-flex flex-column">
+                                        <p class="mate__name m-0">
+                                            @stud.studentSurname @stud.studentName
+                                            @if (stud.studentStatus != null)
+                                            {
+                                                <sup class="acc__status cursor"><img src="data:image/*;base64,@(Convert.ToBase64String(stud.studentStatus))"/></sup>
+                                            }
+                                        </p>
+                                        <small class="mate__ball m-0">Средний балл: @stud.studentsAverage</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div> 
     </aside>
 </div>

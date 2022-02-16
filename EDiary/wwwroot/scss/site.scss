@@ -533,6 +533,8 @@ tr, td {
 }
 
 .main__subjects {
+    height: 100vh;
+    overflow: auto;
     border-radius: 25px;
     -webkit-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
@@ -561,6 +563,39 @@ tr, td {
 
 .item__title {
     font: normal 16px $fontMain;
+}
+
+.group__title{
+    font-family:$fontMain;
+}
+
+.account__group {
+    height: 100vh;
+}
+
+.group__block {
+    height: 95vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 7px;
+        background-color: #f9f9fd;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #00000029;
+    }
+}
+
+.group__mate {
+    border-top: 1px solid $clrBorderWhite;
+}
+
+.mate__img > img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
 }
 
 .subject__find {
