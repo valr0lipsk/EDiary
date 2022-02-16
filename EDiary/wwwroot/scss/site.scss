@@ -534,7 +534,6 @@ tr, td {
 
 .main__subjects {
     height: 100vh;
-    overflow: auto;
     border-radius: 25px;
     -webkit-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0px 0px 22px 3px rgba(0, 0, 0, 0.12);
@@ -571,6 +570,21 @@ tr, td {
 
 .account__group {
     height: 100vh;
+}
+
+.block__subs {
+    height: 95vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 7px;
+        background-color: #f9f9fd;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #00000029;
+    }
 }
 
 .group__block {
