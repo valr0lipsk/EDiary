@@ -184,13 +184,13 @@
         </div>
     </div>
     <aside class="account__group col-lg-3">
-        <div class="row p-3 d-flex flex-column">
+        <div class="row p-3 pt-3 pb-3 pl-2 pr-2 d-flex flex-column">
             <h3 class="group__title mb-3 text-center">Моя группа:</h3>
             <div class="group__block" id="matesBlock">
-                <div class="row d-flex flex-column">
+                <div class="row d-flex justify-content-sm-center">
                     @foreach (var stud in Model.students)
                     {
-                        <div class="group__mate col">
+                        <div class="group__mate col-12 col-sm-11">
                             <div class="row p-1">
                                 <div class="mate__img col-3 d-flex justify-content-center align-items-center">
                                     @if (stud.studentPic != null)
