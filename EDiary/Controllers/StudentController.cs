@@ -105,7 +105,7 @@ namespace EDiary.Controllers
                                                         .Where(less => less.sM.less.tsubjectId == sT.tsubjectId)
                                                         .GroupBy(less => less.sM.less.tsubjectId)
                                                         .Select(m => m.Count()).FirstOrDefault()
-                         }).AsNoTracking().OrderBy(s=>s.subjectName).ToList();           
+                         }).AsNoTracking().OrderBy(s=>s.subjectName).ToList();
 
             //одногруппники
             var groupmates = context.students.Where(gr => gr.studentGroup == student.FirstOrDefault().studentGroup)
@@ -123,7 +123,7 @@ namespace EDiary.Controllers
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                             }).AsNoTracking().OrderBy(st=>st.studentSurname).OrderBy(st=>st.studentName).ToList();
+                                             }).AsNoTracking().OrderByDescending(st => st.studentsAverage).ToList();
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();

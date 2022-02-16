@@ -283,29 +283,16 @@ namespace EDiary.Controllers
         //таблица преподов
         public IActionResult ShowTeachers()
         {
-            var teachers = (from teacher in context.teachers
-                            join aspuser in context.Users on teacher.teacherUser equals aspuser.Id
-                            orderby teacher.teacherSurname
-                            select new AspTeacherSubjectGroupModel
-                            {
-                                teacherId = teacher.teacherId,
-                                teacherLastname = teacher.teacherLastname,
-                                teacherName = teacher.teacherName,
-                                teacherSurname = teacher.teacherSurname,
-                                teacherLogin = aspuser.UserName,
-                                teacherEmail = aspuser.Email,
-                                subjectName = string.Join(", ", (from sub in context.subjects
-                                                                 join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                                                 where subTaught.teacherId == teacher.teacherId
-                                                                 orderby teacher.teacherSurname
-                                                                 select sub.subjectName.Trim()).ToArray()),
-                                groupName = (from sub in context.subjects
-                                             join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
-                                             join gr in context.groups on subTaught.groupId equals gr.groupId
-                                             where subTaught.teacherId == teacher.teacherId
-                                             orderby teacher.teacherSurname
-                                             select gr.groupName).FirstOrDefault(),
-                            }).AsNoTracking().ToList();
+            var teachers = context.teachers.Select(tr => new AspTeacherSubjectGroupModel
+            {
+                teacherId = tr.teacherId,
+                teacherLastname = tr.teacherLastname,
+                teacherName = tr.teacherName,
+                teacherSurname = tr.teacherSurname,
+                teacherLogin = tr.user.UserName,
+                teacherEmail = tr.user.Email,
+                subjectName = string.Join(", ", context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).Select(sub => sub.subject.subjectName).ToArray())
+            }).AsNoTracking().ToList();
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
         }
@@ -572,7 +559,7 @@ namespace EDiary.Controllers
             try
             {
                 using var transaction = context.Database.BeginTransaction();
-                await groupsRep.removeGroupAsync(context.groups.Where(gr => gr.groupId == deleteGroup.groupId).FirstOrDefault());
+                await groupsRep.removeGroupAsync(groupsRep.getGroup(deleteGroup.groupName));
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
@@ -590,7 +577,7 @@ namespace EDiary.Controllers
                                        {
                                            groupId = gr.gr.groupId,
                                            groupName = gr.gr.groupName,
-                                           curator = string.Join(gr.tr.teacherSurname, gr.tr.teacherName.Substring(0, 1) + ".", gr.tr.teacherLastname.Substring(0, 1) + "."),
+                                           curator = string.Join(" ", gr.tr.teacherSurname, gr.tr.teacherName.Substring(0, 1) + ".", gr.tr.teacherLastname.Substring(0, 1) + "."),
                                            studentsCount = context.students.Join(context.groups, st => st.studentGroup, group => group.groupId, (st, gr) => new { st, gr })
                                                                            .Where(st => st.st.studentGroup == gr.gr.groupId)
                                                                            .GroupBy(gr => gr.gr.groupId)
