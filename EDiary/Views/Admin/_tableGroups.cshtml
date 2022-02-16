@@ -8,12 +8,13 @@
                 <input class="form-control" id="findInput" type="text" placeholder="Поиск по группам" />
             </div>
         </div>
-        <table class="table table-bordered overflow-auto table-responsive">
+        <table class="table table-bordered overflow-auto table-responsive-sm">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">Номер</th>
                     <th scope="col">Куратор</th>
                     <th scope="col">Количество учащихся</th>
+                    <th scope="col">Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,8 +25,8 @@
                         <td>@group.curator</td>
                         <td>@group.studentsCount</td>
                         <td>
-                            <a class="btnUpdate" data-object="user"><img src="/css/source/iconUpdate.png"/></a>
-                            <a class="btnRemove"><img src="~/css/source/iconDelete.png"/></a>
+                            <a class="btnUpdate" data-object="group"><img src="/css/source/iconUpdate.png"/></a>
+                            <a class="btnRemove" data-object="group"><img src="~/css/source/iconDelete.png"/></a>
                         </td>
                     </tr>
                 }

@@ -5,19 +5,22 @@ $(document).ready(function ()
     let f_sl = 1;
 
     //sort table by thead clicking
-    $('.table thead tr th').click(function ()
-    {
+    $('body').on('click', '.table thead tr th', function () {
         f_sl *= -1;
         const n = $(this).prevAll().length;
         sortTable(f_sl, n);
     });
 
     //confirm deleting smth
-    $('.btnRemove').click(function () {
+    $('body').on('click', '.btnRemove', function () {
         console.log($(this).attr('data-object'))
         if ($(this).attr('data-object') === 'subject') {
             const cell1 = $(this).parent().parent().children()[0];
             $('#tSubjectIdRmv').val($(cell1).attr('data-idTSub'));
+            $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[0].textContent.trim() + '"?');
+        }
+        else if ($(this).attr('data-object') === 'group') {
+            $('#idGr').val($(this).parent().parent().children()[0]);
             $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[0].textContent.trim() + '"?');
         }
         else {
@@ -25,11 +28,10 @@ $(document).ready(function ()
             $('#confirmText').text('Вы действительно хотите удалить запись "' + $(this).parent().parent().children()[1].textContent + ' ' + $(this).parent().parent().children()[2].textContent + ' ' + $(this).parent().parent().children()[3].textContent + '"?');
         }
         $('#сonfirmModal').modal('show');
-    })
+    });
 
     //fill update inputs
-    $('.btnUpdate').click(function ()
-    {
+    $('body').on('click', '.btnUpdate', function () {
         if ($(this).attr('data-object') === 'user') {
             $('#userLogin').val($(this).parent().parent().children()[0].textContent);
             $('#userSurname').val($(this).parent().parent().children()[1].textContent);
@@ -48,11 +50,15 @@ $(document).ready(function ()
             $('#subjectTeacher').val($(this).parent().parent().children()[1].textContent);
             $('#subjectGroup').val($(this).parent().parent().children()[2].textContent);
         }
+        else if ($(this).attr('data-object') === 'group') {
+            $('#numberGr').val($(this).parent().parent().children()[0].textContent);
+            $('#teacherGr').val($(this).parent().parent().children()[1].textContent);
+        }
         $('#updateModal').modal('show');
-    })
+    });
 
     //find smth in tables
-    $('#findInput').keyup(function () {
+    $('body').on('keyup', '#findInput', function () {
         const _this = this;
 
         $.each($('.table tbody tr'), function () {
@@ -62,21 +68,20 @@ $(document).ready(function ()
                 $(this).show();
             }
         })
-    })
+    });
 
     //show labs inputs
-    $('#labsCheck').change(function () {
+    $('body').on('change', '#labsCheck', function () {
         $('.labs__block').toggleClass('d-none');
-    })
+    });
 
     //show admin menu in mobile/small desktop version
-    $('#admin__menu').click(function () {
+    $('body').on('click', '#admin__menu', function () {
         $('#admin__sidebar').toggle('d-md-none border-bottom')
-    })
-
+    });
 
     //img selection in adding subject
-    $('.img__selection').click(function () {
+    $('body').on('click', '.img__selection', function () {
         event.preventDefault();
         if ($('.dropdown-menu').hasClass('show')) {
             $('.dropdown-menu').dropdown('hide');
@@ -94,6 +99,6 @@ $(document).ready(function ()
             $(this).toggleClass('checked');
             $('#sImgId').val($(this).attr('data-idImg'));
         })
-    })
+    });
 
 })
