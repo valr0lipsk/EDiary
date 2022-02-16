@@ -160,20 +160,19 @@ namespace EDiary.Controllers
         //таблица студентов
         public IActionResult ShowStudents()
         {
-            var students = from student in context.students
-                           join gr in context.groups on student.studentGroup equals gr.groupId
-                           join aspuser in context.Users on student.studentUser equals aspuser.Id
-                           orderby student.studentSurname, student.studentName
-                           select new AspStudentGroupModel
-                           {
-                               studentId = student.studentId,
-                               studentLogin = aspuser.UserName,
-                               studentSurname = student.studentSurname,
-                               studentName = student.studentName,
-                               studentLastname = student.studentLastname,
-                               groupName = gr.groupName,
-                               studentEmail = aspuser.Email,
-                           };
+            var students = (from student in context.students
+                            join gr in context.groups on student.studentGroup equals gr.groupId
+                            join aspuser in context.Users on student.studentUser equals aspuser.Id
+                            select new AspStudentGroupModel
+                            {
+                                studentId = student.studentId,
+                                studentLogin = aspuser.UserName,
+                                studentSurname = student.studentSurname,
+                                studentName = student.studentName,
+                                studentLastname = student.studentLastname,
+                                groupName = gr.groupName,
+                                studentEmail = aspuser.Email,
+                            }).AsNoTracking().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName).ToList();
             var tableStudents = new TableStudentModel { students = students, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableStudent.cshtml", tableStudents);
         }
@@ -275,16 +274,17 @@ namespace EDiary.Controllers
         //таблица преподов
         public IActionResult ShowTeachers()
         {
-            var teachers = context.teachers.Select(tr => new AspTeacherSubjectGroupModel
-            {
-                teacherId = tr.teacherId,
-                teacherLastname = tr.teacherLastname,
-                teacherName = tr.teacherName,
-                teacherSurname = tr.teacherSurname,
-                teacherLogin = tr.user.UserName,
-                teacherEmail = tr.user.Email,
-                subjectName = string.Join(", ", (context.subjectTaughts.Where(teacher => teacher.teacherId == tr.teacherId).Select(sub => sub.subject.subjectId).Distinct().ToArray()))
-            }).AsNoTracking().ToList();
+            var teachers = (from tr in context.teachers
+                            select new AspTeacherSubjectGroupModel
+                            {
+                                teacherId = tr.teacherId,
+                                teacherLastname = tr.teacherLastname,
+                                teacherName = tr.teacherName,
+                                teacherSurname = tr.teacherSurname,
+                                teacherLogin = tr.user.UserName,
+                                teacherEmail = tr.user.Email,
+                                subjectName = string.Join(", ", context.subjectTaughts.Where(ter => ter.teacherId == tr.teacherId).Select(sub => sub.subject.subjectName).ToArray())
+                            }).AsNoTracking().OrderBy(tr => tr.teacherSurname).ThenBy(tr => tr.teacherName).ToList();
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
         }
@@ -489,14 +489,13 @@ namespace EDiary.Controllers
                             join subTaught in context.subjectTaughts on sub.subjectId equals subTaught.subjectId
                             join gr in context.groups on subTaught.groupId equals gr.groupId
                             where subTaught.teacherId == teacher.teacherId
-                            orderby sub.subjectName
                             select new AspTeacherSubjectGroupModel
                             {
                                 teacherFullname = string.Join(" ", teacher.teacherSurname, teacher.teacherName.Substring(0, 1).Trim() + ".", teacher.teacherLastname.Substring(0, 1).Trim() + "."),
                                 subjectName = sub.subjectName,
                                 groupName = gr.groupName,
                                 tsubjectId = subTaught.tsubjectId
-                            }).AsNoTracking().ToList();
+                            }).AsNoTracking().OrderBy(sub => sub.subjectName).ThenBy(tr => tr.teacherSurname).ToList();
             var groups = groupsRep.allGroups();
             var teachers = teachersRep.allTeachers();
             var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
@@ -603,7 +602,7 @@ namespace EDiary.Controllers
                                                                            .Where(st => st.st.studentGroup == gr.gr.groupId)
                                                                            .GroupBy(gr => gr.gr.groupId)
                                                                            .Select(st => st.Count()).FirstOrDefault()
-                                       }).AsNoTracking().ToList();
+                                       }).AsNoTracking().OrderBy(gr => gr.groupName).ToList();
             var teachers = teachersRep.allTeachers();
             var tableSubjects = new TableGroupModel { teachers = teachers, groups = groups };
             return PartialView("~/Views/Admin/_tableGroups.cshtml", tableSubjects);

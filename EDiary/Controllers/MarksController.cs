@@ -337,7 +337,7 @@ namespace EDiary.Controllers
 
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
-                
+
                 //объединение в одну модель вывода журнала предмета
                 var jurnal = new JurnalModel
                 {
@@ -607,7 +607,34 @@ namespace EDiary.Controllers
 
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
+                if (month == "0")
+                {
+                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lessDates.id && less.lessonTypeId != 6)
+                                                    .OrderBy(less => less.lessonDate)
+                                                    .Select(less => new Lesson
+                                                    {
+                                                       lessonId = less.lessonId,
+                                                       lessonDate = less.lessonDate,
+                                                       lessonTypeId = less.lessonTypeId
+                                                    }).AsNoTracking().ToList();
 
+                    //выставленные отметки
+                    jurnal.setMarks = (from setMark in context.setMarks
+                                       join student in context.students on setMark.studentId equals student.studentId
+                                       join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                       join mark in context.marks on setMark.markId equals mark.markId
+                                       join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                       orderby student.studentSurname
+                                       orderby lesson.lessonDate
+                                       where subTaught.tsubjectId == lessDates.id && lesson.lessonTypeId != 6
+                                       select new setMark
+                                       {
+                                           mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                           lessonId = setMark.lessonId,
+                                           setmarkId = setMark.setmarkId,
+                                           studentId = setMark.studentId
+                                       }).AsNoTracking().ToList();
+                }
                 //объединение в одну модель журнала
                 jurnal.Teachers = teacherJurnal;
                 jurnal.Groups = groupJurnal;
