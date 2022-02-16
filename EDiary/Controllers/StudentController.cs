@@ -123,7 +123,7 @@ namespace EDiary.Controllers
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
                                                                        .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                             }).AsNoTracking().OrderBy(st => st.studentName).OrderBy(st => st.studentSurname).ToList();
+                                             }).AsNoTracking().OrderByDescending(st => st.studentsAverage).ToList();
 
             //эмоджи-статусы
             var statuses = context.emojiStatuses.AsNoTracking().Take(8).ToList();
