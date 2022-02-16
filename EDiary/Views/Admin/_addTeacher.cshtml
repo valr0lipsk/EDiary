@@ -35,18 +35,6 @@
                 <input class="form-control" id="tPass" asp-for="teacherPassword" type="text" readonly="readonly" required value="@ViewBag.teacherPass">
             </div>
         </div>
-        <div class="col-lg-5 col-md-6 col-sm-7">
-            <div class="row mb-3">
-                <label class="form-label mt-2 mb-0" for="tGroup">Курируемая группа</label>
-                <input class="form-control" id="tGroup" asp-for="curatorGroup" type="text" list="Groups" value="">
-                <datalist id="Groups">
-                    @foreach (var group in Model.groups)
-                    {
-                        <option value="@group.groupName"></option>
-                    }
-                </datalist>
-            </div>
-        </div>
         <div class="col-lg-4 col-md-5 col-sm-6 col-12">
             <div class="row mb-3 justify-content-center justify-content-sm-start">
                 <button class="btn btn-primary" asp-action="CreateTeacher" type="submit">Сохранить преподавателя</button>

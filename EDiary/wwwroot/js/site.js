@@ -198,6 +198,11 @@ $(document).ready(function () {
         $('#delLessModal').modal('show');
     })
 
+    //open stats modal 
+    $('body').on('click', '#openStatModal', function () {
+        $('#statModal').modal('show');
+    })
+
     //month selection
     $('body').on('change', '#mounthSelection', function () {
         const month = $(this).val();
