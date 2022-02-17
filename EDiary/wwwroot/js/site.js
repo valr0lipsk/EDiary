@@ -287,6 +287,24 @@ $(document).ready(function () {
         $('#periodModal').modal('show');
     })
 
+    $('body').on('click', '#btnPeriodSubmit', function (e) {
+        e.preventDefault();
+        if ($('#firstDate').val() && $('#secondDate').val()) {
+            $.ajax({
+                type: 'POST',
+                data: {
+                    'lessDateStart': $('#firstDate').val(),
+                    'lessDateEnd': $('#secondDate').val()
+                },
+                cache: false,
+                async: true,
+                success: function (result) {
+                    $('.jurnal__main').replaceWith(result)
+                }
+            });
+        }
+    })
+
     //link to another subj
     $('body').on('click', '.jurnal__link', function () {
         const subId = $(this).attr('data-subid');
