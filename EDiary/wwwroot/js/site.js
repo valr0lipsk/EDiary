@@ -256,11 +256,11 @@ $(document).ready(function () {
                     if (result.status === 'deleted') {
                         td[0].removeAttribute('data-idsm')
                     }
+                    else if (result.status === 'error') {
+                        td.text(value)
+                    }
                 },
                 error: function (error) {
-                    if (error) {
-                        td.text('')
-                    }
                     console.error(error);
                 }
             })
@@ -281,7 +281,12 @@ $(document).ready(function () {
                 cache: false,
                 async: true,
                 success: function (result) {
-                    td[0].setAttribute('data-idsm', result.markId)
+                    if (result.status === 'added') {
+                        td[0].setAttribute('data-idsm', result.markId)
+                    }
+                    else if (result.status === 'error') {
+                        td.text('')
+                    }
                 },
                 error: function (error) {
                     if (error) {
