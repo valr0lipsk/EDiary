@@ -224,7 +224,7 @@ namespace EDiary.Controllers
             }
             catch
             {
-                return Json("Error of add group");
+                return Json("Error of add teacher");
             }
         }
 
@@ -283,8 +283,8 @@ namespace EDiary.Controllers
                                 teacherSurname = tr.teacherSurname,
                                 teacherLogin = tr.user.UserName,
                                 teacherEmail = tr.user.Email,
-                                subjectName = string.Join(", ", context.subjectTaughts.Where(ter => ter.teacherId == tr.teacherId).Select(sub => sub.subject.subjectName).ToArray())
                             }).AsNoTracking().OrderBy(tr => tr.teacherSurname).ThenBy(tr => tr.teacherName).ToList();
+            teachers.ForEach(tr => tr.subjectName = string.Join(", ", context.subjectTaughts.Where(ter => ter.teacherId == tr.teacherId).Select(sub => sub.subject.subjectName).Distinct().ToArray()));
             var tableTeachers = new TableTeacherModel { teachers = teachers, groups = groupsRep.allGroups() };
             return PartialView("~/Views/Admin/_tableTeacher.cshtml", tableTeachers);
         }
@@ -495,7 +495,7 @@ namespace EDiary.Controllers
                                 subjectName = sub.subjectName,
                                 groupName = gr.groupName,
                                 tsubjectId = subTaught.tsubjectId
-                            }).AsNoTracking().OrderBy(sub => sub.subjectName).ThenBy(tr => tr.teacherSurname).ToList();
+                            }).AsNoTracking().OrderBy(sub => sub.subjectName).ToList();
             var groups = groupsRep.allGroups();
             var teachers = teachersRep.allTeachers();
             var tableSubjects = new TableSubjectModel { teachers = teachers, subjects = subjects, groups = groups };
