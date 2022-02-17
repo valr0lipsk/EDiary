@@ -802,8 +802,11 @@ namespace EDiary.Controllers
                         worksheet.Cell(currentRow, 1).Value = studentPass.studentFullname;
                         worksheet.Cell(currentRow, 2).Value = studentPass.studentPassesNoReason;
                         worksheet.Cell(currentRow, 3).Value = studentPass.studentPassesReason;
+                        
                     }
-                    
+                    currentRow++;
+                    worksheet.Cell(currentRow, 2).Value = "Всего по неуважительной: " + studentsPasses.Sum(s => s.studentPassesNoReason);
+                    worksheet.Cell(currentRow, 3).Value = "Всего по уважительной: " + studentsPasses.Sum(s => s.studentPassesReason);
                     using (var stream = new MemoryStream())
                     {
                         workbook.SaveAs(stream);
@@ -851,14 +854,12 @@ namespace EDiary.Controllers
                     var currentRow = 1;
                     worksheet.Cell(currentRow, 1).Value = "ФИО";
                     worksheet.Cell(currentRow, 2).Value = "Средний балл";
-
                     foreach (var studentAverage in studentsAverages.OrderBy(s => s.studentFullname))
                     {
                         currentRow++;
                         worksheet.Cell(currentRow, 1).Value = studentAverage.studentFullname;
                         worksheet.Cell(currentRow, 2).Value = studentAverage.studentAverage;
                     }
-
                     using (var stream = new MemoryStream())
                     {
                         workbook.SaveAs(stream);
