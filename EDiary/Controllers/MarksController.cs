@@ -30,8 +30,8 @@ namespace EDiary.Controllers
         //переадресация на нужный POST-метод
         [HttpPost]
         [Route("Marks/Jurnal/{id?}")]
-        public IActionResult Jurnal(int studId, int lessId, string value, LessonModel labaSub, DateTime lessDateStart, DateTime lessDateEnd, string month)
-                                => value == null ? Jurnal(labaSub, lessDateStart, lessDateEnd, month) : Jurnal(studId, lessId, value);
+        public IActionResult Jurnal(int studId, int lessId, string value, LessonModel lubSub, DateTime lessDateStart, DateTime lessDateEnd, string month)
+                                => value == null ? Jurnal(lubSub, lessDateStart, lessDateEnd, month) : Jurnal(studId, lessId, value);
 
 
 
@@ -361,16 +361,16 @@ namespace EDiary.Controllers
         /**********ЖУРНАЛ ПО ДАТАМ**********/
 
         //показать занятия по промежутку
-        public IActionResult Jurnal(LessonModel labaSub, DateTime lessDateStart, DateTime lessDateEnd, string month)
+        public IActionResult Jurnal(LessonModel lubSub, DateTime lessDateStart, DateTime lessDateEnd, string month)
         {
             var jurnal = new JurnalModel();
 
             //если журнал лабораторных
-            if (labaSub.labId != 0)
+            if (lubSub.labId != 0)
             {
                 //преподаватель
                 var teacherJurnal = context.teachers.Join(context.labs, tr => tr.teacherId, lab => lab.teacherId, (tr, lab) => new { tr, lab })
-                                                    .Where(lab => lab.lab.labId == labaSub.labId)
+                                                    .Where(lab => lab.lab.labId == lubSub.labId)
                                                     .Select(tr => new Teacher
                                                     {
                                                         teacherSurname = tr.tr.teacherSurname,
@@ -383,7 +383,7 @@ namespace EDiary.Controllers
                                    join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
                                    join gr in context.groups on subTaught.groupId equals gr.groupId
                                    join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
-                                   where lab.labId == labaSub.labId
+                                   where lab.labId == lubSub.labId
                                    select new collegeGroup
                                    {
                                        groupName = string.Join(" ", gr.groupName, subGr.subgroupName)
@@ -394,11 +394,11 @@ namespace EDiary.Controllers
                                      join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
                                      join gr in context.groups on subTaught.groupId equals gr.groupId
                                      join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
-                                     where lab.labId == labaSub.labId
+                                     where lab.labId == lubSub.labId
                                      select new SubjectGroupModel
                                      {
                                          subjectName = lab.labName,
-                                         labaId = labaSub.labId
+                                         labaId = lubSub.labId
                                      }).AsNoTracking().ToList();
 
                 //студенты
@@ -407,7 +407,7 @@ namespace EDiary.Controllers
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
                                       join subTaught in context.subjectTaughts on laba.tsubjectId equals subTaught.tsubjectId
                                       join gr in context.groups on subTaught.groupId equals gr.groupId
-                                      where student.studentGroup == subTaught.groupId && laba.labId == labaSub.labId
+                                      where student.studentGroup == subTaught.groupId && laba.labId == lubSub.labId
                                       orderby student.studentSurname
                                       select new Student
                                       {
@@ -424,7 +424,7 @@ namespace EDiary.Controllers
                     jurnal.Lessons = (from lesson in context.lessons
                                       join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                       join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                      where lesson.lessonTypeId == 6 && laba.labId == labaSub.labId
+                                      where lesson.lessonTypeId == 6 && laba.labId == lubSub.labId
                                       where lesson.lessonDate >= lessDateStart && lesson.lessonDate <= lessDateEnd
                                       orderby lesson.lessonDate
                                       select new Lesson
@@ -443,7 +443,7 @@ namespace EDiary.Controllers
                                        join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
-                                       where lesson.lessonTypeId == 6 && laba.labId == labaSub.labId
+                                       where lesson.lessonTypeId == 6 && laba.labId == lubSub.labId
                                        where lesson.lessonDate >= lessDateStart && lesson.lessonDate <= lessDateEnd
                                        select new setMark
                                        {
@@ -460,7 +460,7 @@ namespace EDiary.Controllers
                     jurnal.Lessons = (from lesson in context.lessons
                                       join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                       join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                      where lesson.lessonTypeId == 6 && laba.labId == labaSub.labId
+                                      where lesson.lessonTypeId == 6 && laba.labId == lubSub.labId
                                       where lesson.lessonDate.Month.ToString() == month
                                       orderby lesson.lessonDate
                                       select new Lesson
@@ -479,7 +479,7 @@ namespace EDiary.Controllers
                                        join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
-                                       where lesson.lessonTypeId == 6 && laba.labId == labaSub.labId
+                                       where lesson.lessonTypeId == 6 && laba.labId == lubSub.labId
                                        where lesson.lessonDate.Month.ToString() == month
                                        select new setMark
                                        {
@@ -496,7 +496,7 @@ namespace EDiary.Controllers
                     jurnal.Lessons = (from lesson in context.lessons
                                       join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                       join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                      where lesson.lessonTypeId == 6 && laba.labId == labaSub.labId
+                                      where lesson.lessonTypeId == 6 && laba.labId == lubSub.labId
                                       orderby lesson.lessonDate
                                       select new Lesson
                                       {
@@ -514,7 +514,7 @@ namespace EDiary.Controllers
                                        join laba in context.labs on subTaught.tsubjectId equals laba.tsubjectId
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
-                                       where lesson.lessonTypeId == 6 && laba.labId == labaSub.labId
+                                       where lesson.lessonTypeId == 6 && laba.labId == lubSub.labId
                                        select new setMark
                                        {
                                            mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -541,7 +541,7 @@ namespace EDiary.Controllers
             {
                 //преподаватель
                 var teacherJurnal = context.teachers.Join(context.subjectTaughts, tr => tr.teacherId, sT => sT.teacherId, (tr, sT) => new { tr, sT })
-                                                    .Where(sT => sT.sT.tsubjectId == labaSub.id)
+                                                    .Where(sT => sT.sT.tsubjectId == lubSub.id)
                                                     .Select(tr => new Teacher
                                                     {
                                                         teacherSurname = tr.tr.teacherSurname,
@@ -551,21 +551,21 @@ namespace EDiary.Controllers
 
                 //группы
                 var groupJurnal = context.subjectTaughts.Join(context.groups, sT => sT.groupId, gr => gr.groupId, (sT, gr) => new { sT, gr })
-                                                        .Where(sT => sT.sT.tsubjectId == labaSub.id)
+                                                        .Where(sT => sT.sT.tsubjectId == lubSub.id)
                                                         .Select(gr => new collegeGroup { groupName = gr.gr.groupName })
                                                         .AsNoTracking().ToList();
 
                 //предмет
                 var subjectJurnal = context.subjectTaughts.Join(context.subjects, sT => sT.subjectId, sub => sub.subjectId, (sT, sub) => new { sT, sub })
-                                                          .Where(sT => sT.sT.tsubjectId == labaSub.id)
-                                                          .Select(sub => new SubjectGroupModel { subjectName = sub.sub.subjectName, tsubjectId = labaSub.id })
+                                                          .Where(sT => sT.sT.tsubjectId == lubSub.id)
+                                                          .Select(sub => new SubjectGroupModel { subjectName = sub.sub.subjectName, tsubjectId = lubSub.id })
                                                           .AsNoTracking().ToList();
 
                 //студенты
                 var studentsJurnal = (from student in context.students
                                       join gr in context.groups on student.studentGroup equals gr.groupId
                                       join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                      where subTaught.tsubjectId == labaSub.id
+                                      where subTaught.tsubjectId == lubSub.id
                                       orderby student.studentSurname
                                       select new Student
                                       {
@@ -579,7 +579,7 @@ namespace EDiary.Controllers
                 if (month == null)
                 {
                     //занятия
-                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == labaSub.id && less.lessonTypeId != 6)
+                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lubSub.id && less.lessonTypeId != 6)
                                                     .Where(less => less.lessonDate >= lessDateStart && less.lessonDate <= lessDateEnd)
                                                     .OrderBy(less => less.lessonDate)
                                                     .Select(less => new Lesson
@@ -597,7 +597,7 @@ namespace EDiary.Controllers
                                        join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
-                                       where subTaught.tsubjectId == labaSub.id && lesson.lessonTypeId != 6
+                                       where subTaught.tsubjectId == lubSub.id && lesson.lessonTypeId != 6
                                        where lesson.lessonDate >= lessDateStart && lesson.lessonDate <= lessDateEnd
                                        select new setMark
                                        {
@@ -611,7 +611,7 @@ namespace EDiary.Controllers
                 //месяц отображения журнала предметов
                 else
                 {
-                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == labaSub.id && less.lessonTypeId != 6)
+                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lubSub.id && less.lessonTypeId != 6)
                                                     .Where(less => less.lessonDate.Month.ToString() == month)
                                                     .OrderBy(less => less.lessonDate)
                                                     .Select(less => new Lesson
@@ -629,7 +629,7 @@ namespace EDiary.Controllers
                                        join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
-                                       where subTaught.tsubjectId == labaSub.id && lesson.lessonTypeId != 6
+                                       where subTaught.tsubjectId == lubSub.id && lesson.lessonTypeId != 6
                                        where lesson.lessonDate.Month.ToString() == month
                                        select new setMark
                                        {
@@ -646,7 +646,7 @@ namespace EDiary.Controllers
                 //выбраны все
                 if (month == "0")
                 {
-                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == labaSub.id && less.lessonTypeId != 6)
+                    jurnal.Lessons = context.lessons.Where(less => less.tsubjectId == lubSub.id && less.lessonTypeId != 6)
                                                     .OrderBy(less => less.lessonDate)
                                                     .Select(less => new Lesson
                                                     {
@@ -663,7 +663,7 @@ namespace EDiary.Controllers
                                        join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
                                        orderby student.studentSurname
                                        orderby lesson.lessonDate
-                                       where subTaught.tsubjectId == labaSub.id && lesson.lessonTypeId != 6
+                                       where subTaught.tsubjectId == lubSub.id && lesson.lessonTypeId != 6
                                        select new setMark
                                        {
                                            mark = new Mark() { mark = mark.mark, markId = mark.markId },
@@ -744,28 +744,28 @@ namespace EDiary.Controllers
         /**********СТАТИСТИКА**********/
 
         //экспорт статистики 
-       /* public IActionResult Statistics(LessonModel stats)
+        public IActionResult Statistics(LessonModel lessDates)
         {
             string group="";
-            var month = Convert.ToDateTime("01." + stats.month + ".0001 00:00").ToString("MMMM", new System.Globalization.CultureInfo("ru-RU"));
-            if (stats.id != 0)
+            var month = Convert.ToDateTime("01." + lessDates.month + ".0001 00:00").ToString("MMMM", new System.Globalization.CultureInfo("ru-RU"));
+            if (lessDates.id != 0)
             {
-                group = context.subjectTaughts.Where(sT => sT.tsubjectId == stats.id).Select(gr => gr.group.groupName).FirstOrDefault();
+                group = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
             }
-            else if (stats.labId != 0)
+            else if (lessDates.labId != 0)
             {
-                stats.id = context.labs.Where(lab => lab.labId == stats.labId).Select(st => st.tsubjectId).FirstOrDefault();
-                group = context.subjectTaughts.Where(sT => sT.tsubjectId == stats.id).Select(gr => gr.group.groupName).FirstOrDefault();
+                lessDates.id = context.labs.Where(lab => lab.labId == lessDates.labId).Select(st => st.tsubjectId).FirstOrDefault();
+                group = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
             }
             //пропуски 
-            if (stats.type == "1")
+            if (lessDates.type == "1")
             {
                 using (var workbook = new XLWorkbook())
                 {
                     var studentsPasses = (from student in context.students
                                           join gr in context.groups on student.studentGroup equals gr.groupId
                                           join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                          where subTaught.tsubjectId == stats.id
+                                          where subTaught.tsubjectId == lessDates.id
                                           orderby student.studentSurname
                                           select new StudentJurnal
                                           {
@@ -776,8 +776,8 @@ namespace EDiary.Controllers
                                               studentPassesReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                                  .Where(m => m.m.mark == "н")
                                                                                  .Where(m => m.sM.studentId == student.studentId)
-                                                                                 .Where(sM => sM.sM.lesson.tsubjectId == stats.id)
-                                                                                 .Where(less => less.sM.lesson.lessonDate.Month.ToString() == stats.month)
+                                                                                 .Where(sM => sM.sM.lesson.tsubjectId == lessDates.id)
+                                                                                 .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
                                                                                  .GroupBy(sm => sm.sM.studentId)
                                                                                  .Select(m => m.Count()).FirstOrDefault(),
 
@@ -785,8 +785,8 @@ namespace EDiary.Controllers
                                               studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                                    .Where(m => m.m.mark == "н/б")
                                                                                    .Where(m => m.sM.studentId == student.studentId)
-                                                                                   .Where(sM => sM.sM.lesson.tsubjectId == stats.id)
-                                                                                   .Where(less => less.sM.lesson.lessonDate.Month.ToString() == stats.month)
+                                                                                   .Where(sM => sM.sM.lesson.tsubjectId == lessDates.id)
+                                                                                   .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
                                                                                    .GroupBy(sm => sm.sM.studentId)
                                                                                    .Select(m => m.Count()).FirstOrDefault()
                                           }).Distinct().AsNoTracking().ToList();
@@ -830,21 +830,21 @@ namespace EDiary.Controllers
                     var studentsAverages = (from student in context.students
                                             join gr in context.groups on student.studentGroup equals gr.groupId
                                             join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                            where subTaught.tsubjectId == stats.id
+                                            where subTaught.tsubjectId == lessDates.id
                                             select new StudentJurnal
                                             {
                                                 studentId = student.studentId,
                                                 studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
 
                                                 //средний балл ученика
-                                                studentAverage = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                              .Where(m => digitals.Values.Contains(m.m.mark))
-                                                                              .Where(m => m.sM.studentId == student.studentId)
-                                                                              .Where(m => m.sM.student.studentGroup == subTaught.groupId)
-                                                                              .Where(m => m.sM.lesson.tsubjectId == stats.id)
-                                                                              .Where(less => less.sM.lesson.lessonDate.Month.ToString() == stats.month)
-                                                                              .GroupBy(sm => sm.sM.studentId)
-                                                                              .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
+                                                studentAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                                         .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                                         .Where(m => m.sM.studentId == student.studentId)
+                                                                                         .Where(m => m.sM.student.studentGroup == subTaught.groupId)
+                                                                                         .Where(m => m.sM.lesson.tsubjectId == lessDates.id)
+                                                                                         .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
+                                                                                         .GroupBy(sm => sm.sM.studentId)
+                                                                                         .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                             }).Distinct().AsNoTracking().ToList();
 
                     var worksheet = workbook.Worksheets.Add("Статистика");
@@ -871,6 +871,6 @@ namespace EDiary.Controllers
                     }
                 }
             }
-        }*/
+        }
     }
 }
