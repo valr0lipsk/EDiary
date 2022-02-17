@@ -154,10 +154,7 @@
                         <div class="row p-3 d-flex flex-column" id="subsBlock">
                             <h2 class="block__tile mb-3 text-center">Мои предметы:</h2>
                             <div class="input-group mb-3">
-                                <input class="form-control" type="text" placeholder="Введите название предмета или номер группы">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">Поиск</button>
-                                </div>
+                                <input class="form-control" id="subjectFind" type="text" placeholder="Введите название предмета или номер группы">
                             </div>
                             @foreach (var subject in Model.subjects)
                             {

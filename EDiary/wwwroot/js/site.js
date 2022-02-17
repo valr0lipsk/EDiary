@@ -60,6 +60,7 @@ $(document).ready(function () {
 
     //-------------------------------------------
     //common funcs
+
     //change mates block height
     const block = $('#matesBlock');
     $(block).height($('#subsBlock').height());
@@ -162,6 +163,7 @@ $(document).ready(function () {
         $(this).removeClass('selection__item-hover');
     })
 
+    //emoji select
     $('.selection__item').click(function () {
         $.each($('.selection__item'), function () {
             if ($(this).hasClass('selection__item-hover')) {
@@ -175,9 +177,17 @@ $(document).ready(function () {
         $('#statusId').val($(this).attr('data-idStatus'));
     })
 
-    $('#subjectFind').keyup(function () {
+    //find subj in acc
+    $('body').on('#subjectFind', 'keyup', function () {
         const _this = this;
-        $.each($)
+        $.each($('.block__item'), function () {
+            if ($(this).find('.item__title')[0].text.toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
+                $(this).hide();
+            }
+            else {
+                $(this).show();
+            }
+        })
     })
 
     //-----------------------------------------
@@ -299,6 +309,7 @@ $(document).ready(function () {
                 cache: false,
                 async: true,
                 success: function (result) {
+                    $('#periodModal').modal('hide');
                     $('.jurnal__main').replaceWith(result)
                 }
             });
