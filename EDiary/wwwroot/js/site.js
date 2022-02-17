@@ -231,6 +231,7 @@ $(document).ready(function () {
                 async: true,
                 success: function (result) {
                     $('.jurnal__main').replaceWith(result)
+                    jurnalStyleTable();
                 }
             });
         }
@@ -311,6 +312,7 @@ $(document).ready(function () {
                 success: function (result) {
                     $('#periodModal').modal('hide');
                     $('.jurnal__main').replaceWith(result)
+                    jurnalStyleTable();
                 }
             });
         }
