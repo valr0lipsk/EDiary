@@ -187,9 +187,11 @@ namespace EDiary.Controllers
 
         //смена почты
         [Authorize]
+        [HttpGet]
         public IActionResult ChangeEmail() => View();
       
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> ChangeEmail(ChangeEmailModel changeEmail)
         {
             var user = await userManager.FindByIdAsync(userManager.GetUserId(User));

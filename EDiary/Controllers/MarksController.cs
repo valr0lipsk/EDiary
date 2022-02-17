@@ -168,7 +168,7 @@ namespace EDiary.Controllers
                             tsubjectId = sT.tsubjectId,
                         }).AsNoTracking().ToList();
             }
-            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName);
+            var subLabs = subjects.Concat(labs).OrderBy(x => x.subjectName).ToList();
 
 
             //если журнал лабы
@@ -725,8 +725,6 @@ namespace EDiary.Controllers
             return Json("Incorrect date");
         }
 
-
-
         //удаление занятия
         public async Task <IActionResult> DeleteLesson(LessonModel deleteLesson)
         {
@@ -743,73 +741,136 @@ namespace EDiary.Controllers
 
 
 
+        /**********СТАТИСТИКА**********/
+
         //экспорт статистики 
-        public IActionResult SaveStatistics()
+       /* public IActionResult Statistics(LessonModel stats)
         {
-            using (var workbook = new XLWorkbook())
+            string group="";
+            var month = Convert.ToDateTime("01." + stats.month + ".0001 00:00").ToString("MMMM", new System.Globalization.CultureInfo("ru-RU"));
+            if (stats.id != 0)
             {
-                //выборка всех оценок 0-10
-                var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
-                                            .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
-                                            .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
-                var studentsStats = (from student in context.students
-                                     join gr in context.groups on student.studentGroup equals gr.groupId
-                                     join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                     orderby student.studentSurname
-                                     select new StudentJurnal
-                                     {
-                                         studentId = student.studentId,
-                                         studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
-
-                                         //подсчет пропусков по уважительной
-                                         studentPassesReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                            .Where(m => m.m.mark == "н")
-                                                                            .Where(m => m.sM.studentId == student.studentId)
-                                                                            .GroupBy(sm => sm.sM.studentId)
-                                                                            .Select(m => m.Count()).FirstOrDefault(),
-
-                                         //подсчет пропусков по неуважительной 
-                                         studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                              .Where(m => m.m.mark == "н/б")
-                                                                              .Where(m => m.sM.studentId == student.studentId)
-                                                                              .GroupBy(sm => sm.sM.studentId)
-                                                                              .Select(m => m.Count()).FirstOrDefault(),
-
-                                         //подсчет среднего балла
-                                         studentAverage = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                       .Where(m => digitals.Values.Contains(m.m.mark))
-                                                                       .Where(m => m.sM.studentId == student.studentId)
-                                                                       .GroupBy(sm => sm.sM.studentId)
-                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
-                                     }).Distinct().AsNoTracking().ToList();
-
-                var worksheet = workbook.Worksheets.Add("Статистика");
-                var currentRow = 1;
-                worksheet.Cell(currentRow, 1).Value = "ФИО";
-                worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
-                worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
-                worksheet.Cell(currentRow, 4).Value = "Средний балл";
-
-                foreach (var student in studentsStats.OrderBy(s => s.studentFullname)) 
+                group = context.subjectTaughts.Where(sT => sT.tsubjectId == stats.id).Select(gr => gr.group.groupName).FirstOrDefault();
+            }
+            else if (stats.labId != 0)
+            {
+                stats.id = context.labs.Where(lab => lab.labId == stats.labId).Select(st => st.tsubjectId).FirstOrDefault();
+                group = context.subjectTaughts.Where(sT => sT.tsubjectId == stats.id).Select(gr => gr.group.groupName).FirstOrDefault();
+            }
+            //пропуски 
+            if (stats.type == "1")
+            {
+                using (var workbook = new XLWorkbook())
                 {
-                    currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = student.studentFullname;
-                    worksheet.Cell(currentRow, 2).Value = student.studentPassesNoReason;
-                    worksheet.Cell(currentRow, 3).Value = student.studentPassesReason;
-                    worksheet.Cell(currentRow, 4).Value = student.studentAverage;
-                }
+                    var studentsPasses = (from student in context.students
+                                          join gr in context.groups on student.studentGroup equals gr.groupId
+                                          join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
+                                          where subTaught.tsubjectId == stats.id
+                                          orderby student.studentSurname
+                                          select new StudentJurnal
+                                          {
+                                              studentId = student.studentId,
+                                              studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
 
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    var content = stream.ToArray();
+                                              //подсчет пропусков по уважительной
+                                              studentPassesReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                                 .Where(m => m.m.mark == "н")
+                                                                                 .Where(m => m.sM.studentId == student.studentId)
+                                                                                 .Where(sM => sM.sM.lesson.tsubjectId == stats.id)
+                                                                                 .Where(less => less.sM.lesson.lessonDate.Month.ToString() == stats.month)
+                                                                                 .GroupBy(sm => sm.sM.studentId)
+                                                                                 .Select(m => m.Count()).FirstOrDefault(),
 
-                    return File(
-                        content,
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "Statistics.xlsx");
+                                              //подсчет пропусков по неуважительной 
+                                              studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                                   .Where(m => m.m.mark == "н/б")
+                                                                                   .Where(m => m.sM.studentId == student.studentId)
+                                                                                   .Where(sM => sM.sM.lesson.tsubjectId == stats.id)
+                                                                                   .Where(less => less.sM.lesson.lessonDate.Month.ToString() == stats.month)
+                                                                                   .GroupBy(sm => sm.sM.studentId)
+                                                                                   .Select(m => m.Count()).FirstOrDefault()
+                                          }).Distinct().AsNoTracking().ToList();
+
+                    var worksheet = workbook.Worksheets.Add("Статистика");
+                    var currentRow = 1;
+                    worksheet.Cell(currentRow, 1).Value = "ФИО";
+                    worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
+                    worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
+                    foreach (var studentPass in studentsPasses.OrderBy(s => s.studentFullname))
+                    {
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = studentPass.studentFullname;
+                        worksheet.Cell(currentRow, 2).Value = studentPass.studentPassesNoReason;
+                        worksheet.Cell(currentRow, 3).Value = studentPass.studentPassesReason;
+                    }
+                    
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+
+                        return File(
+                            content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            $"Пропуски_{group}_{month}.xlsx");
+                    }
                 }
             }
-        }
+
+            //оценки
+            else 
+            {
+                using (var workbook = new XLWorkbook())
+                {
+                    //выборка всех оценок 0-10
+                    var digitals = context.marks.Where(mark => mark.mark != "н/б" && mark.mark != "н/а" && mark.mark != "зач" && mark.mark != "незач" && mark.mark != "н" && mark.mark != "осв")
+                                                .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
+                                                .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
+
+                    var studentsAverages = (from student in context.students
+                                            join gr in context.groups on student.studentGroup equals gr.groupId
+                                            join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
+                                            where subTaught.tsubjectId == stats.id
+                                            select new StudentJurnal
+                                            {
+                                                studentId = student.studentId,
+                                                studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
+
+                                                //средний балл ученика
+                                                studentAverage = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
+                                                                              .Where(m => digitals.Values.Contains(m.m.mark))
+                                                                              .Where(m => m.sM.studentId == student.studentId)
+                                                                              .Where(m => m.sM.student.studentGroup == subTaught.groupId)
+                                                                              .Where(m => m.sM.lesson.tsubjectId == stats.id)
+                                                                              .Where(less => less.sM.lesson.lessonDate.Month.ToString() == stats.month)
+                                                                              .GroupBy(sm => sm.sM.studentId)
+                                                                              .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault()
+                                            }).Distinct().AsNoTracking().ToList();
+
+                    var worksheet = workbook.Worksheets.Add("Статистика");
+                    var currentRow = 1;
+                    worksheet.Cell(currentRow, 1).Value = "ФИО";
+                    worksheet.Cell(currentRow, 2).Value = "Средний балл";
+
+                    foreach (var studentAverage in studentsAverages.OrderBy(s => s.studentFullname))
+                    {
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = studentAverage.studentFullname;
+                        worksheet.Cell(currentRow, 2).Value = studentAverage.studentAverage;
+                    }
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+
+                        return File(
+                            content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            $"Успеваемость_{group}_{month}.xlsx");
+                    }
+                }
+            }
+        }*/
     }
 }
