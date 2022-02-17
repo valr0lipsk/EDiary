@@ -178,7 +178,7 @@ $(document).ready(function () {
     })
 
     //find subj in acc
-    $('body').on('#subjectFind', 'keyup', function () {
+    $('body').on('keyup', '#subjectFind', function () {
         const _this = this;
         $.each($('.block__item'), function () {
             if ($(this).find('.item__title')[0].text.toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
