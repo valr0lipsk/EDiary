@@ -359,7 +359,7 @@ namespace EDiary.Controllers
         /**********ЖУРНАЛ ПО ДАТАМ**********/
 
         //показать занятия по промежутку
-        public IActionResult Jurnal(LessonModel lessDates, string month)
+        public IActionResult Jurnal(DateTime lessDateStart, DateTime lessDateEnd, string month)
         {
             var jurnal = new JurnalModel();
 
@@ -392,11 +392,9 @@ namespace EDiary.Controllers
                                      join subTaught in context.subjectTaughts on lab.tsubjectId equals subTaught.tsubjectId
                                      join gr in context.groups on subTaught.groupId equals gr.groupId
                                      join subGr in context.subgroups on lab.subgroupId equals subGr.subgroupId
-                                     where lab.labId == lessDates.labId
                                      select new SubjectGroupModel
                                      {
-                                         subjectName = lab.labName,
-                                         labaId = lessDates.labId
+                                         subjectName = lab.labName
                                      }).AsNoTracking().ToList();
 
                 //студенты
@@ -405,7 +403,7 @@ namespace EDiary.Controllers
                                       join laba in context.labs on subGr.subgroupId equals laba.subgroupId
                                       join subTaught in context.subjectTaughts on laba.tsubjectId equals subTaught.tsubjectId
                                       join gr in context.groups on subTaught.groupId equals gr.groupId
-                                      where laba.labId == lessDates.labId && student.studentGroup == subTaught.groupId
+                                      where student.studentGroup == subTaught.groupId
                                       orderby student.studentSurname
                                       select new Student
                                       {
@@ -422,8 +420,8 @@ namespace EDiary.Controllers
                     jurnal.Lessons = (from lesson in context.lessons
                                       join sT in context.subjectTaughts on lesson.tsubjectId equals sT.tsubjectId
                                       join laba in context.labs on sT.tsubjectId equals laba.tsubjectId
-                                      where lesson.lessonTypeId == 6 && laba.labId == lessDates.labId
-                                      where lesson.lessonDate >= lessDates.lessonDateStart && lesson.lessonDate <= lessDates.lessonDateEnd
+                                      where lesson.lessonTypeId == 6 
+                                      where lesson.lessonDate >= lessDateStart && lesson.lessonDate <= lessDateEnd
                                       orderby lesson.lessonDate
                                       select new Lesson
                                       {
