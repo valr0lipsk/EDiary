@@ -42,10 +42,11 @@ namespace EDiary.Controllers
         public IActionResult Jurnal(int id, string value)
         {
             var updatedMark = marksRep.findSetMark(id);
-            if (updatedMark != null && value != null)
+            var mark = marksRep.findMark(value);
+            if (updatedMark != null && value != null && mark != null)
             {
                 using var transaction = context.Database.BeginTransaction();
-                updatedMark.markId = marksRep.findMark(value).markId;
+                updatedMark.markId = mark.markId;
                 marksRep.updateSetMark(updatedMark);
                 transaction.Commit();
                 return Json(new { status = "updated", message = "Оценка обновлена" });
@@ -66,7 +67,7 @@ namespace EDiary.Controllers
         //добавление оценки
         public IActionResult Jurnal(int studId, int lessId, string value)
         {
-            var marks = marksRep.findMark(value).mark;
+            var marks = marksRep.findMark(value);
             if (marks != null)
             {
                 var markValue = marksRep.findMark(value).markId;
