@@ -135,17 +135,61 @@
                                         <input class="btn btn-primary" id="addLessModal" type="button" value="+ Добавить занятие"/>
                                     </div>
                                 </div>
+                            }
 
+                            @if (User.IsInRole("headman") || User.IsInRole("teacher")) {
                                 <div class="col">
                                     <div class="row pt-1 d-flex justify-content-end">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Статистика
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">Пропуски за месяц</a>
-                                                <a class="dropdown-item" asp-action="SaveStatistics">Балл за месяц</a>
+                                        <input class="btn btn-primary" id="openStatModal" type="button" value="Статистика"/>
+                                    </div>
+                                </div>
+                                <div id="statModal" class="modal" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Статистика</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </div>
+                                            <form asp-controller="Marks" asp-action="Statistics" method="post" enctype="multipart/form-data">
+                                                <div class="modal-body">
+                                                    <select class="custom-select mb-3" id="mSel" asp-for="lessDates.month">
+                                                        <option value="" disabled selected>Выберите месяц</option>
+                                                        <option value="1">Январь</option>
+                                                        <option value="2">Февраль</option>
+                                                        <option value="3">Март</option>
+                                                        <option value="4">Апрель</option>
+                                                        <option value="5">Май</option>
+                                                        <option value="6">Июнь</option>
+                                                        <option value="7">Июль</option>
+                                                        <option value="9">Сентябрь</option>
+                                                        <option value="10">Октябрь</option>
+                                                        <option value="11">Ноябрь</option>
+                                                        <option value="12">Декабрь</option>
+                                                    </select>
+                                                    <select class="custom-select" id="typeSel" asp-for="lessDates.type">
+                                                        <option value="" disabled selected>Выберите тип</option>
+                                                        <option value="1">Пропуски за месяц</option>
+                                                        <option value="2">Успеваемость за месяц</option>
+                                                    </select>
+                                                    @foreach (var subject in Model.Subjects)
+                                                    {
+                                                        @if (subject.labaId == 0)
+                                                        {
+                                                            <input type="hidden" id="subId" readonly value="@subject.tsubjectId" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" id="labId" readonly value="@subject.labaId" />
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                                                    <input class="btn btn-primary" id="downloadStat" type="submit" value="Скачать" />
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

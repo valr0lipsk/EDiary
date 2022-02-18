@@ -70,17 +70,6 @@
                                 </div>
                                 <form method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
-                                        @*@foreach (var subject in Model.Subjects)
-                                        {
-                                            @if (subject.labaId == 0)
-                                            {
-                                                <input type="hidden" id="subId" data-object="subject" readonly value="@subject.tsubjectId" />
-                                            }
-                                            else
-                                            {
-                                                <input type="hidden" id="subId" data-object="labor" readonly value="@subject.labaId" />
-                                            }
-                                        }*@
                                         <div class="col-12">
                                             <div class="row mb-2">
                                                 <label class="pr-3" for="firstDate">С:</label>
@@ -171,7 +160,9 @@
                                         <input class="btn btn-primary" id="addLessModal" type="button" value="+ Добавить занятие"/>
                                     </div>
                                 </div>
+                            }
 
+                            @if (User.IsInRole("headman") || User.IsInRole("teacher")) {
                                 <div class="col">
                                     <div class="row pt-1 d-flex justify-content-end">
                                         <input class="btn btn-primary" id="openStatModal" type="button" value="Статистика"/>
@@ -188,7 +179,7 @@
                                             </div>
                                             <form asp-controller="Marks" asp-action="Statistics" method="post" enctype="multipart/form-data">
                                                 <div class="modal-body">
-                                                    <select class="custom-select mb-3" asp-for="lessDates.month">
+                                                    <select class="custom-select mb-3" id="mSel" asp-for="lessDates.month">
                                                         <option value="" disabled selected>Выберите месяц</option>
                                                         <option value="1">Январь</option>
                                                         <option value="2">Февраль</option>
@@ -202,15 +193,26 @@
                                                         <option value="11">Ноябрь</option>
                                                         <option value="12">Декабрь</option>
                                                     </select>
-                                                    <select class="custom-select" asp-for="lessDates.type">
+                                                    <select class="custom-select" id="typeSel" asp-for="lessDates.type">
                                                         <option value="" disabled selected>Выберите тип</option>
                                                         <option value="1">Пропуски за месяц</option>
                                                         <option value="2">Успеваемость за месяц</option>
                                                     </select>
+                                                    @foreach (var subject in Model.Subjects)
+                                                    {
+                                                        @if (subject.labaId == 0)
+                                                        {
+                                                            <input type="hidden" id="subId" readonly value="@subject.tsubjectId" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" id="labId" readonly value="@subject.labaId" />
+                                                        }
+                                                    }
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
-                                                    <input class="btn btn-primary" type="submit" value="Скачать" />
+                                                    <input class="btn btn-primary" id="downloadStat" type="submit" value="Скачать" />
                                                 </div>
                                             </form>
                                         </div>
