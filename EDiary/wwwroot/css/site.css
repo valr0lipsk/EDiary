@@ -529,11 +529,7 @@ tr, td {
   font-family: "Ubuntu", sans-serif;
 }
 
-/*.account__group {
-    height: 100vh;
-}*/
 .group__block {
-  /*min-height: 95vh;*/
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -630,13 +626,6 @@ tr, td {
   background: url("source/checkIcon.png") no-repeat;
 }
 
-@media (max-width: 991px) {
-  .admin__sidebar {
-    background-color: #fff;
-    position: absolute;
-    z-index: 1;
-  }
-}
 #onTop {
   display: none;
   background-color: #7748ca;
@@ -680,4 +669,38 @@ tr, td {
   white-space: nowrap;
   margin-top: 0;
   line-height: 60px;
+}
+
+@media (max-width: 991px) {
+  .admin__sidebar {
+    background-color: #fff;
+    position: absolute;
+    z-index: 1;
+  }
+}
+@media (max-width: 1260px) and (min-width: 1061px) {
+  .subject__find {
+    font-size: 10px;
+  }
+
+  .note__title {
+    font-size: 16px;
+  }
+
+  .note__text {
+    font-size: 12px;
+  }
+}
+@media (max-width: 1060px) and (min-width: 960px) {
+  .mate__name {
+    font-size: 15px;
+  }
+
+  .note__title {
+    font-size: 14px;
+  }
+
+  .note__text {
+    font-size: 11px;
+  }
 }

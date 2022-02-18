@@ -256,7 +256,7 @@ $(document).ready(function () {
                     if (result.status === 'deleted') {
                         td[0].removeAttribute('data-idsm')
                     }
-                    else if (result.status === 'error') {
+                    if (result.status === 'error') {
                         td.text(value)
                     }
                 },
