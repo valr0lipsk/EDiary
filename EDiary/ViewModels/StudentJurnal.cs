@@ -9,8 +9,9 @@ namespace EDiary.ViewModels
     {
         public int studentId { get; set; }
         public string studentFullname { get; set; }
-        public Array studentPassesNoReason { get; set; }
-        public Array studentPassesReason { get; set; }
+        public List<int> studentPassesNoReason { get; set; }
+        public List<int> studentPassesReason { get; set; }
         public double studentAverage { get; set; }
+        public string tsub { get; set; }
     }
 }

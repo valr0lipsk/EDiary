@@ -779,8 +779,7 @@ namespace EDiary.Controllers
                                                                                  .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
                                                                                  .Where(st => st.sM.student.@group.groupName == groupName)
                                                                                  .GroupBy(sm => new { sm.sM.studentId, sm.sM.lessonId })
-                                                                                 //.GroupBy(l => l.FirstOrDefault().sM.lessonId)
-                                                                                 .Select(m => m.Count()).ToArray(),
+                                                                                 .Select(m => m.Count()).ToList(),
 
                                               //подсчет пропусков по неуважительной 
                                               studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
@@ -788,9 +787,8 @@ namespace EDiary.Controllers
                                                                                    .Where(m => m.sM.studentId == student.studentId)
                                                                                    .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
                                                                                    .Where(st => st.sM.student.@group.groupName == groupName)
-                                                                                   .GroupBy(sm => new { sm.sM.studentId, sm.sM.lessonId })
-                                                                                   //.GroupBy(l => l.FirstOrDefault().sM.lessonId)
-                                                                                   .Select(m => m.Count()).ToArray()
+                                                                                   .GroupBy(sm => new { sm.sM.studentId, sm.sM.lesson.lessonDate })
+                                                                                   .Select(m => m.Count()).ToList()
                                           }).Distinct().AsNoTracking().ToList();
 
                     var days = Enumerable.Range(1, DateTime.DaysInMonth(DateTime.Now.Year, Convert.ToInt32(lessDates.month))).ToList();
@@ -799,21 +797,21 @@ namespace EDiary.Controllers
                     var number = 0;
                     worksheet.Cell(currentRow, 1).Value = "№";
                     worksheet.Cell(currentRow, 2).Value = "ФИО";
-                    foreach(var day in days)
+                    foreach (var day in days)
                     {
                         worksheet.Cell(2, day + 2).Value = day;
-                    }
-                    foreach (var studentPass in studentsPasses.OrderBy(s => s.studentFullname))
-                    {
-                        currentRow++;
-                        number++;
-                        worksheet.Cell(currentRow, 1).Value = number;
-                        worksheet.Cell(currentRow, 2).Value = studentPass.studentFullname;
-                        worksheet.Cell(currentRow, 3).Value = studentPass.studentPassesNoReason;
-                        worksheet.Cell(currentRow, 4).Value = studentPass.studentPassesReason;
+
+                        foreach (var studentPass in studentsPasses.OrderBy(s => s.studentFullname))
+                        {
+                            currentRow++;
+                            number++;
+                            worksheet.Cell(currentRow, 1).Value = number;
+                            worksheet.Cell(currentRow, 2).Value = studentPass.studentFullname;
+                            worksheet.Cell(currentRow, day + 2).Value = studentPass.studentPassesNoReason[day] + studentPass.studentPassesReason[day];
+                        }
                     }
                     currentRow++;
-                    //worksheet.Cell(2, days.Last() + 3).Value = "Всего по неуважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason);
+                    //worksheet.Cell(2, days.Last() + 3).Value = "Всего по неуважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesReason.);
                     //worksheet.Cell(2, days.Last() + 4).Value = "Всего по уважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesReason);
                     //worksheet.Cell(2, days.Last() + 5).Value = "Всего пропусков: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason + s.FirstOrDefault().studentPassesReason);
                     using (var stream = new MemoryStream())
@@ -839,35 +837,54 @@ namespace EDiary.Controllers
                                                 .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
                                                 .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
+                    var studentsSub = (from subTaught in context.subjectTaughts
+                                       join gr in context.groups on subTaught.groupId equals gr.groupId
+                                       where subTaught.@group.groupName == groupName
+                                       select new
+                                       {
+                                           tsub = subTaught.subject.subjectName
+                                       }).ToList();
+
                     var studentsAverages = (from student in context.students
                                             join gr in context.groups on student.studentGroup equals gr.groupId
                                             join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                            where subTaught.tsubjectId == lessDates.id
+                                            where subTaught.@group.groupName == groupName
                                             select new StudentJurnal
                                             {
                                                 studentId = student.studentId,
                                                 studentFullname = string.Join(" ", student.studentSurname, student.studentName.Substring(0, 1) + ".", student.studentLastname.Substring(0, 1) + "."),
-
                                                 //средний балл ученика
                                                 studentAverage = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                                          .Where(m => digitals.Values.Contains(m.m.mark))
                                                                                          .Where(m => m.sM.studentId == student.studentId)
                                                                                          .Where(m => m.sM.student.studentGroup == subTaught.groupId)
                                                                                          .Where(st => st.sM.student.@group.groupName == groupName)
+                                                                                         .Where(st => st.sM.lesson.tsubjectId == subTaught.tsubjectId)
                                                                                          .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
-                                                                                         .GroupBy(sm => sm.sM.studentId)
+                                                                                         .GroupBy(sm => new { st = sm.sM.studentId, sub = sm.sM.lesson.tsubjectId })
                                                                                          .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                             }).Distinct().AsNoTracking().ToList();
 
                     var worksheet = workbook.Worksheets.Add("Статистика");
-                    var currentRow = 1;
-                    worksheet.Cell(currentRow, 1).Value = "ФИО";
-                    worksheet.Cell(currentRow, 2).Value = "Средний балл";
+                    var currentRow = 2;
+                    var number = 0;
+                    var currentCol = 2;
+                    worksheet.Cell(currentRow, 1).Value = "№";
+                    worksheet.Cell(currentRow, 2).Value = "ФИО";
+                    foreach (var studentAverage in studentsSub)
+                    {
+                        currentCol++;
+                        worksheet.Cell(1, currentCol).Value = studentAverage.tsub;
+                        worksheet.Cell(1, currentCol+1).Value = "Балл";
+                        worksheet.Cell(1, currentCol+2).Value = "Зачеты";
+                    }
                     foreach (var studentAverage in studentsAverages.OrderBy(s => s.studentFullname))
                     {
                         currentRow++;
-                        worksheet.Cell(currentRow, 1).Value = studentAverage.studentFullname;
-                        worksheet.Cell(currentRow, 2).Value = studentAverage.studentAverage;
+                        number++;
+                        worksheet.Cell(currentRow, 1).Value = number;
+                        worksheet.Cell(currentRow, 2).Value = studentAverage.studentFullname;
+                        //worksheet.Cell(currentRow, 2).Value = studentAverage.studentAverage;
                     }
                     using (var stream = new MemoryStream())
                     {
