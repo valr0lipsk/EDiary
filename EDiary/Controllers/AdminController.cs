@@ -101,11 +101,20 @@ namespace EDiary.Controllers
                 };
                 await studentsRep.createStudentAsync(student);
                 await userManager.AddToRoleAsync(user, "student");
-                //if (createStudent.headman == true)
-                //{
-                //    var headman = context.students.Where(gr => gr.studentGroup == student.studentGroup);
-                //    if(context.Users.)
-                //}
+                if (createStudent.headman == true)
+                {
+                    var headman = context.UserRoles.Join(context.students, us => us.UserId, st => st.studentUser, (us, st) => new { us, st })
+                                                   .Where(gr => gr.st.studentGroup == student.studentGroup);
+                    if (headman.Any(st => st.us.RoleId == "headman") == false)
+                    {
+                        await userManager.AddToRoleAsync(user, "headman");
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                        return Json("Headman is already exists");
+                    }
+                }
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }

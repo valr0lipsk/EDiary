@@ -780,7 +780,7 @@ namespace EDiary.Controllers
                                                                                  .Where(st => st.sM.student.@group.groupName == groupName)
                                                                                  .GroupBy(sm => new { sm.sM.studentId, sm.sM.lessonId })
                                                                                  //.GroupBy(l => l.FirstOrDefault().sM.lessonId)
-                                                                                 .Select(m => m.Count()),
+                                                                                 .Select(m => m.Count()).ToArray(),
 
                                               //подсчет пропусков по неуважительной 
                                               studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
@@ -790,7 +790,7 @@ namespace EDiary.Controllers
                                                                                    .Where(st => st.sM.student.@group.groupName == groupName)
                                                                                    .GroupBy(sm => new { sm.sM.studentId, sm.sM.lessonId })
                                                                                    //.GroupBy(l => l.FirstOrDefault().sM.lessonId)
-                                                                                   .Select(m => m.Count()).FirstOrDefault()
+                                                                                   .Select(m => m.Count()).ToArray()
                                           }).Distinct().AsNoTracking().ToList();
 
                     var days = Enumerable.Range(1, DateTime.DaysInMonth(DateTime.Now.Year, Convert.ToInt32(lessDates.month))).ToList();
@@ -813,9 +813,9 @@ namespace EDiary.Controllers
                         worksheet.Cell(currentRow, 4).Value = studentPass.studentPassesReason;
                     }
                     currentRow++;
-                    worksheet.Cell(2, days.Last() + 3).Value = "Всего по неуважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason);
-                    worksheet.Cell(2, days.Last() + 4).Value = "Всего по уважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesReason);
-                    worksheet.Cell(2, days.Last() + 5).Value = "Всего пропусков: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason + s.FirstOrDefault().studentPassesReason);
+                    //worksheet.Cell(2, days.Last() + 3).Value = "Всего по неуважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason);
+                    //worksheet.Cell(2, days.Last() + 4).Value = "Всего по уважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesReason);
+                    //worksheet.Cell(2, days.Last() + 5).Value = "Всего пропусков: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason + s.FirstOrDefault().studentPassesReason);
                     using (var stream = new MemoryStream())
                     {
                         workbook.SaveAs(stream);
