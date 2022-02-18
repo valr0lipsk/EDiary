@@ -101,6 +101,11 @@ namespace EDiary.Controllers
                 };
                 await studentsRep.createStudentAsync(student);
                 await userManager.AddToRoleAsync(user, "student");
+                //if (createStudent.headman == true)
+                //{
+                //    var headman = context.students.Where(gr => gr.studentGroup == student.studentGroup);
+                //    if(context.Users.)
+                //}
                 transaction.Commit();
                 return RedirectToAction("Admin");
             }
