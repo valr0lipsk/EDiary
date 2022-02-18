@@ -12,5 +12,7 @@ namespace EDiary.ViewModels
         public string lessonType { get; set; }
         public int id { get; set; }
         public int labId { get; set; }
+        public string month { get; set; }
+        public string type { get; set; }
     }
 }
