@@ -746,16 +746,16 @@ namespace EDiary.Controllers
         //экспорт статистики 
         public IActionResult Statistics(LessonModel lessDates)
         {
-            string group="";
+            string groupName="";
             var month = Convert.ToDateTime("01." + lessDates.month + ".0001 00:00").ToString("MMMM", new System.Globalization.CultureInfo("ru-RU"));
             if (lessDates.id != 0)
             {
-                group = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
+                groupName = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
             }
             else if (lessDates.labId != 0)
             {
                 lessDates.id = context.labs.Where(lab => lab.labId == lessDates.labId).Select(st => st.tsubjectId).FirstOrDefault();
-                group = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
+                groupName = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
             }
             //пропуски 
             if (lessDates.type == "1")
@@ -765,8 +765,8 @@ namespace EDiary.Controllers
                     var studentsPasses = (from student in context.students
                                           join gr in context.groups on student.studentGroup equals gr.groupId
                                           join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                          where subTaught.tsubjectId == lessDates.id
                                           orderby student.studentSurname
+                                          where student.@group.groupName == groupName
                                           select new StudentJurnal
                                           {
                                               studentId = student.studentId,
@@ -776,37 +776,46 @@ namespace EDiary.Controllers
                                               studentPassesReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                                  .Where(m => m.m.mark == "н")
                                                                                  .Where(m => m.sM.studentId == student.studentId)
-                                                                                 .Where(sM => sM.sM.lesson.tsubjectId == lessDates.id)
                                                                                  .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
-                                                                                 .GroupBy(sm => sm.sM.studentId)
-                                                                                 .Select(m => m.Count()).FirstOrDefault(),
+                                                                                 .Where(st => st.sM.student.@group.groupName == groupName)
+                                                                                 .GroupBy(sm => new { sm.sM.studentId, sm.sM.lessonId })
+                                                                                 //.GroupBy(l => l.FirstOrDefault().sM.lessonId)
+                                                                                 .Select(m => m.Count()),
 
                                               //подсчет пропусков по неуважительной 
                                               studentPassesNoReason = context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
                                                                                    .Where(m => m.m.mark == "н/б")
                                                                                    .Where(m => m.sM.studentId == student.studentId)
-                                                                                   .Where(sM => sM.sM.lesson.tsubjectId == lessDates.id)
                                                                                    .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
-                                                                                   .GroupBy(sm => sm.sM.studentId)
+                                                                                   .Where(st => st.sM.student.@group.groupName == groupName)
+                                                                                   .GroupBy(sm => new { sm.sM.studentId, sm.sM.lessonId })
+                                                                                   //.GroupBy(l => l.FirstOrDefault().sM.lessonId)
                                                                                    .Select(m => m.Count()).FirstOrDefault()
                                           }).Distinct().AsNoTracking().ToList();
 
+                    var days = Enumerable.Range(1, DateTime.DaysInMonth(DateTime.Now.Year, Convert.ToInt32(lessDates.month))).ToList();
                     var worksheet = workbook.Worksheets.Add("Статистика");
-                    var currentRow = 1;
-                    worksheet.Cell(currentRow, 1).Value = "ФИО";
-                    worksheet.Cell(currentRow, 2).Value = "Пропуски по неуваж.";
-                    worksheet.Cell(currentRow, 3).Value = "Пропуски по уваж.";
+                    var currentRow = 2;
+                    var number = 0;
+                    worksheet.Cell(currentRow, 1).Value = "№";
+                    worksheet.Cell(currentRow, 2).Value = "ФИО";
+                    foreach(var day in days)
+                    {
+                        worksheet.Cell(2, day + 2).Value = day;
+                    }
                     foreach (var studentPass in studentsPasses.OrderBy(s => s.studentFullname))
                     {
                         currentRow++;
-                        worksheet.Cell(currentRow, 1).Value = studentPass.studentFullname;
-                        worksheet.Cell(currentRow, 2).Value = studentPass.studentPassesNoReason;
-                        worksheet.Cell(currentRow, 3).Value = studentPass.studentPassesReason;
-                        
+                        number++;
+                        worksheet.Cell(currentRow, 1).Value = number;
+                        worksheet.Cell(currentRow, 2).Value = studentPass.studentFullname;
+                        worksheet.Cell(currentRow, 3).Value = studentPass.studentPassesNoReason;
+                        worksheet.Cell(currentRow, 4).Value = studentPass.studentPassesReason;
                     }
                     currentRow++;
-                    worksheet.Cell(currentRow, 2).Value = "Всего по неуважительной: " + studentsPasses.Sum(s => s.studentPassesNoReason);
-                    worksheet.Cell(currentRow, 3).Value = "Всего по уважительной: " + studentsPasses.Sum(s => s.studentPassesReason);
+                    worksheet.Cell(2, days.Last() + 3).Value = "Всего по неуважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason);
+                    worksheet.Cell(2, days.Last() + 4).Value = "Всего по уважительной: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesReason);
+                    worksheet.Cell(2, days.Last() + 5).Value = "Всего пропусков: " + studentsPasses.GroupBy(st => st.studentId).Sum(s => s.FirstOrDefault().studentPassesNoReason + s.FirstOrDefault().studentPassesReason);
                     using (var stream = new MemoryStream())
                     {
                         workbook.SaveAs(stream);
@@ -815,7 +824,7 @@ namespace EDiary.Controllers
                         return File(
                             content,
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                            $"Пропуски_{group}_{month}.xlsx");
+                            $"Пропуски_{groupName}_{month}.xlsx");
                     }
                 }
             }
@@ -844,7 +853,7 @@ namespace EDiary.Controllers
                                                                                          .Where(m => digitals.Values.Contains(m.m.mark))
                                                                                          .Where(m => m.sM.studentId == student.studentId)
                                                                                          .Where(m => m.sM.student.studentGroup == subTaught.groupId)
-                                                                                         .Where(m => m.sM.lesson.tsubjectId == lessDates.id)
+                                                                                         .Where(st => st.sM.student.@group.groupName == groupName)
                                                                                          .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
                                                                                          .GroupBy(sm => sm.sM.studentId)
                                                                                          .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
@@ -868,7 +877,7 @@ namespace EDiary.Controllers
                         return File(
                             content,
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                            $"Успеваемость_{group}_{month}.xlsx");
+                            $"Успеваемость_{groupName}_{month}.xlsx");
                     }
                 }
             }
