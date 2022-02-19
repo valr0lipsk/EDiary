@@ -202,11 +202,11 @@
                                                     {
                                                         @if (subject.labaId == 0)
                                                         {
-                                                            <input type="hidden" id="subId" readonly value="@subject.tsubjectId" />
+                                                            <input type="hidden" id="subId" asp-for="lessDates.id" readonly value="@subject.tsubjectId" />
                                                         }
                                                         else
                                                         {
-                                                            <input type="hidden" id="labId" readonly value="@subject.labaId" />
+                                                            <input type="hidden" id="labId" asp-for="lessDates.labId" readonly value="@subject.labaId" />
                                                         }
                                                     }
                                                 </div>
