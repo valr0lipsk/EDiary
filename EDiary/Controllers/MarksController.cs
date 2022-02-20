@@ -746,6 +746,7 @@ namespace EDiary.Controllers
         //экспорт статистики 
         public IActionResult Statistics(LessonModel lessDates)
         {
+            //группа, месяц и дни
             string groupName="";
             var month = Convert.ToDateTime("01." + lessDates.month + ".0001 00:00").ToString("MMMM", new System.Globalization.CultureInfo("ru-RU"));
             if (lessDates.id != 0)
@@ -786,6 +787,7 @@ namespace EDiary.Controllers
                                                                                  .Select(m => m.Count()).FirstOrDefault(),
                                                  }).AsNoTracking().ToList().OrderBy(st => st.studentSurname).ThenBy(st=>st.studentName);
 
+                    //пропуски 
                     var setPasses = (from setMark in context.setMarks
                                      join student in context.students on setMark.studentId equals student.studentId
                                      join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
@@ -805,20 +807,30 @@ namespace EDiary.Controllers
                     var currentRow = 2;
                     var currentCol = 2;
                     var number = 0;
+                    
+                    //заголовки
+                    var main = worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(1, days.Last() + 4)).Merge();
+                    var header = worksheet.Range(worksheet.Cell(2, 1), worksheet.Cell(2, days.Last() + 4));
                     worksheet.Cell(currentRow, 1).Value = "№";
                     worksheet.Cell(currentRow, 2).Value = "ФИО";
                     worksheet.Cell(currentRow, days.Last() + 3).Value = "Всего по уважительной";
                     worksheet.Cell(currentRow, days.Last() + 4).Value = "Всего по неуважительной";
+
+                    //дни
                     foreach(var day in days)
                     {
                         currentCol++;
                         worksheet.Cell(2, currentCol).Value = day;
                     }
+
+                    //студенты и пропуски
                     foreach (var student in passes)
                     {
                         currentRow++;
                         number++;
                         worksheet.Cell(currentRow, 1).Value = number;
+
+                        //студенты
                         if (student.studentLastname != null)
                         {
                             worksheet.Cell(currentRow, 2).Value = student.studentSurname + " " + student.studentName + " " + student.studentLastname.Substring(0, 1) + ".";
@@ -827,8 +839,12 @@ namespace EDiary.Controllers
                         {
                             worksheet.Cell(currentRow, 2).Value = student.studentSurname + " " + student.studentName;
                         }
+
+                        //пропуски студента
                         worksheet.Cell(currentRow, days.Last() + 3).Value = student.passesReason;
                         worksheet.Cell(currentRow, days.Last() + 4).Value = student.passesNoReason;
+
+                        //пропуски по дням
                         for (int i = 0; i < days.Count(); i++)
                         {
                             var sm = setPasses.Where(x => x.studentId == student.studentId && x.lesson.lessonDate.Day == days[i]).Count();
@@ -842,13 +858,25 @@ namespace EDiary.Controllers
                             }
                         }
                     }
-                    worksheet.Cell(passes.Count() + 3, days.Last() + 3).Value = "Всего по уважительной группы: " + passes.Sum(s => s.passesReason);
-                    worksheet.Cell(passes.Count() + 3, days.Last() + 4).Value = "Всего по неуважительной группы: " + passes.Sum(s => s.passesNoReason);
-                    worksheet.Cell(passes.Count() + 3, days.Last() + 5).Value = "Всего пропусков за месяц: " + passes.Sum(s => s.passesNoReason + s.passesReason);
+
+                    //все пропуски
+                    worksheet.Cell(passes.Count() + 3, days.Last() + 3).Value = "Всего: " + passes.Sum(s => s.passesReason);
+                    worksheet.Cell(passes.Count() + 3, days.Last() + 4).Value = "Всего: " + passes.Sum(s => s.passesNoReason);
+                    worksheet.Cell(passes.Count() + 3, days.Last() + 5).Value = "Всего за месяц: " + passes.Sum(s => s.passesNoReason + s.passesReason);
                     using (var stream = new MemoryStream())
                     {
-                        worksheet.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+                        //оформление границ
+                        worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(currentRow, days.Last() + 4)).Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                        worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(currentRow, days.Last() + 4)).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                         worksheet.Columns().AdjustToContents();
+                        //месяц
+                        main.Value = month;
+                        main.Style.Font.Bold = true;
+                        main.Style.Font.FontSize = 14;
+                        main.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        //заголовки
+                        header.Style.Font.Bold = true;
+                        header.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
                         workbook.SaveAs(stream);
                         var content = stream.ToArray();
                         return File(
@@ -859,7 +887,9 @@ namespace EDiary.Controllers
                 }
             }
 
-            //оценки
+
+
+            //оценки и зачеты
             else 
             {
                 using (var workbook = new XLWorkbook())
@@ -869,25 +899,27 @@ namespace EDiary.Controllers
                                                 .Select(mark => new Mark { markId = mark.markId, mark = mark.mark.Trim() })
                                                 .ToDictionary(mark => mark.markId, mark => mark.mark.Trim());
 
+                    //предметы группы + зачеты и баллы
                     var studentsSub = (from subTaught in context.subjectTaughts
                                        join gr in context.groups on subTaught.groupId equals gr.groupId
                                        where subTaught.@group.groupName == groupName
                                        select new
                                        {
+                                           tsubjectId = subTaught.tsubjectId,
                                            subject = subTaught.subject.subjectName,
-                                           zach= "Зачеты",
-                                           average = "Балл"                                           
+                                           zach = "Зачеты",
+                                           average = "Балл"
                                        }).ToList();
 
-                    var students = (from st in context.students
-                                    join gr in context.groups on st.studentGroup equals gr.groupId
-                                    where gr.groupName == groupName
-                                    select new StudentJurnal
-                                    {
-                                        studentSurname = st.studentSurname,
-                                        studentName = st.studentName.Substring(0, 1) + ".",
-                                        studentLastname = st.studentLastname
-                                    }).AsNoTracking().ToList().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName);
+                    //студенты
+                    var students = context.students.Where(gr => gr.group.groupName == groupName)
+                                                 .Select(st => new StudentJurnal
+                                                 {
+                                                     studentSurname = st.studentSurname,
+                                                     studentName = st.studentName.Substring(0, 1) + ".",
+                                                     studentLastname = st.studentLastname,
+                                                     studentId = st.studentId
+                                                 }).AsNoTracking().ToList().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName);
 
                     var studentsAverages = (from student in context.students
                                             join gr in context.groups on student.studentGroup equals gr.groupId
@@ -907,41 +939,39 @@ namespace EDiary.Controllers
                                                                                          .GroupBy(sm => new { st = sm.sM.studentId, sub = sm.sM.lesson.tsubjectId })
                                                                                          .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
                                             }).Distinct().AsNoTracking().ToList();
-
                     var worksheet = workbook.Worksheets.Add("Статистика");
                     var currentRow = 2;
                     var number = 0;
                     var currentCol = 2;
-                    worksheet.Cell(currentRow, 1).Value = "№";
-                    worksheet.Cell(currentRow, 2).Value = "ФИО";
+
+                    //заголовки
+                    worksheet.Cell(currentRow + 1, 1).Value = "№";
+                    worksheet.Cell(currentRow + 1, 2).Value = "ФИО";
                     foreach (var sub in studentsSub)
                     {
                         currentCol++;
                         worksheet.Cell(currentRow, currentCol).Value = sub.subject;
-                        worksheet.Cell(currentRow++, currentCol++).Value = sub.average;
-                        worksheet.Cell(currentRow, currentCol++).Value = sub.zach;
-                        worksheet.Range(worksheet.Cell(currentRow, currentCol++), worksheet.Cell(currentRow++, currentCol++)).Merge();
+                        worksheet.Cell(currentRow + 1, currentCol).Value = sub.average;
+                        worksheet.Cell(currentRow + 1, currentCol + 1).Value = sub.zach;
+                        worksheet.Range(worksheet.Cell(currentRow, currentCol - 1), worksheet.Cell(currentRow, currentCol)).Merge();
                     }
+                    var main = worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(1, studentsSub.Count() + 3)).Merge();
+                    var header = worksheet.Range(worksheet.Cell(2, 1), worksheet.Cell(2, studentsSub.Count() + 3));
                     foreach (var student in students)
                     {
                         currentRow++;
                         number++;
-                        worksheet.Cell(currentRow, 1).Value = number;
+                        worksheet.Cell(currentRow + 1, 1).Value = number;
                         if (student.studentLastname != null)
                         {
-                            worksheet.Cell(currentRow, 2).Value = student.studentSurname + " " + student.studentName + " " + student.studentLastname.Substring(0, 1) + ".";
+                            worksheet.Cell(currentRow + 1, 2).Value = student.studentSurname + " " + student.studentName + " " + student.studentLastname.Substring(0, 1) + ".";
                         }
                         else
                         {
-                            worksheet.Cell(currentRow, 2).Value = student.studentSurname + " " + student.studentName;
+                            worksheet.Cell(currentRow + 1, 2).Value = student.studentSurname + " " + student.studentName;
                         }
                     }
-                    foreach (var average in studentsAverages)
-                    {
-                        currentRow++;
-                        number++;
-                        worksheet.Cell(currentRow, currentCol).Value = average.average;
-                    }
+                   
                     using (var stream = new MemoryStream())
                     {
                         worksheet.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
