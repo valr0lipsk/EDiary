@@ -746,7 +746,7 @@ namespace EDiary.Controllers
         //экспорт статистики 
         public IActionResult Statistics(LessonModel lessDates)
         {
-            //группа, месяц и дни
+            //группа и месяц
             string groupName="";
             var month = Convert.ToDateTime("01." + lessDates.month + ".0001 00:00").ToString("MMMM", new System.Globalization.CultureInfo("ru-RU"));
             if (lessDates.id != 0)
@@ -758,13 +758,15 @@ namespace EDiary.Controllers
                 lessDates.id = context.labs.Where(lab => lab.labId == lessDates.labId).Select(st => st.tsubjectId).FirstOrDefault();
                 groupName = context.subjectTaughts.Where(sT => sT.tsubjectId == lessDates.id).Select(gr => gr.group.groupName).FirstOrDefault();
             }
-            var days = Enumerable.Range(1, DateTime.DaysInMonth(DateTime.Now.Year, Convert.ToInt32(lessDates.month))).ToList();
 
             //пропуски 
             if (lessDates.type == "1")
             {
                 using (var workbook = new XLWorkbook())
                 {
+                    //дни месяца
+                    var days = Enumerable.Range(1, DateTime.DaysInMonth(DateTime.Now.Year, Convert.ToInt32(lessDates.month))).ToList();
+
                     //студенты + общая статистика пропусков
                     var passes = context.students.Where(gr => gr.group.groupName == groupName)
                                                  .Select(st => new StudentJurnal
@@ -906,79 +908,133 @@ namespace EDiary.Controllers
                                        select new
                                        {
                                            tsubjectId = subTaught.tsubjectId,
-                                           subject = subTaught.subject.subjectName,
-                                           zach = "Зачеты",
-                                           average = "Балл"
+                                           subject = subTaught.subject.subjectName.Trim()
                                        }).ToList();
 
                     //студенты
                     var students = context.students.Where(gr => gr.group.groupName == groupName)
-                                                 .Select(st => new StudentJurnal
-                                                 {
-                                                     studentSurname = st.studentSurname,
-                                                     studentName = st.studentName.Substring(0, 1) + ".",
-                                                     studentLastname = st.studentLastname,
-                                                     studentId = st.studentId
-                                                 }).AsNoTracking().ToList().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName);
+                                                   .Select(st => new StudentJurnal
+                                                   {
+                                                       studentSurname = st.studentSurname,
+                                                       studentName = st.studentName.Substring(0, 1) + ".",
+                                                       studentLastname = st.studentLastname,
+                                                       studentId = st.studentId
+                                                   }).AsNoTracking().ToList().OrderBy(st => st.studentSurname).ThenBy(st => st.studentName);
 
-                    var studentsAverages = (from student in context.students
-                                            join gr in context.groups on student.studentGroup equals gr.groupId
-                                            join subTaught in context.subjectTaughts on gr.groupId equals subTaught.groupId
-                                            where subTaught.@group.groupName == groupName
-                                            orderby subTaught.subject.subjectName
-                                            select new StudentJurnal
-                                            {
-                                                studentId = student.studentId,
-                                                average = Math.Round(context.marks.Join(context.setMarks, m => m.markId, sM => sM.markId, (m, sM) => new { m, sM })
-                                                                                         .Where(m => digitals.Values.Contains(m.m.mark))
-                                                                                         .Where(m => m.sM.studentId == student.studentId)
-                                                                                         .Where(m => m.sM.student.studentGroup == subTaught.groupId)
-                                                                                         .Where(st => st.sM.student.@group.groupName == groupName)
-                                                                                         .Where(st => st.sM.lesson.subjectTaught.subject.subjectName == studentsSub.FirstOrDefault().subject)
-                                                                                         .Where(less => less.sM.lesson.lessonDate.Month.ToString() == lessDates.month)
-                                                                                         .GroupBy(sm => new { st = sm.sM.studentId, sub = sm.sM.lesson.tsubjectId })
-                                                                                         .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
-                                            }).Distinct().AsNoTracking().ToList();
+                    //зачеты
+                    var setZachets = (from setMark in context.setMarks
+                                     join student in context.students on setMark.studentId equals student.studentId
+                                     join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                     join mark in context.marks on setMark.markId equals mark.markId
+                                     join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                     orderby student.studentSurname
+                                     where student.@group.groupName == groupName
+                                     where mark.mark.Trim() == "зач"
+                                     where lesson.lessonDate.Month.ToString() == lessDates.month
+                                     select new setMark
+                                     {
+                                         studentId = student.studentId,
+                                         mark = new Mark() { mark = mark.mark, markId = mark.markId },
+                                         lesson = new Lesson() { lessonId = lesson.lessonId, lessonDate = lesson.lessonDate, tsubjectId = subTaught.tsubjectId }
+                                     }).AsNoTracking().ToList();
+
+                    //средние баллы
+                    var setAverages = (from setMark in context.setMarks
+                                       join student in context.students on setMark.studentId equals student.studentId
+                                       join lesson in context.lessons on setMark.lessonId equals lesson.lessonId
+                                       join mark in context.marks on setMark.markId equals mark.markId
+                                       join subTaught in context.subjectTaughts on lesson.tsubjectId equals subTaught.tsubjectId
+                                       orderby student.studentSurname
+                                       where student.@group.groupName == groupName
+                                       where digitals.Values.Contains(mark.mark.Trim())
+                                       where lesson.lessonDate.Month.ToString() == lessDates.month
+                                       select new setMark
+                                       {
+                                           studentId = student.studentId,
+                                           student = new Student() { studentSurname = student.studentSurname },
+                                           mark = new Mark() { mark = mark.mark.Trim(), markId = mark.markId },
+                                           lesson = new Lesson() { lessonId = lesson.lessonId, lessonDate = lesson.lessonDate, tsubjectId = subTaught.tsubjectId }
+                                       }).AsNoTracking().OrderBy(st => st.student.studentSurname).ToList();
+
                     var worksheet = workbook.Worksheets.Add("Статистика");
-                    var currentRow = 2;
+                    var currentRow = 3;
                     var number = 0;
                     var currentCol = 2;
 
                     //заголовки
-                    worksheet.Cell(currentRow + 1, 1).Value = "№";
-                    worksheet.Cell(currentRow + 1, 2).Value = "ФИО";
+                    worksheet.Cell(currentRow, 1).Value = "№";
+                    worksheet.Cell(currentRow, 2).Value = "ФИО";
                     foreach (var sub in studentsSub)
                     {
                         currentCol++;
-                        worksheet.Cell(currentRow, currentCol).Value = sub.subject;
-                        worksheet.Cell(currentRow + 1, currentCol).Value = sub.average;
-                        worksheet.Cell(currentRow + 1, currentCol + 1).Value = sub.zach;
-                        worksheet.Range(worksheet.Cell(currentRow, currentCol - 1), worksheet.Cell(currentRow, currentCol)).Merge();
+                        worksheet.Cell(2, currentCol).Value = sub.subject;
+                        worksheet.Cell(3, currentCol).Value = "Зачеты";
+                        worksheet.Cell(3, ++currentCol).Value = "Балл";
+                        worksheet.Range(worksheet.Cell(2, currentCol-1), worksheet.Cell(2, currentCol)).Merge();
                     }
-                    var main = worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(1, studentsSub.Count() + 3)).Merge();
-                    var header = worksheet.Range(worksheet.Cell(2, 1), worksheet.Cell(2, studentsSub.Count() + 3));
+                    var main = worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(1, worksheet.Cells().Last().Address.ColumnNumber)).Merge();
+                    var header = worksheet.Range(worksheet.Cell(2, 1), worksheet.Cell(3, worksheet.Cells().Last().Address.ColumnNumber));
+
+                    //студенты и статистика
                     foreach (var student in students)
                     {
                         currentRow++;
                         number++;
-                        worksheet.Cell(currentRow + 1, 1).Value = number;
+                        worksheet.Cell(currentRow, 1).Value = number;
                         if (student.studentLastname != null)
                         {
-                            worksheet.Cell(currentRow + 1, 2).Value = student.studentSurname + " " + student.studentName + " " + student.studentLastname.Substring(0, 1) + ".";
+                            worksheet.Cell(currentRow, 2).Value = student.studentSurname + " " + student.studentName + " " + student.studentLastname.Substring(0, 1) + ".";
                         }
                         else
                         {
-                            worksheet.Cell(currentRow + 1, 2).Value = student.studentSurname + " " + student.studentName;
+                            worksheet.Cell(currentRow, 2).Value = student.studentSurname + " " + student.studentName;
+                        }
+
+                        //зачеты
+                        for (int i = 0; i < studentsSub.Count(); i++)
+                        {
+                            var sz = setZachets.Where(x => x.studentId == student.studentId && x.lesson.tsubjectId == studentsSub[i].tsubjectId).Count();
+                            if (sz != 0)
+                            {
+                                worksheet.Cell(number + 3, worksheet.CellsUsed().Where(x => x.Value.ToString() == studentsSub[i].subject.Trim()).Select(x => x.Address.ColumnNumber).FirstOrDefault()).Value = sz;
+                            }
+                            else
+                            {
+                                worksheet.Cell(number + 3, worksheet.CellsUsed().Where(x => x.Value.ToString() == studentsSub[i].subject.Trim()).Select(x => x.Address.ColumnNumber).FirstOrDefault()).Value = "";
+                            }
+                        }
+
+                        //баллы
+                        for (int i = 0; i < studentsSub.Count(); i++)
+                        {
+                            var sa = setAverages.Where(x => x.studentId == student.studentId && x.lesson.tsubjectId == studentsSub[i].tsubjectId).Select(x => Convert.ToInt32(x.mark.mark));
+                            if (sa.Count() != 0)
+                            {
+                                worksheet.Cell(number + 3, worksheet.CellsUsed().Where(x => x.Value.ToString() == studentsSub[i].subject.Trim()).Select(x => x.Address.ColumnNumber).FirstOrDefault()+1).Value = sa.Average();
+                            }
+                            else
+                            {
+                                worksheet.Cell(number + 3, worksheet.CellsUsed().Where(x => x.Value.ToString() == studentsSub[i].subject.Trim()).Select(x => x.Address.ColumnNumber).FirstOrDefault()+1).Value = "";
+                            }
                         }
                     }
-                   
+
                     using (var stream = new MemoryStream())
                     {
-                        worksheet.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+                        //оформление границ
+                        worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(currentRow, main.Cells().Last().Address.ColumnNumber)).Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                        worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(currentRow, main.Cells().Last().Address.ColumnNumber)).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                        //месяц
+                        main.Value = month;
+                        main.Style.Font.Bold = true;
+                        main.Style.Font.FontSize = 14;
+                        main.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        //заголовки
+                        header.Style.Font.Bold = true;
+                        header.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
                         worksheet.Columns().AdjustToContents();
                         workbook.SaveAs(stream);
                         var content = stream.ToArray();
-
                         return File(
                             content,
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
