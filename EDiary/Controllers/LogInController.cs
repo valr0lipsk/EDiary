@@ -245,21 +245,16 @@ namespace EDiary.Controllers
         //подтвержение почты
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> ConfirmSend(string email)
+        public async Task<IActionResult> ConfirmSend()
         {
-            if (ModelState.IsValid)
-            {
-                var user = await userManager.FindByIdAsync(userManager.GetUserId(User));
-                //токен подтверждения
-                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail", "LogIn", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync(email, "Подтверждение почты", $"Подтвердите почту, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
-                return Content("Для подтверждения почты перейдите по ссылке, указанной в отправленном письме");
-            }
-            return View(email);
+            var user = await userManager.FindByIdAsync(userManager.GetUserId(User));
+            //генерация токена для подтверждения
+            var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action("ConfirmEmail", "LogIn", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+            EmailService emailService = new EmailService();
+            await emailService.SendEmailAsync(user.Email, "Подтверждение почты", $"Подтвердите почту, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+            return Content("Для подтверждения почты перейдите по ссылке, указанной в отправленном письме");
         }
-
 
         [HttpGet]
         [Authorize]
