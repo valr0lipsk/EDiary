@@ -523,6 +523,7 @@ namespace EDiary.Controllers
                                            studentId = setMark.studentId
                                        }).AsNoTracking().ToList();
                 }
+
                 //типы занятий
                 var types = lessonsRep.getLessonTypes();
 
@@ -692,6 +693,7 @@ namespace EDiary.Controllers
         {
             if (addLesson.lessonDate.Month != 8 && DateTime.Now.Year == addLesson.lessonDate.Year || DateTime.Now.Year - addLesson.lessonDate.Year == 1)
             {
+                //если журнал предмета
                 if (addLesson.labId == 0)
                 {
                     using var transaction = context.Database.BeginTransaction();
@@ -705,6 +707,8 @@ namespace EDiary.Controllers
                     transaction.Commit();
                     return RedirectToAction("Jurnal", "Marks", new { addLesson.id });
                 }
+
+                //если журнал лабы
                 else
                 {
                     var tsub = context.subjectTaughts.Join(context.labs, st => st.tsubjectId, lab => lab.tsubjectId, (st, lab) => new { st, lab })
@@ -888,8 +892,6 @@ namespace EDiary.Controllers
                     }
                 }
             }
-
-
 
             //оценки и зачеты
             else 

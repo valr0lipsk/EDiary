@@ -43,14 +43,19 @@ namespace EDiary.Controllers
                     SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.Remember, false);
                     if (result.Succeeded)
                     {
+                        //если админ
                         if (await userManager.IsInRoleAsync(user, "admin"))
                         {
                             return RedirectToAction("Admin", "Admin");
                         }
+
+                        //если препод
                         if (await userManager.IsInRoleAsync(user, "teacher"))
                         {
                             return RedirectToAction("Teacher", "Teacher");
                         }
+
+                        //если студент
                         if (await userManager.IsInRoleAsync(user, "student"))
                         {
                             return RedirectToAction("Student", "Student");
@@ -62,7 +67,9 @@ namespace EDiary.Controllers
             return View(loginModel);
         }
 
-        //сброс пароля
+
+
+        //забыли пароль
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword() => View();
@@ -75,11 +82,13 @@ namespace EDiary.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByEmailAsync(forgotPassword.userEmail.Trim());
-                if (user == null)
+                if (user == null || !await userManager.IsEmailConfirmedAsync(user))
                 {
                     ModelState.AddModelError(nameof(ForgotPasswordModel.userEmail), "Не удалось найти пользователя с указанным адресом эл. почты");
                 }
+                //генерация токена для восстановления 
                 var сode = await userManager.GeneratePasswordResetTokenAsync(user);
+                //генерация сслыки
                 var callbackUrl = Url.Action("ResetPassword", "LogIn", new { userId = user.Id, code = сode }, protocol: HttpContext.Request.Scheme);
                 EmailService emailService = new EmailService();
                 await emailService.SendEmailAsync(forgotPassword.userEmail.Trim(), "Сброс пароля", $"Для сброса пароля перейдите по ссылке: <a href='{callbackUrl}'>Сбросить пароль</a>");
@@ -88,6 +97,7 @@ namespace EDiary.Controllers
             return View(forgotPassword);
         }
 
+        //сброс пароля
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string code)
@@ -129,6 +139,8 @@ namespace EDiary.Controllers
             return View(resetPassword);
         }   
 
+
+
         //смена пароля пользователя
         [Authorize]
         [HttpGet]
@@ -154,10 +166,13 @@ namespace EDiary.Controllers
                             IdentityResult result = await userManager.ChangePasswordAsync(user, userPassword.oldPassword, userPassword.newPassword);
                             if (result.Succeeded)
                             {
+                                //если студент
                                 if (await userManager.IsInRoleAsync(user, "student"))
                                 {
                                     return RedirectToAction("Student", "Student");
                                 }
+                                
+                                //если преподаватель
                                 else if (await userManager.IsInRoleAsync(user, "teacher"))
                                 {
                                     return RedirectToAction("Teacher", "Teacher");
@@ -177,6 +192,9 @@ namespace EDiary.Controllers
             }
             return View(userPassword);
         }
+
+
+
         //выход
         [Authorize]
         public async Task<IActionResult> Logout()
@@ -184,6 +202,8 @@ namespace EDiary.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Login", "LogIn");
         }
+
+
 
         //смена почты
         [Authorize]
@@ -200,10 +220,14 @@ namespace EDiary.Controllers
                 user.Email = changeEmail.newEmail;
                 context.Users.Update(user);
                 await context.SaveChangesAsync();
+
+                //если студент
                 if (await userManager.IsInRoleAsync(user, "student"))
                 {
                     return RedirectToAction("Student", "Student");
                 }
+
+                //если преподаватель
                 else if (await userManager.IsInRoleAsync(user, "teacher"))
                 {
                     return RedirectToAction("Teacher", "Teacher");
@@ -215,6 +239,57 @@ namespace EDiary.Controllers
             }
             return View(changeEmail);
         }
+
+
+
+        //подтвержение почты
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ConfirmSend(string email)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByIdAsync(userManager.GetUserId(User));
+                //токен подтверждения
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Action("ConfirmEmail", "LogIn", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                EmailService emailService = new EmailService();
+                await emailService.SendEmailAsync(email, "Подтверждение почты", $"Подтвердите почту, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+                return Content("Для подтверждения почты перейдите по ссылке, указанной в отправленном письме");
+            }
+            return View(email);
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return Json("Error");
+            }
+            var user = await userManager.FindByIdAsync(userId);
+            var result = await userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                //если студент
+                if (await userManager.IsInRoleAsync(user, "student"))
+                {
+                    return RedirectToAction("Student", "Student");
+                }
+
+                //если преподаватель
+                else if (await userManager.IsInRoleAsync(user, "teacher"))
+                {
+                    return RedirectToAction("Teacher", "Teacher");
+                }
+            }
+            return Json("Error");
+        }
+
+
+
         //ошибка
         public IActionResult AlertMessage() => PartialView("~/Views/Login/_alertMessage.cshtml");
     }

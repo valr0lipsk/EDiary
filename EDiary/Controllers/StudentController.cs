@@ -130,6 +130,7 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
+
             //все
             if (category == "1")
             {
@@ -144,6 +145,7 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
+
             //только лекции
             else if (category == "2")
             {
@@ -158,6 +160,7 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
+
             //только лабы
             else if (category == "3")
             {
@@ -172,6 +175,7 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Student/_subjectsBlock.cshtml", studentSubjectGroup);
             }
+
             //начальная загрузка
             else
             {
@@ -215,6 +219,8 @@ namespace EDiary.Controllers
                 return Json("Error of add picture"); 
             }
         }
+
+
 
         //добавление эмоджи статуса
         [HttpPost]

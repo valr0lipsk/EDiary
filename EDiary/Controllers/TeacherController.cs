@@ -102,7 +102,7 @@ namespace EDiary.Controllers
                                                                    .Select(lab => lab.Count()).FirstOrDefault()
                                     }).AsNoTracking().OrderBy(sub => sub.subjectName).ThenBy(gr => gr.groupName).ToList();
 
-            //учащиеся кураторской группы
+            //коллеги по предмету
             var colleagues = context.teachers.Join(context.subjectTaughts, tr => tr.teacherId, sT => sT.teacherId, (tr, sT) => new { tr, sT })
                                              .Where(sub => sub.sT.subject.subjectName == subjects.FirstOrDefault().subjectName)
                                              .Where(tr => tr.tr.teacherId != teacher.FirstOrDefault().teacherId)
@@ -120,6 +120,7 @@ namespace EDiary.Controllers
 
             //отображение все/лекции/лабы
             var subLabs = new List<SubjectGroupModel>();
+
             //все
             if (category == "1")
             {
@@ -134,6 +135,7 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+
             //только лекции
             else if (category == "2")
             {
@@ -148,6 +150,7 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+
             //только лабы
             else if (category == "3")
             {
@@ -162,6 +165,7 @@ namespace EDiary.Controllers
                 };
                 return PartialView("~/Views/Teacher/_subjectsBlock.cshtml", teacherSubjectGroup);
             }
+
             //начальная загрузка
             else
             {
