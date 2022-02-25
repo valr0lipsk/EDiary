@@ -671,6 +671,10 @@ tr, td {
   line-height: 60px;
 }
 
+#notesToggle > * {
+  font-size: 30px;
+}
+
 @media (max-width: 991px) {
   .admin__sidebar {
     background-color: #fff;

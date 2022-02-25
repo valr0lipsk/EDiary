@@ -61,6 +61,11 @@ $(document).ready(function () {
     //-------------------------------------------
     //common funcs
 
+    //toggle notes visibility 
+    $('body').on('click', '#notesToggle', function () {
+        $('.notes__block').toggle('d-none')
+    })
+
     //change mates block height
     const block = $('#matesBlock');
     $(block).height($('#subsBlock').height());
