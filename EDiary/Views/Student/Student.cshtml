@@ -17,6 +17,7 @@
                                 <a class="openEmojiModal" href="#">Выбрать статус</a>
                                 <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
                                 <a asp-controller="LogIn" asp-action="ChangeEmail">Сменить почту</a>
+                                <a asp-controller="LogIn" asp-action="ConfirmEmail">Подтвердить почту</a>
                             </div>
                         </div>
                     </div>
@@ -113,9 +114,11 @@
             <div class="sidebar__notes col-7 mw-100 overflow-auto">
                 <div class="row d-flex flex-column align-items-center justify-content-center">
                     <h2 class="notes__title mt-2 mb-lg-3 mb-1">Текущие задачи</h2>
-                    <a class="d-lg-none d-block" id="notesToggle"><i class="fa-solid fa-angle-down"></i></a>
-                    <div class="notes__block col-11 justify-content-center">
-                        <div class="row">
+                    <a class="d-lg-none d-block" id="notesToggle">
+                        <i class="fa-solid fa-angle-down"></i>
+                    </a>
+                    <div class="notes__block col-11 d-lg-block">
+                        <div class="row justify-content-center">
                             @foreach (var tasks in Model.tasks)
                             {
                             <div class="notes__note col-12 col-md-11 col-lg-12 mb-4">
@@ -125,7 +128,7 @@
                                             <img class="col-12" src="~/css/source/todoIcon.png"/>
                                         </div>
                                     </div>
-                                    <div class="note__texts col-9">
+                                    <div class="note__texts col-10">
                                         <div class="row">
                                             <p class="note__title m-0">@tasks.subjectName</p>
                                             <p class="note__text m-0">Сдано: <span>@tasks.zachCount</span> из <span>@tasks.labaCount</span> лаб. работ</p>

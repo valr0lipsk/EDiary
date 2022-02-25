@@ -16,6 +16,7 @@
                                 <a class="openEmojiModal" href="#">Выбрать статус</a>
                                 <a asp-controller="LogIn" asp-action="ChangePassword">Сменить пароль</a>
                                 <a asp-controller="LogIn" asp-action="ChangeEmail">Сменить почту</a>
+                                <a asp-controller="LogIn" asp-action="ConfirmEmail">Подтвердить почту</a>
                             </div>
                         </div>
                     </div>
@@ -84,7 +85,7 @@
                                     <div class="modal-body d-flex flex-wrap">
                                         @foreach(var status in Model.statuses)
                                         {
-                                            <div class="selection__item col-3 d-flex flex-column justify-content-start align-items-center text-center" data-idStatus="@status.statusId">
+                                            <div class="selection__item col-3 m-1 d-flex flex-column justify-content-start align-items-center text-center" data-idStatus="@status.statusId">
                                                 <div class="item__circle rounded-circle d-flex align-content-center align-items-center justify-content-center">
                                                     <img src="data:image/*;base64,@(Convert.ToBase64String(status.emoji))"/>
                                                 </div>
@@ -120,15 +121,18 @@
                 </div>
             </div>
             <div class="sidebar__notes col-7 mw-100 overflow-auto">
-                <div class="row d-flex justify-content-center">
-                    <h2 class="notes__title mt-2 mb-3">Текущие задачи</h2>
-                    <div class="notes__block col-11">
-                        <div class="row">
+                <div class="row d-flex flex-column align-items-center justify-content-center">
+                    <h2 class="notes__title mt-2 mb-lg-3 mb-1">Текущие задачи</h2>
+                    <a class="d-lg-none d-block" id="notesToggle">
+                        <i class="fa-solid fa-angle-down"></i>
+                    </a>
+                    <div class="notes__block col-11 d-lg-block">
+                        <div class="row justify-content-center">
                             @foreach (var task in Model.tasks)
                             {
-                            <div class="notes__note col-12 mb-4">
+                            <div class="notes__note col-12 col-md-11 col-lg-12 mb-4">
                                 <div class="row p-3">
-                                    <div class="col-2 pt-1 pb-1 pl-1 pr-2">
+                                    <div class="col-2 col-md-1 col-lg-2 pt-1 pb-1 pl-1 pr-2">
                                         <div class="row">
                                             <img class="col-12" src="~/css/source/todoIcon.png"/>
                                         </div>
@@ -152,14 +156,14 @@
         <div class="row h-100 p-3">
             <div class="main__subjects col-12">
                 <div class="row h-100">
-                    <div class="subjects__side col-1 border-right">
+                    <div class="subjects__side d-none d-md-block col-1 border-right">
                         <div class="row">
                             <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom" data-findType="1">Все</a>
                             <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom" data-findType="2">Лекции</a>
                             <a class="subject__find col-12 p-1 d-flex justify-content-center align-items-center text-center border-bottom" data-findType="3">Лаб. работы</a>
                         </div>
                     </div>
-                    <div class="subjects__block col-11">
+                    <div class="subjects__block col-md-11 col-sm-12">
                         <div class="row p-3 d-flex flex-column" id="subsBlock">
                             <h2 class="block__tile mb-3 text-center">Мои предметы:</h2>
                             <div class="input-group mb-3">
@@ -168,17 +172,17 @@
                             @foreach (var subjectGroup in Model.subjectGroups)
                             {
                                 <div class="block__item col-12 mb-4">
-                                    <div class="row p-2">
+                                    <div class="row p-2 align-items-center">
                                         <div class="item__circle mr-3 d-flex align-content-center align-items-center justify-content-center rounded-circle">
                                             <img src="data:image/*;base64,@(Convert.ToBase64String(subjectGroup.subIcon))" />
                                         </div>
                                         @if (subjectGroup.labaId == 0)
                                         {
-                                            <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                                            <a class="item__title col-md-9 col-7 m-0 p-0 d-flex align-items-center" data-id="@subjectGroup.tsubjectId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
                                         }
                                         else
                                         {
-                                            <a class="item__title col-9 m-0 p-0 d-flex align-items-center" data-labaid="@subjectGroup.labaId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
+                                            <a class="item__title col-md-9 col-7 m-0 p-0 d-flex align-items-center" data-labaid="@subjectGroup.labaId">@subjectGroup.subjectName (@subjectGroup.groupName)</a>
                                         }
                                     </div>
                                 </div>
@@ -189,8 +193,7 @@
             </div>
         </div>
     </div>
-    <aside class="account__group col-lg-3">
-        <div class="row h-100 d-flex flex-column">
+    <aside class="account__group col-lg-3 d-md-none d-none d-lg-block">
             <div class="row p-3 pt-3 pb-3 pl-2 pr-2 d-flex flex-column">
                 <h3 class="group__title mb-3 text-center">Другие преподаватели:</h3>
                 <div class="group__block" id="matesBlock">
@@ -226,6 +229,5 @@
                     </div>
                 </div>
             </div> 
-        </div>
     </aside>
 </div>
