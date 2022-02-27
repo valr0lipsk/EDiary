@@ -4,20 +4,20 @@
 }
 <div class="row h-100 min-vh-100 justify-content-center align-items-center">
     <div class="autorizationF col-10 offset-1 flex-column justify-content-center align-self-center">
-        <div class="row h-100">
-            <img class="img__icon" src="~/css/source/loginIcon.png"/>
-            <div class="autorizationF__img col-6 p-2 d-flex flex-column align-items-center align-content-center justify-content-center">
-                <div class="row">
+        <div class="row h-100 flex-column flex-md-row">
+            <img class="img__icon d-none d-md-block" src="~/css/source/loginIcon.png"/>
+            <div class="autorizationF__img col-12 col-sm-4 col-md-6 p-2 d-flex flex-column align-items-center align-content-center justify-content-center">
+                <div class="row d-md-block d-none">
                     <h1 class="img__title">Электронный журнал</h1>
                 </div>
             </div>
-            <div class="autorizationF__form col-6 d-flex flex-column justify-content-center align-content-center align-items-center">
+            <div class="autorizationF__form col-12 col-sm-8 col-md-6 d-flex flex-column justify-content-center align-content-center align-items-center">
                 <div class="row align-items-center justify-content-center">
-                    <form class="col-10 h-100 align-content-center align-items-center justify-content-start" asp-area="" asp-controller="LogIn" asp-action="Login" method="post">
+                    <form class="col-sm-10 col-12 h-100 align-content-center align-items-center justify-content-start" asp-area="" asp-controller="LogIn" asp-action="Login" method="post">
                         <div class="row h-100 w-100 m-0 align-content-center justify-content-start">
                             <div class="circle1"></div>
                             <div class="circle2"></div>
-                            <div class="col-12 mb-2 d-flex flex-column justify-content-center align-items-lg-start">
+                            <div class="col-12 mb-3 mb-md-2 d-flex flex-column justify-content-center align-items-lg-start">
                                 <h2 class="form__title">Вход</h2>
                             </div>
                             <div class="col-12 mt-3 d-flex flex-column justify-content-center align-items-center">
@@ -43,7 +43,7 @@
                                             <a class="form__label" asp-action="ForgotPassword">Забыли пароль?</a>
                                         </div>
                                     </div>
-                                    <button class="login__btn col-md-12 col-5 mt-4">Войти</button>
+                                    <button class="login__btn col-md-12 col-10 mt-4">Войти</button>
                                 </div>
                             </div>
                         </div>

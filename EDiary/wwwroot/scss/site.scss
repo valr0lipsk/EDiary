@@ -759,3 +759,46 @@ tr, td {
         font-size: 11px;
     }
 }
+
+@media(max-width: 1024px) {
+    .form__label{
+        font-size: 75%
+    }
+    .autorizationF {
+        min-width: 80vh;
+    }
+}
+
+@media (max-width: 1110px) and (min-width: 768px) {
+    .autorizationF{
+        min-width: 105vh;
+    }
+    .img__title{
+        font-size: 210%
+    }
+}
+
+@media (max-width: 558px) {
+    .autorizationF {
+        min-width: 40vh;
+    }
+}
+
+@media (max-width: 426px) {
+    .autorizationF{
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+
+    .autorizationF__img{
+        min-height: 5vh;
+        border-bottom-left-radius: 0px;
+        border-top-right-radius: 5px;
+    }
+
+    .autorizationF__form{
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+    }
+}
