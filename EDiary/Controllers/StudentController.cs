@@ -43,7 +43,7 @@ namespace EDiary.Controllers
                                               join sm in context.setMarks on st.studentId equals sm.studentId
                                               join mark in context.marks on sm.markId equals mark.markId
                                               where digitals.Values.Contains(mark.mark) && st.studentUser == userManager.GetUserId(User)
-                                              select Convert.ToInt32(mark.mark)).Average(), 2);
+                                              select Convert.ToInt32(mark.mark)).Average(), 1);
 
             //ФИО учника
             var student = context.students.Where(st => st.studentUser == userManager.GetUserId(User))
@@ -122,7 +122,7 @@ namespace EDiary.Controllers
                                                                        .Where(m => digitals.Values.Contains(m.m.mark))
                                                                        .Where(m => m.sM.studentId == st.studentId)
                                                                        .GroupBy(sm => sm.sM.studentId)
-                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 2)
+                                                                       .Select(m => m.Average(m => Convert.ToInt32(m.m.mark))).FirstOrDefault(), 1)
                                              }).AsNoTracking().OrderByDescending(st => st.studentsAverage).ThenBy(st => st.studentSurname).ToList();
 
             //эмоджи-статусы
