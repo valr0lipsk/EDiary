@@ -243,7 +243,6 @@ namespace EDiary.Controllers
 
 
         //подтвержение почты
-        [HttpPost]
         [Authorize]
         public async Task<IActionResult> ConfirmSend()
         {
@@ -252,7 +251,7 @@ namespace EDiary.Controllers
             var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.Action("ConfirmEmail", "LogIn", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
             EmailService emailService = new EmailService();
-            await emailService.SendEmailAsync(user.Email, "Подтверждение почты", $"Подтвердите почту, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+            await emailService.SendEmailAsync(user.Email, "Подтверждение почты", $"Подтвердите почту, перейдя по ссылке: <a href='{callbackUrl}'>Подтвердить почту аккаунта {user.UserName}</a>");
             return Content("Для подтверждения почты перейдите по ссылке, указанной в отправленном письме");
         }
 
