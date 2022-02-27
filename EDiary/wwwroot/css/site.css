@@ -362,9 +362,6 @@ tr, td {
   background-color: #fff;
   border-radius: 25px;
 }
-.jurnal__block h3 {
-  font-size: 32px;
-}
 
 .block__item {
   background-color: #d5cbf0;
@@ -671,8 +668,9 @@ tr, td {
   line-height: 60px;
 }
 
-#notesToggle > * {
+.toggle > * {
   font-size: 30px;
+  cursor: pointer;
 }
 
 @media (max-width: 991px) {

@@ -385,10 +385,6 @@ tr, td {
 .jurnal__block {
     background-color: $clrWhite;
     border-radius: 25px;
-
-    & h3 {
-        font-size: 32px;
-    }
 }
 
 .block__item {
@@ -723,8 +719,9 @@ tr, td {
     line-height: 60px;
 }
 
-#notesToggle > *{
+.toggle > *{
     font-size: 30px;
+    cursor: pointer;
 }
 
 @media (max-width: 991px) {

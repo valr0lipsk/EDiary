@@ -3,8 +3,11 @@
 <div class="row min-vh-100">
     <div class="jurnal__subjects col-lg-3">
         <div class="row h-100 p-3 d-flex flex-column align-items-center">
-            <h2 class="notes__title mb-3">Мои предметы</h2>
-            <dl class="w-100 list-group list-group-flush text-center">
+            <h2 class="notes__title mb-lg-3 mb-1">Мои предметы</h2>
+            <a class="subjects__toggle toggle d-lg-none d-block" id="subjToggle">
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+            <dl class="subjects__block w-100 list-group list-group-flush text-center">
                 @if (User.IsInRole("teacher"))
                 {
                     @foreach (var sub in Model.userSubjects)
@@ -47,15 +50,15 @@
                             @subject.subjectName
                         }
                     </h3>
-                    <div class="jurnal__text col-12 mt-4">
+                    <div class="jurnal__text col-12 mt-2 mt-sm-4">
                         <div class="row pl-3 d-flex flex-column">
                             @foreach (var group in Model.Groups)
                             {
-                                <p class="text__group">Номер группы: @group.groupName</p>
+                                <p class="text__group mb-1 mb-sm-3">Номер группы: @group.groupName</p>
                             }
                             @foreach (var teacher in Model.Teachers)
                             {
-                                <p class="text__teacher">Преподаватель: @teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</p>
+                                <p class="text__teacher mb-0 mb-sm-3">Преподаватель: @teacher.teacherSurname @teacher.teacherName @teacher.teacherLastname</p>
                             }
                         </div>
                     </div>
@@ -95,7 +98,7 @@
                         <div class="row pl-3 pr-3 align-items-center">
                             @if (User.IsInRole("student"))
                             {
-                                <div class="col-3">
+                                <div class="col-3 mr-1">
                                     <div class="row">
                                         <div class="form-group">
                                             <label class="m-0" for="mounthSelection">Показать за:</label>
@@ -127,7 +130,7 @@
 
                             @if (User.IsInRole("teacher"))
                             {
-                                <div class="col">
+                                <div class="col mr-1">
                                     <div class="row">
                                         <div class="form-group">
                                             <label class="m-0" for="mounthSelection">Показать за:</label>
@@ -150,12 +153,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col">
+                                <div class="col mr-1 mt-1">
                                     <div class="row pt-1">
                                         <input class="btn btn-primary" id="periodBtn" type="button" value="Показать за промежуток"/>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col mt-1 mr-1 mb-sm-1 mb-md-0">
                                     <div class="row pt-1">
                                         <input class="btn btn-primary" id="addLessModal" type="button" value="+ Добавить занятие"/>
                                     </div>
@@ -163,8 +166,8 @@
                             }
 
                             @if (User.IsInRole("headman") || User.IsInRole("teacher")) {
-                                <div class="col">
-                                    <div class="row pt-1 d-flex justify-content-end">
+                                <div class="col ml-sm-1 ml-0 mt-1 mb-1 mb-md-0">
+                                    <div class="row pt-1 d-flex justify-content-sm-end justify-content-start">
                                         <input class="btn btn-primary" id="openStatModal" type="button" value="Статистика"/>
                                     </div>
                                 </div>

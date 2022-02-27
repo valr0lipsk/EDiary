@@ -2,6 +2,12 @@
 import { stickyTable } from './tableModule.js'
 import { jurnalStyleTable } from './tableModule.js'
 
+function toggleBlock(idToggle, classBlockToggle) {
+    $('body').on('click', `#${idToggle}`, () => {
+        $(`.${classBlockToggle}`).toggle('d-none');
+    })
+}
+
 $(document).ready(function () {
     //admin funcs
     //add student
@@ -62,9 +68,7 @@ $(document).ready(function () {
     //common funcs
 
     //toggle notes visibility 
-    $('body').on('click', '#notesToggle', function () {
-        $('.notes__block').toggle('d-none')
-    })
+    toggleBlock('notesToggle', 'notes__block');
 
     //change mates block height
     const block = $('#matesBlock');
@@ -197,6 +201,9 @@ $(document).ready(function () {
 
     //-----------------------------------------
     //jurnal funcs
+
+    //toggle subjects
+    toggleBlock('subjToggle', 'subjects__block');
 
     //fixed columns 
     stickyTable();
