@@ -207,7 +207,6 @@ namespace EDiary.Controllers
             var groups = groupsRep.allGroups();
             ViewBag.teacherLogin = teacherLogin;
             ViewBag.teacherPass = teacherPass;
-            curGroup.groups = groups;
             return PartialView("~/Views/Admin/_addTeacher.cshtml", curGroup);
         }
         public async Task <IActionResult> CreateTeacher(AddTeacherModel createTeacher)

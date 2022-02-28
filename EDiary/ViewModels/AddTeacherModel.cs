@@ -28,10 +28,5 @@ namespace EDiary.ViewModels
         [Required]
         [Display(Name = "Пароль преподавателя")]
         public string teacherPassword { get; set; }
-        
-        [Display(Name = "Курируемая группа")]
-        public string curatorGroup { get; set; }
-
-        public IEnumerable<collegeGroup> groups { get; set; }
     }
 }
