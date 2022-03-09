@@ -249,6 +249,7 @@ namespace EDiary.Controllers
             {
                 var teacher = userManager.FindByNameAsync(deleteTeacher.teacherLogin).Result;
                 await usersRep.removeUserAsync(teacher);
+                transaction.Commit();
                 return RedirectToAction("Admin");
             }
             catch
