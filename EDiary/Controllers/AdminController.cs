@@ -335,7 +335,7 @@ namespace EDiary.Controllers
                         subjectTaught subjectTaught = new subjectTaught
                         {
                             subjectId = subject.subjectId,
-                            teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.firstTeacher)
+                            teacherId = context.teachers.Where(tr => tr.teacherSurname.Trim() + " " + tr.teacherName.Trim() + " " + tr.teacherLastname.Trim() == addSubject.firstTeacher)
                                                         .Select(tr => tr.teacherId).FirstOrDefault(),
                             groupId = groupsRep.getGroup(addSubject.groupName).groupId
                         };
@@ -356,7 +356,7 @@ namespace EDiary.Controllers
                             {
                                 labName = addSubject.subjectName.Trim() + " (лабораторная, 2-ая подгруппа)",
                                 subgroupId = 2,
-                                teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
+                                teacherId = context.teachers.Where(tr => tr.teacherSurname.Trim() + " " + tr.teacherName.Trim() + " " + tr.teacherLastname.Trim() == addSubject.secondTeacher)
                                                             .Select(tr => tr.teacherId).FirstOrDefault(),
                                 countLabs = addSubject.labsCount,
                                 tsubjectId = subjectTaught.tsubjectId
@@ -380,7 +380,7 @@ namespace EDiary.Controllers
                         subjectTaught subjectTaught = new subjectTaught
                         {
                             subjectId = sub.subjectId,
-                            teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.firstTeacher)
+                            teacherId = context.teachers.Where(tr => tr.teacherSurname.Trim() + " " + tr.teacherName.Trim() + " " + tr.teacherLastname.Trim() == addSubject.firstTeacher)
                                                        .Select(tr => tr.teacherId).FirstOrDefault(),
                             groupId = groupsRep.getGroup(addSubject.groupName).groupId
                         };
@@ -400,7 +400,7 @@ namespace EDiary.Controllers
                             {
                                 labName = addSubject.subjectName + "(лабораторная, 2-ая подгруппа)",
                                 subgroupId = 2,
-                                teacherId = context.teachers.Where(tr => tr.teacherSurname + " " + tr.teacherName + " " + tr.teacherLastname == addSubject.secondTeacher)
+                                teacherId = context.teachers.Where(tr => tr.teacherSurname.Trim() + " " + tr.teacherName.Trim() + " " + tr.teacherLastname.Trim() == addSubject.secondTeacher)
                                                             .Select(tr => tr.teacherId).FirstOrDefault(),
                                 countLabs = addSubject.labsCount,
                                 tsubjectId = subjectTaught.tsubjectId
@@ -445,7 +445,7 @@ namespace EDiary.Controllers
         public async Task <IActionResult> UpdateSubject(TableSubjectModel updateSubject)
         {
             var havedSub = context.subjectTaughts.Where(s => s.subject.subjectName.Trim() == updateSubject.subjectName.Trim())
-                                                 .Where(tr => tr.teacher.teacherSurname + " " + tr.teacher.teacherName + " " + tr.teacher.teacherLastname == updateSubject.teacher.Trim())
+                                                 .Where(tr => tr.teacher.teacherSurname.Trim() + " " + tr.teacher.teacherName.Trim() + " " + tr.teacher.teacherLastname.Trim() == updateSubject.teacher.Trim())
                                                  .Where(gr => gr.group.groupName.Trim() == updateSubject.group.Trim())
                                                  .Select(s => s).FirstOrDefault();
             
@@ -455,7 +455,7 @@ namespace EDiary.Controllers
                 var subjectTaught = subjectsRep.findSubjectTaught(updateSubject.tsubjectId);
                 var subjectId = subjectsRep.findSubject(updateSubject.subjectName).subjectId;
                 var groupId = groupsRep.getGroup(updateSubject.group).groupId;
-                var teacherId= context.teachers.Where(tr => (tr.teacherSurname + " " + tr.teacherName.Substring(0, 1) + ". " + tr.teacherLastname.Substring(0, 1) + ". ") == updateSubject.teacher.Trim())
+                var teacherId= context.teachers.Where(tr => (tr.teacherSurname.Trim() + " " + tr.teacherName.Trim().Substring(0, 1) + ". " + tr.teacherLastname.Trim().Substring(0, 1) + ". ") == updateSubject.teacher.Trim())
                                                .Select(tr => tr.teacherId).FirstOrDefault();
                 if (subjectId != 0)
                 {
